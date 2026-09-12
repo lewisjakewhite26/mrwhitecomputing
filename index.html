@@ -1056,7 +1056,7 @@
     {n:3,live:true,title:"Searching the web",obj:"Write instructions for a web search, refine a search that returns the wrong thing, and compare results across search engines.",vocab:["search engine","refine","search box","address bar"],dur:"60 min",openHref:"#/y56/lesson/3",sheetBase:"#/y56/sheet/3/",resources:[["instructions","How do you search?"],["compare","Comparing search engines"],["hw","Search safely at home"]]},
     {n:4,live:true,title:"Selecting search results",obj:"Explain why we need tools to find things online, describe what a web crawler does, and relate a search term to a search engine's index.",vocab:["index","crawler","search engine"],dur:"60 min",openHref:"#/y56/lesson/4",sheetBase:"#/y56/sheet/4/",resources:[["index","Indexing the classroom"],["narrow","Narrowing a search"],["hw","The history of the web"]]},
     {n:5,live:true,title:"How search results are ranked",obj:"Order a list by rank, explain that a search engine follows an algorithm, and give examples of what it scores.",vocab:["rank","algorithm","inbound link","SEO"],dur:"60 min",openHref:"#/y56/lesson/5",sheetBase:"#/y56/sheet/5/",resources:[["webpage","Create your own webpage"],["score","Score your page"],["hw","SEO at home"]]},
-    {n:6,live:false,title:"How are searches influenced",obj:"Recognise that adverts and the people who build websites can both influence what a search shows you.",vocab:["advert","influence","ranking"],dur:"60 min"}
+    {n:6,live:true,title:"How are searches influenced",obj:"Describe ways search results can be influenced, recognise limitations of search engines, and explain how they make money.",vocab:["influence","ambiguous","sponsored result"],dur:"60 min",openHref:"#/y56/lesson/6",sheetBase:"#/y56/sheet/6/",resources:[["perspectives","Searching the web"],["ambiguous","Ambiguous searches"],["hw","What can't you find on the web?"]]}
   ];
   var GLOSSARY = [
     ["system","a number of parts that work together to do a task"],
@@ -1166,7 +1166,7 @@
     {n:3,live:true,title:"Developing mouse skills",obj:"Recap the parts of a computer, learn to double-click to open a program, and click and drag with a mouse or trackpad to make a picture.",vocab:["mouse","trackpad","double-click","click and drag"],dur:"40 min",openHref:"#/y12/lesson/3",sheetBase:"#/y12/sheet/3/",resources:[["steps","Double-click steps"],["picture","My picture"],["home","A mouse at home"]]},
     {n:4,live:true,title:"Using a computer keyboard",obj:"Say what a keyboard is for, type your name into a computer, and save your work to a file.",vocab:["keyboard","typing","save"],dur:"40 min",openHref:"#/y12/lesson/4",sheetBase:"#/y12/sheet/4/",resources:[["name","Typing my name"],["save","Why save sensibly?"],["home","A keyboard at home"]]},
     {n:5,live:true,title:"Developing keyboard skills",obj:"Open your saved work, use the arrow keys to move the cursor, and edit text by deleting letters.",vocab:["keyboard","cursor","backspace","space bar"],dur:"40 min",openHref:"#/y12/lesson/5",sheetBase:"#/y12/sheet/5/",resources:[["sentence","Finish the sentence"],["keys","Find the keys"],["home","A sentence at home"]]},
-    {n:6,live:false,title:"Using a computer responsibly",obj:"Look after shared computers, and know who to tell if something online worries you.",vocab:["responsible","share","trusted adult"],dur:"40 min"}
+    {n:6,live:true,title:"Using a computer responsibly",obj:"Say why we have rules, give examples for using computers safely, and know who to tell if something online worries you.",vocab:["rules","responsible","safe","trusted adult"],dur:"40 min",openHref:"#/y12/lesson/6",sheetBase:"#/y12/sheet/6/",resources:[["poster","Rule poster"],["grid","Rules grid"],["home","A rule at home"]]}
   ];
   var GLOSSARY_Y12 = [
     ["technology","anything people make to help us do a job"],
@@ -1192,7 +1192,7 @@
     {n:3,live:true,title:"How do digital devices help us?",obj:"Compare how a task can be done with a digital device and with non-digital tools, and say when each is the better fit.",vocab:["digital","non-digital","program"],dur:"45 min",openHref:"#/y34/lesson/3",sheetBase:"#/y34/sheet/3/",resources:[["tasks","What can you use a device for?"],["review","Learner review"],["hw","Digital or not, at home"]]},
     {n:4,live:true,title:"How am I connected?",obj:"Recognise different kinds of connection, pass a message through a network, and discuss why a network needs a switch.",vocab:["connection","network","network switch"],dur:"45 min",openHref:"#/y34/lesson/4",sheetBase:"#/y34/sheet/4/",resources:[["connections","My connections"],["switch","Becoming a computer network"],["hw","A network at home"]]},
     {n:5,live:true,title:"How are computers connected?",obj:"Recognise the devices in a network, follow a file through a switch and a server, and explain what a wireless access point does.",vocab:["server","wireless access point","network switch"],dur:"45 min",openHref:"#/y34/lesson/5",sheetBase:"#/y34/sheet/5/",resources:[["roleplay","Build your own network"],["match","Match the vocabulary"],["hw","Computer networks around us"]]},
-    {n:6,live:false,title:"What does our school network look like?",obj:"Explore the parts of the school network and map how they are joined together.",vocab:["network","router","cable","wireless"],dur:"45 min"}
+    {n:6,live:true,title:"What does our school network look like?",obj:"Identify how devices in a network connect together, spot networked devices around you, and explain the benefits of a network.",vocab:["network cable","network socket","router"],dur:"45 min",openHref:"#/y34/lesson/6",sheetBase:"#/y34/sheet/6/",resources:[["hunt","Scavenger hunt"],["map","Mapping a network"],["hw","A network at home"]]}
   ];
   var GLOSSARY_Y34 = [
     ["digital device","a device with a tiny computer inside that follows instructions"],
@@ -3219,6 +3219,325 @@
     }
   };
 
+  /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 6 =================== */
+  var Y12META6 = { eyebrow:'Technology around us &middot; Lesson 6', exitHash:'#/g/y12' };
+  var Y12_NOTES6 = [
+    ["Introduction · 3 min","Using a computer responsibly","Think, pair, share: what rules are already in place at school? Note them down for Activity 1."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Activity 1 · 4 min","Why do we have rules?","Four reasons: to stay safe, to be happy, so we can learn, and to be kind to each other."],
+    ["Activity 1 · 8 min","Sort the rules","In pairs, match the school rules from the introduction to one of the four reasons. There's no single right answer."],
+    ["Activity 2 · 5 min","Rules for using computers safely","Think about rules that would help you use computers safely in school. An example set is on the next slide."],
+    ["Activity 2 · 3 min","Some example rules","Hold your device carefully. Stop using it when someone's talking to you. Take turns. Use only the apps you've been asked to. Don't share your passwords."],
+    ["Activity 2 · 15 min","Make a poster","In groups, take one rule each and make a poster for it, for using technology safely at home and at school."],
+    ["Plenary · 2 min","What is technology?","Technology is something made to help us."],
+    ["Plenary · 2 min","The parts of a computer","Screen, base unit, keyboard, mouse or trackpad. You used them to draw pictures and write words."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
+  ];
+  var Y12_SLIDES6 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Using a computer <em>responsibly</em></h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('shield-check',56)+ph('users-three',56)+ph('book-open',56) + '</div>' }; },
+    function(){
+      var items = ["Say why we have rules","Give examples of rules for using computers safely","Make a poster of a rule for using technology"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:14px;text-align:left;max-width:28ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.2vw,1.4rem);font-weight:600">' +
+          '<span style="flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Think, pair, share</h1>' +
+      '<p class="lead pp">What rules are already in place at your school?</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Tell your partner one rule, and why you think it exists.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Why do we have rules?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('To stay safe','','in-c') +
+        rc('To make sure we are all happy','','pr-c') +
+        rc('So that we can learn','','ou-c') +
+        rc('To be kind to each other','') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Sort the rules</h1>' +
+      '<p class="lead pp" style="max-width:32ch">In pairs, match your school\'s rules to one of the four reasons. There\'s no single right answer.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Rules for using computers safely</h1>' +
+      '<p class="lead pp">What rules would help you use a computer safely in school?</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Talk with your partner, then share with the class.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Some example rules</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Hold your device carefully','','in-c') +
+        rc('Stop using it when someone is talking to you','','pr-c') +
+        rc('Take turns','','ou-c') +
+        rc('Use only the apps you have been asked to') +
+        rc('Don&rsquo;t share your passwords') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Make a poster</h1>' +
+      '<p class="lead pp" style="max-width:30ch">Take one rule. Make a poster for using technology safely, at home and at school.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">What is technology?</h1>' +
+      '<p class="lead pp">Look back over the unit.</p>' +
+      '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">Technology is something made by people to help us.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">The parts of a computer</h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(12px,3vw,26px);color:var(--proc)">' + ph('monitor',44)+ph('keyboard',44)+ph('mouse-simple',44)+ph('cpu',44) + '</div>' +
+      '<p class="lead pp">Screen, keyboard, mouse or trackpad, and base unit. You used them to draw pictures and write words.</p>' }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">That&rsquo;s the unit done</h1>' +
+      '<p class="lead pp">You found technology, used a mouse and keyboard, and made rules to stay safe.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Well done.</p>' }; }
+  ];
+  var Y12_QUIZ6 = [
+    {q:"One reason we have rules is to…", o:["get in trouble","stay safe","make computers slower"], a:1},
+    {q:"'Don't share your password' is a rule mostly about…", o:["staying safe","being fast","learning to type"], a:0},
+    {q:"If something online worries you, you should…", o:["keep it a secret","tell a trusted adult","ignore it and carry on"], a:1},
+    {q:"Taking turns on a shared computer is an example of a rule that helps us…", o:["be kind to each other","delete files","go faster"], a:0}
+  ];
+  var Y12_SHEETS6 = {
+    poster: function(){
+      return shell(Y12META6,'Rule poster',
+        'Fill in the missing word for your rule, then draw a picture to go with it.',
+        ['___________ your device carefully.','Stop using your ___________ when someone is talking to you.','Take turns with your ___________.','Use only the ___________ you have been asked to use.',"Don't share your ___________."].map(function(t){
+          return '<div style="padding:10px 0;border-bottom:1.5px solid #dfe2ec;font-weight:600;font-size:14px">'+t+'</div>';
+        }).join('') +
+        '<div class="draw" data-hint="Draw a picture for your rule" style="height:180px"></div>');
+    },
+    grid: function(){
+      var box = function(t){ return '<div style="flex:1;min-width:130px;border:1.6px solid #c3c8d4;border-radius:10px;padding:10px"><h2 style="margin-top:0">'+t+'</h2><div class="lines s3"></div></div>'; };
+      return shell(Y12META6,'Rules grid',
+        'Write one school rule in each box, for the reason it matches best.',
+        '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px">' + box('To be safe')+box('To stay happy')+box('To learn')+box('To be kind') + '</div>');
+    },
+    home: function(){
+      return shell(Y12META6,'A rule at home',
+        'Write one rule your family has for using a computer, tablet or phone at home. Say why it helps.',
+        '<div class="lines s3"></div>');
+    }
+  };
+
+  /* =================== YEAR 3/4 · CONNECTING COMPUTERS · LESSON 6 =================== */
+  var Y34META6 = { eyebrow:'Connecting Computers &middot; Lesson 6', exitHash:'#/g/y34' };
+  var Y34_NOTES6 = [
+    ["Introduction · 3 min","What does our school network look like?","Recap: switch, server and wireless access point from Lessons 4 and 5. Ask what each one does."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 3 min","Cables and sockets","A network cable wires a device to the network. A network socket is where that cable plugs in."],
+    ["Activity 1 · 5 min","Why have a network at all?","Discuss: what does the school network let people do? Why is it useful for more than one person to reach the same information?"],
+    ["Activity 2 · 3 min","Who looks after it?","The school's IT technician installs, orders and maintains the network's hardware and software, and supports staff and pupils."],
+    ["Activity 2 · 15 min","School network tour","Find the network's real parts around the school: devices, a printer, wireless access points, cables, sockets, the switch, the server. For each, ask what its job is, and whether it's vital or optional."],
+    ["Activity 3 · 10 min","Map your network","Mark on the network map where you found each device, and whether its connection is wired or wireless."],
+    ["Plenary · 4 min","Networks, and the internet","Computers connected together make a network. Networks connected together make the internet, reached through a router."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
+  ];
+  var Y34_SLIDES6 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Our school <em>network</em></h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('cpu',52)+ph('globe',52)+ph('printer',52) + '</div>' }; },
+    function(){
+      var items = ["Identify how devices in a network connect together","Spot networked devices around me","Explain the benefits of a computer network"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:34ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
+          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Recap: three components</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Switch','connects several devices on a network together','in-c') +
+        rc('Server','manages the network and stores files','pr-c') +
+        rc('Wireless access point','sends and receives wifi signals, wired into the network','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Cables and sockets</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Network cable','a wire that connects a wired device to the network','in-c') +
+        rc('Network socket','where a network cable plugs in','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Why have a network at all?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('What can people do on it?','share files, take the register, and message each other easily','in-c') +
+        rc('Why does that help?','information only has to be entered once, and everyone who needs it can reach it','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Who looks after it?</h1>' +
+      '<p class="lead pp">The school\'s IT technician.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">They install, order and maintain the network\'s hardware and software, and support staff and pupils.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">School network tour</h1>' +
+      '<p class="lead pp" style="max-width:34ch">Find real network parts around the school: a printer, a wireless access point, cables, sockets, the switch, the server.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">For each one: what is its job, and is it vital or optional?</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Map your network</h1>' +
+      '<p class="lead pp" style="max-width:32ch">Mark where you found each device, and whether its connection is wired or wireless.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Networks, and the internet</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('A network','computers connected together','in-c') +
+        rc('The internet','many networks, connected together, reached through a router','ou-c') +
+      '</div>', init: revealInit }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">That&rsquo;s the unit done</h1>' +
+      '<p class="lead pp">You built networks, spotted their real parts around school, and found out how they link to the internet.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Well done.</p>' }; }
+  ];
+  var Y34_QUIZ6 = [
+    {q:"A network cable is a wire that…", o:["connects a wired device to the network","creates wifi out of nothing","stores files"], a:0},
+    {q:"The school's IT technician mainly…", o:["teaches computing lessons","installs and maintains the network's hardware and software","cleans the computers"], a:1},
+    {q:"Connecting many networks together creates…", o:["a bigger switch","the internet","a wireless access point"], a:1},
+    {q:"A router's job in the school network is to…", o:["provide a connection to the internet","delete old files","print documents"], a:0}
+  ];
+  var Y34_SHEETS6 = {
+    hunt: function(){
+      var row = function(t){ return '<div style="display:flex;gap:14px;padding:8px 0;border-bottom:1.5px solid #dfe2ec"><div style="flex:1;font-weight:600">'+t+'</div><div style="flex:1;border-bottom:1.5px solid #c3c8d4"></div></div>'; };
+      return shell(Y34META6,'Scavenger hunt',
+        'Find each device around the school. Write where you found it.',
+        ['Desktop computer','Laptop computer','Tablet computer','Printer','Server','Wireless access point','Network socket','Switch'].map(row).join(''));
+    },
+    map: function(){
+      return shell(Y34META6,'Mapping a network',
+        'Draw the network devices you found, and how they connect. Use a solid line for wired, a dashed line for wireless.',
+        '<div class="draw" data-hint="Draw your school\'s network" style="height:260px"></div>');
+    },
+    hw: function(){
+      return shell(Y34META6,'A network at home',
+        'Does your home have a network? Draw the router, and one device connected to it. Say if the connection is wired or wireless.',
+        '<div class="draw" data-hint="Draw the router and a device" style="height:200px"></div>');
+    }
+  };
+
+  /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 6 =================== */
+  var Y56META6 = { eyebrow:'Systems and Searching &middot; Lesson 6', exitHash:'#/g/y56' };
+  var Y56_NOTES6 = [
+    ["Introduction · 3 min","How are searches influenced?","With a partner, agree definitions for selection and ranking from Lessons 4 and 5."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Activity 1 · 3 min","Three points of view","A search involves the searcher, the search engine company, and the webpage creator. Each one can influence what you see."],
+    ["Activity 1 · 4 min","What influences the searcher?","The search engine they chose, the words they typed, the links they've clicked before, their browsing history."],
+    ["Activity 1 · 4 min","What influences the search engine company?","Their own ethics, the rules their crawlers follow, how they rank pages, and how much they make from advertising."],
+    ["Activity 1 · 4 min","What influences the webpage creator?","The words, text and headings they choose, which pages they link to and from, and decisions about advertising."],
+    ["Activity 2 · 12 min","Ambiguous searches","Priya searches 'firefox' hoping for the animal. Marcus searches 'pasta recipes' hoping to learn to make pasta. Sophie searches 'Parks' remembering only a surname. Each first search misses; a better second search finds it."],
+    ["Activity 3 · 8 min","What can't you find on the web?","Discuss in groups of four: private information, feelings and smells, your own thoughts, and face-to-face contact don't live on the web."],
+    ["Plenary · 4 min","How do search engines make money?","Search 'guitar'. The top results are often sponsored, paid for by companies who want to rank higher for that term."],
+    ["Plenary · 4 min","Targeted or not?","A bus-side advert reaches everyone who passes, whether they're interested or not. A search advert reaches people already looking for that exact thing."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
+  ];
+  var Y56_SLIDES6 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">How are searches <em>influenced</em>?</h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('globe',52)+ph('users-three',52)+ph('cpu',52) + '</div>' }; },
+    function(){
+      var items = ["Describe ways that search results can be influenced","Recognise some limitations of search engines","Explain how search engines make money"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:34ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
+          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Recap: selection and ranking</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Selection','a search engine picks results from its own index, built by crawlers','in-c') +
+        rc('Ranking','the order those results appear in, based on an algorithm','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Three points of view</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Searcher','you, and everyone else using a search engine','in-c') +
+        rc('Search engine company','Google, Bing, DuckDuckGo','pr-c') +
+        rc('Webpage creator','the BBC, your school, a local club','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What influences the searcher?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Their search engine','','in-c') +
+        rc('The words they use','','pr-c') +
+        rc('Links they\'ve clicked before','','ou-c') +
+        rc('Their browsing history') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What influences the search engine company?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Their own ethics and beliefs','','in-c') +
+        rc('The rules their crawlers follow','','pr-c') +
+        rc('How they rank pages','','ou-c') +
+        rc('How much they earn from advertising') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What influences the webpage creator?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Their words, text and headings','','in-c') +
+        rc('Which pages they link to and from','','pr-c') +
+        rc('Their decisions about advertising','','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Ambiguous searches</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Priya searches &ldquo;firefox&rdquo;, hoping for the animal','she gets the web browser instead; &ldquo;firefox animal&rdquo; finds it','in-c') +
+        rc('Marcus searches &ldquo;pasta recipes&rdquo;','he gets dishes, not how to make pasta; &ldquo;how to make pasta&rdquo; works better','pr-c') +
+        rc('Sophie searches &ldquo;Parks&rdquo;, remembering a surname','she gets national parks; &ldquo;famous people named Parks&rdquo; finds Rosa Parks','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What can&rsquo;t you find on the web?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Private information','like someone\'s medical records','in-c') +
+        rc('Smells, feelings, sights','hard to put into words at all','pr-c') +
+        rc('Your own thoughts','nobody else\'s search finds those for you','ou-c') +
+        rc('Real face-to-face contact') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">How do search engines make money?</h1>' +
+      '<p class="lead pp">You search &ldquo;guitar&rdquo;. Look at the first few results.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Some are sponsored: a company paid to rank higher for that term. That\'s how search engines make most of their money.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Targeted, or not?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('An advert on the side of a bus','seen by everyone nearby, whether interested or not','in-c') +
+        rc('An advert after searching &ldquo;guitar&rdquo;','seen only by people already looking for one','ou-c') +
+      '</div>', init: revealInit }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">That&rsquo;s the unit done</h1>' +
+      '<p class="lead pp">You searched, refined, ranked, and worked out how search engines make their money.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Well done.</p>' }; }
+  ];
+  var Y56_QUIZ6 = [
+    {q:"Searching 'firefox' instead of 'firefox animal' mostly returns results about…", o:["a red panda","the Firefox web browser","a type of pasta"], a:1},
+    {q:"Something you're very unlikely to find by searching the web is…", o:["a company's website","your own thoughts and feelings","a news article"], a:1},
+    {q:"Search engines make most of their money from…", o:["selling computers","companies paying for adverts and sponsored results","charging people to search"], a:1},
+    {q:"An advert that appears because of your search term, rather than on a bus for everyone, is…", o:["an untargeted advert","a targeted advert","not an advert at all"], a:1}
+  ];
+  var Y56_SHEETS6 = {
+    perspectives: function(){
+      return shell(Y56META6,'Searching the web',
+        'For each point of view, write one thing that influences the search results.',
+        '<h2>The searcher</h2><div class="lines s2"></div>' +
+        '<h2>The search engine company</h2><div class="lines s2"></div>' +
+        '<h2>The webpage creator</h2><div class="lines s2"></div>');
+    },
+    ambiguous: function(){
+      return shell(Y56META6,'Ambiguous searches',
+        'Circle your scenario: Priya, Marcus, or Sophie. Then answer the questions.',
+        '<div style="display:flex;gap:20px;font-weight:700;font-size:1.1rem;margin-bottom:12px">' +
+          ['Priya','Marcus','Sophie'].map(function(n){ return '<span style="border:1.6px solid #c3c8d4;border-radius:999px;padding:6px 18px">'+n+'</span>'; }).join('') +
+        '</div>' +
+        '<h2>How helpful was the first search term?</h2><div class="lines s2"></div>' +
+        '<h2>Why did the second search term return different results?</h2><div class="lines s3"></div>' +
+        '<h2>Which search was most effective, and why?</h2><div class="lines s2"></div>');
+    },
+    hw: function(){
+      return shell(Y56META6,"What can't you find on the web?",
+        'Think of three things you cannot find on the web, and explain why.',
+        [1,2,3].map(function(n){ return '<h2>'+n+'</h2><div class="lines s3"></div>'; }).join(''));
+    }
+  };
+
   /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 2 =================== */
   var Y12META2 = { eyebrow:'Technology around us &middot; Lesson 2', exitHash:'#/g/y12' };
   var Y12_NOTES2 = [
@@ -3764,6 +4083,14 @@
       exitHash:Y34META5.exitHash, lessonHash:'#/y34/lesson/5',
       taskTk:'Connecting Computers · Lesson 5', taskH1:'How are computers connected?',
       taskIntro:'<div class="tcard"><h2>Your task</h2><p>Draw a small network with a switch, a server, and one wireless device. Label the connections, and show which is wired and which is wireless.</p></div>' },
+    'y12/6':{ notes:Y12_NOTES6, slides:Y12_SLIDES6, quiz:Y12_QUIZ6, sheets:Y12_SHEETS6,
+      exitHash:Y12META6.exitHash, lessonHash:'#/y12/lesson/6',
+      taskTk:'Technology around us · Lesson 6', taskH1:'Using a computer responsibly',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Make a poster for one rule that keeps you safe when using a computer, tablet or phone. Draw a picture to go with it.</p></div>' },
+    'y34/6':{ notes:Y34_NOTES6, slides:Y34_SLIDES6, quiz:Y34_QUIZ6, sheets:Y34_SHEETS6,
+      exitHash:Y34META6.exitHash, lessonHash:'#/y34/lesson/6',
+      taskTk:'Connecting Computers · Lesson 6', taskH1:'What does our school network look like?',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Find one real network device around your school or home, like a router or a printer. Draw it, and say whether it connects by wire or by wireless.</p></div>' },
     'y12/1':{ notes:Y12_NOTES, slides:Y12_SLIDES, quiz:Y12_QUIZ, sheets:Y12_SHEETS,
       exitHash:Y12META.exitHash, lessonHash:'#/y12/lesson/1',
       taskTk:'Technology around us · Lesson 1', taskH1:'Technology in our classroom',
@@ -3804,7 +4131,11 @@
     'y56/5':{ notes:Y56_NOTES5, slides:Y56_SLIDES5, quiz:Y56_QUIZ5, sheets:Y56_SHEETS5,
       exitHash:Y56META5.exitHash, lessonHash:'#/y56/lesson/5',
       taskTk:'Systems and Searching · Lesson 5', taskH1:'How search results are ranked',
-      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a topic and write three short sentences about it as if they were webpages. Rank them 1st, 2nd and 3rd, and say why you ranked them that way.</p></div>' }
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a topic and write three short sentences about it as if they were webpages. Rank them 1st, 2nd and 3rd, and say why you ranked them that way.</p></div>' },
+    'y56/6':{ notes:Y56_NOTES6, slides:Y56_SLIDES6, quiz:Y56_QUIZ6, sheets:Y56_SHEETS6,
+      exitHash:Y56META6.exitHash, lessonHash:'#/y56/lesson/6',
+      taskTk:'Systems and Searching · Lesson 6', taskH1:'How are searches influenced?',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Think of a word that could mean two different things. Write both meanings, and a search term that would find each one clearly.</p></div>' }
   };
 
   function shell(meta, title, task, body){
