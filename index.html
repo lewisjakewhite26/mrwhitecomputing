@@ -1055,7 +1055,7 @@
     {n:2,live:true,title:"Computer systems and us",obj:"Explore how devices, processes and people are connected in a system, and weigh up the benefits of computer systems.",vocab:["system","connection","process","device","benefit"],dur:"60 min",openHref:"#/y56/lesson/2",sheetBase:"#/y56/sheet/2/",resources:[["trace","Trace a system"],["benefits","Benefits and trade-offs"],["hw","Homework"]]},
     {n:3,live:true,title:"Searching the web",obj:"Write instructions for a web search, refine a search that returns the wrong thing, and compare results across search engines.",vocab:["search engine","refine","search box","address bar"],dur:"60 min",openHref:"#/y56/lesson/3",sheetBase:"#/y56/sheet/3/",resources:[["instructions","How do you search?"],["compare","Comparing search engines"],["hw","Search safely at home"]]},
     {n:4,live:true,title:"Selecting search results",obj:"Explain why we need tools to find things online, describe what a web crawler does, and relate a search term to a search engine's index.",vocab:["index","crawler","search engine"],dur:"60 min",openHref:"#/y56/lesson/4",sheetBase:"#/y56/sheet/4/",resources:[["index","Indexing the classroom"],["narrow","Narrowing a search"],["hw","The history of the web"]]},
-    {n:5,live:false,title:"How search results are ranked",obj:"Describe how web crawlers follow links, and how links affect the order of results.",vocab:["rank","link","web crawler"],dur:"60 min"},
+    {n:5,live:true,title:"How search results are ranked",obj:"Order a list by rank, explain that a search engine follows an algorithm, and give examples of what it scores.",vocab:["rank","algorithm","inbound link","SEO"],dur:"60 min",openHref:"#/y56/lesson/5",sheetBase:"#/y56/sheet/5/",resources:[["webpage","Create your own webpage"],["score","Score your page"],["hw","SEO at home"]]},
     {n:6,live:false,title:"How are searches influenced",obj:"Recognise that adverts and the people who build websites can both influence what a search shows you.",vocab:["advert","influence","ranking"],dur:"60 min"}
   ];
   var GLOSSARY = [
@@ -1165,7 +1165,7 @@
     {n:2,live:true,title:"Using computer technology",obj:"Name the main parts of a computer, turn it on and log in, and use a mouse to click and drag.",vocab:["computer","screen","keyboard","mouse","base unit"],dur:"40 min",openHref:"#/y12/lesson/2",sheetBase:"#/y12/sheet/2/",resources:[["parts","Label the computer"],["same","Desktop and laptop"],["home","A computer at home"]]},
     {n:3,live:true,title:"Developing mouse skills",obj:"Recap the parts of a computer, learn to double-click to open a program, and click and drag with a mouse or trackpad to make a picture.",vocab:["mouse","trackpad","double-click","click and drag"],dur:"40 min",openHref:"#/y12/lesson/3",sheetBase:"#/y12/sheet/3/",resources:[["steps","Double-click steps"],["picture","My picture"],["home","A mouse at home"]]},
     {n:4,live:true,title:"Using a computer keyboard",obj:"Say what a keyboard is for, type your name into a computer, and save your work to a file.",vocab:["keyboard","typing","save"],dur:"40 min",openHref:"#/y12/lesson/4",sheetBase:"#/y12/sheet/4/",resources:[["name","Typing my name"],["save","Why save sensibly?"],["home","A keyboard at home"]]},
-    {n:5,live:false,title:"Developing keyboard skills",obj:"Type more quickly, and fix mistakes as you go.",vocab:["keyboard","edit","delete"],dur:"40 min"},
+    {n:5,live:true,title:"Developing keyboard skills",obj:"Open your saved work, use the arrow keys to move the cursor, and edit text by deleting letters.",vocab:["keyboard","cursor","backspace","space bar"],dur:"40 min",openHref:"#/y12/lesson/5",sheetBase:"#/y12/sheet/5/",resources:[["sentence","Finish the sentence"],["keys","Find the keys"],["home","A sentence at home"]]},
     {n:6,live:false,title:"Using a computer responsibly",obj:"Look after shared computers, and know who to tell if something online worries you.",vocab:["responsible","share","trusted adult"],dur:"40 min"}
   ];
   var GLOSSARY_Y12 = [
@@ -1191,7 +1191,7 @@
     {n:2,live:true,title:"What parts make up a digital device?",obj:"Sort input and output devices, describe a simple process, and design your own digital device.",vocab:["input device","output device","process","digital device"],dur:"45 min",openHref:"#/y34/lesson/2",sheetBase:"#/y34/sheet/2/",resources:[["match","Match input, device, output"],["invent","Invent a device"],["hw","Homework"]]},
     {n:3,live:true,title:"How do digital devices help us?",obj:"Compare how a task can be done with a digital device and with non-digital tools, and say when each is the better fit.",vocab:["digital","non-digital","program"],dur:"45 min",openHref:"#/y34/lesson/3",sheetBase:"#/y34/sheet/3/",resources:[["tasks","What can you use a device for?"],["review","Learner review"],["hw","Digital or not, at home"]]},
     {n:4,live:true,title:"How am I connected?",obj:"Recognise different kinds of connection, pass a message through a network, and discuss why a network needs a switch.",vocab:["connection","network","network switch"],dur:"45 min",openHref:"#/y34/lesson/4",sheetBase:"#/y34/sheet/4/",resources:[["connections","My connections"],["switch","Becoming a computer network"],["hw","A network at home"]]},
-    {n:5,live:false,title:"How are computers connected?",obj:"Learn what a computer network is and how devices pass information between each other.",vocab:["network","server","switch"],dur:"45 min"},
+    {n:5,live:true,title:"How are computers connected?",obj:"Recognise the devices in a network, follow a file through a switch and a server, and explain what a wireless access point does.",vocab:["server","wireless access point","network switch"],dur:"45 min",openHref:"#/y34/lesson/5",sheetBase:"#/y34/sheet/5/",resources:[["roleplay","Build your own network"],["match","Match the vocabulary"],["hw","Computer networks around us"]]},
     {n:6,live:false,title:"What does our school network look like?",obj:"Explore the parts of the school network and map how they are joined together.",vocab:["network","router","cable","wireless"],dur:"45 min"}
   ];
   var GLOSSARY_Y34 = [
@@ -3001,6 +3001,224 @@
     }
   };
 
+  /* =================== YEAR 3/4 · CONNECTING COMPUTERS · LESSON 5 =================== */
+  var Y34META5 = { eyebrow:'Connecting Computers &middot; Lesson 5', exitHash:'#/g/y34' };
+  var Y34_NOTES5 = [
+    ["Introduction · 3 min","How are computers connected?","Recap the network switch from Lesson 4: it reads only who a message is going to, then passes it on."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Activity 1 · 8 min","Making a network","Role-play again: a group of desktop computers connected to a switch with string. Pass a note through the switch."],
+    ["Activity 1 · 4 min","What if…","How could a file travel from computer 1 to computer 2? What if one computer was switched off?"],
+    ["Activity 2 · 4 min","Adding a server","A server is a computer that stores files for the whole network to use: documents, sound, video, and more."],
+    ["Activity 2 · 6 min","A file's journey","Computer 1 creates a file and sends it to the switch. The switch passes it on to the server, where it's stored."],
+    ["Activity 2 · 6 min","What changes with a server?","Any computer on the network can now reach that file, even if computer 1 is switched off."],
+    ["Activity 2 · 10 min","Build your own network","In groups: one switch, one server, one message carrier, the rest desktop computers. Send a file all the way to the server and back."],
+    ["Activity 3 · 5 min","Wireless access points","Laptops and tablets have no wire to the switch. They connect to a wireless access point instead, which is wired into the network."],
+    ["Activity 3 · 6 min","A file's longer journey","From a wireless device, to the access point, to the switch, to the server, and all the way back."],
+    ["Plenary · 5 min","Match the vocabulary","Connection, network, network switch, wireless access point, server. Match each to its definition."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: touring the school's own network."]
+  ];
+  var Y34_SLIDES5 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">How are computers <em>connected</em>?</h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('cpu',52)+ph('globe',52)+ph('envelope-simple',52) + '</div>' }; },
+    function(){
+      var items = ["Recognise the devices that make up a network","Follow a file's journey through a switch and a server","Explain what a wireless access point does"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:34ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
+          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Making a network</h1>' +
+      '<p class="lead pp" style="max-width:34ch">Some of you become desktop computers, connected by string to one person who is the switch. Pass a note through them.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What if…</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('A file needs to go from computer 1 to computer 2','it goes to the switch, and the switch sends it on to computer 2','in-c') +
+        rc('Computer 1 is switched off','you can\'t send anything to it, or get anything from it','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Adding a server</h1>' +
+      '<p class="lead pp">A server is a computer that stores files for the whole network.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Documents, sound files, video, and more.</p>' }; },
+    function(){ return { steps:2, html:
+      '<h1 class="pp">A file&rsquo;s journey</h1>' +
+      '<div class="d2-ipo">' +
+        '<div class="box in pp" data-step="1"><b>Computer 1</b><span>Creates the file, sends it to the switch.</span></div>' +
+        '<div class="arr pp" data-step="2">→</div>' +
+        '<div class="box ou pp" data-step="2"><b>Server</b><span>The switch passes it on. It&rsquo;s now stored for the network.</span></div>' +
+      '</div>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What changes with a server?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Which computers can reach the file now?','any computer on the network','in-c') +
+        rc('What if computer 1 is switched off?','it doesn\'t matter, the file is safe on the server','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Build your own network</h1>' +
+      '<p class="lead pp" style="max-width:32ch">In groups: one switch, one server, one message carrier, and the rest desktop computers. Send a file all the way to the server and back.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Wireless access points</h1>' +
+      '<p class="lead pp">Laptops and tablets have no wire to the switch.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">They connect to a wireless access point instead, which is wired into the network.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">A file&rsquo;s longer journey</h1>' +
+      '<p class="lead pp" style="max-width:34ch">From the wireless device, to the access point, to the switch, to the server, and all the way back.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Match the vocabulary</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Network switch','sends each message to the right device, without reading it','in-c') +
+        rc('Server','a networked computer that stores files','pr-c') +
+        rc('Wireless access point','sends and receives wireless signals, wired into the network','ou-c') +
+      '</div>', init: revealInit }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Nicely networked</h1>' +
+      '<p class="lead pp">You built a network with a switch, a server, and a wireless access point.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: touring the school\'s own network.</p>' }; }
+  ];
+  var Y34_QUIZ5 = [
+    {q:"A server on a network is mainly used to…", o:["switch the lights on","store files that any device on the network can use","print documents only"], a:1},
+    {q:"A wireless access point connects to the rest of the network via…", o:["a wire","nothing at all","another wireless access point only"], a:0},
+    {q:"If computer 1 is switched off, but a file is saved on the server…", o:["nobody can ever access it again","other computers on the network can still access it","the server deletes it"], a:1},
+    {q:"A network switch's job is to…", o:["read every message before sending it on","send each message to the right device, without reading it","store all the files"], a:1}
+  ];
+  var Y34_SHEETS5 = {
+    roleplay: function(){
+      return shell(Y34META5,'Build your own network',
+        'Write who played each role in your group, and describe the journey your file took.',
+        '<h2>Switch</h2><div class="lines s2"></div>' +
+        '<h2>Server</h2><div class="lines s2"></div>' +
+        '<h2>Message carrier</h2><div class="lines s2"></div>' +
+        '<h2>The journey my file took</h2><div class="lines s3"></div>');
+    },
+    match: function(){
+      var col = function(title, items){ return '<div style="flex:1"><h2>' + title + '</h2>' + items.map(function(x){ return '<div style="padding:11px 0;border-bottom:1.5px solid #dfe2ec;font-weight:600">' + x + '</div>'; }).join('') + '</div>'; };
+      return shell(Y34META5,'Match the vocabulary',
+        'Draw a line from each word to its definition.',
+        '<div style="display:flex;gap:24px;margin-top:12px">' +
+          col('Word', ['Connection','Network switch','Server','Wireless access point']) +
+          col('Definition', ['A link between two things','Sends each message to the right device','A networked computer for storing files','Sends and receives wireless signals']) +
+        '</div>');
+    },
+    hw: function(){
+      return shell(Y34META5,'Computer networks around us',
+        'Look for a computer network outside school: a shop, a restaurant, a library. Draw or write the computers and network devices you think it uses.',
+        '<h2>I think there is a computer network at</h2><div class="lines s2"></div>' +
+        '<div class="draw" data-hint="Draw the devices" style="height:200px"></div>');
+    }
+  };
+
+  /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 5 =================== */
+  var Y56META5 = { eyebrow:'Systems and Searching &middot; Lesson 5', exitHash:'#/g/y56' };
+  var Y56_NOTES5 = [
+    ["Introduction · 4 min","Ordering and ranking","Show the world's ten biggest cities two ways: alphabetically, and ranked by population. Ask which is more useful, and why."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 2 min","Ranking search results","A search returns millions of pages. Ranking puts the most useful ones first, the same way ranking by population puts the biggest city first."],
+    ["Activity 1 · 20 min","Create your own webpage","Groups of four make a paper webpage on the same topic: a URL, a heading, subheadings, paragraphs, and pictures or diagrams. Fifteen minutes."],
+    ["Activity 2 · 10 min","Linking your webpage","Show a real webpage with links at the bottom. Each group picks one other group's webpage to link to, choosing a good one, and writes down why."],
+    ["Activity 3 · 4 min","How search engines score a page","Search engines use an algorithm: a set of rules that gives a page points for different things, then ranks by the total."],
+    ["Activity 3 · 8 min","Score your page","1 point per mention in the paragraphs, 5 for a subheading, 10 for the heading, 20 for the URL, 50 for each inbound link from another group. Total it up and rank the group's pages."],
+    ["Plenary · 5 min","Search engine optimisation","Website creators try to rank higher on purpose. That's called SEO. Give groups five minutes to improve their score, then rank again."],
+    ["Plenary · 3 min","Would this page score well?","Show a page that repeats its keyword dozens of times. Search engines can detect that and penalise the page instead of rewarding it."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: how searches can be influenced."]
+  ];
+  var Y56_SLIDES5 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">How search results are <em>ranked</em></h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('globe',52)+ph('arrow-down',52)+ph('cpu',52) + '</div>' }; },
+    function(){
+      var items = ["Order a list by rank","Explain that a search engine follows rules called an algorithm","Give examples of what search engines score"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:34ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
+          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Ordering and ranking</h1>' +
+      '<p class="lead pp" style="max-width:34ch">The world&rsquo;s ten biggest cities, listed A to Z: Beijing, Cairo, Delhi, Dhaka…</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Or ranked by population: Tokyo, Delhi, Shanghai… Which is more useful, and why?</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Ranking search results</h1>' +
+      '<p class="lead pp">A search can return millions of pages.</p>' +
+      '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">Ranking puts the most useful ones first, the same way ranking by population puts the biggest city first.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Create your own webpage</h1>' +
+      '<p class="lead pp" style="max-width:34ch">In your group, design a paper webpage on the class topic. 15 minutes.</p>' +
+      '<div class="d2-reveal pp">' +
+        rc('A URL','a web address, like www.allaboutourschool.com','in-c') +
+        rc('A heading and subheadings','','pr-c') +
+        rc('Paragraphs, and pictures or diagrams','','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Linking your webpage</h1>' +
+      '<p class="lead pp">Real webpages link to other webpages.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Pick one other group’s page to link to. Choose a good one, and write down why.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">How search engines score a page</h1>' +
+      '<p class="lead pp">A search engine follows an algorithm: a set of rules that scores a page.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">The highest-scoring page ranks first.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Score your page</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('In the paragraphs','1 point each time','in-c') +
+        rc('In a subheading','5 points each time','pr-c') +
+        rc('In the heading','10 points','ou-c') +
+        rc('In the URL','20 points') +
+        rc('An inbound link from another page','50 points each') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Search engine optimisation</h1>' +
+      '<p class="lead pp">Website creators try to rank higher on purpose. That&rsquo;s called SEO.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">You have 5 minutes to improve your page’s score. Then we’ll rank again.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Would this page score well?</h1>' +
+      '<p class="lead pp" style="max-width:34ch">A page that repeats &ldquo;our school&rdquo; forty times in a row.</p>' +
+      '<div class="d2-rc pp" data-step="1" style="max-width:32ch" id="d2seo"><b>Tap for the answer</b><span class="ans">Search engines can detect keyword repeated in an unnatural way, and penalise the page instead of ranking it higher.</span></div>',
+      init:function(el){ var c=el.querySelector('#d2seo'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Well ranked</h1>' +
+      '<p class="lead pp">You scored a webpage, then tried to optimise it.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: how searches can be influenced.</p>' }; }
+  ];
+  var Y56_QUIZ5 = [
+    {q:"Ranking a list by population instead of A to Z lets you see…", o:["nothing new","which is biggest, second biggest, and so on","the colour of each item"], a:1},
+    {q:"The set of rules a search engine follows to score a page is called…", o:["a browser","an algorithm","a URL"], a:1},
+    {q:"In this lesson's scoring rules, the search term appearing in the URL is worth…", o:["1 point","10 points","20 points"], a:2},
+    {q:"Repeating a keyword over and over in an unnatural way…", o:["always ranks a page top","can be detected and penalised by a search engine","makes no difference at all"], a:1}
+  ];
+  var Y56_SHEETS5 = {
+    webpage: function(){
+      return shell(Y56META5,'Create your own webpage',
+        'Design a paper webpage on your topic. Include a URL, a heading, subheadings, paragraphs, and pictures or diagrams.',
+        '<h2>Topic</h2><div class="lines s2"></div>' +
+        '<h2>URL</h2><div class="lines s2"></div>' +
+        '<h2>Heading</h2><div class="lines s2"></div>' +
+        '<h2>Subheadings and paragraphs</h2><div class="lines s5"></div>' +
+        '<div class="draw" data-hint="Draw a picture or diagram" style="height:180px"></div>' +
+        '<h2>Link to another group&rsquo;s page, and why</h2><div class="lines s2"></div>');
+    },
+    score: function(){
+      var row = function(rule, pts){ return '<div style="display:flex;gap:14px;padding:9px 0;border-bottom:1.5px solid #dfe2ec"><div style="flex:1">'+rule+'</div><div style="flex:none;width:70px;font-weight:700">'+pts+'</div><div style="flex:none;width:60px;border-bottom:1.5px solid #c3c8d4"></div></div>'; };
+      return shell(Y56META5,'Score your page',
+        'Count how many times your search term appears in each place, and write your score.',
+        '<div style="display:flex;gap:14px;font-size:12px;font-weight:700;color:#5c6676"><div style="flex:1">Where</div><div style="flex:none;width:70px">Points each</div><div style="flex:none;width:60px">Your score</div></div>' +
+        row('In the paragraphs','1') + row('In a subheading','5') + row('In the heading','10') + row('In the URL','20') + row('Each inbound link','50') +
+        '<h2>Total</h2><div class="lines s2"></div>');
+    },
+    hw: function(){
+      return shell(Y56META5,'SEO at home',
+        'With a grown-up, look at a real website. Find its heading and one link on the page. Guess one reason it might rank well in a search.',
+        '<h2>The website</h2><div class="lines s2"></div>' +
+        '<h2>One reason it might rank well</h2><div class="lines s3"></div>');
+    }
+  };
+
   /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 2 =================== */
   var Y12META2 = { eyebrow:'Technology around us &middot; Lesson 2', exitHash:'#/g/y12' };
   var Y12_NOTES2 = [
@@ -3305,6 +3523,98 @@
     }
   };
 
+  /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 5 =================== */
+  var Y12META5 = { eyebrow:'Technology around us &middot; Lesson 5', exitHash:'#/g/y12' };
+  var Y12_NOTES5 = [
+    ["Introduction · 3 min","Developing keyboard skills","Recap the mouse and the keyboard. Read a statement, pupils point to or move toward whichever device it describes."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Activity 1 · 5 min","Opening a file","Open the paint program, click the open-image icon, and find last lesson's self-portrait by its file name."],
+    ["Activity 1 · 3 min","Why the name mattered","A sensible file name from Lesson 4 makes it easy to find the right file now."],
+    ["Activity 2 · 5 min","Three new keys","Space bar: a gap between words. Backspace: removes the letter just before the cursor. Arrow keys: move the cursor left or right without deleting anything."],
+    ["Activity 2 · 15 min","Write a sentence","Not just a word this time. Add a text box above or below the self-portrait and write a short sentence, using backspace and the arrow keys to fix mistakes."],
+    ["Activity 2 · 5 min","Need a starter?","Pupils who want one can use a sentence starter: my name is…, my school is…, I live in…"],
+    ["Plenary · 4 min","Why name it sensibly?","Think, pair, share. It helps you find the file quickly, and shows what it is without opening it."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: using technology safely and responsibly."]
+  ];
+  var Y12_SLIDES5 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Developing <em>keyboard</em> skills</h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('keyboard',56)+ph('arrow-right',56)+ph('pencil-simple',56) + '</div>' }; },
+    function(){
+      var items = ["Open my work from a saved file","Use the arrow keys to move the cursor","Edit text by deleting letters"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:14px;text-align:left;max-width:26ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.2vw,1.4rem);font-weight:600">' +
+          '<span style="flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Mouse, or keyboard?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Move a pointer around the screen','mouse','in-c') +
+        rc('Type letters','keyboard','pr-c') +
+        rc('Draw a picture','mouse','in-c') +
+        rc('Write a sentence','keyboard','pr-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Opening a file</h1>' +
+      '<p class="lead pp">Open your paint program, then click the open-image icon.</p>' +
+      '<p class="lead pp" style="font-weight:700">Find your self-portrait from last lesson by its file name.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Three new keys</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Space bar','a gap between words','in-c') +
+        rc('Backspace','removes the letter just before the cursor','pr-c') +
+        rc('Arrow keys','move the cursor left or right, without deleting anything','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Write a sentence</h1>' +
+      '<p class="lead pp">Last lesson you typed a word: your name.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Add a text box above or below your self-portrait, and write a full sentence.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Need a starter?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('My name is…','finish it your way','in-c') +
+        rc('My school is…','finish it your way','pr-c') +
+        rc('I live in…','finish it your way','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Why name it sensibly?</h1>' +
+      '<div class="d2-rc pp" data-step="1" style="max-width:30ch" id="d2name5"><b>Think, pair, share</b><span class="ans">It helps you find your file quickly, and shows what it is without opening it.</span></div>',
+      init:function(el){ var c=el.querySelector('#d2name5'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Well typed</h1>' +
+      '<p class="lead pp">You opened a saved file and wrote a whole sentence, fixing mistakes as you went.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: using technology safely and responsibly.</p>' }; }
+  ];
+  var Y12_QUIZ5 = [
+    {q:"Backspace…", o:["adds a space","deletes the letter just before the cursor","saves your work"], a:1},
+    {q:"Arrow keys let you…", o:["move the cursor without deleting anything","delete a whole sentence","open a new file"], a:0},
+    {q:"To open a file you saved earlier, you need to remember its…", o:["colour","name","size"], a:1},
+    {q:"The space bar…", o:["deletes a letter","adds a space between words","saves your file"], a:1}
+  ];
+  var Y12_SHEETS5 = {
+    sentence: function(){
+      return shell(Y12META5,'Finish the sentence',
+        'Pick one sentence starter and finish it. Then copy it onto the computer.',
+        ['My name is ___________________','My school is ___________________','I live in ___________________'].map(function(t){
+          return '<div style="padding:12px 0;border-bottom:1.5px solid #dfe2ec;font-weight:600;font-size:15px">'+t+'</div>';
+        }).join(''));
+    },
+    keys: function(){
+      return shell(Y12META5,'Find the keys',
+        'Draw a keyboard. Put a ring around the space bar, and an arrow pointing to backspace.',
+        '<div class="draw" data-hint="Draw the keyboard" style="height:220px"></div>');
+    },
+    home: function(){
+      return shell(Y12META5,'A sentence at home',
+        'Type or write a short sentence about your day, like you did on the computer.',
+        '<div class="lines s2"></div>');
+    }
+  };
+
   /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 2 =================== */
   var Y56META2 = { eyebrow:'Systems and Searching &middot; Lesson 2', exitHash:'#/g/y56' };
   var Y56_NOTES2 = [
@@ -3450,6 +3760,10 @@
       exitHash:Y34META4.exitHash, lessonHash:'#/y34/lesson/4',
       taskTk:'Connecting Computers · Lesson 4', taskH1:'How am I connected?',
       taskIntro:'<div class="tcard"><h2>Your task</h2><p>Draw yourself in the middle of a page, and 5 connections around you. Then write one sentence: what could a network switch do for this group?</p></div>' },
+    'y34/5':{ notes:Y34_NOTES5, slides:Y34_SLIDES5, quiz:Y34_QUIZ5, sheets:Y34_SHEETS5,
+      exitHash:Y34META5.exitHash, lessonHash:'#/y34/lesson/5',
+      taskTk:'Connecting Computers · Lesson 5', taskH1:'How are computers connected?',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Draw a small network with a switch, a server, and one wireless device. Label the connections, and show which is wired and which is wireless.</p></div>' },
     'y12/1':{ notes:Y12_NOTES, slides:Y12_SLIDES, quiz:Y12_QUIZ, sheets:Y12_SHEETS,
       exitHash:Y12META.exitHash, lessonHash:'#/y12/lesson/1',
       taskTk:'Technology around us · Lesson 1', taskH1:'Technology in our classroom',
@@ -3463,6 +3777,10 @@
       exitHash:Y12META4.exitHash, lessonHash:'#/y12/lesson/4',
       taskTk:'Technology around us · Lesson 4', taskH1:'Using a computer keyboard',
       taskIntro:'<div class="tcard"><h2>Your task</h2><p>Type your name into a computer. Then save your work, using your name as the file name.</p></div>' },
+    'y12/5':{ notes:Y12_NOTES5, slides:Y12_SLIDES5, quiz:Y12_QUIZ5, sheets:Y12_SHEETS5,
+      exitHash:Y12META5.exitHash, lessonHash:'#/y12/lesson/5',
+      taskTk:'Technology around us · Lesson 5', taskH1:'Developing keyboard skills',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Open your saved picture from last lesson. Add a sentence to it, using backspace to fix any mistakes.</p></div>' },
     'y12/3':{ notes:Y12_NOTES3, slides:Y12_SLIDES3, quiz:Y12_QUIZ3, sheets:Y12_SHEETS3,
       exitHash:Y12META3.exitHash, lessonHash:'#/y12/lesson/3',
       taskTk:'Technology around us · Lesson 3', taskH1:'Developing mouse skills',
@@ -3482,7 +3800,11 @@
     'y56/4':{ notes:Y56_NOTES4, slides:Y56_SLIDES4, quiz:Y56_QUIZ4, sheets:Y56_SHEETS4,
       exitHash:Y56META4.exitHash, lessonHash:'#/y56/lesson/4',
       taskTk:'Systems and Searching · Lesson 4', taskH1:'Selecting search results',
-      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Index five items you can find at home. Write each item and where it can be found. Then explain in one sentence how a web crawler does something similar for the internet.</p></div>' }
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Index five items you can find at home. Write each item and where it can be found. Then explain in one sentence how a web crawler does something similar for the internet.</p></div>' },
+    'y56/5':{ notes:Y56_NOTES5, slides:Y56_SLIDES5, quiz:Y56_QUIZ5, sheets:Y56_SHEETS5,
+      exitHash:Y56META5.exitHash, lessonHash:'#/y56/lesson/5',
+      taskTk:'Systems and Searching · Lesson 5', taskH1:'How search results are ranked',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a topic and write three short sentences about it as if they were webpages. Rank them 1st, 2nd and 3rd, and say why you ranked them that way.</p></div>' }
   };
 
   function shell(meta, title, task, body){
