@@ -895,31 +895,28 @@
   .d2-ipo .arr{display:grid;place-items:center;color:var(--soft);font-size:1.6rem;flex:0 0 auto}
   @media (max-width:900px){ .d2-ipo{flex-direction:column;align-items:center} .d2-ipo .arr{transform:rotate(90deg)} }
 
-  /* timeline: drag-scroll carousel with a fill track, like a horizontal story strip */
-  .d2-tl-wrap{width:100%;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-  .d2-tl{
-    display:flex;gap:16px;overflow-x:auto;padding:6px 30vw 10px 4px;cursor:grab;user-select:none;
-    scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  /* timeline: a rising dial-curve of tick marks, the reached stretch lights up as the deck advances */
+  .d2-tl-wrap{width:100%;max-width:860px;margin:0 auto}
+  .d2-tl-stage{position:relative;width:100%;aspect-ratio:900/300}
+  .d2-tl-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .d2-tick{stroke:var(--hair);stroke-width:2.4;stroke-linecap:round;transition:stroke .35s var(--ease)}
+  .d2-tick.on{stroke:var(--proc)}
+  .d2-tl-node{fill:var(--paper);stroke:var(--hair);stroke-width:2.5;transition:fill .3s var(--ease),stroke .3s var(--ease)}
+  .d2-tl-node.reached{fill:var(--proc);stroke:var(--proc)}
+  .d2-tl-dotmark{fill:var(--proc);stroke:var(--paper);stroke-width:4;filter:drop-shadow(0 3px 8px rgba(24,28,45,.28));transition:cx .55s var(--ease),cy .55s var(--ease)}
+  .d2-tl-ms{
+    position:absolute;width:clamp(96px,15vw,150px);text-align:center;pointer-events:none;
+    left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);
   }
-  .d2-tl::-webkit-scrollbar{display:none}
-  .d2-tl.dragging{cursor:grabbing;scroll-snap-type:none}
-  .d2-tl.dragging .d2-tl-card{transition:none}
-  .d2-tl-card{
-    flex:0 0 auto;scroll-snap-align:start;width:clamp(160px,42vw,208px);border-radius:20px;
-    padding:18px 18px 16px;background:var(--paper);border:1px solid var(--paper-edge);box-shadow:var(--shadow-sm);
-    display:flex;flex-direction:column;gap:8px;border-top:5px solid var(--c,var(--proc));
-    transition:transform .2s var(--ease),box-shadow .2s var(--ease);
-  }
-  .d2-tl-card.centered{transform:translateY(-4px) scale(1.04);box-shadow:var(--shadow-md)}
-  .d2-tl-year{font-weight:800;font-size:1.5rem;letter-spacing:-0.01em;color:var(--c,var(--proc))}
-  .d2-tl-label{font-weight:700;font-size:.92rem;line-height:1.32;color:var(--ink)}
-  .d2-tl-fact{font-size:.8rem;line-height:1.4;color:var(--muted)}
-  .d2-tl-track{height:5px;border-radius:999px;background:var(--hair);position:relative;overflow:hidden;margin:0 4px}
-  .d2-tl-fill{position:absolute;left:0;top:0;bottom:0;width:8%;border-radius:999px;background:linear-gradient(90deg,var(--in),var(--proc),var(--out));transition:width .12s linear}
-  .d2-tl-hint{display:flex;align-items:center;gap:6px;justify-content:center;font-size:.78rem;font-weight:600;color:var(--soft)}
-  .d2-tl-hint svg{width:14px;height:14px;animation:d2tlnudge 1.4s ease-in-out infinite}
-  html.rm .d2-tl-hint svg{animation:none}
-  @keyframes d2tlnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  .d2-tl-ms.below{transform:translate(-50%, 14px) rotate(var(--rot,0deg))}
+  .d2-tl-ms.above{transform:translate(-50%, calc(-100% - 14px)) rotate(var(--rot,0deg))}
+  .d2-slide .pp.d2-tl-ms{opacity:0;transform:translate(-50%,-40%) scale(.8) rotate(var(--rot,0deg))}
+  .d2-slide .pp.d2-tl-ms.below.in{opacity:1;transform:translate(-50%, 14px) scale(1) rotate(var(--rot,0deg));transition:opacity .4s var(--ease),transform .5s var(--bounce,cubic-bezier(.34,1.56,.64,1))}
+  .d2-slide .pp.d2-tl-ms.above.in{opacity:1;transform:translate(-50%, calc(-100% - 14px)) scale(1) rotate(var(--rot,0deg));transition:opacity .4s var(--ease),transform .5s var(--bounce,cubic-bezier(.34,1.56,.64,1))}
+  .d2-tl-yr{font-weight:800;font-size:clamp(.85rem,1.7vw,1.05rem);color:var(--soft);transition:color .3s var(--ease)}
+  .d2-tl-ms.reached .d2-tl-yr{color:var(--proc)}
+  .d2-tl-lb{font-weight:600;font-size:clamp(.68rem,1.3vw,.78rem);line-height:1.28;color:var(--muted)}
+  .d2-tl-note{margin-top:clamp(14px,3vh,26px);min-height:2.6em;font-size:clamp(.85rem,1.7vw,1rem);color:var(--ink);font-weight:600;max-width:52ch;margin-left:auto;margin-right:auto;text-align:center;transition:opacity .25s var(--ease)}
 
   /* sort activity */
   .d2-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:44ch}
@@ -2924,7 +2921,7 @@
   /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 4 =================== */
   var Y56META4 = { eyebrow:'Systems and Searching &middot; Lesson 4', exitHash:'#/g/y56' };
   var Y56_NOTES4 = [
-    ["Introduction · 3 min","Selecting search results","A brief history: the web in 1989, the first website in 1991, Yahoo! in 1994, Google in 1998."],
+    ["Introduction · 3 min","Selecting search results","A brief history, on the timeline: the web in 1989, the first website in 1991, Mosaic in 1993, Yahoo! in 1994, Google in 1998, and where we are today. Click Next to move the marker along."],
     ["Introduction · 2 min","Today you will…","Read the three together."],
     ["Introduction · 3 min","The web grew fast","1 website in 1991. 2.4 million by 1998. Around 1.9 billion today. Ask what that growth means for finding things."],
     ["Activity 1 · 4 min","How do you find things?","I want to find out about rabbits. What could I do? Build to an encyclopedia's index: a list of words and the pages they're on."],
@@ -2951,58 +2948,83 @@
           '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
     },
     function(){
+      // a rising dial-curve: y(t) traces a hill, tick marks stand off it like a ruler
+      var W = 900, H = 300, BASE = 250, AMP = 190, BIAS = 0.62;
+      function curveY(t){ return BASE - AMP * Math.sin(Math.PI * Math.pow(t, BIAS)); }
+      function curvePoint(t){
+        var eps = 0.002, x = t * W, y = curveY(t);
+        var y1 = curveY(Math.max(0, t - eps)), y2 = curveY(Math.min(1, t + eps));
+        return { x:x, y:y, ang: Math.atan2(y2 - y1, 2 * eps * W) };
+      }
       var items = [
-        {y:'1989', c:'var(--in)', l:'Tim Berners-Lee invents the World Wide Web', f:'He worked at CERN, a physics lab in Switzerland, and just wanted scientists to share documents more easily.'},
-        {y:'1991', c:'var(--proc)', l:'The first website goes online', f:'It explained what the World Wide Web even was. A copy of it is still online today.'},
-        {y:'1994', c:'var(--out)', l:'Yahoo!, the first widely used search engine', f:'It began as a simple list of favourite websites, sorted by two Stanford students.'},
-        {y:'1998', c:'var(--in)', l:'Google is founded', f:'It started life in a rented garage in California.'}
+        {t:0.03, y:'1989', l:'The World Wide Web is invented', side:1},
+        {t:0.21, y:'1991', l:'The first website goes online', side:-1},
+        {t:0.39, y:'1993', l:'Mosaic, one of the first web browsers', side:1},
+        {t:0.57, y:'1994', l:'Yahoo!, the first widely used search engine', side:-1},
+        {t:0.75, y:'1998', l:'Google is founded', side:1},
+        {t:0.96, y:'Today', l:'Billions of searches, every single day', side:-1}
       ];
-      return { steps:0, html:
+      var NOTES = [
+        'A physicist at CERN, wanting scientists to share documents more easily.',
+        'It explained what the World Wide Web even was. A copy is still online today.',
+        'Before it, browsing meant typing commands. Mosaic added pictures and clickable links.',
+        'It began as a simple list of favourite websites, sorted by two Stanford students.',
+        'It started life in a rented garage in California.',
+        'Search engines now index over a billion websites for you in a fraction of a second.'
+      ];
+      var TICKS = 100, tickLen = 8, ticksSvg = '';
+      for(var i = 0; i <= TICKS; i++){
+        var t = i / TICKS, p = curvePoint(t), perp = p.ang + Math.PI / 2;
+        var x1 = p.x - tickLen * Math.cos(perp), y1v = p.y - tickLen * Math.sin(perp);
+        var x2 = p.x + tickLen * Math.cos(perp), y2v = p.y + tickLen * Math.sin(perp);
+        ticksSvg += '<line class="d2-tick" data-tf="' + t.toFixed(3) + '" x1="' + x1.toFixed(1) + '" y1="' + y1v.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2v.toFixed(1) + '"/>';
+      }
+      var nodesSvg = items.map(function(it){
+        var p = curvePoint(it.t);
+        return '<circle class="d2-tl-node" data-tf="' + it.t.toFixed(3) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="7"/>';
+      }).join('');
+      var start = curvePoint(0.001);
+      var labelsHtml = items.map(function(it, i){
+        var p = curvePoint(it.t);
+        var xPct = (p.x / W) * 100, yPct = (p.y / H) * 100;
+        var rot = it.side * (4 + (i % 3) * 2);
+        var side = it.side < 0 ? 'below' : 'above';
+        return '<div class="pp d2-tl-ms ' + side + '" data-step="' + (i + 1) + '" data-note="' + i + '" style="--x:' + xPct.toFixed(2) + ';--y:' + yPct.toFixed(2) + ';--rot:' + rot + 'deg">' +
+          '<div class="d2-tl-yr">' + it.y + '</div>' +
+          '<div class="d2-tl-lb">' + it.l + '</div>' +
+        '</div>';
+      }).join('');
+      return { steps: items.length, html:
         '<h1 class="pp">A brief history of the web</h1>' +
         '<div class="d2-tl-wrap pp">' +
-          '<div class="d2-tl" id="d2tlTrack">' +
-            items.map(function(it){
-              return '<div class="d2-tl-card" style="--c:'+it.c+'">' +
-                '<div class="d2-tl-year">'+it.y+'</div>' +
-                '<div class="d2-tl-label">'+it.l+'</div>' +
-                '<div class="d2-tl-fact">'+it.f+'</div>' +
-              '</div>';
-            }).join('') +
+          '<div class="d2-tl-stage">' +
+            '<svg class="d2-tl-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">' +
+              ticksSvg + nodesSvg +
+              '<circle class="d2-tl-dotmark" id="d2tlDot" cx="' + start.x.toFixed(1) + '" cy="' + start.y.toFixed(1) + '" r="9"/>' +
+            '</svg>' +
+            labelsHtml +
           '</div>' +
-          '<div class="d2-tl-track"><div class="d2-tl-fill" id="d2tlFill"></div></div>' +
-          '<div class="d2-tl-hint">Drag to explore' + ph('arrow-right',14) + '</div>' +
+          '<p class="d2-tl-note" id="d2tlNote">Tap Next to move through the timeline.</p>' +
         '</div>',
         init: function(el){
-          var track = el.querySelector('#d2tlTrack');
-          var fill = el.querySelector('#d2tlFill');
-          var cards = [].slice.call(el.querySelectorAll('.d2-tl-card'));
-          function refresh(){
-            var max = track.scrollWidth - track.clientWidth;
-            var pct = max > 0 ? (track.scrollLeft / max) * 100 : 100;
-            fill.style.width = Math.min(100, Math.max(8, pct)) + '%';
-            var mid = track.scrollLeft + track.clientWidth / 2;
-            var closest = null, closestDist = Infinity;
-            cards.forEach(function(c){
-              var d = Math.abs((c.offsetLeft + c.offsetWidth / 2) - mid);
-              if(d < closestDist){ closestDist = d; closest = c; }
+          var dot = el.querySelector('#d2tlDot');
+          var note = el.querySelector('#d2tlNote');
+          var ticks = [].slice.call(el.querySelectorAll('.d2-tick'));
+          var nodes = [].slice.call(el.querySelectorAll('.d2-tl-node'));
+          function apply(step){
+            var i = Math.max(0, Math.min(items.length - 1, step - 1));
+            var target = step <= 0 ? { t: 0.001 } : items[i];
+            var p = curvePoint(target.t);
+            dot.setAttribute('cx', p.x.toFixed(1)); dot.setAttribute('cy', p.y.toFixed(1));
+            ticks.forEach(function(tk){ tk.classList.toggle('on', parseFloat(tk.getAttribute('data-tf')) <= target.t + 0.002); });
+            nodes.forEach(function(n){ n.classList.toggle('reached', parseFloat(n.getAttribute('data-tf')) <= target.t + 0.002); });
+            [].forEach.call(el.querySelectorAll('.d2-tl-ms'), function(g){
+              g.classList.toggle('reached', parseInt(g.getAttribute('data-step'), 10) <= step);
             });
-            cards.forEach(function(c){ c.classList.toggle('centered', c === closest); });
+            note.textContent = step <= 0 ? 'Tap Next to move through the timeline.' : NOTES[i];
           }
-          track.addEventListener('scroll', refresh, {passive:true});
-          var dragging = false, startX = 0, startScroll = 0;
-          track.addEventListener('pointerdown', function(e){
-            dragging = true; track.classList.add('dragging');
-            startX = e.clientX; startScroll = track.scrollLeft;
-            try{ track.setPointerCapture(e.pointerId); }catch(err){}
-          });
-          track.addEventListener('pointermove', function(e){
-            if(!dragging) return;
-            track.scrollLeft = startScroll - (e.clientX - startX);
-          });
-          function release(){ dragging = false; track.classList.remove('dragging'); }
-          track.addEventListener('pointerup', release);
-          track.addEventListener('pointercancel', release);
-          refresh();
+          el.addEventListener('d2step', function(e){ apply(e.detail); });
+          apply(0);
         } };
     },
     function(){ return { steps:1, html:
