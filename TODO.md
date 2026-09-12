@@ -2,11 +2,12 @@
 
 ## Live "answer the question" task (Route B, cloud room)
 
-See `ipad-board-plan.md` for a researched comparison of buying an existing
-tool (Whiteboard.fi, Padlet, FigJam, Nearpod, Pear Deck, Mentimeter, Slido,
-Apple Classroom + Freeform) against building this. Recommendation: pilot
-Whiteboard.fi's free plan in one real lesson before spending engineering
-time on the custom build below.
+See `ipad-board-plan.md` for the actual build plan: submit-once (not
+live-stroke) drawing/text answers, plain HTTPS polling instead of
+WebSockets, vanilla JS reusing the existing QR and router patterns, and a
+staged feature order (gallery + spotlight first, word-cloud mode second,
+live-stroke sync and a shared canvas later if wanted at all). Estimated
+at a weekend for the first stage, matching the ~200-line estimate below.
 
 Pupils scan the QR on the slide, a question opens on their iPad, they type or
 draw an answer and send it. Answers tile onto the teacher's board view in real
