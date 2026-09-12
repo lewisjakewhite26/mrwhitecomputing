@@ -38,13 +38,15 @@ Rough size: ~200 lines in `index.html` plus the room code on PartyKit.
 - **QR code needs a real host.** It builds its URL from `location.origin`, so it
   only works once `index.html` is served from a real address. Opening the file
   directly breaks the iPad hand-off.
-- **Lessons 3 to 6** for all three units. Lessons 1 and 2 are built. Source packs
-  live one level up in `..\KS1\`, `..\LKS2\`, `..\UKS2\` (siblings of `hub\`).
-  `..\UKS2\` has zipped source packs for all six Year 5/6 lessons (L1-L6), so a
-  real pack exists for L2 too — Lesson 2 was written from the NCCE unit outline
-  instead because that pack hadn't been unzipped/checked at the time. Worth
-  re-checking L2 against the real pack before writing L3-6. `hub\_src\L1\` only
-  has the unzipped Lesson 1 pack; L2-L6 for UKS2 still need unzipping.
+- ~~Lessons 3 to 6 for all three units~~ — done. All 18 lessons (KS1, LKS2,
+  UKS2, Lessons 1-6 each) are now built and live, matching the real NCCE
+  source packs unzipped into `..\KS1\L*_src\`, `..\LKS2\L*_src\`,
+  `..\UKS2\L*_src\` (siblings of `hub\`, git-ignored by the source repo since
+  they sit outside it). Extracted text dumps are kept in
+  `hub\_tools\dumps\*.txt` for reference; `hub\_tools\extract-office-text.js`
+  and `dump-lesson.sh` can regenerate them from any future NCCE pack update.
+  Lesson 2 for each unit was left as originally built (not re-checked against
+  the real pack) since it was already live before this pass.
 - **Two engines for Year 5/6.** Lesson 1 runs on the original bespoke deck
   (`#/lesson/1`, the `initDeck` code). Lesson 2 onward runs on the shared kid-deck
   factory (`HB_DECK`, `#/y56/lesson/2`). They look slightly different. Either port
