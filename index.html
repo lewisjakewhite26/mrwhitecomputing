@@ -1053,7 +1053,7 @@
   var LESSONS = [
     {n:1,live:true,title:"Systems",obj:"Explain that a system is built from parts, and describe the input, process and output of a digital system.",vocab:["system","connection","digital","input","process","output"],dur:"60 min",resources:[["a1","Bicycle systems"],["a2","Talking teddy"],["a3","Smart locker"],["hw","Homework"]]},
     {n:2,live:true,title:"Computer systems and us",obj:"Explore how devices, processes and people are connected in a system, and weigh up the benefits of computer systems.",vocab:["system","connection","process","device","benefit"],dur:"60 min",openHref:"#/y56/lesson/2",sheetBase:"#/y56/sheet/2/",resources:[["trace","Trace a system"],["benefits","Benefits and trade-offs"],["hw","Homework"]]},
-    {n:3,live:false,title:"Searching the web",obj:"Recognise that a search engine helps you find information, and use one to answer a question.",vocab:["search engine","web address","browser"],dur:"60 min"},
+    {n:3,live:true,title:"Searching the web",obj:"Write instructions for a web search, refine a search that returns the wrong thing, and compare results across search engines.",vocab:["search engine","refine","search box","address bar"],dur:"60 min",openHref:"#/y56/lesson/3",sheetBase:"#/y56/sheet/3/",resources:[["instructions","How do you search?"],["compare","Comparing search engines"],["hw","Search safely at home"]]},
     {n:4,live:false,title:"Selecting search results",obj:"Explain how a search engine finds and selects the results it shows you.",vocab:["index","web crawler","content"],dur:"60 min"},
     {n:5,live:false,title:"How search results are ranked",obj:"Describe how web crawlers follow links, and how links affect the order of results.",vocab:["rank","link","web crawler"],dur:"60 min"},
     {n:6,live:false,title:"How are searches influenced",obj:"Recognise that adverts and the people who build websites can both influence what a search shows you.",vocab:["advert","influence","ranking"],dur:"60 min"}
@@ -1189,7 +1189,7 @@
       openHref:"#/y34/lesson/1", sheetBase:"#/y34/sheet/1/",
       resources:[["m","IPO machines"],["d","Spot the digital devices"],["p","Strong passwords"],["hw","Homework"]]},
     {n:2,live:true,title:"What parts make up a digital device?",obj:"Sort input and output devices, describe a simple process, and design your own digital device.",vocab:["input device","output device","process","digital device"],dur:"45 min",openHref:"#/y34/lesson/2",sheetBase:"#/y34/sheet/2/",resources:[["match","Match input, device, output"],["invent","Invent a device"],["hw","Homework"]]},
-    {n:3,live:false,title:"How do digital devices help us?",obj:"Think about the many ways digital devices are used, at home, at school and out in the world.",vocab:["digital device","task","benefit"],dur:"45 min"},
+    {n:3,live:true,title:"How do digital devices help us?",obj:"Compare how a task can be done with a digital device and with non-digital tools, and say when each is the better fit.",vocab:["digital","non-digital","program"],dur:"45 min",openHref:"#/y34/lesson/3",sheetBase:"#/y34/sheet/3/",resources:[["tasks","What can you use a device for?"],["review","Learner review"],["hw","Digital or not, at home"]]},
     {n:4,live:false,title:"How am I connected?",obj:"Recognise the different ways you are connected to other people and to devices.",vocab:["connection","network","device"],dur:"45 min"},
     {n:5,live:false,title:"How are computers connected?",obj:"Learn what a computer network is and how devices pass information between each other.",vocab:["network","server","switch"],dur:"45 min"},
     {n:6,live:false,title:"What does our school network look like?",obj:"Explore the parts of the school network and map how they are joined together.",vocab:["network","router","cable","wireless"],dur:"45 min"}
@@ -2571,6 +2571,229 @@
     }
   };
 
+  /* =================== YEAR 3/4 · CONNECTING COMPUTERS · LESSON 3 =================== */
+  var Y34META3 = { eyebrow:'Connecting Computers &middot; Lesson 3', exitHash:'#/g/y34' };
+  var Y34_NOTES3 = [
+    ["Introduction · 3 min","How do digital devices help us?","Recap Lessons 1 and 2: input, process, output. Today we compare a digital way of doing a task with a non-digital way."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 2 min","A digital version of this?","Ask what the digital version of writing on paper is, and the digital version of painting with a brush."],
+    ["Activity 1 · 8 min","One device, many tasks","A digital camera, laptop, games console and smartphone can each do more than one job. Ask which of the listed tasks each device could do."],
+    ["Activity 1 · 4 min","Devices rarely do one thing","A smartphone alone takes photos, sends messages, plays games and makes calls. Hand out the A1 sheet for pupils to tick which device can do which task."],
+    ["Activity 2 · 15 min","Paint it two ways","Pupils create the same picture twice: once with paint on paper, once in a digital paint program using brush, fill, and undo."],
+    ["Activity 2 · 3 min","What's different?","Undo lets you fix a mistake instantly. Fill covers a whole area in one tap. Paper has neither, but needs no charging."],
+    ["Activity 3 · 6 min","Think back","Pupils reflect on both pieces of work. Which did they prefer, and why?"],
+    ["Plenary · 4 min","Sometimes non-digital wins","Discuss: is a digital tool always the better choice? Paper starts instantly and never runs out of battery."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: how you are connected to people and devices."]
+  ];
+  var Y34_SLIDES3 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">How do digital devices <em>help us</em>?</h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(12px,3vw,26px);color:var(--proc);flex-wrap:wrap;justify-content:center">' +
+        ph('camera',48)+ph('laptop',48)+ph('game-controller',48)+ph('device-mobile-camera',48) + '</div>' }; },
+    function(){
+      var items = ["Explain how digital devices are used for different tasks","Compare a digital way of working with a non-digital way","Suggest when a non-digital tool is the better choice"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:30ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
+          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">A digital version of this?</h1>' +
+      '<p class="lead pp">Writing on paper, painting with a brush.</p>' +
+      '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">A word processor, and a digital paint program.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What can you use a device for?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Digital camera','takes pictures, and some can film video too','in-c') +
+        rc('Laptop computer','writes a story, plays a game, makes a video call','pr-c') +
+        rc('Games console','plays a game, and some let you send messages','ou-c') +
+        rc('Smartphone','takes pictures, makes a call, sends a message, plays a game') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Do devices have one purpose?</h1>' +
+      '<p class="lead pp">No.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Most digital devices can do several different tasks. Which one they do depends on the program you open.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Paint it two ways</h1>' +
+      '<p class="lead pp">Make the same picture twice: once with paint on paper, once in a digital paint program.</p>' +
+      '<p class="lead pp">This time, notice how you change colour, and how you fix a mistake.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What&rsquo;s different?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Undo','fixes a mistake instantly, no need to start again','in-c') +
+        rc('Fill tool','covers a whole area in one tap','pr-c') +
+        rc('Paper and paint','needs no charging, and never lags','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Think back</h1>' +
+      '<div class="d2-rc pp" data-step="1" style="max-width:34ch" id="d2think"><b>Which did you prefer, and why?</b><span class="ans">There is no wrong answer. Some people prefer paper because it feels direct; some prefer digital because mistakes are easy to fix.</span></div>',
+      init:function(el){ var c=el.querySelector('#d2think'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Sometimes non-digital wins</h1>' +
+      '<p class="lead pp">A digital tool is not always the better choice.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Paper starts instantly, needs no charging, and works when the wifi is down.</p>' }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Nice work</h1>' +
+      '<p class="lead pp">You compared digital tools with non-digital ones, and worked out when each is the better fit.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: how you are connected to people and devices.</p>' }; }
+  ];
+  var Y34_QUIZ3 = [
+    {q:"A laptop can be used for…", o:["only playing games","many different tasks","nothing without the internet"], a:1},
+    {q:"Painting on paper and painting on a screen are similar because both let you…", o:["use electricity","make marks and pick colours","print your work"], a:1},
+    {q:"Something a digital paint program can do that paper can't…", o:["use the colour blue","undo a mistake instantly","use a brush shape"], a:1},
+    {q:"A good reason to use a non-digital tool sometimes is…", o:["it always looks better","it needs no charging and starts straight away","it is always faster"], a:1}
+  ];
+  var Y34_SHEETS3 = {
+    tasks: function(){
+      var col = function(title, items){ return '<div style="flex:1;min-width:120px"><h2>' + title + '</h2>' + items.map(function(x){ return '<label style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1.5px solid #dfe2ec;font-weight:600"><span style="width:20px;height:20px;border:1.6px solid #c3c8d4;border-radius:5px;display:inline-block;flex:none"></span>' + x + '</label>'; }).join('') + '</div>'; };
+      return shell(Y34META3,'What can you use a device for?',
+        'Tick the box if that device can do the task. A device can have more than one tick.',
+        '<div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:12px">' +
+          col('Digital camera', ['Take pictures','Write a story','Play a game','Make a call']) +
+          col('Laptop', ['Take pictures','Write a story','Play a game','Make a call']) +
+          col('Games console', ['Take pictures','Write a story','Play a game','Make a call']) +
+          col('Smartphone', ['Take pictures','Write a story','Play a game','Make a call']) +
+        '</div>');
+    },
+    review: function(){
+      return shell(Y34META3,'Learner review',
+        'You made the same picture on paper and on a digital device. Answer these questions about the two.',
+        '<h2>Which method did you prefer, and why?</h2><div class="lines s3"></div>' +
+        '<h2>What was easier or harder about each one?</h2><div class="lines s3"></div>' +
+        '<h2>How did you fix a mistake in each one?</h2><div class="lines s2"></div>');
+    },
+    hw: function(){
+      return shell(Y34META3,'Digital or not, at home',
+        'Think of a task you do at home, like making a shopping list or drawing a picture. Say how you could do it digitally, and how you could do it without a digital device.',
+        '<h2>The task</h2><div class="lines s2"></div>' +
+        '<h2 class="in">The digital way</h2><div class="lines s3"></div>' +
+        '<h2 class="ou">The non-digital way</h2><div class="lines s3"></div>' +
+        '<h2>Which would you choose, and why?</h2><div class="lines s2"></div>');
+    }
+  };
+
+  /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 3 =================== */
+  var Y56META3 = { eyebrow:'Systems and Searching &middot; Lesson 3', exitHash:'#/g/y56' };
+  var Y56_NOTES3 = [
+    ["Introduction · 2 min","Searching the web","Recap: a search engine is a system. Today's focus is the search itself."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 2 min","Staying safe while you search","Search engines can store what you search and use it to advertise to you. Only visit trustworthy sites and never share personal information."],
+    ["Introduction · 3 min","These are all search engines","Bing, Google, DuckDuckGo, Ecosia and Swisscows. Ask which pupils recognise. Note what makes each one different."],
+    ["Introduction · 2 min","A search engine is a system","Input: your search term. Process: the search engine works out what to show. Output: the results list. The next three lessons cover the process."],
+    ["Activity 1 · 15 min","Write the instructions","Pairs write full instructions to answer a set question by searching, without naming the answer itself. Swap with another pair, test the instructions on a real device, and give feedback."],
+    ["Activity 2 · 6 min","Same word, different meaning","Search Rugby, Sale and Boot. Most results are the sport, the shop event, and the footwear, not the three UK places."],
+    ["Activity 2 · 4 min","Refine the search","Ask how to fix it. Adding a county name or the word 'village' usually narrows it to the place."],
+    ["Activity 3 · 10 min","Comparing search engines","As a class, agree one search term. Pupils try it in all five search engines and record the top result, the number of adverts, and anything they notice."],
+    ["Plenary · 6 min","Search box or address bar?","Typing into a search engine's own box searches with that engine. Typing into the browser's address bar uses whichever search engine the browser is set to by default."],
+    ["Plenary · 4 min","Is this website trustworthy?","Check for spelling errors, low-quality images, and a web address that looks right. If unsure, check the same fact on two other sites."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: how a search engine selects its results."]
+  ];
+  var Y56_SLIDES3 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Searching the <em>web</em></h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('globe',52)+ph('monitor',52)+ph('shield-check',52) + '</div>' }; },
+    function(){
+      var items = ["Write clear instructions for a web search","Refine a search that returns the wrong thing","Compare results across different search engines"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:32ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
+          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:1, html:
+      '<div class="pp" style="color:var(--proc)">' + ph('shield-check',72) + '</div>' +
+      '<h1 class="pp">Staying safe while you search</h1>' +
+      '<p class="lead pp">Search engines can store what you search, and use it to advertise to you.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Only visit websites you trust, and never share personal information.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">These are all search engines</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Bing','Microsoft&rsquo;s search engine','in-c') +
+        rc('Google','the most used search engine worldwide','pr-c') +
+        rc('DuckDuckGo','built around not tracking what you search','ou-c') +
+        rc('Ecosia','puts its profits into planting trees') +
+        rc('Swisscows','family-friendly, and does not store your searches') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:3, html:
+      '<h1 class="pp">A search engine is a system</h1>' +
+      '<div class="d2-ipo">' +
+        '<div class="box in pp" data-step="1"><b>Input</b><span>The words you type in to search.</span></div>' +
+        '<div class="arr pp" data-step="2">→</div>' +
+        '<div class="box pr pp" data-step="2"><b>Process</b><span>The search engine works out what to show you. More on this over the next three lessons.</span></div>' +
+        '<div class="arr pp" data-step="3">→</div>' +
+        '<div class="box ou pp" data-step="3"><b>Output</b><span>The list of results you see.</span></div>' +
+      '</div>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Write the instructions</h1>' +
+      '<p class="lead pp" style="max-width:38ch">In what year was Mahatma Gandhi born? Write full steps for someone else to follow to find out, without telling them the answer.</p>' +
+      '<p class="lead pp">Swap with another pair. Test their steps on a real device.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Same word, different meaning</h1>' +
+      '<p class="lead pp">Search these three words, and note what comes up.</p>' +
+      '<div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-weight:700;font-size:clamp(1.2rem,3vw,1.7rem);color:var(--proc)">' +
+        '<span>Rugby</span><span>Sale</span><span>Boot</span></div>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Not what you meant?</h1>' +
+      '<p class="lead pp">Most results are about the sport, the shop event, and the footwear.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">You wanted Rugby in Warwickshire, Sale in Greater Manchester, and Boot in Cumbria.</p>' +
+      '<div class="d2-rc pp" data-step="1" style="max-width:30ch" id="d2refine"><b>How could you refine your search?</b><span class="ans">Add a word that narrows it down, like a county name, or the word &lsquo;village&rsquo;.</span></div>',
+      init:function(el){ var c=el.querySelector('#d2refine'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Comparing search engines</h1>' +
+      '<p class="lead pp">As a class, agree one search term. Try it in all five search engines. Record the top result, the number of adverts, and anything you notice.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Search box or address bar?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('The search engine&rsquo;s own box','searches with that engine, the one you chose','in-c') +
+        rc("The browser's address bar","searches with whichever engine the browser is set to by default",'ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Is this website trustworthy?</h1>' +
+      '<p class="lead pp">Check for spelling errors, low-quality images, and a web address that looks right.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Still not sure? Check the same fact on two other sites.</p>' }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Good searching</h1>' +
+      '<p class="lead pp">You wrote search instructions, refined a search, and compared search engines.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: how a search engine selects its results.</p>' }; }
+  ];
+  var Y56_QUIZ3 = [
+    {q:"A search engine's input is…", o:["the results list","the words you type in to search","a photo"], a:1},
+    {q:"Searching 'Boot' and only getting football boots, when you wanted the village in Cumbria, means you should…", o:["give up","refine your search, for example by adding 'Cumbria'","turn off the wifi"], a:1},
+    {q:"Typing a search term into the browser's address bar uses…", o:["no search engine at all","your browser's default search engine","a random search engine each time"], a:1},
+    {q:"A sign a website might not be trustworthy is…", o:["a clear, correct web address","spelling mistakes and low-quality images","matching other trusted sources"], a:1}
+  ];
+  var Y56_SHEETS3 = {
+    instructions: function(){
+      return shell(Y56META3,'How do you search?',
+        'In what year was Mahatma Gandhi born? Write a full set of instructions for someone to follow to find the answer, without giving the answer away.',
+        '<h2>My instructions</h2><div class="lines s5"></div>' +
+        '<h2>Reviewed by</h2><div class="lines s2"></div>' +
+        '<h2>Were they able to find the answer? What would make the instructions clearer?</h2><div class="lines s3"></div>');
+    },
+    compare: function(){
+      var row = function(name){ return '<div style="display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:1.5px solid #dfe2ec">' +
+        '<div style="flex:none;width:110px;font-weight:700">'+name+'</div>' +
+        '<div style="flex:1;border-bottom:1.5px solid #c3c8d4;min-height:22px"></div>' +
+        '<div style="flex:1;border-bottom:1.5px solid #c3c8d4;min-height:22px"></div></div>'; };
+      return shell(Y56META3,'Comparing search engines',
+        'Agree one search term as a class. Search it in each engine below. Write the top result, and anything interesting you notice.',
+        '<h2>Search term</h2><div class="lines s2"></div>' +
+        '<div style="display:flex;gap:14px;font-size:12px;font-weight:700;color:#5c6676;padding-left:124px"><div style="flex:1">Top result</div><div style="flex:1">What&rsquo;s interesting?</div></div>' +
+        row('Bing') + row('Google') + row('DuckDuckGo') + row('Ecosia') + row('Swisscows'));
+    },
+    hw: function(){
+      return shell(Y56META3,'Search safely at home',
+        'Ask a grown-up before you search online. Write one search you did, and one thing you checked to decide if a site was trustworthy.',
+        '<h2>What I searched</h2><div class="lines s2"></div>' +
+        '<h2>How I checked it was trustworthy</h2><div class="lines s3"></div>');
+    }
+  };
+
   /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 2 =================== */
   var Y12META2 = { eyebrow:'Technology around us &middot; Lesson 2', exitHash:'#/g/y12' };
   var Y12_NOTES2 = [
@@ -2913,6 +3136,12 @@
         '<ul><li>one <strong>input device</strong> it uses</li>' +
         '<li>one <strong>output device</strong> it uses</li>' +
         '<li>a simple sentence for its <strong>process</strong></li></ul></div>' },
+    'y34/3':{ notes:Y34_NOTES3, slides:Y34_SLIDES3, quiz:Y34_QUIZ3, sheets:Y34_SHEETS3,
+      exitHash:Y34META3.exitHash, lessonHash:'#/y34/lesson/3',
+      taskTk:'Connecting Computers · Lesson 3', taskH1:'How do digital devices help us?',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Make the same simple picture twice: once with paint or pencils, once on a digital device. Then write:</p>' +
+        '<ul><li>one thing that was <strong>easier</strong> the digital way</li>' +
+        '<li>one thing that was <strong>easier</strong> the non-digital way</li></ul></div>' },
     'y12/1':{ notes:Y12_NOTES, slides:Y12_SLIDES, quiz:Y12_QUIZ, sheets:Y12_SHEETS,
       exitHash:Y12META.exitHash, lessonHash:'#/y12/lesson/1',
       taskTk:'Technology around us · Lesson 1', taskH1:'Technology in our classroom',
@@ -2931,7 +3160,13 @@
     'y56/2':{ notes:Y56_NOTES2, slides:Y56_SLIDES2, quiz:Y56_QUIZ2, sheets:Y56_SHEETS2,
       exitHash:Y56META2.exitHash, lessonHash:'#/y56/lesson/2',
       taskTk:'Systems and Searching · Lesson 2', taskH1:'Computer systems and us',
-      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a system you use: a message app, an online shop, a bus card. Write three of its connected parts, and say which is a <strong>device</strong>, which is a <strong>process</strong>, and which is a <strong>person</strong>.</p></div>' }
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a system you use: a message app, an online shop, a bus card. Write three of its connected parts, and say which is a <strong>device</strong>, which is a <strong>process</strong>, and which is a <strong>person</strong>.</p></div>' },
+    'y56/3':{ notes:Y56_NOTES3, slides:Y56_SLIDES3, quiz:Y56_QUIZ3, sheets:Y56_SHEETS3,
+      exitHash:Y56META3.exitHash, lessonHash:'#/y56/lesson/3',
+      taskTk:'Systems and Searching · Lesson 3', taskH1:'Searching the web',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Search a word that could mean more than one thing (a place name works well). Then write:</p>' +
+        '<ul><li>what your <strong>first search</strong> found</li>' +
+        '<li>what you added to <strong>refine</strong> it, and what changed</li></ul></div>' }
   };
 
   function shell(meta, title, task, body){
