@@ -1052,7 +1052,7 @@
   /* ---------- data ---------- */
   var LESSONS = [
     {n:1,live:true,title:"Systems",obj:"Explain that a system is built from parts, and describe the input, process and output of a digital system.",vocab:["system","connection","digital","input","process","output"],dur:"60 min",resources:[["a1","Bicycle systems"],["a2","Talking teddy"],["a3","Smart locker"],["hw","Homework"]]},
-    {n:2,live:true,title:"Computer systems and us",obj:"Explore how devices, processes and people are connected in a system, and weigh up the benefits of computer systems.",vocab:["system","connection","process","device","benefit"],dur:"60 min",openHref:"#/y56/lesson/2",sheetBase:"#/y56/sheet/2/",resources:[["trace","Trace a system"],["benefits","Benefits and trade-offs"],["hw","Homework"]]},
+    {n:2,live:true,title:"Computer systems and us",obj:"Identify tasks managed by computer systems, spot the human parts, explain the benefits, and stay safe online.",vocab:["system","connection","process","device","personal information"],dur:"60 min",openHref:"#/y56/lesson/2",sheetBase:"#/y56/sheet/2/",resources:[["crossing","Comparing pedestrian crossings"],["store","Catalogue store"],["hw","A system at home"]]},
     {n:3,live:true,title:"Searching the web",obj:"Write instructions for a web search, refine a search that returns the wrong thing, and compare results across search engines.",vocab:["search engine","refine","search box","address bar"],dur:"60 min",openHref:"#/y56/lesson/3",sheetBase:"#/y56/sheet/3/",resources:[["instructions","How do you search?"],["compare","Comparing search engines"],["hw","Search safely at home"]]},
     {n:4,live:true,title:"Selecting search results",obj:"Explain why we need tools to find things online, describe what a web crawler does, and relate a search term to a search engine's index.",vocab:["index","crawler","search engine"],dur:"60 min",openHref:"#/y56/lesson/4",sheetBase:"#/y56/sheet/4/",resources:[["index","Indexing the classroom"],["narrow","Narrowing a search"],["hw","The history of the web"]]},
     {n:5,live:true,title:"How search results are ranked",obj:"Order a list by rank, explain that a search engine follows an algorithm, and give examples of what it scores.",vocab:["rank","algorithm","inbound link","SEO"],dur:"60 min",openHref:"#/y56/lesson/5",sheetBase:"#/y56/sheet/5/",resources:[["webpage","Create your own webpage"],["score","Score your page"],["hw","SEO at home"]]},
@@ -1120,7 +1120,7 @@
     lastRoute = h;
     var parts = h.split('/').filter(Boolean);
     var v = 'picker', slide = 0, group = 'y56', unit = null;
-    var VALID = {y12:'12', y34:'12', y56:'2'};
+    var VALID = {y12:'123456', y34:'123456', y56:'23456'};
     var kidUnit = VALID[parts[0]] ? parts[0] : null;
     var kidKey = (kidUnit && parts[2] && VALID[kidUnit].indexOf(parts[2]) > -1) ? kidUnit + '/' + parts[2] : null;
     if(parts[0] === 'g' && GROUP_KEYS.indexOf(parts[1]) > -1){ v = 'hub'; group = parts[1]; }
@@ -1303,9 +1303,9 @@
           '<div class="foot">' + (L.live
             ? '<button class="open">Open lesson <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button><span>' + L.dur + '</span>'
             : '<span class="soon-tag">Coming soon</span><span>' + L.dur + '</span>') + '</div>';
-        if(L.live) el.addEventListener('click', function(){ location.hash = openHref; });
+        if(L.live) el.addEventListener('click', function(){ location.hash = L.openHref || openHref; });
         [].forEach.call(el.querySelectorAll('.wsheets a'), function(a){
-          a.addEventListener('click', function(e){ e.stopPropagation(); location.hash = sheetBase + a.getAttribute('data-sheet'); });
+          a.addEventListener('click', function(e){ e.stopPropagation(); location.hash = (L.sheetBase || sheetBase) + a.getAttribute('data-sheet'); });
         });
         spine.appendChild(el);
       });
@@ -3937,15 +3937,20 @@
   /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 2 =================== */
   var Y56META2 = { eyebrow:'Systems and Searching &middot; Lesson 2', exitHash:'#/g/y56' };
   var Y56_NOTES2 = [
-    ["Introduction · 1 min","Computer systems and us","Recall Lesson 1: a system is a set of parts working together, each with an input, process and output."],
-    ["Introduction · 2 min","Today you will…","Read the three together. Pupils rate themselves at the end."],
-    ["Introduction · 1 min","Recap: what is a system","Parts working together. Not one clever device: several devices, processes and people connected up."],
-    ["Activity 1 · 8 min","A bigger system","Walk through an online food order one step at a time. Point out that most of the work happens on computers you never see."],
-    ["Activity 1 · 3 min","Devices, processes, people","Some parts are devices you can touch. Some are hidden processes. Some are people. A system usually has all three."],
-    ["Activity 2 · 8 min","Which part is this?","Tap each card. Sort the parts of the food-order system into device, process or person."],
-    ["Activity 3 · 6 min","Why are they useful?","Take answers before revealing. Fast, always on, connects people far apart, does repetitive jobs."],
-    ["Activity 3 · 3 min","What still needs a person?","Someone sets the system up, checks it, and fixes it. And decides whether it should exist at all."],
-    ["Plenary · 4 min","Spot the system","Read the bus-fare example. Count the connected parts. Our lives run on systems like this."],
+    ["Introduction · 2 min","Computer systems and us","Recap Lesson 1's smart locker system. How do computers help it work?"],
+    ["Introduction · 2 min","Today you will…","Read the four together."],
+    ["Activity 1 · 3 min","Crossing the road","How would you cross the road safely at the pictured crossing?"],
+    ["Activity 1 · 3 min","A puffin crossing","Its sensors detect people waiting to cross, people already on the crossing, and cars approaching."],
+    ["Activity 1 · 8 min","Timed or sensor?","Pupils complete the sheet comparing a timed crossing with a sensor crossing. Some statements apply to both."],
+    ["Activity 1 · 4 min","Why are the sensors better?","They stop traffic no longer than necessary, cope with people walking at different speeds, and cancel if someone presses and walks away."],
+    ["Activity 1 · 3 min","Big systems elsewhere","Arrival and departure boards, doctors' sign-in screens, hospital 'next patient' boards, and ordering systems in shops and cafes."],
+    ["Activity 2 · 3 min","Catalogue store","Like Argos: a system with an order point, a warehouse, and a collection point. Sort the given steps under the right heading."],
+    ["Activity 2 · 6 min","Order point, warehouse, collection point","Each part of the store has its own tasks. Talk through an example of each."],
+    ["Activity 2 · 4 min","Person, or computer?","Mark each task with a person or a computer. Some jobs, like picking an item off the shelf, still need a person."],
+    ["Activity 2 · 4 min","What if…","A returned item is resold. A price changes. An item is recalled. Which stages would each affect?"],
+    ["Activity 3 · 6 min","Staying safe online","Just like the road, going online needs systems to keep us safe: passwords, trustworthy sites, keeping information private."],
+    ["Activity 3 · 3 min","What apps ask for","Apps can gather personal information and share it with other companies. Choose not to share, if you're asked."],
+    ["Plenary · 3 min","How do systems help us?","The puffin crossing helps pedestrians. The catalogue store helps customers and staff. Ask how, for each."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how a search engine finds information on the web."]
   ];
@@ -3954,102 +3959,123 @@
       '<h1 class="pp">Computer systems and <em>us</em></h1>' +
       '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('device-mobile-camera',52)+ph('laptop',52)+ph('users-three',52)+ph('globe',52) + '</div>' }; },
     function(){
-      var items = ["Explain how devices and processes are connected","Trace a system from start to end","Weigh up the benefits of computer systems"];
+      var items = ["Identify tasks that are managed by computer systems","Identify the human parts of a computer system","Explain the benefits of a given system","Explain how to keep your information safe online"];
       return { steps:items.length, html:
         '<h1 class="pp">Today you will…</h1>' +
-        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:30ch">' +
-        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
-          '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:34ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1rem,2vw,1.3rem);font-weight:600">' +
+          '<span style="flex:none;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
     },
     function(){ return { steps:1, html:
-      '<h1 class="pp">A system is parts working together</h1>' +
-      '<p class="lead pp">Not one clever device.</p>' +
-      '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">Several devices, hidden processes and people, all connected.</p>' }; },
-    function(){
-      var steps = [
-        [ph('device-mobile-camera',40),'You tap "order" on your phone'],
-        [ph('cpu',40),"the shop's computer takes the order"],
-        [ph('monitor',40),'a kitchen screen shows what to make'],
-        [ph('bus',40),"a driver's app maps the route"],
-        [ph('envelope-simple',40),'your phone pings "on its way"']
-      ];
-      return { steps:steps.length, html:
-        '<h1 class="pp">A bigger system: ordering food</h1>' +
-        '<div style="display:flex;flex-direction:column;gap:10px;text-align:left;max-width:34ch">' +
-        steps.map(function(s,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-weight:600;color:var(--ink)"><span style="color:var(--proc)">'+s[0]+'</span>'+s[1]+'</div>'; }).join('') +
-        '</div>' +
-        '<p class="lead pp" data-step="'+steps.length+'">Most of it happens on computers you never see.</p>' };
-    },
+      '<h1 class="pp">Remember the smart locker?</h1>' +
+      '<p class="lead pp">In Lesson 1 you looked at a smart locker system.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">How do computers help that system work?</p>' }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Devices, processes, people</h1>' +
+      '<h1 class="pp">Crossing the road</h1>' +
+      '<p class="lead pp">Tell your partner how to cross the road safely at a pedestrian crossing.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">A puffin crossing</h1>' +
+      '<p class="lead pp">Some crossings have a set of sensors built in.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">They detect people waiting, people already on the crossing, and cars approaching.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Timed, or sensor?</h1>' +
+      '<p class="lead pp" style="max-width:32ch">Complete the sheet comparing a timed crossing with a sensor crossing. Some statements apply to both.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Why are the sensors better?</h1>' +
       '<div class="d2-reveal pp">' +
-        rc('Device','something you can touch: a phone, a screen, a card reader','in-c') +
-        rc('Process','a hidden job the computer does: checking a payment, working out a route','pr-c') +
-        rc('Person','someone in the system: the driver, the person who packs the order','ou-c') +
+        rc('No unnecessary stops','it doesn\'t hold traffic if a pedestrian presses and then walks away','in-c') +
+        rc('Adapts to people','copes with several people, and different walking speeds','pr-c') +
+        rc('Only as long as needed','traffic isn\'t stopped for longer than it has to be','ou-c') +
       '</div>', init: revealInit }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Which part is this?</h1>' +
+      '<h1 class="pp">Big systems elsewhere</h1>' +
       '<div class="d2-reveal pp">' +
-        rc('The phone you tap','device','in-c') +
-        rc('Working out the fastest route','process','pr-c') +
-        rc('The delivery driver','person','ou-c') +
-        rc("The shop's computer",'device','in-c') +
-        rc('Checking your payment','process','pr-c') +
-      '</div>' +
-      '<p class="lead pp">Tap each card.</p>', init: revealInit }; },
+        rc('Arrival and departure boards','','in-c') +
+        rc('A doctor\'s surgery sign-in screen','','pr-c') +
+        rc('A hospital &lsquo;next patient&rsquo; board','','ou-c') +
+        rc('Ordering and payment in shops and cafes') +
+      '</div>', init: revealInit }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Why are computer systems useful?</h1>' +
+      '<h1 class="pp">Catalogue store</h1>' +
+      '<p class="lead pp" style="max-width:32ch">Like Argos: a system with an order point, a warehouse, and a collection point. Sort the steps under the right heading.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Order point, warehouse, collection point</h1>' +
       '<div class="d2-reveal pp">' +
-        rc('Fast','it happens in seconds') +
-        rc('Always on','it works at 3am') +
-        rc('Connects people','across the world, instantly') +
-        rc('Does the boring jobs','so people do not have to') +
+        rc('Order point','a tablet shows what\'s in stock and its price; the customer chooses and pays','in-c') +
+        rc('Warehouse','the order arrives, items are picked from the shelf and marked off','pr-c') +
+        rc('Collection point','items arrive, a message says they\'re ready, staff check and hand them over','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Person, or computer?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Showing stock and price on the tablet','computer','in-c') +
+        rc('Choosing items to buy','person','ou-c') +
+        rc('Picking the item off the shelf','person','ou-c') +
+        rc('Keeping the stocklist up to date','computer','in-c') +
+        rc('Showing where items are in the warehouse','computer','in-c') +
       '</div>', init: revealInit }; },
     function(){ return { steps:1, html:
-      '<h1 class="pp">What still needs a person?</h1>' +
-      '<div class="d2-rc pp" data-step="1" style="max-width:32ch" id="d2ppl"><b>Tap to see</b><span class="ans">Someone to set it up, check it, and fix it when it breaks. And to decide whether it should exist at all.</span></div>',
-      init:function(el){ var c=el.querySelector('#d2ppl'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+      '<h1 class="pp">What if…</h1>' +
+      '<p class="lead pp" style="max-width:34ch">A returned item is resold. A price changes. An item is recalled and can\'t be sold.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Which stages of your system would each of those affect?</p>' }; },
     function(){ return { steps:1, html:
-      '<h1 class="pp">Spot the system</h1>' +
-      '<p class="lead pp" style="max-width:40ch;font-size:clamp(1rem,1.9vw,1.25rem)">You tap your card on the bus. A screen says &ldquo;fare paid&rdquo;. Later, your parent gets a text with the new balance.</p>' +
-      '<div class="d2-rc pp" data-step="1" style="max-width:26ch" id="d2bus"><b>How many connected parts?</b><span class="ans">At least four: the card reader, the bus company&rsquo;s computer, the payment system, and a phone.</span></div>',
-      init:function(el){ var c=el.querySelector('#d2bus'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+      '<h1 class="pp">Staying safe online</h1>' +
+      '<p class="lead pp">Just like the road, going online needs systems to keep us safe.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">What do we already do to keep our information safe?</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Systems that protect us online</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Passwords','','in-c') +
+        rc('Trustworthy websites','','pr-c') +
+        rc('Keeping personal information private','','ou-c') +
+        rc('Gaming only with people you know') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">What do apps ask for?</h1>' +
+      '<p class="lead pp">Apps can gather your personal information and share it with other companies.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">If an app asks to share your information, you can say no.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">How do systems help us?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('The puffin crossing','keeps pedestrians safer, without holding up traffic longer than needed','in-c') +
+        rc('The catalogue store','helps customers order easily, and helps staff track stock and orders','ou-c') +
+      '</div>', init: revealInit }; },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Good thinking</h1>' +
-      '<p class="lead pp">You traced a system and weighed up what it is good for.</p>' +
+      '<p class="lead pp">You compared two systems, and thought about staying safe in the systems you use online.</p>' +
       '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: how a search engine finds information.</p>' }; }
   ];
   var Y56_QUIZ2 = [
-    {q:"A computer system is…", o:["one clever device","several parts working together","just the internet"], a:1},
-    {q:"A driver's app working out the fastest route is a…", o:["device","process","person"], a:1},
-    {q:"A benefit of computer systems is that they…", o:["never need checking","can work day and night","always make the right choice"], a:1},
-    {q:"Computer systems still need people to…", o:["do nothing","set them up and fix them","slow them down"], a:1}
+    {q:"A puffin crossing's sensors can detect…", o:["only cars","people waiting, people crossing, and approaching cars","nothing, they're just for show"], a:1},
+    {q:"In a catalogue store, choosing items and paying happens at…", o:["the warehouse","the order point","the collection point"], a:1},
+    {q:"Picking an item off the shelf and marking it off is a job usually done by…", o:["a computer","a person","nobody, it happens automatically"], a:1},
+    {q:"One way to help keep your information safe online is to…", o:["share your password with a good friend","use trustworthy websites and keep information private","accept every app's request to share your data"], a:1}
   ];
   var Y56_SHEETS2 = {
-    trace: function(){
-      return shell(Y56META2,'Trace a system',
-        'Pick a system: sending a message, ordering something online, or paying a bus fare. Write the steps in order, then say which parts are devices, which are hidden processes, and which are people.',
-        '<h2>My system</h2><div class="lines s2"></div>' +
-        '<h2>The steps, in order</h2><div class="lines s5"></div>' +
-        '<h2 class="in">Devices</h2><div class="lines s2"></div>' +
-        '<h2 class="pr2">Hidden processes</h2><div class="lines s2"></div>' +
-        '<h2 class="ou">People</h2><div class="lines s2"></div>');
+    crossing: function(){
+      var row = function(t){ return '<div style="display:flex;gap:14px;padding:8px 0;border-bottom:1.5px solid #dfe2ec"><div style="flex:1;font-size:13px">'+t+'</div><div style="flex:none;width:70px;text-align:center;border-left:1.5px solid #dfe2ec"></div><div style="flex:none;width:70px;text-align:center;border-left:1.5px solid #dfe2ec"></div></div>'; };
+      return shell(Y56META2,'Comparing pedestrian crossings',
+        'Tick the column if that crossing does this. Some statements apply to both.',
+        '<div style="display:flex;gap:14px;font-size:12px;font-weight:700;color:#5c6676"><div style="flex:1"></div><div style="flex:none;width:70px;text-align:center">Timed</div><div style="flex:none;width:70px;text-align:center">Sensor</div></div>' +
+        row('Lets pedestrians stop the traffic, to help them cross safely') +
+        row('Gives pedestrians time to cross the road') +
+        row('Stops the traffic no longer than necessary') +
+        row('Adapts to pedestrians walking at different speeds') +
+        row('Cancels if someone presses the button, then walks away'));
     },
-    benefits: function(){
-      return shell(Y56META2,'Benefits and trade-offs',
-        'Think about the system you traced. What is good about doing it with a computer system? What could go wrong, or what does it still need a person for?',
-        '<div style="display:flex;gap:18px;margin-top:10px">' +
-          '<div style="flex:1"><h2 class="ou">What is good about it</h2><div class="lines s5"></div></div>' +
-          '<div style="flex:1"><h2 class="in">What could go wrong</h2><div class="lines s5"></div></div>' +
-        '</div>');
+    store: function(){
+      var box = function(t){ return '<div style="flex:1;min-width:150px"><h2>'+t+'</h2><div class="lines s4"></div></div>'; };
+      return shell(Y56META2,'Catalogue store',
+        'Write what happens at each part of the store, and mark each task P for person or C for computer.',
+        '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px">' + box('Order point')+box('Warehouse')+box('Collection point') + '</div>');
     },
     hw: function(){
       return shell(Y56META2,'A system at home',
-        'Find a computer system at home: a smart speaker, a heating thermostat, a games console playing online. List its connected parts and say what each one does.',
+        'Find a computer system at home: a smart speaker, a heating thermostat, a games console playing online. List its connected parts, and one thing you do to keep it safe.',
         '<h2>The system</h2><div class="lines s2"></div>' +
-        '<h2>Its connected parts</h2><div class="lines s5"></div>' +
-        '<h2>One thing it does well, and one thing that could go wrong</h2><div class="lines s3"></div>');
+        '<h2>Its connected parts</h2><div class="lines s3"></div>' +
+        '<h2>One thing you do to stay safe using it</h2><div class="lines s2"></div>');
     }
   };
 
@@ -4117,7 +4143,7 @@
     'y56/2':{ notes:Y56_NOTES2, slides:Y56_SLIDES2, quiz:Y56_QUIZ2, sheets:Y56_SHEETS2,
       exitHash:Y56META2.exitHash, lessonHash:'#/y56/lesson/2',
       taskTk:'Systems and Searching · Lesson 2', taskH1:'Computer systems and us',
-      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a system you use: a message app, an online shop, a bus card. Write three of its connected parts, and say which is a <strong>device</strong>, which is a <strong>process</strong>, and which is a <strong>person</strong>.</p></div>' },
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Pick a system you use: an online shop, a bus card, a library scanner. Write two tasks it does, and say whether each one is done by a <strong>person</strong> or a <strong>computer</strong>.</p></div>' },
     'y56/3':{ notes:Y56_NOTES3, slides:Y56_SLIDES3, quiz:Y56_QUIZ3, sheets:Y56_SHEETS3,
       exitHash:Y56META3.exitHash, lessonHash:'#/y56/lesson/3',
       taskTk:'Systems and Searching · Lesson 3', taskH1:'Searching the web',
