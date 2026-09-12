@@ -35,6 +35,15 @@ Rough size: ~200 lines in `index.html` plus the room code on PartyKit.
 
 ## Also outstanding
 
+- **Fix the shit timeline on Lesson 4 of Year 5/6.** The "brief history of the
+  web" slide (`#/y56/lesson/4`, second content slide, `Y56_SLIDES4` in
+  `index.html`, class prefix `d2-tl-`). Three attempts this session, all
+  rejected by the user as not matching the reference
+  (dropship.io/about's timeline) and looking bad in the browser. Don't
+  guess again from a fetched HTML dump — get an actual screenshot or live
+  look at both the reference and the current render before touching this,
+  or ask the user to describe exactly what's wrong with a screenshot in
+  hand.
 - **QR code needs a real host.** It builds its URL from `location.origin`, so it
   only works once `index.html` is served from a real address. Opening the file
   directly breaks the iPad hand-off.
