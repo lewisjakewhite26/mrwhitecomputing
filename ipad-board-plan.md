@@ -141,15 +141,82 @@ school's actual network can reach PartyKit at all if there's a
 restrictive allowlist. Both are five-minute checks on a real school
 iPad, not engineering risk.
 
-## Open questions worth deciding before building
+## Decided
 
-- **Room lifetime.** A code per lesson, wiped after — matches the
-  original plan and needs no persistence beyond the current session.
-- **Moderation before display, or after.** Padlet can vet a post before
-  it's public; this plan's hide button is after-the-fact instead, which
-  is simpler and probably fine for a primary classroom, but worth a
-  deliberate choice rather than a default.
-- **What happens with no wifi.** The rest of the app works offline by
-  design; this feature is the one exception. Worth deciding what the
-  pupil and board views show if PartyKit's unreachable — a plain error,
-  or a graceful "try again" — rather than a raw failed fetch.
+- **Room lifetime: in-memory only, no disk.** A PartyKit room (a
+  Cloudflare Durable Object under the hood) holds its answers in a plain
+  array for as long as it's active. No storage quota to worry about, no
+  cleanup job to write. One caveat worth stating plainly rather than
+  assuming: nothing in a pure HTTP-polling design tells the room a
+  teacher closed the board tab — there's no live connection to notice
+  that. The room's contents sit in memory until Cloudflare's own idle
+  eviction reclaims it, on its own schedule, not on any classroom action.
+  Functionally this is still "ephemeral, never touches disk"; it just
+  isn't "wiped the instant the tab closes."
+- **Moderation: after-the-fact hide, not pre-approval.** Vetting 30
+  submissions one by one before they're visible stalls the lesson.
+  New answers land on the board immediately; the hide button pulls one
+  back if it needs pulling. Fine for a primary classroom, not fine if
+  this ever needed to run genuinely unsupervised.
+- **No wifi, or PartyKit unreachable:** silent retry on the board (a
+  failed poll just tries again in two seconds, no error overlay
+  interrupting the class), sticky feedback on the pupil side (a failed
+  Send re-enables the button and says plainly that it didn't go through
+  — a pupil should never be left wondering).
+
+## Implementation review
+
+A first pass at the actual code turned up one mistake worth catching
+before it's anywhere near `index.html`, plus some real gaps.
+
+**The routing has to be a branch inside the existing `route()`, not a
+replacement for it.** Hub's router (`index.html:1137`) already toggles a
+`views` object of pre-existing `<section>` elements — `view-picker`,
+`view-hub`, `view-deck`, and so on — inside one function with its own
+`lastRoute`/`selfHash` guards and a try/catch that falls back to the
+picker on error. A version of this feature that defines its own
+`route()` rendering into a generic `document.getElementById("app")`
+would replace that function outright and silently kill every other page
+in the app. The fix is two new sections (`view-live`, `view-board`)
+added to the HTML and the `views` object, and two new `else if`
+branches inside the real `route()` — everything else about it (the
+guards, the fallback, the toggle loop) is reused for free.
+
+**Nothing sets the room's question.** The pupil view reads it with a
+`GET`; nothing anywhere calls the matching `set-question`. That has to
+happen once, when the teacher opens the board for a room that doesn't
+have a question yet — pulling from whatever prompt the current slide
+already carries (`taskH1`/`taskIntro` on the lesson's `UNITS` entry) is
+the natural source, rather than making the teacher retype it.
+
+**No "this room doesn't exist" state.** A stale or mistyped code
+currently falls through to the same "write or draw your answer" prompt
+as a working room. Given rooms are meant to be single-lesson and
+short-lived, a pupil hitting an expired one needs to be told that
+plainly, not left assuming it's working.
+
+**`clear-all` and `hide-answer` are unauthenticated.** Anyone with the
+room code, or who finds the URL shape, can wipe the board or hide a
+tile. Low stakes for an activity nobody outside the room knows exists —
+but worth being a deliberate choice. Once the app has a real host (the
+separate, already-listed "QR code needs a real host" item), restricting
+the PartyKit server's CORS to that origin instead of `*` closes most of
+this for free.
+
+**Styling needs to become hub's, not generic.** A first pass came back
+in ad hoc hex colours and system sans-serif — functional, but visually
+foreign next to the rest of the deck. Before this ships it should pull
+from the same custom properties everything else in `index.html` already
+uses (`--proc`, `--paper`, `--ink`, the existing border-radius and
+shadow scale), not introduce a second visual language.
+
+**A `partykit.json` manifest is still needed.** The server file alone
+(`party/main.ts`) doesn't deploy without a couple of lines naming it as
+the project's "main" party — easy to forget if following the server code
+in isolation.
+
+**Worth keeping regardless:** the pre-flight check — open Safari on an
+actual school iPad, on the school's pupil wifi, and hit the PartyKit URL
+directly before writing another line of code. A content-filter block or
+a DNS failure there is a five-minute finding; the same problem
+discovered mid-lesson in front of a class is not.
