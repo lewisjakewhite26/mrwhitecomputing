@@ -35,6 +35,15 @@ Rough size: ~200 lines in `index.html` plus the room code on PartyKit.
 
 ## Also outstanding
 
+- **Make the 13 lessons built this session more engaging, not just longer.**
+  Full pedagogy audit in `pedagogy-audit.md`: 14 of the 18 lessons have zero
+  checked/embedded activity (no drag-sort, no sequencing), leaning entirely
+  on tap-to-reveal cards, and the deck-only walkthrough is roughly a third
+  of the claimed lesson length in every case. The other four lessons
+  (already built before this session) use a real Check-button sort or
+  sequence activity — that mechanic already exists in the code
+  (`sortInit`, `renderSeq`) and just needs reusing. The audit names five
+  specific slides to convert first.
 - **Fix the shit timeline on Lesson 4 of Year 5/6.** The "brief history of the
   web" slide (`#/y56/lesson/4`, second content slide, `Y56_SLIDES4` in
   `index.html`, class prefix `d2-tl-`). Three attempts this session, all
