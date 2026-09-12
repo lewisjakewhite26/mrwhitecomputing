@@ -1,0 +1,366 @@
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/A1 Activity sheet – Searching the web.docx
+############################################################
+Searching the web
+In this activity, learners explore how search results are influenced by the person who: 
+Completes the search 
+Creates the search engine company
+Creates websites and webpages
+In groups of three, each learner will think about a different perspective in the search process: the searcher, the search engine company, or the webpage creator.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Learner 1: The searcher
+You would like to find out about the best zoos in America. Using the same search engine, try each of these search terms and compare the results.
+Best zoos
+USA zoo
+San Diego zoo
+Which was the most effective search term, and why? 
+Which was the least effective search term, and why?
+How does the search term influence the results that you see?
+Learner 2: The search engine company
+How effectively do different search engines handle the same search term? Use the search term “Best USA zoo” and compare the results from Google, Bing, and DuckDuckGo.
+What differences were there between the results from each search engine?
+Why do you think there were differences?
+Which search engine did you find most useful? Explain your answer.
+Learner 3: The webpage creator
+How is a website designed to help search engines find relevant information? Go to https://zoo.sandiegozoo.org/ and then answer the question below.
+What features on the San Diego Zoo website would help it be searchable? Explain your answer.
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/A1 Handout – Searching the web.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 6 – How are searches influenced?
+Learner handout
+Searching the web
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Searcher
+Search engine company
+Webpage creator
+--- notes for slide1.xml ---
+Late updated 00-00-00
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/A2 Activity sheet – Limitations.docx
+############################################################
+Priya’s first search: “firefox”
+Priya’s second search: “firefox animal”
+Marcus’s first search “pasta recipes”
+Marcus’s second search: “how to make pasta”
+Sophie’s first search: “parks”
+Sophie’s second search: “famous people named parks”
+Which scenario did you look at? (circle one)
+Priya
+Marcus
+Sophie
+How helpful was the first search term?
+Why did the second search term return different results?
+Which search was most effective? Why?
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Image credits:
+Pasta: https://pixabay.com/photos/pasta-rotini-raw-uncooked-2093/ 
+Red panda: https://pixabay.com/photos/red-panda-animal-carnivore-close-up-1851661/ 
+Rosa Parks: https://upload.wikimedia.org/wikipedia/commons/3/3d/Rosa_Parks_MLK_30th_anniversary.jpg 
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/AP Activity sheet – How do search engines make money_.docx
+############################################################
+How do search engines make money?
+Look at the image below. Make notes about anything that you think indicates how a search engine could make money.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/L6 Homework – Systems and searching – Y5.docx
+############################################################
+Homework
+In Lesson 6, you discussed things that you can’t find on the web. Can you think of three things that you can’t find on the web and explain why that might be?
+What can’t you find on the web?
+Why can’t you find this on the web?
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/L6 Lesson plan – Systems and searching – Y5.docx
+############################################################
+Lesson 6: How are searches influenced?
+Introduction
+Learners explore how someone performing a web search can influence the results that are returned, and how content creators can optimise their sites for searching. They also explore some of the limitations of searching and discuss what cannot be searched.
+Learning objectives
+To recognise why the order of results is important, and to whom
+I can describe some of the ways that search results can be influenced
+I can recognise some of the limitations of search engines
+I can explain how search engines make money
+Key vocabulary
+Searching, search engine, web crawler, content creator, selection, ranking
+Preparation
+Subject knowledge:
+You will need an understanding of selection and page ranking from Lessons 4 and 5.
+For Activity 1, you will need to be aware of the impact that searchers, search engines, and webpage creators have on the effectiveness of a search:
+Searchers: the search term, the links that they click on, the location of the searcher, the choice of search engine, and the settings that they have chosen
+Search engines: the rules that their web crawlers follow to create an index, adverts and sponsored results, and the settings available
+Webpage creators: the terms, text, and images used; and the links in and out of a page
+You will need to be familiar with the scenarios in Activity 2. 
+You will need:
+Slides (ncce.io/csn6-4-s)
+A1 Handout – Searching the web
+A1 Activity sheet – Searching the web (cut this up in advance of the lesson)
+A2 Activity sheet – Limitations (print a copy of the final page of the activity sheet for each learner, and a copy of the first six pages for every three learners)
+AP Activity sheet – How do search engines make money?
+Homework (optional)
+Internet-connected devices (for Activity 2)
+Assessment opportunities
+Introduction: You can assess how well learners can recall the definitions of ‘selection’ and ‘page rank’.
+Activity 1: You can assess how well learners can explain searching from three perspectives in the search process. The responses are summarised on slides 6 to 8.
+Activity 2: You can assess learners’ logical thinking skills: if one search term is not effective, can they adapt it to something more useful? 
+Activity 3: You can assess how well learners can differentiate between online and offline interactions.
+Plenary: You can assess how well learners can associate advertising that they see in the offline world with advertising they see online, and you can assess their understanding of how advertising is a significant source of income for search engines.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 2–3)
+5 mins
+Lesson 4 and 5 recap: selection and page rank
+Introduce the lesson and the learning objectives.
+Give learners time to discuss the key learning points from the previous two lessons with a partner. They should agree on a definition for each term:
+Selection: A search engine creates an index of the World Wide Web using web crawlers. When a search takes place, results are selected from the search engine’s index and delivered to the user.
+Page rank: Some factors, including the name of the site, the presence of the search term on the site, and the number of links to a site can influence the order in which results are delivered.
+Activity 1
+(Slides 4–8)
+15 mins
+Searching the web
+Arrange learners into groups of three and give each learner a number: 1, 2, or 3. Explain that each learner will think about a different perspective in the search process. Give one copy of the handout to each group and also give each learner their section of the activity sheet. For example, Learner 1 would receive the page titled ‘The searcher’. 
+Then put learners into new groups with at least one other learner who has the same number. Give them the opportunity to discuss the perspective of their character:
+The searcher
+The search engine company
+The webpage creator
+After the discussions, ask learners to return to their original groups of three and complete the handout to explain how results are influenced by each part of the search process. These responses can then be combined to form an overall picture. 
+Share the ideas on slides 6, 7, and 8 and compare them with learners’ responses.
+Activity 2(Slides 9–12)
+15 mins
+The web searcher
+In this activity, learners explore some of the limitations of web searches through using phrases that are ambiguous or have more than one meaning. Show slide 9 to introduce the activity.
+Describe the three scenarios on slides 10 to 12 and tell learners that they will each be given one of the three scenarios, and two terms to consider. Give each learner the table on page 7 of the activity sheet and tell them that they need to answer the following questions:
+How helpful was the first search term?
+Why did the second search term return different results?
+Which search was the most effective? Why?
+Give out the first search for each scenario and allow learners time to consider how helpful the search was. Then, hand out the second search. Give learners time to record their thoughts on the table in the activity sheet. Once they have completed this table, ask them to share their scenario with another learner who has been working on a different scenario, then discuss the responses as a whole class:
+Priya’s search: ‘Firefox’ is another name for a red panda. Searching for “firefox” will return results about the Firefox web browser, not the animal. An alternative search term, such as “firefox animal” should be considered.
+Marcus’s search: Searching for pasta recipes will mostly return results for pasta dishes, rather than recipes for making pasta itself. An alternative search term such as “how to make pasta” should be considered.
+Sophie’s search: The image is of Rosa Parks, the civil rights activist. Searching for “parks” or “famous parks” will direct learners towards parks or national parks. Searching for “famous people named parks” will be more helpful, however further refinement may be required.
+Activity 3
+(Slide 13)
+10 mins
+What can’t you find on the web?
+This is a discussion-based activity that could explore many concepts. Arrange learners into groups of four and ask them, “What can’t be found on the web? Why?”. Give them some time to exchange ideas. Below are some potential discussion points:
+Private information such as medical records
+Anything that is difficult to quantify in words, e.g. smells, sights, feelings
+Your own thoughts, feelings, or motivations
+Human contact or face-to-face social interaction
+Note: Parts of the web are hidden from search engines. These are sometimes referred to as the ‘deep web’ or ‘dark web’, and can be associated with criminal activity. This is not a key learning point for this lesson. However, some learners may be aware of it, and may raise it during the discussion.
+Plenary
+(Slides 14–17)
+5 mins
+How do search engines make money?
+Outline the following scenario: you would like to learn how to play the guitar, but you don’t own that instrument. So you decide to do a search for “guitar”.
+Give learners the activity sheet. At this point, you can either show slide 15, or demonstrate a search on screen. If you choose to do your own search, you should check beforehand that sponsored and localised results or adverts appear in the results, as they do in the image on the slide. Ask learners what they notice about the first few results, and tell them to note their ideas on the activity sheet. Then, build the slide or draw attention to the adverts and sponsored links.
+Explain that the results that are sponsored or adverts are ranked highly because companies have agreed to pay search engines for their links to be prominent for certain search terms. Providing this advertising space is how search engines make money (as of January 2020, Google is estimated to be worth over $300 billion). Note: The search also includes certain results based on location.
+Show slide 16 (title only) and ask learners where else they might see adverts. Invite responses, and then build the slide to show five examples of adverts or sponsorship:
+On football shirts
+On billboards
+On television
+In newspapers
+On buses or public transport
+Display slide 17. Ask learners if they can identify any differences between the adverts in the two pictures. If necessary, prompt learners by asking when they are likely to see adverts such as these.
+The Spiderman film advert is not targeted. It is on the side of a bus in a busy city, so it can be seen by as many people as possible. This will include some people who are interested in superhero films, but also, many who are not.
+The guitar adverts have appeared in response to a specific search term. This means that the advertisers and retailers can have more confidence that the advert is reaching its target audience in terms of the product (guitar) and location (in this example, Manchester).
+Next time 
+(Slides 18–19)
+5 mins
+This lesson, next lesson
+Review the ‘Assessment’ and ‘Summary’ slides.
+Homework
+Following on from Activity 3, ask learners to consider what they cannot find on the web and the implications of this.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L6_src/L6 – How are searches influenced_/L6 Slides – Systems and searching – Y5.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 6: How are searches influenced? 
+Year 5 – Computing systems and networks – Systems and searching
+--- notes for slide1.xml ---
+Last updated: 31-01-22
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 6: How are searches influenced? 
+Objectives
+To recognise why the order of results is important, and to whom 
+I can describe some of the ways that search results can be influenced
+I can recognise some of the limitations of search engines
+I can explain how search engines make money
+‹#›
+
+=== slide3.xml ===
+Searching the web
+‹#›
+Introduction
+In the previous lessons, you learnt about:
+Selection
+Ranking
+Talk to a partner and agree definitions for these terms.
+
+=== slide4.xml ===
+Searching the web
+‹#›
+Activity 1
+You can think about searching the web from three different points of view: 
+Searcher: you, me, and other people using search engines to find web pages
+Search engine company: Google, Bing, DuckDuckGo
+Webpage creators: companies and organisations, for example, the BBC, your school, a local running club
+
+=== slide5.xml ===
+Searching the web
+‹#›
+Activity 1
+Think about each point of view in the search process. Which things affect the pages that are viewed?
+Discuss the questions with learners that have the same number as you. Then return to your original group of three to write up your discussions and share your thoughts.
+Learner number 1: Searcher
+Learner number 2: Search engine company
+Learner number 3: Webpage creator
+
+=== slide6.xml ===
+Searching the web – searcher
+‹#›
+Activity 1
+Did you include any of the ideas below? Can you add any more?
+The choice of search engine
+The words used in the search phrase or term
+The links that they click on
+Their browsing history
+
+=== slide7.xml ===
+Searching the web – search engine company
+‹#›
+Activity 1
+Did you include any of the ideas below? Can you add any more?
+Their ethics and beliefs
+The rules that their web crawlers follow
+The rules that their page rank uses
+Money they make from advertising
+
+=== slide8.xml ===
+Searching the web – webpage creator
+‹#›
+Activity 1
+Did you include any of the ideas below? Can you add any more?
+The terms, text, and headings used on the pages
+The links in and out of a page
+Decisions they make about advertising and promotion
+
+=== slide9.xml ===
+Sometimes search engines don’t give you the results you expect. You will now find out why.
+Activity 2
+‹#›
+
+=== slide10.xml ===
+Priya has been told that this animal is called a firefox, and she would like some more pictures of it.
+How helpful was the search term “firefox”?
+Why did the second search term “firefox animal” return different results?
+Which search was the most effective? Why?
+The web searcher (1)
+Activity 2
+‹#›
+--- notes for slide10.xml ---
+Image source: https://pixabay.com/photos/adorable-red-panda-animal-carnivore-1851661/
+
+=== slide11.xml ===
+Marcus would like to know how to make pasta. Discuss the first and second searches that he completes.
+How helpful was the first search term “pasta recipes”?
+Why did the second search term “how to make pasta” return different results?
+Which search was the most effective? Why?
+The web searcher (2)
+Activity 2
+‹#›
+--- notes for slide11.xml ---
+Image source: https://pixabay.com/photos/background-diet-dinner-dry-eat-2093/
+
+=== slide12.xml ===
+The web searcher (3)
+‹#›
+Activity 2
+Sophie has seen a picture of someone. She can remember that her last name was Parks. 
+How helpful was the first search term “Parks”?
+Why did the second search term “famous people named Parks” return different results?
+Which search was the most effective? Why?
+--- notes for slide12.xml ---
+Image source: https://commons.wikimedia.org/wiki/File:Rosa_Parks_MLK_30th_anniversary.jpg#/media/File:Rosa_Parks_MLK_30th_anniversary.jpg
+
+=== slide13.xml ===
+What can’t be found on the web? Why?
+  
+Not everything can be found on the web
+‹#›
+Activity 3
+
+=== slide14.xml ===
+You have decided that you would like to learn how to play the guitar. You search Google for “guitar”.
+How do search engines make money?
+Plenary
+‹#›
+--- notes for slide14.xml ---
+Image source: https://pixabay.com/vectors/acoustic-guitar-guitar-instrument-149427/
+
+=== slide15.xml ===
+What do you notice about the first few results?
+Plenary
+‹#›
+
+=== slide16.xml ===
+Where else have you seen adverts?
+Plenary
+‹#›
+--- notes for slide16.xml ---
+Image sources:
+https://pixabay.com/photos/piccadilly-circus-people-crowd-busy-926802/
+https://pixabay.com/photos/football-soccer-players-competition-83222/
+https://pixabay.com/photos/london-bus-united-kingdom-664101/ (cropped)
+https://pixabay.com/photos/newspapers-stack-reading-paper-1412940/
+https://pixabay.com/photos/children-tv-child-television-home-403582/
+
+=== slide17.xml ===
+Targeting advertisements
+Plenary
+‹#›
+--- notes for slide17.xml ---
+https://pixabay.com/photos/vehicle-london-united-kingdom-bus-3815301/ (cropped)
+
+=== slide18.xml ===
+‹#›
+Assessment
+I can describe some of the ways that search results can be influenced
+I can recognise some of the limitations of search engines
+I can explain how search engines make money
+How confident are you? (1–3)
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide18.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide19.xml ===
+In this lesson, you…
+Looked at how searches can be influenced, and the limitations of search engines
+This lesson
+‹#›
+Summary

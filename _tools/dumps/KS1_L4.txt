@@ -1,0 +1,236 @@
+
+############################################################
+FILE: ../KS1/L4_src/L4 - Using a computer keyboard/L4 Lesson plan – Technology around us – Y1.docx
+############################################################
+Lesson 4: Using a computer keyboard
+Introduction
+Learners will begin to use the computer keyboard for a purpose. They will understand that writing on a keyboard is called typing and will begin to demonstrate their ability to write their name. Learners will then save their work using the save icon and understand that this icon is used in lots of different programs. 
+Learning objectives
+To use a keyboard to type on a computer
+I can say what a keyboard is for
+I can type my name on a computer
+I can save my work to a file
+Key vocabulary
+Computer, keyboard, mouse, typing
+Preparation
+Subject knowledge:
+Teachers will need to be aware that typing is the process of using a keyboard to write words, letters or numbers on a screen.
+You will need:
+L4 Slides 
+A1 – Desktop or laptop computers (tablet devices could be used as an alternative)
+A1 – Learner access to paintz.app
+Assessment opportunities
+Introduction: Assess whether learners can explain that the process of writing using a keyboard is called typing.  
+Activity 1: Assess whether learners are able to type their name using a keyboard.
+Activity 2: Assess learners’ ability to save a file. 
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction 
+(Slides 2–5)
+10 mins
+Introducing the keyboard
+Share the learning objective with the learners. 
+Share slide 3 and remind the learners that computer mice come in different varieties. Explain that in this lesson, learners will be using a keyboard to write using a computer. 
+Share slide 4 and ask the learners to think, pair, share, ‘What do you use a keyboard for?’ Explain that keyboards are used for writing words, letters or numbers on a screen. 
+Display slide 5 and ask learners to comment on any similarities and differences. As with the computer mice and trackpads, emphasise that keyboards can look different, but they all perform the same function.
+Activity 1
+(Slides 6–10)
+20 mins
+Typing on a keyboard
+Note: This part of the activity is best modelled for the learners within the program, however screenshots of the program have been provided on slides 7-9 as an alternative. 
+Display slide 6 and explain that learners will be using the paint program they used in Lesson 3. Model opening the program for the learners and explain that the program allows them to create pictures and add text/words. 
+Highlight the text function on the toolbar (dotted square with a T in the middle). Select this function with a single click. Demonstrate clicking and dragging a text box onto the paint area. Explain that you can now write text in the box. Model this by writing your name or a word. 
+Note: To finalise a text box, learners will need to click outside of the box or a different tool on the toolbar. It is important to emphasise that once learners click away from their text box, they will not be able to edit the text, including moving the text box. 
+Display slide 10 and ask learners to log on to the computer and open the paint program in a browser. Ask them to write their name into a text box at the bottom of the page. If the learners are working with a partner, ensure both learners have the opportunity to perform this task. 
+Note: Expectations for capital letters in the learners’ names should be considered for this activity. This will depend on whether the learners have been taught this skill in your setting. This skill is introduced in the Y1 – Digital writing unit.
+Once learners have written their name, they can use the remaining time to practise their mouse skills by drawing a simple self-portrait. Explain that this will be very simple and does not need too much detail. 
+Explorer task: Ask learners to alter the size, colour and font of the text in a text box. Remind the learners that they will need to do this before they click away from their text box. 
+Activity 2
+(Slides 11–14)
+10 mins
+Saving my work
+Note: This part of the activity is best modelled for the learners within the program, however screenshots of the program have been provided on slides 12-14 as an alternative. 
+Display slide 11 and ask learners to think, pair, share, ‘How could you keep the work you have created so you can add to it another day?’ Open the paint program and highlight the ‘save’ icon. Explain that this is used to save their work and will be visible in lots of programs they use. 
+Model clicking the save icon in the paint program, and explain that they need to write their name into the box that appears. They don’t need to remove the ‘.png’ part. 
+Display slide 14 and ask the learners, ‘Why is it important to name the files you save sensibly?’
+It helps you to find it more easily
+You know what a saved file is without having to open it
+Ask the learners to return to their computers to save their work, by naming their file with their name. 
+Note: By default, the files in Paintz.app will be saved to the Downloads folder of the local computer.
+Plenary
+(Slide 15)
+5 mins
+What functions have been used?
+Review and share an example of the learners’ work. Can learners identify which functions were used to create the picture? Questions could include:
+Has more than one colour been used?
+Has text been added?
+Have any other tools been used?
+Next time
+(Slides 16–17)
+5 mins
+This time, next time
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L4_src/L4 - Using a computer keyboard/L4 Slides – Technology around us – Y1.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 4: Using a computer keyboard
+Year 1 – Computing systems and networks – Technology around us
+--- notes for slide1.xml ---
+Last updated: 03-06-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+To use a keyboard to type on a computer
+I can say what a keyboard is for
+I can type my name on a computer
+I can save my work to a file
+Objectives
+Lesson 4: Using a computer keyboard
+
+=== slide3.xml ===
+Introduction
+We can use a mouse to draw pictures
+--- notes for slide3.xml ---
+Remind the learners that computer mice come in different varieties. Explain that in this lesson, learners will be using a keyboard to write using a computer. 
+Wired mouse: https://pixabay.com/vectors/computer-mouse-computer-device-152249/
+Single button mouse: https://pixabay.com/photos/workplace-mouse-computer-apple-2341642/
+Wireless mouse: https://pixabay.com/vectors/computer-mouse-hardware-wheel-click-23266/
+Two button trackpad: https://pixabay.com/vectors/mousepad-finger-mouse-pad-point-160223/
+
+=== slide4.xml ===
+What do you use a keyboard for?
+Introduction
+Keyboards are used for writing on a computer. 
+--- notes for slide4.xml ---
+Explain that keyboards are used for writing on a computer.
+Keyboard: https://pixabay.com/vectors/keyboard-electronic-computer-311803/ 
+
+=== slide5.xml ===
+Introduction
+Not all keyboards look the same, but they do the same thing.
+The keyboard
+--- notes for slide5.xml ---
+Ask learners to comment on any similarities and differences. As with the computer mice and trackpads, emphasise that keyboards can look different, but they all perform the same function.
+Wired keyboard (cropped): https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+Wireless keyboard (cropped): https://pixabay.com/photos/workplace-office-desk-business-2303849/
+Laptop: https://pixabay.com/illustrations/laptop-macbook-computer-technology-4353711/ 
+
+=== slide6.xml ===
+Activity 1
+Typing on a keyboard
+You will use the paint program you used in Lesson 3. 
+paintz.app
+--- notes for slide6.xml ---
+Explain that learners will be using the paint program they used in Lesson 3. Model opening the program for the learners and explain that the program allows them to create pictures and add text/words. 
+Screenshot: paintz.app
+
+=== slide7.xml ===
+Click on the text tool
+Activity 1
+--- notes for slide7.xml ---
+Highlight the text function on the toolbar (dotted square with a T in the middle). Select this function with a single click.
+Screenshot: https://paintz.app 
+
+=== slide8.xml ===
+Activity 1
+Click and drag in the paint area to draw a textbox
+--- notes for slide8.xml ---
+Demonstrate clicking and dragging a text box onto the paint area. 
+Screenshot: https://paintz.app 
+
+=== slide9.xml ===
+Type your name into the textbox
+Activity 1
+Click anywhere outside of the textbox to finish
+--- notes for slide9.xml ---
+Explain that you can now write text in the box. Model this by writing your name or a word. 
+Note: To finalise a text box, learners will need to click outside of the box or a different tool on the toolbar. It is important to emphasise that once learners click away from their text box, they will not be able to edit the text, including moving the text box. 
+Screenshot: https://paintz.app 
+
+=== slide10.xml ===
+Activity 1
+Typing on a keyboard
+Open the Paintz program:
+paintz.app
+Write your name at the bottom of the paint area. 
+Draw a simple drawing of yourself above your name. 
+--- notes for slide10.xml ---
+Ask learners to log on to the computer and open the paint program in a browser. Ask them to write their name into a text box at the bottom of the page. If the learners are working with a partner, ensure both learners have the opportunity to perform this task. 
+Remaining time can be used to practise mouse skills by drawing a simple self-portrait. Explain that this will be very simple and does not need too much detail. 
+Screenshot: paintz.app
+
+=== slide11.xml ===
+Activity 2
+Think, pair, share
+How could you keep the work you have created so you can add to it another day?
+--- notes for slide11.xml ---
+Open the paint program and highlight the ‘save’ icon. Explain that this is used as to save their work and will be visible in lots of programs they use. 
+
+=== slide12.xml ===
+Click on the ‘save as’ icon
+Activity 2
+--- notes for slide12.xml ---
+Highlight the ‘save’ icon. Explain that this is used as a save icon and will be visible in lots of programs they use. 
+Screenshot: https://paintz.app 
+
+=== slide13.xml ===
+Activity 2
+Type your name. This will name your file with your name
+Click the ‘SAVE’ button
+--- notes for slide13.xml ---
+The learners don’t need to remove the ‘.png’ part. 
+Screenshot: https://paintz.app 
+
+=== slide14.xml ===
+Activity 2
+Saving my work
+Why is it important to name the files you save sensibly?
+It helps you to find it more easily
+You know what a saved file is without having to open it
+Return to your computer and save your work. 
+--- notes for slide14.xml ---
+Ask the learners, ‘Why is it important to name the files you save sensibly?’
+It helps you to find it more easily
+You know what a saved file is without having to open it
+Ask the learners to return to their computers to save their work, by naming their file with their name. 
+Note: By default, the files in Paintz.app will be saved to the Downloads folder of the local computer.
+Screenshot: https://paintz.app 
+
+=== slide15.xml ===
+Plenary
+Look at the image. What functions have been used to create the image?
+Has more than one colour been used?
+Has text been added?
+Have any other tools been used?
+What functions have been used?
+--- notes for slide15.xml ---
+Review and share an example of the learners’ work
+
+=== slide16.xml ===
+I can say what a keyboard is for
+I can type my name on a computer
+I can save my work to a file
+How confident are you? (1–3)
+‹#›
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide16.xml ---
+https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide17.xml ===
+In this lesson, you…
+Used a computer keyboard to type letters on a screen
+Next lesson
+‹#›
+Next lesson, you will…
+Use the keyboard to edit text
+Summary

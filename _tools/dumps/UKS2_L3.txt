@@ -1,0 +1,286 @@
+
+############################################################
+FILE: ../UKS2/L3_src/L3-Searching the web_v1.3/A1 Activity sheet - How do you search.docx
+############################################################
+How do you search?
+In what year was Mahatma Gandhi born?
+Write a full set of instructions for someone to follow to find the answer to the question above.
+Written by:_________________Reviewed by:_________________
+To be completed by the reviewer: How good were the instructions? Were you able to find the answer to the question?
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../UKS2/L3_src/L3-Searching the web_v1.3/A3 Activity sheet - Comparing search engines.docx
+############################################################
+Comparing search engines
+Search term: _______________
+Search engine
+Top result
+How many ads?
+What’s interesting about this search engine’s results?
+Bing.com
+Google.com
+DuckDuckGo.com
+Ecosia.org
+Swisscows.com
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../UKS2/L3_src/L3-Searching the web_v1.3/L3 Lesson plan - Systems and searching - Y5 .docx
+############################################################
+Lesson 3: Searching the web
+Introduction
+Learners are introduced to a range of search engines. They are given the opportunity to explain how to search, before they write and test instructions. Next, they learn that searches do not always return the results that someone is looking for, and refine their searches accordingly. Finally, learners are introduced to the two most common methods of searching: using a search engine and using the address bar.
+Learning objectives
+To experiment with search engines
+I can make use of a web search to find specific information
+I can refine my web search
+I can compare results from different search engines
+I can recognise trustworthy websites
+Key vocabulary
+Search, search engine, refine 
+Preparation
+Subject knowledge:
+You will need an awareness of internet searching and an understanding of the search engines introduced in the starter activity
+You will need an understanding of how to refine search terms to get more relevant results (Activity 2)
+You will need to be aware that there are two ways to conduct a web search: from within a search engine and using the address bar (omnibox)
+You will need:
+Slides
+A1 Activity sheet – How do you search?
+A3 Activity sheet – Comparing search engines
+Internet-connected devices with a web browser
+Dry wipe board or flip chart
+Assessment opportunities
+Starter activity: You can assess learners’ awareness of a range of search engines.
+Activity 1: You can assess how well learners can write an accurate set of instructions and provide peer-to-peer feedback.
+Activity 2: You can assess how well learners can refine a search using logic or prior knowledge.
+Activity 3: You can assess learners ability to compare the results from different search engines and draw conclusions from those comparisons.
+Plenary: Learners should be able to explain the different ways that people can search.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 2–4)
+5 mins
+Introducing search engines
+Introduce the lesson and the learning objectives.
+Before they begin, ask learners if they can remember when searching online how they can keep themselves safe? i.e. use trustworthy websites and avoid sharing personal information. Explain that this also applies to search engines as these can store your searches and use this to advertise products to you or recommend certain sites.
+Display slide 3. Explain that the websites on the slide are all search engines. Ask learners which of these search engines they are familiar with. 
+Bing — the search engine provided by Microsoft
+Google — the most popular and widely used search engine worldwide  
+DuckDuckGo — places an emphasis on users’ privacy
+Ecosia — dedicate all of their profits to environmental projects, in particular planting trees
+Swisscows — a family-friendly search site that does not store users’ data; it uses Bing for web searches
+Note: Please adapt this list as necessary in line with your school policies. You will also need to adapt the PowerPoint slides and A3 Activity sheet ‘comparing search engines’.
+Move on to slide 4. Explain that search engines are systems and that in a search engine system, the search engine looks for information. Ask learners, “What are the inputs and outputs when you use a search engine?”. Learners should identify the input is the entering of the search term and the outputs are the results displayed. Explain to learners that in the next four lessons they will learn about what happens between the input and the output.
+Activity 1
+(Slides 5–7)
+15 mins
+How do you search?
+Give learners the activity sheet and display slide 5. Ask learners to work in pairs to write a full set of instructions for someone to conduct a search to answer the question, “In what year was Mahatma Gandhi born?”. Explain that even if they know the answer, they still need to write instructions, as the person who will follow them may not know the answer.
+Note: You could replace the question above with one that is relevant to another classroom topic; the focus of the activity is the process, rather than the answer.
+Ask learners to swap their instructions with another pair. Make sure each pair has written their names on their instructions, so that the instructions can be returned after they have been reviewed.
+Ask learners to test the instructions using an internet-connected device with a web browser. They need to write their feedback on the activity sheet, then return it to the pair who wrote the instructions.
+As a class, agree on a shared set of instructions, and record them on a flipchart or whiteboard, so that they are visible for the rest of the lesson.
+Activity 2(Slides 8–10)
+10 mins
+Refining a search
+In this activity, learners search for terms that have more than one meaning (in this case, the terms are place names). This activity demonstrates to learners that searches may not always produce the information that they are looking for.
+Without mentioning place names, ask learners to search for:
+Rugby
+Sale
+Boot
+Ask learners to make brief notes about their search results. They are likely to find information about the sport of rugby, retail sales, and boots as footwear.
+Show slide 9 and explain that you want to plan a trip to visit family and friends in Rugby in Warwickshire, Sale in Greater Manchester, and Boot in Cumbria. Ask learners if their initial searches were helpful. In most cases, they will have returned results linked to the alternative meaning associated with each place name.
+Show slide 10. Ask learners to reflect on how they could refine their searches, and note ideas on a dry wipe board or flip chart. Give learners the opportunity to search again.
+Activity 3
+(Slide 11)
+10 mins
+Comparing search engines
+Explain to learners that they are going to compare search engines by searching a common term in the five search engines that they were introduced to at the beginning of this lesson.
+As a class, agree on a common search term. Generally, a wider search term such as a country or city name is more likely to return different results from different search engines.
+Note: You should always test search terms before the lesson in school, on devices that the learners will use, as search results vary from day to day. It’s also helpful to know what your online safety policy says if learners do find inappropriate content.
+Ask learners to visit each search engine and record the results on the handout. If you are short of time, you could complete this activity in pairs or small groups.
+Ask learners to complete the final column of the handout, which asks for anything interesting they notice about each particular search engine. Learners may identify features similar to those in the introduction to this lesson, or may draw conclusions from the results found.
+Plenary
+(Slides 12-13)
+15 mins
+Using the search box and address bar
+Explain to learners that there are two common ways to conduct a search: using the search box in the search engine itself or typing the term into the address bar of the browser (sometimes referred to as the ‘omnibox’). 
+The video on slide 11 explains the difference between the two methods, which is summarised as follows:
+Using the search box: the search will be carried out by the search engine that you have chosen.
+Using the address bar/omnibox: the search will be carried out in the default search engine. This is determined by a setting within the browser in use.
+Identifying trusted websites
+Discuss how pupils can tell if a result from the search is a trusted website. This can include checking for spelling errors, checking for quality, checking the source is trusted and, if they are unsure, checking the same information is present on other websites.
+Next time 
+(Slides 13–14)
+5 mins
+This lesson, next lesson
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../UKS2/L3_src/L3-Searching the web_v1.3/L3 Slides - Systems and searching - Y5.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 3: Searching the web 
+Year 5 – Computing systems and networks – Systems and searching
+--- notes for slide1.xml ---
+Last updated: 17-09-2024
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 3: Searching the web 
+Objectives
+To experiment with search engines
+I can make use of a web search to find specific information
+I can refine my web search
+I can compare results from different search engines
+I can explain why I should search trustworthy websites and not share any personal information online.
+2
+
+=== slide3.xml ===
+These websites are all search engines:When searching online how can you stay safe?
+3
+Introduction
+Bing
+Google
+DuckDuckGo
+Ecosia
+Swisscows
+In the next four lessons, you will find out how search engines work.
+
+=== slide4.xml ===
+A search engine looks for information
+Search engines are systems
+Introduction
+Input
+Process
+Output
+What are the inputs and outputs when you use a search engine?
+4
+
+=== slide5.xml ===
+How would you use a search engine to find out...
+5
+Activity 1
+In what year was Mahatma Gandhi born?
+Work with a partner and write down the steps that you would take to find out the answer. The steps should be clear enough for someone else to follow. You should use the correct terms, e.g. World Wide Web, browser. You should work from memory. 
+Another pair will test your instructions. 
+
+=== slide6.xml ===
+How would you use a search engine to find out...
+6
+Activity 1
+In what year was Mahatma Gandhi born?
+Test another pair’s instructions.
+
+=== slide7.xml ===
+How would you use a search engine to find out...
+7
+Activity 1
+In what year was Mahatma Gandhi born?
+Give feedback and agree a class set of steps.
+
+=== slide8.xml ===
+Search for the following terms and note what you find
+8
+Activity 2
+  
+Rugby
+Sale
+Boot
+  
+
+=== slide9.xml ===
+I was hoping for information about...
+Activity 2
+Boot in Cumbria
+Sale in Greater Manchester
+Rugby in Warwickshire
+9
+--- notes for slide9.xml ---
+Image sources:
+https://pixabay.com/vectors/united-kingdom-map-great-britain-36481/
+https://commons.wikimedia.org/wiki/File:Boot._-_geograph.org.uk_-_246722.jpg#/media/File:Boot._-_geograph.org.uk_-_246722.jpg
+https://commons.wikimedia.org/wiki/File:Sale_Town_Hall_-_geograph.org.uk_-_1749852.jpg#/media/File:Sale_Town_Hall_-_geograph.org.uk_-_1749852.jpg 
+https://commons.wikimedia.org/wiki/File:Rugby_town_centre.jpg#/media/File:Rugby_town_centre.jpg 
+
+=== slide10.xml ===
+How could you refine your search to find the information I was looking for?
+Activity 2
+10
+
+=== slide11.xml ===
+Comparing search engines
+Activity 3
+Bing
+You are now going to compare results from the search engines you were introduced to at the beginning of this lesson.
+As a class, agree a search term.
+Google
+DuckDuckGo
+Ecosia
+Swisscows
+
+=== slide12.xml ===
+Using the search box and address bar
+12
+Plenary
+
+=== slide13.xml ===
+Internet safety – what do we need to think about when searching?
+13
+Plenary
+Is it a trusted website? How do we know? i.e. spelling errors, low image quality, correct logos, web address https etc.
+Use a trusted website for information such as BBC.
+If you’re not sure, check 3 sources to ensure information correct.
+--- notes for slide13.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030 (edited)
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide14.xml ===
+14
+Assessment
+I can make use of a web search to find specific information
+I can refine my web search
+I can compare results from different search engines
+I can explain why I should search trustworthy websites and not share any personal information online.
+How confident are you? (1–3)
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide14.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide15.xml ===
+In this lesson, you…
+Described how to complete a web search and then refined and improved your searching
+Next lesson
+15
+Next lesson, you will…
+Explore how search engines select results
+Summary
+
+=== slide16.xml ===
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+Attribution statement

@@ -1,0 +1,260 @@
+
+############################################################
+FILE: ../KS1/L6_src/L6 - Using a computer responsibly/A1 Resource_ Rules grid.pptx
+############################################################
+
+=== slide1.xml ===
+Activity 1 – Rules grid
+To learn
+To be kind to each other
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Year 1 - Technology around us
+Lesson 6 – Using a computer responsibly
+Learner activity sheet
+To be safe
+To stay happy
+--- notes for slide1.xml ---
+Last updated: 03-06-21
+Hard hat: https://pixabay.com/vectors/safety-helmet-helmet-safe-work-150913/ 
+Smile emoji: https://pixabay.com/vectors/smiley-happy-face-smile-lucky-559124/  
+Owl: https://pixabay.com/vectors/owl-bird-book-wise-nature-47526/  
+Holding hands: https://pixabay.com/vectors/circle-colorful-cooperation-1300241/  
+
+############################################################
+FILE: ../KS1/L6_src/L6 - Using a computer responsibly/A2 Resource_ Poster template.docx
+############################################################
+Activity 2 – Poster template
+__________ your device carefully.
+Stop using your __________ when someone is talking to you.
+Take turns with your __________
+Use only the __________ you have been asked to use.
+Don’t share your __________.
+Desktop: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L6_src/L6 - Using a computer responsibly/L6 Lesson plan – Technology around us – Y1.docx
+############################################################
+Lesson 6: Using a computer responsibly
+Introduction
+Learners will be introduced to the concept of using computers safely, within the context of a school setting. They will explore why we have rules in school and how those rules help us, and then apply this understanding to rules needed for using computer technology safely.
+Learning objectives
+To create rules for using technology responsibly
+I can identify rules to keep us safe and healthy when we are using technology in and beyond the home
+I can give examples of some of these rules
+I can discuss how we benefit from these rules
+Key vocabulary
+Computer, technology
+Preparation
+Subject knowledge:
+You should be familiar with any school rules which may be in place. This lesson meets objectives from the Education for a Connected World document.
+You will need:
+L6 Slides
+A1 – Flipchart or large piece of paper (Optional)
+A1 Resource: Rules grid (size A3; enough for learners to work in pairs)
+A1 – Print out of your school’s rules (Slide 7 can be adapted to reflect the rules in place in your setting)
+A2 Resource: Scaffolding (Scaffolding opportunity)
+Assessment opportunities
+Introduction: Assess whether the learners can explain the reason for rules. 
+Activity 1: Assess whether learners are able to list rules they know of in the school setting. 
+Activity 2:Assess whether learners are able to list rules for using computer technology safely. 
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*timings are rough guides
+Introduction
+(Slides 2 - 3)
+10 mins
+Using technology safely
+Share the learning objective with the learners. 
+Display slide 3 and ask the learners to think, pair, share, ‘What rules are already in place at your school?’. Depending on your school’s policy, you may wish to prompt or encourage relevant responses. 
+Note down the rules that the learners provide on a large piece of paper or flipchart. These will be used in Activity 1. 
+Note: These rules should be general school rules before moving to computing related rules. 
+Activity 1
+(Slides 4 - 5)
+10 mins
+Why do you need rules?
+Share slide 4 with the learners and ask them to think, pair, share, ‘Why do you have rules?’. Capture the learners’ ideas on a flipchart or large piece of paper. Click to animate and relate the learners ideas to four key areas:
+To stay safe
+To make sure we are all happy
+So that we can learn
+To help us to be good people
+Display slide 5 and group learner into pairs. Provide each pair with A1 Resource – Rules grid. Ask the learners to match the rules you have agreed in the introduction to the key areas on the grid provided. Explain to the learners that there is no right or wrong answer for this activity. 
+Note: If learners require support with reading, this activity could be completed with the whole class or in smaller, targeted groups. 
+Activity 2
+(Slides 6 - 8)
+20 mins
+Using computers safely
+Share slide 6 with the learners and ask learners to think about rules which would help them use computers safely in school. Record their ideas on a large piece of paper or flipchart.
+Note: An example set of rules is included on slide 7,  which can be used or adapted to your setting.
+Display slide 8 and tell the learners that they will create a poster using the rules you have noted. Learners could be split into groups and given a rule each to create their rule posters. 
+Scaffolded learning: Provide learners with A2 Resource: Poster template (this can be adapted for your setting) and ask the learners to fill in the missing words or add their own rules to the bottom. 
+Explorer task: Ask learners to suggest additional rules and add to their poster to represent these. 
+Plenary
+(Slides 9 - 11)
+5 mins
+What have you learned?
+Share slide 9 and explain that they have looked at different types of technology. Remind the learners that technology is something that has been made to help others. 
+Share slide 10 and explain that they have looked at different types of computer technology and the different parts of computers. 
+Share slide 11 and remind the learners they have used a mouse and keyboard to draw pictures and write words. 
+Next time
+(Slides 12 - 13)
+5 mins
+This time, next time
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L6_src/L6 - Using a computer responsibly/L6 Slides – Technology around us – Y1.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 6: Using a computer responsibly
+Year 1 – Computing systems and networks – Technology around us
+--- notes for slide1.xml ---
+Last updated: 03-06-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 6: Using a computer responsibly
+Objectives
+To create rules for using technology responsibly
+I can identify rules to keep us safe and healthy when we are using technology in and beyond the home
+I can give examples of some of these rules
+I can discuss how we benefit from these rules
+
+=== slide3.xml ===
+Think, pair, share
+Introduction
+What rules are in place at your school?
+--- notes for slide3.xml ---
+Ask the learners to think, pair, share, ‘What rules are already in place at your school?’. Depending on your school’s policy, you may wish to prompt or encourage relevant responses. 
+Note down the rules that the learners provide on a large piece of paper or flipchart. These will be used in Activity 1. 
+Note: These rules should be general school rules before moving to computing related rules. 
+Speech bubble: https://pixabay.com/vectors/cloud-thinking-thought-bubble-304979/
+
+=== slide4.xml ===
+Activity 1
+Why do we have these rules?
+To stay safe
+To make sure we are all happy
+So that we can learn
+To help us to be kind to each other
+There are four main reasons that we have rules.
+--- notes for slide4.xml ---
+Ask them to think, pair, share, ‘Why do you have rules?’. Capture the learners’ ideas on a flipchart or large piece of paper. Click to animate and relate the learners ideas to four key areas:
+To stay safe
+To make sure we are all happy
+So that we can learn
+To help us to be good people
+
+=== slide5.xml ===
+Where do your rules fit on the grid?
+Activity 1
+To be safe
+To stay happy
+To learn
+To be kind to each other
+--- notes for slide5.xml ---
+Group learner into pairs. Provide each pair with A1 Resource – Rules grid. Ask the learners to match the rules you have agreed in the introduction to the key areas on the grid provided. Explain to the learners that there is no right or wrong answer for this activity. 
+Note: If learners require support with reading, this activity could be completed with the whole class or in smaller, targeted groups. 
+Hard hat: https://pixabay.com/vectors/safety-helmet-helmet-safe-work-150913/
+Smile emoji: https://pixabay.com/vectors/smiley-happy-face-smile-lucky-559124/
+Owl: https://pixabay.com/vectors/owl-bird-book-wise-nature-47526/
+Holding hands: https://pixabay.com/vectors/circle-colorful-cooperation-1300241/
+
+=== slide6.xml ===
+Computer technology
+Activity 2
+What rules would help you to use computer technology safely?
+--- notes for slide6.xml ---
+Ask learners to think about rules which would help them use computers safely in school. Record their ideas on a large piece of paper or flipchart.
+Note: An example set of rules is included on slide 7,  which can be used or adapted to your setting.
+PC: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+Tablet: https://pixabay.com/vectors/ipad-tablet-tablet-computer-147691/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+
+=== slide7.xml ===
+Rules for using computer technology
+Activity 2
+Hold your device carefully
+Stop using your device when someone is talking to you
+Take turns with your partner
+Use only the apps you have been asked to used
+Don’t share your passwords
+--- notes for slide7.xml ---
+PC: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+
+=== slide8.xml ===
+Using technology safely
+Activity 2
+Create a poster for using technology safely both at home and in school. 
+Using technology safely
+ 
+ 
+ 
+--- notes for slide8.xml ---
+Tell the learners that they will create a poster using the rules you have noted. Learners could be split into groups and given a rule each to create their rule posters. 
+PC: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+
+=== slide9.xml ===
+Plenary
+Technology
+Technology is something that has been made to help you. 
+--- notes for slide9.xml ---
+Explain that they have looked at different types of technology. Remind the learners that technology is something that has been made to help others. 
+Scissors: https://pixabay.com/vectors/cut-scissors-tool-1295044/
+Pencil: https://pixabay.com/vectors/school-pencil-pen-write-sketch-153561/
+Sharpener: https://pixabay.com/vectors/pencil-sharpener-sharpener-office-159427/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+PC: https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+Phone: https://pixabay.com/vectors/iphone-cellphone-smartphone-mobile-37856/ 
+
+=== slide10.xml ===
+Computer technology
+Plenary
+Laptop computer
+Desktop computer
+Screen
+Base unit
+Keyboard
+Mouse / trackpad
+--- notes for slide10.xml ---
+Explain that they have looked at different types of computer technology and the different parts of computers. 
+Desktop: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+
+=== slide11.xml ===
+Plenary
+Keyboard and mice
+You used a keyboard and mouse to draw a picture and write words. 
+--- notes for slide11.xml ---
+Remind the learners they have used a mouse and keyboard to draw pictures and write words. 
+Wired mouse: https://pixabay.com/vectors/computer-mouse-computer-device-152249/
+Wireless mouse: https://pixabay.com/vectors/computer-mouse-hardware-wheel-click-23266/
+Two button trackpad: https://pixabay.com/vectors/mousepad-finger-mouse-pad-point-160223/
+Wired keyboard: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+Screenshot: https://paintz.app 
+
+=== slide12.xml ===
+I can identify rules to keep us safe and healthy when we are using technology in and beyond the home
+I can give examples of some of these rules
+I can discuss how we benefit from these rules
+How confident are you? (from 1 to 3)
+‹#›
+Assessment
+3 = very confident
+1 = not confident
+2 = unsure 
+--- notes for slide12.xml ---
+https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide13.xml ===
+In this lesson, you…
+Learned how to use a computer safely and responsibly
+What you learned
+‹#›
+Next time

@@ -1,0 +1,271 @@
+
+############################################################
+FILE: ../KS1/L3_src/L3 - Developing mouse skills/L3 Lesson plan – Technology around us – Y1.docx
+############################################################
+Lesson 3: Developing mouse skills
+Introduction
+Learners will be building on the mouse skills they were introduced to in Lesson 2. Learners will review images of a computer to explain what each part does. They will develop an understanding that different computers use different mice, but they perform the same function. They will use the mouse to open a program and create a simple picture. 
+Learning objectives
+To use a mouse in different ways
+I can use a mouse to open a program
+I can click and drag to make objects on a screen
+I can use a mouse to create a picture
+Key vocabulary
+Computer, mouse, trackpad, double-click
+Preparation
+Subject knowledge:
+Teachers will need to be familiar with the paint program used in the lesson. This plan and screenshots in the slide deck assume the use of the free online painting program paintz.app. 
+You will need:
+L3 Slides 
+A1 – Desktop or laptop computers (tablet devices could be used as an alternative)
+A1 – Learner access to paintz.app. 
+Assessment opportunities
+Introduction: Assess whether learners can name different parts of a computer and explain what it does. 
+Activity 1: Assess whether learners are able to use a double-click to open a program/browser
+Activity 2: Assess whether learners are able to create a simple picture using a mouse. 
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 2-7)
+10 mins
+The mouse
+Share the learning objective with the learners. 
+Display slide 3 and ask the learners to name the key parts of the desktop / laptop and what it does. 
+Share slide 4-7 and ask the learners what each part of the computer is called and what it does.  
+Activity 1
+(Slides 8-11)
+10 mins
+Opening a program
+Display slide 8 and explain that the learners will be using a computer mouse/trackpad to create a picture. Invite learners to explain how the images are different. Responses should include:
+Some have wires, some don’t
+Some have buttons, some don’t
+Some are part of the computer, others are connected to it
+Emphasise that even though each device looks different, they perform the same function.
+Share slide 9 with the learners and explain before they can begin creating pictures, they need to open a program. Explain that to do this, they will need to double click their mouse. 
+Display slide 10. Explain that they will be demonstrating a double-click without using the computer. Ask the learners to clap twice (or tap their leg twice) in quick succession. Monitor the learners' response to this to ensure they are doing this quickly enough. Once learners have practised double-clicking, demonstrate the process by holding up a mouse and double-clicking the key. Ensure learners are aware of the speed they need to use. 
+Model opening a browser (such as Chrome, Safari, Firefox, Edge, etc.). Explain that to do this using a shortcut on the desktop, they will need to double-click the mouse. Once you have opened the browser, model entering the URL in the ‘you will need’ section of this plan. 
+Display slide 11 and ask learners to log on to their computer and open the correct browser using the double-click. They can then enter the URL provided on the slide. 
+Without navigating away from the paint program, ask the learners to return their attention to the display to begin activity 2. 
+Activity 2
+(Slides 12-16)
+20 mins
+Developing mouse skills
+Note: This part of the activity is best modelled for the learners within the program, however screenshots of the program have been provided in slides 12-16 as an alternative. 
+Open the Paintz program. Explain that this program allows the user to draw images and make pictures using the mouse. Highlight the paint brush function, showing marks can be made by clicking and dragging. 
+Demonstrate how to change the colour and thickness of the line, and create a simple picture. 
+Allow learners time to draw their own pictures.If learners are working with a partner, ensure both learners have the opportunity to explore the program and demonstrate their mouse skills. 
+Note: This could be an opportunity to link to other areas of the curriculum.
+Explorer task: Learners can explore other functions available in the Paintz program, as demonstrated on slide 16 e.g.:
+Change the background colour from white using the fill tool
+Create shapes and lines
+Correct mistakes by using the eraser function
+Insert a shape or line
+Note: The Paintz program allows files to be saved, By default, the files will be saved to the Downloads folder of the local computer.
+Plenary
+(Slides 17-19)
+5 mins
+What's changed?
+Display slides 17-19 for the learners. On each slide, ask the learners which tools have been used to change the image. 
+Slide 17: Line thickness has been increased.
+Slide 18: Line colour has been changed.
+Slide 19: Fill tool has been used.
+Next time
+(Slides 20-21)
+5 mins
+This time, next time
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L3_src/L3 - Developing mouse skills/L3 Slides – Technology around us – Y1.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 3: Developing mouse skills
+Year 1 – Computing systems and networks – Technology around us
+--- notes for slide1.xml ---
+Last updated: 03-06-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 3: Developing mouse skills
+To use a mouse in different ways
+I can use a mouse to open a program
+I can click and drag to make objects on a screen
+I can use a mouse to create a picture
+Objectives
+‹#›
+
+=== slide3.xml ===
+Can you name the main parts of these computers?
+Introduction
+‹#›
+
+=== slide4.xml ===
+‹#›
+Introduction 1
+What is this part of a computer called?
+The screen shows what the computer is doing.
+Screen
+--- notes for slide4.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide5.xml ===
+‹#›
+What is this part of a computer called?
+The keyboard lets you type letters and numbers.
+Keyboard
+Introduction
+--- notes for slide5.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide6.xml ===
+‹#›
+What is this part of a computer called?
+The mouse lets you select and move objects. On a laptop, this is called a trackpad.
+Mouse
+Introduction
+--- notes for slide6.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide7.xml ===
+Base unit
+The base unit stores and processes information.
+‹#›
+What is this part of a computer called?
+Introduction
+--- notes for slide7.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide8.xml ===
+Activity 1
+Not all computer mice or trackpads look the same, but they do the same thing.
+Using the computer mouse or trackpad
+--- notes for slide8.xml ---
+Show images of different computer mice and trackpads. Invite learners to explain how they are different. Responses should include:
+Some have wires, some don’t
+Some have buttons, some don’t
+Some are part of the computer, others are connected to it
+Emphasise that even though each device looks different, they all perform the same function.
+Wired mouse: https://pixabay.com/vectors/computer-mouse-computer-device-152249/
+Single button mouse: https://pixabay.com/photos/workplace-mouse-computer-apple-2341642/
+Wireless mouse: https://pixabay.com/vectors/computer-mouse-hardware-wheel-click-23266/
+Two button trackpad: https://pixabay.com/vectors/mousepad-finger-mouse-pad-point-160223/
+
+=== slide9.xml ===
+Activity 1
+Creating a picture
+Before you can begin creating pictures, you need to open a program. 
+To do this, you will need to double-click using your mouse.
+--- notes for slide9.xml ---
+Click to animate the double-click. 
+Screenshot: paintz.app
+
+=== slide10.xml ===
+Activity 1
+Double-clicking
+Let’s practice double-clicking, without using a computer mouse!
+--- notes for slide10.xml ---
+Click to animate the double-click. 
+Screenshot: paintz.app
+
+=== slide11.xml ===
+Activity 1
+Log in and open Paintz.app
+Open the browser using double-click. 
+Open
+paintz.app
+--- notes for slide11.xml ---
+Click to animate the double-click. 
+Screenshot: paintz.app
+
+=== slide12.xml ===
+Click on the brush tool
+Activity 1
+--- notes for slide12.xml ---
+In the Paintz program demonstrate the paint brush tool in the toolbar.
+Screenshot: https://paintz.app
+
+=== slide13.xml ===
+Choose a brush colour
+Activity 2
+--- notes for slide13.xml ---
+In the Paintz program demonstrate changing the brush colour in the toolbar.
+Screenshot: https://paintz.app
+
+=== slide14.xml ===
+Choose how thick you want your brush to be
+Activity 2
+--- notes for slide14.xml ---
+In the Paintz program demonstrate the changing the line thickness in the toolbar.
+Screenshot: https://paintz.app
+
+=== slide15.xml ===
+Activity 2
+Click and drag to paint a picture!
+--- notes for slide15.xml ---
+In the Paintz program demonstrate drawing a simple picture.
+Screenshot: https://paintz.app
+
+=== slide16.xml ===
+Activity 2
+Explorer task: Try out some of the other tools. What can you do with these?
+--- notes for slide16.xml ---
+Screenshot: https://paintz.app
+
+=== slide17.xml ===
+Plenary
+What’s been changed?
+What tool has been used to change the way the image was drawn?
+--- notes for slide17.xml ---
+Answer: Line thickness has been increased.
+Screenshot: https://paintz.app
+
+=== slide18.xml ===
+Plenary
+What’s been changed?
+What tool has been used to change the way the image was drawn?
+--- notes for slide18.xml ---
+Answer: Line colour has been changed.
+Screenshot: https://paintz.app
+
+=== slide19.xml ===
+Plenary
+What’s been changed?
+What tool has been used to change the way the image was drawn?
+--- notes for slide19.xml ---
+Answer: Fill tool has been used.
+Screenshot: https://paintz.app
+
+=== slide20.xml ===
+I can use a mouse to open a program
+I can click and drag to make objects on a screen
+I can use a mouse to create a picture
+How confident are you? (from 1 to 3)
+‹#›
+Assessment
+3 = very confident
+1 = not confident
+2 = unsure 
+--- notes for slide20.xml ---
+https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide21.xml ===
+In this lesson, you…
+Identified the main parts of computers
+Used a computer mouse to draw a picture
+Next lesson
+‹#›
+Next lesson, you will…
+Use a computer keyboard to type
+Summary

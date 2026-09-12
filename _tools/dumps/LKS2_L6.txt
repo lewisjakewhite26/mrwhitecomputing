@@ -1,0 +1,290 @@
+
+############################################################
+FILE: ../LKS2/L6_src/L6 What does our school network look like_v1.1/A2 Activity sheet - Scavenger hunt.docx
+############################################################
+Scavenger hunt
+Where did you find it?
+Desktop computer
+Laptop computer
+Tablet computer
+Printer
+Server
+Wireless access point
+Network socket
+Switch
+Image sources:
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/laptop-notebook-computer-black-158648/ 
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+https://pixabay.com/vectors/copier-scanner-printer-office-42612/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+https://freesvg.org/network-socket
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L6_src/L6 What does our school network look like_v1.1/A3 Activity sheet - Mapping a network.pptx
+############################################################
+
+=== slide1.xml ===
+Year 6 – Connecting computers
+Lesson 6 – What does our school network look like?
+Learner activity sheet
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Wired connection
+Wireless connection
+On this activity sheet, mark 
+where you found each device
+in school.
+Switch
+Mapping a network
+Printer
+Server
+Desktop computers
+Wireless access point
+Tablet computers
+Laptop computer
+--- notes for slide1.xml ---
+ Last updated: 02-07-21
+Image sources:
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+https://pixabay.com/vectors/copier-scanner-printer-office-42612/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+https://pixabay.com/vectors/laptop-notebook-computer-black-158648/ 
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+
+############################################################
+FILE: ../LKS2/L6_src/L6 What does our school network look like_v1.1/L6 Lesson plan - Connecting computers - Y3.docx
+############################################################
+Lesson 6: What does our school network look like?
+Introduction
+In this lesson, learners will further develop their understanding of computer networks. They will see examples of network infrastructure in a real-world setting and relate them to the activities in Lesson 5.
+Learning objectives
+To recognise the physical components of a network
+I can identify how devices in a network are connected together
+I can identify networked devices around me
+I can identify the benefits of computer networks
+Key vocabulary
+Network cables, network sockets
+Preparation
+Subject knowledge:
+You will need to be familiar with how the main devices (network switch, server, wireless access point, router, and printer or copier) on your school’s network are connected with one another, and where the devices are located. You may wish to discuss this with the IT technician prior to the lesson or even better, invite your school IT technician in to support the lesson, if possible.
+You will need to know that network cables and network sockets are needed to connect devices in a network.
+You will need:
+Slides
+Activities:
+A2 Activity sheet – Scavenger hunt (optional)
+A3 Activity sheet – Mapping a network
+A camera, or a tablet that can take photographs (optional)
+Assessment opportunities
+Activity 1: You can assess whether learners can explain the benefits of computer networks.
+Activity 2: You can assess whether learners can identify real-world network devices.
+Activity 3: You can assess whether learners can explain how different components are connected with one another in a computer network.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–6)
+5 mins
+Display slide 2 and introduce the learning objective and success criteria.
+Click through the animations on slides 3 to 5 to remind learners of three network components that were introduced in the previous lessons. 
+Ask learners to discuss what the network components that were introduced in the previous lessons do.
+Display slide 6. Explain to learners that a number of other components are part of a network, including:
+Network (Ethernet) cables
+Network (Ethernet) sockets
+Click through the animations on slide 6 to show learners the definitions of ‘network cable’ and ‘network socket’.
+Activity 1
+(Slide 7)
+5 mins
+Discuss the benefits of computer networks
+Ask learners the following questions. Once learners have discussed these questions, invite them to give feedback to the class:
+What kind of tasks does the school network let learners and staff members do?Possible responses: On the school network, files can be accessed and shared, staff members can access the register and administration system, and messages can be sent easily between people. Note: Learners may also talk about being able to access the internet. This is possible on most networks, however, a computer does not have to be part of a local network to connect to the internet, as is the case with many home computers.
+Why is it useful for more than one person to be able to access information in school?Possible responses: It is useful because it means that information such as attendance information or shared projects can be accessed by more than one person, meaning that such information only needs to be entered once. Communication between staff members and learners can be more effective.
+Activity 2
+(Slides 8-9)
+15 mins
+Look at the school network
+Display slide 8, which introduces pupils to the role of the schools IT technician (you may wish to personalise the slide by replacing the image with a photograph of your technician). If you have invited your technician to support this part of the lesson, please ask them to explain in their own words, what their role is and if appropriate, invite questions from pupils, who are interested to know more about the job. 
+Move on to slide 9 (ideally your technician will be on hand to support this next activity).
+Explain to learners that they are going to go on a brief tour of the school to find the key components of the computer network discussed in the unit so far:
+Devices
+Printers or copiers
+Wireless access points (WAPs)
+Network (Ethernet) cables
+Network (Ethernet) socket
+Switch
+Server
+You could ask learners to take photographs of the various network components. They may also find other network devices, such as routers or firewalls.
+During the activity, remind learners how information moves around a network. You could give the example of opening a file from the server on the class computer: the computer sends a request for the file through the wired or wireless network to the switch, which sends the request to the server, then the server replies, sending the file back through the switch to the class computer.
+Note: During the tour, learners might mention the internet at home, or the school internet connection. You will address this topic during the Plenary.
+Scaffolding opportunity: You could adapt this activity into an ‘I spy’ game, scavenger hunt, or tally chart, and you could give learners images of the devices that they need to find. You could use the A2 Activity sheet for this, adapting it for your chosen activity.
+Explorer task: As learners are finding the different network components, ask them to consider the purpose of each device:
+What is the device’s job in the school network?
+Is it vital to the network or optional?
+Activity 3
+(Slide 10)
+15 mins
+Map your school network
+Display slide 10. Remind learners how the parts of a network that they have seen during their network tour combine to form a network. Click through the animations on the slide to show how the following are connected:
+Switch, server, and printer
+Desktop computers
+Wireless devices (laptop computers and tablet computers)
+Ask learners to amend the network map on the A3 Activity sheet with where those devices were found in school.
+Plenary
+(Slides 11–12)
+5 mins
+Discussion
+Display slide 11. Ask learners to recap what a computer network is, and to discuss how networks can help us. For example, learners might say that they can share files, and all staff members can access the register.
+What about the internet?
+Display slide 12. During Activity 2, learners may have mentioned the internet at home, or the school internet connection. Explain to learners that the school network is connected to a router. The router provides a connection to the internet through an external cable.
+Conclusion
+(Slides 13–14)
+5 mins
+Review the ‘Assessment’ and ‘Summary’ slides.
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License  (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here, and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via  info@teachcomputing.org 
+
+############################################################
+FILE: ../LKS2/L6_src/L6 What does our school network look like_v1.1/L6 Slides - Connecting computers - Y3.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 6: What does our school network look like?
+Year 3 – Computing systems and networks – Connecting computers
+--- notes for slide1.xml ---
+Last updated: 31-07-24
+
+=== slide2.xml ===
+To recognise the physical components of a network
+I can identify how devices in a network are connected together
+I can identify networked devices around me
+I can identify the benefits of computer networks
+Lesson 6: What does our school network look like?
+Objectives
+
+=== slide3.xml ===
+Switch
+Introduction
+A device that enables multiple devices on a network to be connected together
+--- notes for slide3.xml ---
+Image source: https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+
+=== slide4.xml ===
+Server
+Introduction
+A computer that manages the network and stores files
+--- notes for slide4.xml ---
+Image source: https://pixabay.com/vectors/computer-database-network-server-156948/
+
+=== slide5.xml ===
+Wireless access point
+Introduction
+A device connected to a wired network, which sends and receives wireless signals for devices with Wi-Fi connectivity
+--- notes for slide5.xml ---
+Image source: https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+
+=== slide6.xml ===
+Other network components
+Introduction
+Network cables: wires used to connect wired devices to the network
+Network sockets: allow network cables to be connected to the network
+--- notes for slide6.xml ---
+Image sources:
+https://pixabay.com/photos/network-cables-rj-plug-patch-cable-499798/
+https://pixabay.com/illustrations/network-cable-ethernet-plug-1027309/
+https://freesvg.org/network-socket
+
+=== slide7.xml ===
+What kind of tasks does the school computer network let learners and staff members do?
+Why is it useful for more than one person to be able to access information in school?
+Benefits of a computer network
+Activity 1
+--- notes for slide7.xml ---
+Image source: https://pixabay.com/illustrations/binary-one-cyborg-cybernetics-1536651/
+
+=== slide8.xml ===
+Our school IT technician looks after our school network
+They are responsible for installing, ordering and maintaining software and hardware 
+Our IT technician provides technical support to teachers and pupils
+Who looks after the school network?
+Activity 2
+--- notes for slide8.xml ---
+Image source: https://pixabay.com/photos/pc-hardware-man-personal-computer-5737958/   
+
+=== slide9.xml ===
+You will be creating a map of your school network, so you need to know where network devices are located.
+Which devices can you spot in the classroom?
+Which ones can you see in corridors?
+Which ones are in other rooms?
+School network tour
+Activity 2
+--- notes for slide9.xml ---
+Image source: https://pixabay.com/illustrations/binoculars-search-see-to-find-1026425/
+
+=== slide10.xml ===
+Wired connection
+Wireless connection
+Switch
+Mapping a network
+Activity 3
+Printer
+Server
+Desktop computers
+Wireless access point
+Laptop computer
+Tablet computers
+--- notes for slide10.xml ---
+Image sources:
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+https://pixabay.com/vectors/copier-scanner-printer-office-42612/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+https://pixabay.com/vectors/laptop-notebook-computer-black-158648/ 
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+
+=== slide11.xml ===
+Computers connected to other computers creates a network.
+Networks let us...
+Networks
+Plenary
+--- notes for slide11.xml ---
+Image source: https://pixabay.com/illustrations/network-social-social-networks-1911678/
+
+=== slide12.xml ===
+Connecting networks together makes the internet.
+Internet
+Plenary
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/illustrations/network-connections-communication-3537400/
+
+=== slide13.xml ===
+I can identify how devices in a network are connected together
+I can identify networked devices around me
+I can identify the benefits of computer networks
+How confident are you? (1–3)
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide13.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide14.xml ===
+In this lesson, you…
+Explored the computer networks in your school and considered the benefits of having a computer network
+This lesson
+Summary
+
+=== slide15.xml ===
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here, and are asked to provide a link to the OGL v3.
+The original version can be made available on request via  info@teachcomputing.org  
+15
+Attribution

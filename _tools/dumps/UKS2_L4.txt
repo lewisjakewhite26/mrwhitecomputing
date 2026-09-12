@@ -1,0 +1,372 @@
+
+############################################################
+FILE: ../UKS2/L4_src/L4 – Selecting search results/A2 Teacher notes – Indexing the classroom_ Example.docx
+############################################################
+Indexing the classroom
+Pick five items that you can find in your classroom and list them in the first column. Then, write down where you can find those items in the classroom (they might be in more than one place). 
+Item
+Location(s) in the classroom
+Rulers
+Pots on tables
+Maths cupboard
+Ruler drawer
+Coloured pencils
+Art cupboard
+Whiteboard pens
+A pot next to the whiteboard
+Learners’ trays
+Stationery cupboard 
+Computer
+Teacher’s desk
+Chairs
+Around each table
+Next to the teacher’s desk
+Exercise books
+Shelves
+Learners’ drawers
+Teacher’s desk
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L4_src/L4 – Selecting search results/A2 Worksheet – Indexing the classroom.docx
+############################################################
+Indexing the classroom
+Pick five items that you can find in your classroom and list them in the first column. Then, write down where you can find those items in the classroom (they might be in more than one place). An example has been provided in the first row.
+Item
+Location(s) in the classroom
+Rulers
+Pots on tables
+Maths cupboard
+Ruler drawer
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L4_src/L4 – Selecting search results/L4 Lesson plan – Systems and searching – Y5.docx
+############################################################
+Lesson 4: Selecting search results
+Introduction
+Learners gain an understanding of why search engines are necessary to help them find things on the World Wide Web. They conduct their own searches and break down, in detail, the steps needed to find things on the web. Learners then emulate web crawlers to create an index of their own classroom. Finally, they consider why some searches return more results than others.
+Learning objectives
+To describe how search engines select results
+I can explain why we need tools to find things online
+I can recognise the role of web crawlers in creating an index
+I can relate a search term to the search engine’s index
+Key vocabulary
+Index, crawler, bot, search engine
+Preparation
+Subject knowledge:
+You will need to be aware of the key milestones in the development of the World Wide Web, displayed on slide 3.
+In this context, ‘select’ refers to how a search engine chooses the results to display. Search engines also ‘rank’ results that are selected — this is covered in Lesson 5.
+You will need to know how search engines use web crawlers to create an index of the World Wide Web. There is a useful guide here: https://www.bbc.co.uk/bitesize/topics/z7wtb9q/articles/ztbjq6f
+You will need:
+Slides
+A2 Activity sheet – Indexing the classroom
+A2 Teacher notes – Indexing the classroom: Example
+Assessment opportunities
+Starter activity: You can assess how well learners can relate the exponential growth of the World Wide Web to the need for search engines.
+Activity 1: You can assess learners’ understanding of the benefits of indexing.
+Activity 2: Learners can apply their understanding of indexing to create their own index and relate this to the way that search engines use indices.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–5)
+5 mins
+The World Wide Web
+Introduce the lesson and the learning objectives.
+Give learners a brief history of the World Wide Web and search engines (slide 3):
+1989: Sir Tim Berners-Lee invented the World Wide Web to make it easier to share documents with other scientists
+1991: The first website was launched (here is a summary of the World Wide Web: info.cern.ch/hypertext/WWW/TheProject.html)
+1994: The first widely used search engine (Yahoo!) was launched
+1998: Google was founded
+Discuss why search engines came after the invention of the World Wide Web, and why there was such a demand for a service like Google by 1998. Relate this to the growth of webpages.
+Year
+Number of websites
+1991
+1
+1994 (Yahoo! launched)
+2,738
+1998 (Google launched)
+2,410,067
+2018 (most recent count)
+1,630,322,579
+ (source: www.internetlivestats.com/total-number-of-websites)
+Note: You could also show live statistics from the website above to further emphasise the size and scale of the internet.
+Show slide 5 and ask learners, “What does the huge growth in the number of websites mean for finding things?”.
+Activity 1
+(Slides 6–9)
+10 mins
+Using an index
+Show slide 6 and pose an open question for learners to discuss: “I would like to find out about rabbits. What could I do?”. Give learners an opportunity to discuss their responses, then build the slide and reveal the encyclopedia. Ask learners how this could help.
+Show slide 7. Ask learners what they know about indices and indexing, and how an index can help someone to find something. Build slide 6, then show slide 8.
+Show slide 9. Ask learners to use the index in a reference book from the classroom or school library to find something specific in the book. Once they have found the page, ask them to locate the word they looked up. Ask learners how successfully they could have found that word without an index.
+Activity 2(Slides 10–14)
+15 mins
+How do search engines find things on the World Wide Web?
+Show slide 10 to introduce the activity, then move on to slide 11. Explain that search engines use programs known as crawlers (they may also be referred to as web crawlers, spiders, or spiderbots). Crawlers create an index of the World Wide Web. They ‘crawl’ websites for searchable content and store where it is found in an index. It is important to emphasise that crawlers are programs, not physical objects.  Explain that the indices for large search engines are stored in huge data centres around the world. The link on slide 11 shows the location of Google data centres. If you choose a particular data centre, you can see a picture to give an indication of the size and scale.
+Show slide 12 and explain that the animation shows how crawlers work. Each time the crawler identifies a key word, it adds it to the index on the left-hand side. If a word is found more than once, a number is added after each time the word is found.
+Move on to slide 13. Tell learners that when you enter a search term, the search engine selects results from its index. It does not need to search every webpage on the internet. Then explain that they will be simulating this process by creating an index of the classroom.
+Indexing the classroom
+Display slide 14. Explain to learners that they are going to assume the role of crawlers to index things in the classroom or school, with the aim of making it easier to find things. Group the learners into pairs and ensure that each pair has an activity sheet. Ask them to use that sheet to write five items (singular items or groups of items) that can be found in the classroom and then list the places where they can be found (this could be one place or many). 
+Once the learners have completed their activity sheets, ask them to swap sheets and test each other’s indices, to see if it makes it easier to find things.
+Discuss whether the index helps in finding something that hasn’t been indexed, e.g. the teacher’s keys or the light switch. The index doesn’t help if the item has not been indexed — but that doesn’t mean that the item doesn’t exist!
+Activity 3
+(Slides 15–17)
+15 mins
+Narrowing a search
+Show slide 15 and explain that most search engines display the number of results that a search returns. Ask learners to think, pair, share: “Why do some search terms return more results than others?”. Responses should refer to how often the search term appears in the search engine’s index.
+Show slide 16. Animate the slide to show that as the search terms are narrowed, fewer results will be returned. In this case the results are represented by images.
+Show slide 17 and explain that learners will now have an opportunity to choose a broad search term and narrow it to reduce the number of results returned. Emphasise that the search terms should be placed inside speech marks to ensure that the whole term is searched rather than searching all the words in the term concurrently.
+Note: This activity can easily be adapted to a theme of your choosing, e.g. a list of countries, famous people, etc.
+Plenary
+(Slide 18)
+5 mins
+Complete this sentence
+Show slide 18 and explain that the learners’ task is to complete the sentence where there are blanks using the words provided (visible on screen underneath the sentence). 
+Ask for answers from the class before revealing the answer. 
+Next time 
+(Slides 19–20)
+5 mins
+This lesson, next lesson
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L4_src/L4 – Selecting search results/L4 Slides – Systems and searching – Y5.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 4: Selecting search results
+Year 5 – Computing systems and networks – Systems and searching
+--- notes for slide1.xml ---
+Last updated: 31-01-22
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 4: Selecting search results
+Objectives
+To describe how search engines select results
+I can explain why we need tools to find things online
+I can recognise the role of web crawlers in creating an index
+I can relate a search term to the search engine’s index
+‹#›
+
+=== slide3.xml ===
+A brief history of the World Wide Web
+Introduction
+1989: Sir Tim Berners-Lee invented the World Wide Web to make it easier to share documents with other scientists
+1991: The first website was launched (summary of the World Wide Web:  info.cern.ch/hypertext/WWW/TheProject.html)
+1994: The first widely used search engine (Yahoo!) was launched
+1998: Google was founded
+‹#›
+--- notes for slide3.xml ---
+Tim Berners-Lee portrait: By Paul Clarke — own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=53878695
+Yahoo! logo: https://commons.wikimedia.org/wiki/File:Yahoo!_(1996).svg#/media/File:Yahoo!_(1996).svg
+Google logo: By Google Inc. — https://chromium.googlesource.com/chromium/src/+/master/ui/webui/resources/images/google_logo.svg, public domain, https://commons.wikimedia.org/w/index.php?curid=42827827
+
+=== slide4.xml ===
+Growth of the World Wide Web
+Introduction
+Year
+Number of websites
+1991
+1
+1994 (Yahoo! launched)
+2,738
+1998 (Google launched)
+2,410,067
+2022 (most recent count)
+1,900,000,000
+There is a huge amount of information on the World Wide Web, which means finding things can be difficult!
+‹#›
+--- notes for slide4.xml ---
+See www.internetlivestats.com/total-number-of-websites for a graph of the growth of the web. Live data can also be seen on the website.
+
+=== slide5.xml ===
+Growth of the World Wide Web
+Introduction
+Year
+Number of websites
+1991
+1
+1994 (Yahoo! launched)
+2,738
+1998 (Google launched)
+2,410,067
+2022 (most recent count)
+1,900,000,000
+What does the huge growth in the number of websites mean for finding things?
+‹#›
+--- notes for slide5.xml ---
+See www.internetlivestats.com/total-number-of-websites for a graph of the growth of the web. Live data can also be seen on the website.
+
+=== slide6.xml ===
+How do you find things?
+Activity 1
+I would like to find out about rabbits. What could I do?
+I have an encyclopedia. What does it include that can help me find things?
+‹#›
+--- notes for slide6.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide7.xml ===
+What would it be useful for me to look for in the index, if I want to know about rabbits?
+Indexing
+Activity 1
+‹#›
+--- notes for slide7.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide8.xml ===
+Here are the pages referred to in the index.
+Indexing
+Activity 1
+‹#›
+--- notes for slide8.xml ---
+Image sources: Raspberry Pi Foundation
+
+=== slide9.xml ===
+Look in a non-fiction book.
+Pick a word from the index and see if you can find where the word appears in the book.
+How would you find information related to that word without an index?
+Try using an index yourself
+Activity 1
+‹#›
+--- notes for slide9.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide10.xml ===
+How do search engines select results?
+‹#›
+Activity 2
+By using the index of a book, you can find information quickly and save time
+Search engines also use an index
+--- notes for slide10.xml ---
+Image source: https://pixabay.com/illustrations/cloud-data-hex-computer-technology-3333628/
+
+=== slide11.xml ===
+Search engine’s index
+Activity 2
+Search engines use programs called web crawlers to create an index of the web
+The indices are stored on a big system of computers called a data centre  www.google.com/about/datacenters/locations
+‹#›
+--- notes for slide11.xml ---
+Note: Visit www.google.com/about/datacenters/locations, select ‘Gallery’, then choose ‘Tech’ as the category, to see the banks of servers that make search engines work.
+https://pixabay.com/photos/technology-servers-server-1587673/ 
+https://pixabay.com/vectors/black-happy-face-spider-animal-48190/
+
+=== slide12.xml ===
+Activity 2
+‹#›
+
+=== slide13.xml ===
+How does a search engine use an index?
+‹#›
+Activity 2
+When you enter a search term, the search engine selects results from its index. It does not need to search every web page on the internet.
+You are going to create an index for the classroom, so you can find things without having to search the whole classroom.
+--- notes for slide13.xml ---
+Image source: https://pixabay.com/illustrations/looking-for-find-internet-1013911/ 
+
+=== slide14.xml ===
+Choose five different items that you can find in this classroom.
+List all the places where you can find those items. There is an example opposite.
+Indexing the classroom
+Activity 2
+Item
+Location(s) in the classroom
+Rulers
+Pots on tables
+Maths cupboard
+Ruler drawer
+Coloured pencils
+Art cupboard
+Whiteboard pens
+A pot next to the whiteboard
+Learners’ trays
+Stationery cupboard 
+Computer
+Teacher’s desk
+Chairs
+Around each table
+Next to the teacher’s desk
+Exercise books
+Shelves
+Learners’ drawers
+Teacher’s desk
+‹#›
+
+=== slide15.xml ===
+The internet is vast and searches often return billions of results.
+Most search engines will tell you how many results there are for your search term.
+So many results
+Activity 3
+‹#›
+
+=== slide16.xml ===
+You could search for:
+“Dogs”
+then...
+“Black dogs”
+then...
+“Black Labrador dog”
+What do you notice?
+Narrowing a search
+Activity 3
+‹#›
+--- notes for slide16.xml ---
+Image sources: 
+https://pixabay.com/vectors/animals-pets-dog-afghan-hound-1454214/
+https://pixabay.com/vectors/dog-silhouette-animal-domestic-dog-1185460/
+https://pixabay.com/vectors/dog-puppy-animal-black-silhouette-159481/ 
+https://pixabay.com/vectors/dog-puppy-silhouette-animal-4971630/ 
+https://pixabay.com/vectors/dog-pet-animal-rottweiler-eyes-48227/ 
+
+=== slide17.xml ===
+Choose a broad search term and narrow it. What happens to the number of results?
+Put your searches in quote marks, for example “black dog”, so the whole phrase is searched.
+Note your findings on a dry wipe board.
+Now do your own
+Search 1:
+Search 1 results:
+Search 2: 
+Search 2 results:
+Search 3:
+Search 3 results:
+Activity 3
+‹#›
+
+=== slide18.xml ===
+Complete the sentence below to explain how search engines select results:
+A _______ uses _______ to create an _______ of _______.
+webpages		web crawlers		index		search engine
+Complete this sentence
+Plenary
+A search engine uses web crawlers to create an index of webpages.
+‹#›
+
+=== slide19.xml ===
+‹#›
+Assessment
+I can explain why we need tools to find things online
+I can recognise the role of web crawlers in creating an index
+I can relate a search term to the search engine’s index
+How confident are you? (1–3)
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide19.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide20.xml ===
+In this lesson, you…
+Learnt how search engines create an index to select results
+Next lesson
+‹#›
+Next lesson, you will…
+Learn how the results that search engines select are ranked
+Summary

@@ -1,0 +1,403 @@
+
+############################################################
+FILE: ../LKS2/L5_src/A1, A2, and A3 Handout – Images for role play.pptx
+############################################################
+
+=== slide1.xml ===
+Year 3 – Connecting computers
+Lesson 5 – How are computers connected?
+Handout
+Images for role play
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+--- notes for slide1.xml ---
+Image sources: 
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/laptop-computer-technology-business-1295373/
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+
+=== slide2.xml ===
+--- notes for slide2.xml ---
+Last updated: 02-07-21
+Image source: https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+
+=== slide3.xml ===
+--- notes for slide3.xml ---
+Image source: https://pixabay.com/vectors/laptop-computer-technology-business-1295373/
+
+=== slide4.xml ===
+--- notes for slide4.xml ---
+Image source: https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+
+=== slide5.xml ===
+--- notes for slide5.xml ---
+Image source: https://pixabay.com/vectors/computer-database-network-server-156948/
+
+=== slide6.xml ===
+--- notes for slide6.xml ---
+Image source: https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+
+=== slide7.xml ===
+--- notes for slide7.xml ---
+Image source: https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+
+############################################################
+FILE: ../LKS2/L5_src/L5 Homework – Computer networks around us – Y3.docx
+############################################################
+Computer networks around us
+Have a look around you for computer networks outside of school. Where can you find them? (Hint: Shops, restaurants, and the library all have networks!) Draw or write the different computers and network devices that you think are used in the place that you have chosen.
+I think that there is a computer network _____________________ (Where did you find the network?)
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L5_src/L5 Lesson plan – Connecting computers – Y3.docx
+############################################################
+Lesson 5: How are computers connected?
+Introduction
+This lesson introduces key network components, including a server and wireless access points. Learners will examine each device’s functionality and look at the benefits of networking computers.
+Learning objectives
+To explore how digital devices can be connected
+I can recognise that a computer network is made up of a number of devices
+I can demonstrate how information can be passed between devices
+I can explain the role of a switch, server, and wireless access point in a network
+Key vocabulary
+Server, wireless access point
+Preparation
+Subject knowledge:
+This lesson requires further knowledge of a simple school network. It introduces a server, which for the purposes of this lesson is defined as a location to store files (they can, and usually do, carry out more functions than this). It also introduces wireless access points, which send and receive wireless signals from wireless devices such as tablets or laptops. There is likely to be a wireless access point in most classrooms or communal areas in school. It will be connected to the network via a physical cable.
+Note: The images used for network devices in this unit are illustrative and are unlikely to be representative of the actual devices on your school network. In Lesson 6, learners will have the opportunity to take part in a ‘network tour’ in your setting, in which they will see the physical devices.
+You will need:
+Slides 
+A1, A2, and A3 Handout – Images for role play (ideally, print the first page in size A3, or print the larger images) 
+String, wool, or skipping ropes to represent wired connections
+Blank paper
+Homework (optional)
+Assessment opportunities
+Activity 1: You can assess learners’ understanding of how information flows around a network through a switch.
+Activity 2: You can assess learners’ understanding of the function of a server.
+Activity 3: You can assess learners’ understanding of wireless connections in a network.
+Plenary: You can assess learners’ understanding of the roles of a switch, server, and wireless access point in a network.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–5)
+5 mins
+Vocabulary
+Display slide 2 and introduce the learning objective and success criteria.
+Display slide 3. Remind learners that a network is made up of connections between many people or objects. This is illustrated on the slide with the example of a personal network consisting of connections between family members and friends.
+Display slide 4 and let the animation play. The animation will show connections between learners in a classroom, but with no organisation or structure. Ask learners if they think that this is a good way of making lots of connections.
+Display slide 5 and let the animation play. The switch is connected to every computer and can therefore pass information from any computer to any computer. The animation will demonstrate that a switch makes connections more efficient, as there does not need to be a direct connection between each learner and each other learner. Explain that the messages pass from the sender to the switch, and then the switch forwards them on to the receiver. The switch does not read the messages; it just sends them to the right place.
+Activity 1
+(Slides 6–7)
+10 mins
+Making a network
+Display slide 6. Explain to learners that, like in Lesson 4, some class members will now role-play to recreate the school network, but this time, the roles will include a number of new types of network devices. The network will start out with a small number of devices, but more devices will join and the network will grow. 
+Note: For this activity, you may wish to use printed images from the A1, A2, and A3 Handout to remind learners which device they represent.
+First, ask learners to role-play the network as it was at the end of Lesson 4, ie a small number of desktop computers (6 to 10) connected to a switch in an arc. Use pieces of string or skipping ropes to represent the connections between the network switch and each of the desktop computers. The person representing the network switch should hold one end of each string, and each person representing a desktop computer should hold the other end of one string each.
+Remind learners that when one computer wants to send information to another computer, it can do so via the network switch; the information does not need to go through any other computer.
+Ask one learner to pass a note to another learner via the person representing the network switch.
+Display slide 7. Ask learners:
+How could a file travel from computer 1 to computer 2?
+Answer: Computer 1 would send the file to the network switch. The network switch would direct the file to computer 2, which would then receive it.
+What would happen if one computer was switched off?
+Answer: You couldn’t send anything to it or get anything from it.
+Activity 2(Slides 8–11)
+15 mins
+Adding a server
+Display slide 8. Explain to learners that many networks contain a server, which is an important computer that stores files and manages the network. 
+Display slide 9. Use the slide to show learners where a server is connected to a computer network. Explain that the desktop computers can access the server via the switch.
+Ask another learner to role-play the server in the network. Give the learner one end of a piece of string, and give the other end to the learner representing the network switch, to represent connecting the server to the network switch.
+Demonstrate to learners how we can use our network model to follow the journey of a file. Ask learners to pretend that a teacher using computer 1 creates a file, then saves that file on the server:
+The learner role-playing computer 1 holds a piece of paper (this represents the file that has just been created)
+A learner takes the piece of paper (representing the file) from computer 1 and follows the piece of string until they reach the network switch
+The learner role-playing the network switch points in the direction of the learner role-playing the server
+The learner carrying the file (the piece of paper) follows the piece of string to the server and passes the file to the server
+Note: The benefit of saving files on a server is that they can be accessed from any device on the network (with appropriate permission). Also, most servers are backed up on a regular basis, which means that file storage is likely to be more secure and reliable than on a personal device.
+Display slide 10. Ask learners:
+Where is the file now?
+Answer: Saved on the server.
+Which computers can access a file on the server?
+Answer: Any computers connected to the network.
+Would it matter if computer 1 was now switched off?
+Answer: No, because other computers can still access the file on the server.
+Display slide 11. Give learners an opportunity to role-play a network including a server. One learner will represent the switch, one will represent the server, one will carry the message, and the rest of the group will act as desktop computers. Emphasise to learners that they should use the new vocabulary throughout the activity, including the terms ‘network switch’ and ‘server’, and that they should explain the function of each device.
+Activity 3
+(Slides 12–13)
+10 mins
+Wireless (Wi-Fi) connections
+Stop the previous activity and select one group of learners to remain in their positions. You could add a few more learners representing desktop computers to the group too. Explain that some devices in a network are not connected by wires. Ask learners how they think a tablet computer or a laptop computer can connect to the school network. Explain that this connection takes place via wireless networking (Wi-Fi).
+Note: A Wi-Fi connection is not an internet connection; it’s just a wireless way of connecting to a network. Equally, learners may mention 3G, 4G, or 5G connections, which connect devices (usually smartphones) to the internet and not solely to a network.
+Display slide 12. Explain to learners that, because wireless devices do not have wires that connect them to the network switch, they need to connect to a device called a wireless access point (WAP), which in turn connects to the network switch. Explain that a wireless access point is a device connected to a wired network via a wire, and that it sends and receives wireless signals for and from devices with wireless connectivity. In most schools, wireless access points will be in every classroom and in communal areas. 
+Display slide 13. Ask approximately 6 learners to role-play wireless devices (this time, not using string), eg laptop computers or tablet computers. Ask another learner to represent the wireless access point, and explain that they will connect the wireless devices to the network switch. Give the learner one end of a piece of string, and give the other end to the learner representing the network switch, to represent connecting the wireless access point to the network switch, like the desktop computers. 
+Ask learners to now demonstrate the journey of a file on the server to a wireless device. Explain that this time, the teacher is using a laptop to open a file, and the file (or the request for the file, at first) will need to move:
+From a wireless device to the wireless access point
+To the network switch
+To the server (the learner should pick up the file)
+Back to the network switch
+To the wireless access point
+To the wireless device (the learner should hand over the file)
+Ask learners:
+What do you need in order to access information on the network via a laptop?
+Answer: You need a wireless (Wi-Fi) connection.
+Plenary
+(Slides 14–15)
+5 mins
+Define key vocabulary
+Display slide 14. Show learners the key vocabulary used in today’s lesson, and ask them to match the words with the definitions. 
+Show slide 15 to reveal the answers.
+Next time
+(Slides 16–17)
+5 mins
+Review the ‘Assessment’ and ‘Summary’ slides.
+Homework
+Learners should consider where computer networks are used beyond a school. Learners should choose a setting, using the suggestions in the Homework activity sheet or their own ideas, and draw or list the computers and network devices that are in use in their chosen setting.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L5_src/L5 Slides – Connecting computers – Y3.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 5: How are computers connected?
+Year 3 – Computing systems and networks – Connecting computers
+--- notes for slide1.xml ---
+Last updated: 02-07-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+To explore how digital devices can be connected
+I can recognise that a computer network is made up of a number of devices
+I can demonstrate how information can be passed between devices
+I can explain the role of a switch, server, and wireless access point in a network
+Lesson 5: How are computers connected?
+Objectives
+
+=== slide3.xml ===
+My personal connections make a network of people
+Introduction
+Parent /carer
+Parent /carer
+Aunt D
+Grandad M
+Grandad D
+Grandma D
+Grandma M
+Uncle M
+Sister
+Brother
+Friend A
+Friend D
+Friend C
+Friend B
+Me
+
+=== slide4.xml ===
+Is this a good way of connecting?
+Introduction
+Is this a good way to share messages?
+How is the network working? 
+What is good? 
+What is frustrating?
+--- notes for slide4.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide5.xml ===
+Connecting like a computer network
+Introduction
+A switch helps to make connections simpler.
+The switch doesn’t need to read the message. It just reads who the message is going to and then passes the message on.
+Switch
+--- notes for slide5.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+https://pixabay.com/vectors/man-restroom-toilet-male-person-151083/ (edited) 
+
+=== slide6.xml ===
+Making a computer network
+Activity 1
+Switch
+Learner 1
+Learner 2
+--- notes for slide6.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide7.xml ===
+Making a computer network
+Activity 1
+How could a file travel from computer 1 to computer 2?
+What would happen if one computer was switched off?
+Desktop computers
+Wires
+Network switch
+Desktop computers
+Wires
+Network switch
+1
+2
+3
+4
+5
+--- notes for slide7.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/ 
+
+=== slide8.xml ===
+A server is a computer that can store things on a network.
+The server in this network will be used to store files.
+These files can include documents, sound files, video files, or many other types of file.
+Adding a server
+Activity 2
+--- notes for slide8.xml ---
+Image source: https://pixabay.com/vectors/computer-database-network-server-156948/
+
+=== slide9.xml ===
+Adding a server
+Activity 2
+Desktop computers
+Wires
+Network switch
+Desktop computers
+Wires
+Network switch
+1
+2
+3
+4
+5
+Server
+Server
+--- notes for slide9.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+
+=== slide10.xml ===
+Adding a server
+Activity 2
+Desktop computers
+Wires
+Network switch
+Desktop computers
+Wires
+Network switch
+1
+2
+3
+4
+5
+Server
+Server
+Which computers can access a file stored on the server?
+Would it matter if computer 1 was now switched off?
+--- notes for slide10.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+
+=== slide11.xml ===
+You will need one person each to be: 
+Switch
+Server
+Message carrier
+Build your own network
+You will need several people to be: 
+Desktop computers
+In groups, make your own computer network.
+
+=== slide12.xml ===
+A device connected to a wired network, which sends and receives wireless signals for devices with Wi-Fi connectivity.
+Devices with Wi-Fi connectivity are usually devices that can be moved around, such as laptop computers, tablet computers, or smartphones.
+Wireless access point
+Activity 3
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+
+=== slide13.xml ===
+Adding wireless (Wi-Fi) devices
+Activity 3
+Desktop computers
+Wires
+Network switch
+Desktop computers
+Wires
+Network switch
+1
+2
+3
+4
+5
+Server
+Server
+Wireless devices
+Wireless devices
+Wireless access point
+--- notes for slide13.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+https://pixabay.com/vectors/computer-hub-network-server-switch-159835/
+https://pixabay.com/vectors/computer-database-network-server-156948/
+https://pixabay.com/vectors/router-wifi-wireless-connector-23240/
+https://pixabay.com/vectors/laptop-computer-technology-business-1295373/
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+
+=== slide14.xml ===
+A wired device that sends and receives wireless signals for devices with wireless connectivity to and from the network
+Match these columns
+Plenary
+Connection
+Computer network
+Network switch
+Wireless access point
+Server
+A number of connections linking devices together
+A link between two things 
+A networked computer for storing files
+A device that connects multiple devices on a network with one another
+
+=== slide15.xml ===
+A wired device that sends and receives wireless signals for devices with wireless connectivity to and from the network
+Match these columns
+Plenary
+Connection
+Computer network
+Network switch
+Wireless access point
+Server
+A number of connections linking devices together
+A link between two things 
+A networked computer for storing files
+A device that connects multiple devices on a network with one another
+
+=== slide16.xml ===
+I can recognise that a computer network is made up of a number of devices
+I can demonstrate how information can be passed between devices
+I can explain the role of a switch, server, and wireless access point in a network
+How confident are you? (1–3)
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide16.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide17.xml ===
+In this lesson, you…
+Explored how computer networks work and looked at other devices that can be connected to a network
+Next lesson
+Next lesson, you will…
+Explore the computer network in your school and consider the benefits of having a computer network
+Summary

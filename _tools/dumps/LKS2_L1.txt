@@ -1,0 +1,475 @@
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/A1 Handout_Sorting images.docx
+############################################################
+Sorting images
+Cut these images out if you want learners to have pictures for sorting during Activity 1. 
+Image sources:
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/vectors/violin-classic-instrument-strings-33610/
+https://pixabay.com/vectors/bicycle-bike-downhill-stumpjumper-161315/
+https://pixabay.com/vectors/desk-lamp-lamp-night-office-red-147523/
+https://pixabay.com/vectors/torch-flashlight-torchlight-lamp-29658/
+https://pixabay.com/vectors/android-nexus-5-phone-smart-phone-1294370/
+https://pixabay.com/photos/nikon-l29-digital-camera-compact-1502599/
+https://pixabay.com/photos/beebot-bee-robot-technology-4096410/
+https://pixabay.com/illustrations/amazon-echo-dot-amazon-alexa-3597986/
+https://pixabay.com/photos/object-pencil-sharpener-grinder-1675929/
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org.  
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/A2 Activity sheet_Exploring inputs and outputs.pptx
+############################################################
+
+=== slide1.xml ===
+Year 3 – Connecting computers
+Lesson 1 – How does a digital device work?
+Learner activity sheet
+Exploring inputs and outputs
+Complete the ‘input, process, output’ machines.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+4
+6
+7
+0
+2
+4
+6
+7
+0
+2
++3
++2
+3
+8
+2
+6
+3
+?
+2
+7
+3
+8
+4
+9
+?
+3
+30
+7
+70
+1
+10
+×2
+--- notes for slide1.xml ---
+Last updated: 21-02-24
+
+=== slide2.xml ===
+Attribution statement This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. The original version can be made available on request via info@teachcomputing.org.  
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/A2 Answers_Exploring inputs and outputs.pptx
+############################################################
+
+=== slide1.xml ===
+80
+Year 3 – Connecting computers
+Lesson 1 – How does a digital device work?
+Answers
+Exploring inputs and outputs – Answers
+Complete the ‘input, process, output’ machines.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+4
+6
+7
+0
+2
+4
+6
+7
+0
+2
++3
++2
+3
+8
+2
+6
+3
++5
+2
+7
+3
+8
+4
+9
+×10
+3
+30
+7
+70
+1
+10
+7
+9
+10
+3
+5
+8
+12
+14
+0
+4
+5
+6
+0
+4
+1
+×2
+8
+eg
+--- notes for slide1.xml ---
+Last updated: 21-02-24
+
+=== slide2.xml ===
+Attribution statement This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. The original version can be made available on request via info@teachcomputing.org.  
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/A3 Activity sheet_Processes.docx
+############################################################
+Processes
+Think of processes for these input/output machines.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/L1 Lesson plan_Connecting computers_Y3.docx
+############################################################
+Lesson 1: What is a digital device?
+Introduction
+This lesson introduces the concepts of input, process, and output and how to protect devices using secure passwords. These concepts are fundamental to all digital devices. 
+Learning objectives
+To explain how digital devices function
+I can explain that digital devices accept inputs
+I can explain that digital devices produce outputs
+I can follow a process
+I can explain what makes a secure password
+Key vocabulary
+Digital device, input, process, output, secure, password, cyber attack
+Preparation
+Subject knowledge:
+You will need an understanding of digital and non-digital devices. The key difference between them is that a digital device is capable of some processing, ie it has functions beyond being either on or off. 
+You will need to be familiar with the concept of input, process, output (IPO), which underpins all digital devices. 
+You will have an understanding of how we use passwords to protect our devices.
+There are cross-curricular links with maths for IPO, which can be referenced during this lesson.
+You will need:
+Slides
+L1 Resource IPO Overview - information for teachers
+Activities:
+A1 Handout – Sorting images (optional)
+A2 Activity sheet – Exploring inputs and outputs
+A2 Answers – Exploring inputs and outputs
+Assessment opportunities
+Introduction: You can examine learners’ prior knowledge and determine whether they can identify digital devices.
+Activities 1 and 2: You can assess whether learners can identify inputs, processes, and outputs.
+Activity 3: You can assess whether the learners can understand what makes a secure password.
+Plenary: You can assess learners’ understanding of inputs, processes, and outputs in relation to a digital device.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–3)
+5 mins
+Display slide 2 and introduce the learning objective and success criteria.
+Display slide 3. Click through the images on the slide and ask learners which of the digital devices shown on the slide they recognise, and whether some or all of them have anything in common. When the final image has been displayed, tell learners that all the images are of digital devices. Explain to learners that through the lessons in this unit, they will develop their understanding of digital devices, how these can be connected, what the benefits of connecting them are and how we can protect them.
+Activity 1
+(Slides 4–5)
+10 mins
+Sorting objects
+Display slide 4. Show learners images of a range of objects, and ask them how they would sort them into two groups. Record their responses and discuss ideas, eg “objects that are the same colour”, “objects that have buttons”, or “things that you play on”. 
+Discuss how learners have sorted the objects, emphasising that there is not a ‘right’ or ‘wrong’ way of sorting them.
+Note: If you like, you could provide learners with printed images from the A1 Handout and ask learners to physically sort the images.
+Display slide 5 and show learners one method of sorting the objects. Ask them why they think the objects have been sorted in this way. A misconception may be that the groupings are ‘electrical’ and ‘non-electrical’ — if this were the case, the torch and lamp would be in the other group. Explain to learners that:
+The objects are grouped into digital and non-digital devices
+A digital device processes information digitally, which means that it does something beyond being either on or off
+Activity 2
+(Slides 6–9)
+20 mins
+‘Input, process, output’ machine
+Display slide 6. Explain to learners that we can tell whether something is a digital device by applying the ‘input, process, output’ model. Do hand jive actions to help demonstrate and remember the process i.e.
+Input – point fingers downwards
+Process – roll hands in front of your body
+Output – point fingers outwards
+Then open a word processing program, such as Microsoft Word or Google Docs, and demonstrate pressing buttons on the keyboard (the input). Discuss what the computer is doing: following the program for the button that you have pressed (process), and then showing the correct letter on the screen (output).N.B. Do the actions for each part as you demonstrate.
+The slide illustrates the ‘input, process, output’ model that you have just demonstrated, and you and learners will explore this model in more detail throughout the lesson. Note: Learners are going to explore the concept of the ‘input, process, output’ model without the complexities of digital devices.
+Display slide 7, which includes animations for you to click through to demonstrate examples of processes. First, demonstrate a simple process to learners: taking a football or star (an input) and passing it through the machine so that it gets bigger (an output). Ask learners to explain what process the machine is carrying out. 
+Demonstrate a second process, and ask learners what process the machine is carrying out (multiplying by two). 
+Show a machine that carries out a process using numbers (2 becoming 4). Ask learners to discuss whether there is more than one possible explanation for the machine’s process. 
+Show an additional example (5 becoming 7) and ask learners if they can now explain the machine’s process. 
+Finally, show the process. Discuss with learners whether the machine works with any number. 
+Display slide 8. Tell learners that they will now find the inputs, processes, and outputs for the machines on the A2 Activity sheet. Check learners’  understanding of the activity sheet — this could include relating the activity sheet to prior learning in maths — then, ask learners to complete the activity sheet. If you like, ask learners to work in pairs, so that they can review their ideas with each other.
+Scaffolding opportunity: Use questioning to ensure that learners understand how the function machines are working. For example, ask learners why they wrote a number, or how they knew what to do. In this activity, the concept is important, rather than mathematical accuracy.
+Display slide 9. Review the answers with learners.
+Explorer task: Explain that a laptop has at least three inputs and three outputs. Remind learners that you discussed one of each (keyboard and screen) earlier in the lesson, and ask whether they can identify any others. Learners should consider all of the tasks that they can use a laptop for. Learners might give the following answers:
+●Inputs: Mouse, ‘on’ and ‘off’ button, camera, microphone
+●Outputs: Speakers, lights (‘power on’, battery status, ‘Caps Lock on’)
+Activity 3
+(Slides 10 - 12)
+15 mins
+Display slide 10. Explain that when pupils are using their own device, they provide the input for it to process. They are in control of what the device does. However, sometimes people can get control of our devices. Pose the questions on the slide. 
+Ask the learners ‘what is a cyber-attack?’ Ask learners to jot ideas on whiteboards. Work with a partner to gather ideas. Invite learners to share their ideas then reveal the definition on the slide. They are when criminals try to steal our online information without our permission.
+Explain to learners that we can protect our devices with a password. This stops people being able to pick it up and use it, but also protects us from cyber attacks.  Show the following video from Warwickshire Police - How secure is your password? on slide 11. As they watch, ask learners to consider what makes a secure password.
+https://www.youtube-nocookie.com/embed/3ebesxcmriU
+Gather ideas from the learners to answer the question – what makes a secure password i.e. three random words. We can also improve this by adding capital letters, special characters and numbers. On the next slide show the following passwords – which do they think will be the most secure?
+Password
+Dogc&tmeAn25
+fredsmith65
+Ask the learners to investigate which will be the most secure using the How Secure is My Password website. https://www.security.org/how-secure-is-my-password/ This website allows you to check how long your password would take to be hacked by criminals. What did they find out? i.e. the most secure was the second one as it takes 34 thousand years to hack.
+Explorer task: Testing their own passwords
+Learners are to use the website to check their own passwords to see how secure they are. They could then rewrite their passwords to make them more secure.
+Plenary
+(Slide 13)
+3 mins
+Recap
+Explain that learners are now going to relate the ideas of input, process, and output back to a real-world digital device. Show the image of a digital camera on slide 11 and ask the class these questions about the device: 
+What is this digital device? 
+What does it do? 
+What is the input? 
+What is the process? 
+What is the output? 
+How can we protect our data?
+Using the example responses below, assess how effectively learners can link the ‘input, process, output’ machines that they have been looking at to a real digital device.
+Digital device
+Input
+Process
+Output
+Digital camera
+Pressing the button
+A picture is taken
+A photograph
+Next time
+(Slides 14–15)
+2 mins
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/L1 Resource_IPO Model Overview_Y3.docx
+############################################################
+What is the IPO model?
+The input, process, output (IPO) model describes a fundamental aspect of computing. All computers accept inputs as data, which are then processed by a program, or part of a program, to produce an output.
+Some physical parts of a computer system can be classified as an input device, an output device, or sometimes both. Input devices send information to a computer. These include a keyboard, mouse, or microphone. Outputs can be produced by screens, speakers, or printers. A touchscreen is an example of a combined input and output device — it accepts inputs in the form of taps or swipes and displays outputs on the screen. 
+IPO can go beyond physical inputs and outputs, for example in systems where data is flowing between computers, one computer can produce an output that will be sent to another computer to input and process.
+Why is the IPO model important?
+IPO is a milestone concept in computing. All computers follow the IPO model and it is pivotal to understanding how digital devices or systems work. Knowledge of the IPO model helps you to use systems more effectively and recognise when and where technology is helping or hindering you.
+IPO underpins all aspects of computing. Even in KS1 (age 5–7), before it is introduced in the curriculum, learning is based on the fundamental aspects of the IPO model. For example, when you press a key on a keyboard, a letter appears on the screen, or when you press ‘Go’ on a floor robot, the program executes. Then in KS2 (age 7–11), in line with the English National Curriculum, we explicitly introduce the IPO model and it is subsequently woven throughout all units.
+How is IPO taught in the TCC?
+The terms input, process, and output are used throughout the Teach Computing Curriculum (TCC). In Year 3 ‘Computing Systems and Networks’, the IPO model is explicitly introduced to learners and then built upon in later units. In ‘Programming’ units, learners write programs to respond to inputs and control outputs. In ‘Creating media’ units, learners use a variety of computer peripherals and these are specifically called out as input or output devices. In ‘Data and information’ units, learners input, collect data, or use automated devices to gather data which they then work with and process in a variety of data handling applications to produce outputs in the form of charts, graphs, or tables.
+Where to find out more
+To find out more about the IPO model, sign up for our online course Teaching Computing Systems and Networks to 5- to 11-year-olds. Using example content from the TCC, you will be introduced to the concept of computer systems and the IPO model. You will also be given ideas to inspire your learners to be more curious about technology around them, by introducing them to the IPO model. 
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../LKS2/L1_src/L1_How does a digital device work_v1.2/L1 Slides_Connecting computers_Y3.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 1: How does a digital device work?
+Year 3 – Computing systems and networks – Connecting computers
+--- notes for slide1.xml ---
+Last updated 23-09-24
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+
+=== slide2.xml ===
+To explain how digital devices function
+I can explain that digital devices accept inputs
+I can explain that digital devices produce outputs
+I can follow a process
+I can explain what makes a secure password
+Lesson 1: How does a digital device work?
+Objectives
+
+=== slide3.xml ===
+All of these things either are digital devices or use digital devices inside them to make them work. 
+Introduction
+What do these things have in common?
+--- notes for slide3.xml ---
+Image sources:
+https://pixabay.com/photos/airbus-a380-airbus-a380-airplane-1185984/
+https://pixabay.com/photos/beebot-bee-robot-technology-4096410/
+https://pixabay.com/photos/technology-servers-server-1587673/
+https://pixabay.com/illustrations/watch-digital-exercise-technology-1660232/
+https://pixabay.com/photos/electronics-hands-mobile-phone-1851218/
+https://pixabay.com/photos/car-engine-prius-c-motor-vehicle-231213/
+https://pixabay.com/photos/canon-camera-lens-photography-3605069/
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/photos/laptop-typing-internet-hands-1149412/
+https://pixabay.com/vectors/gps-navigation-garmin-device-304842/
+https://pixabay.com/photos/tv-android-tv-network-android-627876/
+https://pixabay.com/photos/wireless-home-router-adsl-modem-1861612/
+
+=== slide4.xml ===
+Why did you sort them that way?
+Sort these items into two groups
+Activity 1
+--- notes for slide4.xml ---
+Image sources:
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+https://pixabay.com/illustrations/amazon-echo-dot-amazon-alexa-3597986/ 
+https://pixabay.com/vectors/violin-classic-instrument-strings-33610/ 
+https://pixabay.com/vectors/bicycle-bike-downhill-stumpjumper-161315/ 
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/ 
+https://pixabay.com/photos/object-pencil-sharpener-grinder-1675929/ 
+https://pixabay.com/vectors/android-nexus-5-phone-smart-phone-1294370/ 
+https://pixabay.com/vectors/desk-lamp-lamp-night-office-red-147523/ 
+https://pixabay.com/photos/nikon-l29-digital-camera-compact-1502599/ 
+https://pixabay.com/vectors/torch-flashlight-torchlight-lamp-29658/ 
+https://pixabay.com/photos/beebot-bee-robot-technology-4096410/ 
+
+=== slide5.xml ===
+They could be sorted like this...
+Activity 1
+--- notes for slide5.xml ---
+Image sources:
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/illustrations/amazon-echo-dot-amazon-alexa-3597986/
+https://pixabay.com/vectors/violin-classic-instrument-strings-33610/
+https://pixabay.com/vectors/bicycle-bike-downhill-stumpjumper-161315/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/photos/object-pencil-sharpener-grinder-1675929/
+https://pixabay.com/vectors/android-nexus-5-phone-smart-phone-1294370/
+https://pixabay.com/vectors/desk-lamp-lamp-night-office-red-147523/
+https://pixabay.com/photos/nikon-l29-digital-camera-compact-1502599/
+https://pixabay.com/vectors/torch-flashlight-torchlight-lamp-29658/
+https://pixabay.com/photos/beebot-bee-robot-technology-4096410/
+
+=== slide6.xml ===
+Digital devices must have an input, a process, and an output
+Activity 2
+Input
+You press a button on the keyboard
+Output
+Process
+The computer follows a program that tells it what to do when you press a button
+You see the letter on the screen that matches the button that you pressed
+Hello world
+When ‘H’ key pressed, display ‘H’
+When ‘e’ key pressed,
+display ‘e’
+When...
+--- notes for slide6.xml ---
+Image sources:
+https://pixabay.com/photos/computer-keyboard-typing-1869236/
+https://pixabay.com/illustrations/monitor-isolated-display-white-313011/
+
+=== slide7.xml ===
+  Process: add 2
+  Process: make it bigger
+  Process: double it
+‘Input, process, output’ machine
+2
+5
+output
+input
+4
+7
+Activity  2
+--- notes for slide7.xml ---
+Football image source: https://pixabay.com/vectors/football-ball-sport-soccer-round-157930/
+
+=== slide8.xml ===
+Input, process, output
+Activity 2
+Can you find the inputs, processes, and outputs for the machines on the sheet?
+
+=== slide9.xml ===
+Did you find the different inputs, processes, and outputs?
+Input, process, output – Answers
+Activity 2
+
+=== slide10.xml ===
+When you are using your own digital device, you are providing the input for the device to process. You are in control.
+If we do not protect our digital devices, sometimes other people provide the input. Then, we are no longer in control!
+How might someone get access to our device? 
+How can we protect our digital devices?
+Protecting digital devices
+10
+Activity 3
+?
+--- notes for slide10.xml ---
+https://pixabay.com/illustrations/hacker-hacking-cyber-security-hack-1944688/
+Youtube video https://www.youtube-nocookie.com/embed/3ebesxcmriU
+
+=== slide11.xml ===
+When criminals try to steal our online information without our permission.
+What is a cyber-attack?
+11
+Activity 3
+
+=== slide12.xml ===
+ 
+Password12
+Dogc&tmeAn25
+fredsmith65
+Which of these password is the most secure?
+12
+https://www.security.org/how-secure-is-my-password/
+Activity 3
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/vectors/camera-digital-photographer-29052/
+
+=== slide13.xml ===
+What is this digital device?
+What does it do?
+What is the input?
+What is the process?
+What is the output?
+How can we protect our data?
+What have you learnt?
+Plenary
+--- notes for slide13.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide14.xml ===
+I can explain that digital devices accept inputs
+I can explain that digital devices produce outputs
+I can follow a process
+I can explain what makes a secure password
+How confident are you? (1–3)
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+
+=== slide15.xml ===
+In this lesson, you...
+Used an ‘input, process, output’ machine and understood what makes a secure password
+Next lesson
+Next lesson, you will…
+Look at devices with different inputs and outputs and design your own digital device
+Summary
+
+=== slide16.xml ===
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+Attribution statement 
+16

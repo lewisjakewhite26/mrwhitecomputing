@@ -1,0 +1,484 @@
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/A1 Teacher handout – Devices.pptx
+############################################################
+
+=== slide1.xml ===
+Year 3 – Connecting computers 
+Lesson 2 – What parts make up a digital device?
+Teacher handout
+Devices
+These cards can be used as an alternative to physical devices for Activity 1.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+--- notes for slide1.xml ---
+Last updated 02-07-21
+
+=== slide2.xml ===
+mouse
+--- notes for slide2.xml ---
+Image source: https://pixabay.com/vectors/mouse-computer-technology-internet-34688/
+
+=== slide3.xml ===
+keyboard
+--- notes for slide3.xml ---
+Image source: https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+
+=== slide4.xml ===
+printer
+--- notes for slide4.xml ---
+Image source: https://pixabay.com/vectors/printer-copier-modern-office-1293116/
+
+=== slide5.xml ===
+webcam
+--- notes for slide5.xml ---
+Image source: https://pixabay.com/vectors/webcam-video-camera-movie-record-295440/
+
+=== slide6.xml ===
+cable
+--- notes for slide6.xml ---
+Image source: https://pixabay.com/vectors/usb-cable-cable-connect-mini-usb-154767/
+
+=== slide7.xml ===
+microphone
+--- notes for slide7.xml ---
+Image source: https://pixabay.com/photos/micro-usb-microphone-1335142/
+
+=== slide8.xml ===
+monitor
+--- notes for slide8.xml ---
+Image source: https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+
+=== slide9.xml ===
+touchscreen
+--- notes for slide9.xml ---
+Image source: https://pixabay.com/vectors/african-african-american-black-2029825/
+
+=== slide10.xml ===
+speakers
+--- notes for slide10.xml ---
+Image source: https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+
+=== slide11.xml ===
+crossing button
+--- notes for slide11.xml ---
+Image source: https://pixabay.com/photos/london-united-kingdom-678711/
+
+=== slide12.xml ===
+crossing lights
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/photos/traffic-light-green-light-1024768/
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/A2 Activity sheet – Match input, device, output.pptx
+############################################################
+
+=== slide1.xml ===
+Year 3 – Connecting computers
+Lesson 2 – What parts make up a digital device?
+Learner activity sheet
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Match input, device, output
+Keyboard
+Touchscreen
+Games controller
+Button
+Laptop
+Games console
+Tablet
+Pedestrian crossing
+button
+Printer
+Screen
+Speaker
+Pedestrian crossing lights
+Input device
+Digital device
+Output device
+--- notes for slide1.xml ---
+Last updated: 02-07-21
+Image sources:
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/video-game-controller-game-computer-147039/
+https://pixabay.com/vectors/help-button-red-emergency-support-153094/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+https://pixabay.com/photos/london-united-kingdom-678711/
+https://pixabay.com/vectors/printer-copier-modern-office-1293116/
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+https://pixabay.com/photos/traffic-light-green-light-1024768/
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/A2 Answers – Match input, device, output.pptx
+############################################################
+
+=== slide1.xml ===
+Year 3 – Connecting computers
+Lesson 2 – What parts make up a digital device?
+Answers
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Match input, device, output – Answers
+Keyboard
+Touchscreen
+Games controller
+Button
+Laptop
+Games console
+Tablet
+Pedestrian crossing
+button
+Printer
+Screen
+Speaker
+Pedestrian crossing  lights
+Input device
+Digital device
+Output device
+--- notes for slide1.xml ---
+Last updated 02-07-21
+Image sources:
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/video-game-controller-game-computer-147039/
+https://pixabay.com/vectors/help-button-red-emergency-support-153094/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+https://pixabay.com/photos/london-united-kingdom-678711/
+https://pixabay.com/vectors/printer-copier-modern-office-1293116/
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+https://pixabay.com/photos/traffic-light-green-light-1024768/
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/A3 Activity sheet – Invent your own digital device.docx
+############################################################
+Invent your own digital device
+Image sources:
+https://pixabay.com/vectors/help-button-red-emergency-support-153094/
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/vectors/mouse-computer-technology-internet-34688/ 
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/webcam-video-camera-movie-record-295440/
+https://pixabay.com/photos/micro-usb-microphone-1335142/ 
+https://pixabay.com/vectors/rainbow-colors-diodes-electronic-26389/ (cropped)
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/L2 Homework – Connecting computers_ At home – Y3.docx
+############################################################
+Input, process, output at home
+Introduction
+Choose a device in your home that you think might have a digital device inside it (hint: everything from games consoles to washing machines!). Draw or write what you think the inputs and outputs are for the device that you have chosen. An example is provided on this page for a washing machine. This example has photographs, but you can use drawings if you prefer.
+What are the device’s inputs?
+There is an On/Off button and several other buttons on the front of the washing machine.
+What process takes place?
+The washing machine selects a program, based on the selection that has been made.
+The program determines how the machine will operate.
+What are the device’s outputs?
+There are lights and a small digital display, which show which parts of the wash cycle have been completed and how long is left. There is also a motor, which spins the drum of the washing machine.
+Device: ____________________
+What are the device’s inputs?
+What process takes place?
+What are the device’s outputs?
+Images source: Raspberry Pi Foundation
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/L2 Lesson plan – Connecting computers – Y3.docx
+############################################################
+Lesson 2: What parts make up a digital device?
+Introduction
+In Lesson 1, learners looked at the relationship between inputs, processes, and outputs. In this lesson, they will develop that knowledge and apply it to devices and parts of devices that they will be familiar with from their everyday surroundings.
+Learning objectives
+To identify input and output devices
+I can classify input and output devices
+I can describe a simple process
+I can design a digital device
+Key vocabulary
+Digital device, input, process, output
+Preparation
+Subject knowledge:
+You will need to be familiar with the inputs and outputs of a range of digital devices. 
+You will need to understand that devices can have one input that leads to several outputs (eg starting a video leads to outputs from the screen and the speaker) and that many inputs can lead to one output (eg using a mouse and a keyboard to produce a document). 
+You will need:
+Slides
+A1 Teacher handout – Devices or examples of input and output devices
+Activities:
+A2 Activity sheet – Match input, device, output
+A2 Answers – Match input, device, output
+A3 Activity sheet – Invent your own digital device (optional: print in A3 to provide more working space) 
+Homework (optional)
+Assessment opportunities
+Activity 1: You can assess whether learners can classify input and output devices.
+Activity 2: You can assess learners’ understanding of the relationship between inputs, processes, and outputs for existing digital devices.
+Activity 3: You can assess learners’ understanding of the relationship between inputs, processes, and outputs through evaluating the digital devices that they invent.
+Plenary: You can assess learners’ understanding of the relationship between inputs, processes, and outputs through evaluating learners’ explanations of how their inventions work.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–4)
+5 mins
+Display slide 2. Introduce the learning objective and success criteria. 
+Use slides 3 and 4 to remind learners about Lesson 1. Show learners a selection of input and output devices that are used with, or within, digital devices — show physical devices if you can, or alternatively, use the images in the A1 Teacher handout. 
+Activity 1
+(Slides 5–6)
+10 mins
+Input or output?
+Using slide 5 (or large hoops, if you have physical devices), show a Venn diagram consisting of circles for ‘input’ and ‘output’. Using the A1 Teacher handout, the animations on slide 5, or physical devices if you have them, place an example of an input device (eg a keyboard) in the ‘input’ circle, and place an example of an output device (eg a screen) in the ‘output’ circle. Ensure that learners are aware that there are devices that fit into both circles (eg a touchscreen) and some that do not fit into either (eg a cable).
+Then, show learners the other devices one by one and ask where these belong in the Venn diagram.
+Answers (also revealed in the animations on slides 5 to 6):
+Input devices: Keyboard, mouse, microphone, button (on a pedestrian crossing)
+Output devices: Speakers, monitor, printer, traffic lights (on a pedestrian crossing)
+Device with input and output: Touchscreen
+Device without input or output: Cable
+Note: Learners’ only experience of printers may be of multifunctional printers that have the ability to scan documents. These multifunctional machines are input and output devices and go into the intersection of the Venn diagram.
+Note: Some learners may not be familiar with webcams. Explain that some computers (often laptops) have integrated webcams, which perform the same function as the example in the slides, but look different.
+Activity 2
+(Slide 7)
+10 mins
+Match input, device, and output
+Explain to learners that in this activity, they will match up inputs, digital devices, and outputs. Explain that the items named on the slide have been sorted as they were in the Venn diagram, but this time, they have been arranged into columns, and learners will draw connecting arrows between items in the different columns that match up.
+Using the animation on slide 7, give examples of where there is a connection between one input, one digital device, and one or many outputs, each time articulating the whole sentence, eg:
+“Pressing the keys on the keyboard (input) of a laptop (device) can change what you can see on the screen (output).”
+“Pressing the keys on the keyboard (input) of a laptop (device) can also make a speaker (output) play sounds, or it can make a printer (output) print something.”
+Give an example of where there is a connection between one input, one or many digital devices, and one or many outputs, articulating the whole sentence, eg:
+“Tapping on a touchscreen (input) of a smartphone or tablet (devices) can make its screen (output) display something and make its speaker (output) play sounds.”
+Note: Connections between many inputs, one device, and one output are also possible.
+Ask learners to discuss further connections between the items in the columns, and to then complete the A2 Activity sheet.
+Scaffolding opportunity: Focus the activity on devices that learners can see within the classroom to aid recognition of what inputs and outputs they have.
+Explorer task: Ask learners to consider digital devices explored in Lesson 1, eg a digital camera or a smart speaker, and what the inputs and outputs for those devices are. This encourages them to make connections with their previous learning.
+Activity 3
+(Slides 8–9)
+15 mins
+Invent your own digital device
+Explain to learners that they are now going to use their understanding of inputs and outputs to invent their own digital device. Some ideas are provided on slide 8, but learners can also think up a completely different invention. Tell learners that they must consider how their invention will work, including what inputs it will need (for example, it could have a button or a screen), and what its processes will be.
+Share the example on slide 9 and then let learners invent their own device on a blank sheet of paper or on the A3 Activity sheet.
+Once learners have completed their designs, invite them to share them with other learners, explaining how their devices would work.
+Note: Learners can do this activity individually or in pairs.
+Explorer task: Ask learners to include multiple inputs and/or outputs as part of their device and describe how these work together as part of the invention’s process.
+Plenary
+(Slides 10–11)
+5 mins
+Learners share their invention
+Ask learners to show their inventions either to each other or to the whole class. Encourage learners to explain the input, process, and output of their inventions. Highlight correct use of terminology.
+Display slide 10 and read out the text to draw learners’ attention to a real-world example. Ask learners to identify the digital devices or interactions with a digital device in the text. Discuss the digital devices or interactions (highlighted on slide 11), and remind learners that our world is filled with digital devices and tools.
+Next time
+(Slides 12–13)
+5 mins
+Review the ‘Assessment’ and ‘Summary’ slides.
+Homework
+(optional)
+Learners should choose a digital device in their home and explain how it is an ‘input, process, output’ device.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L2_src/L2 - What parts make up a digital device_/L2 Slides – Connecting computers – Y3.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 2: What parts make up a digital device?
+Year 3 – Computing systems and networks – Connecting computers
+--- notes for slide1.xml ---
+Last updated: 02-07-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+To identify input and output devices
+I can classify input and output devices
+I can describe a simple process
+I can design a digital device
+Lesson 2: What parts make up a digital device?
+Objectives
+
+=== slide3.xml ===
+What is this digital device?
+What does it do?
+What is the input?
+What is the process?
+What is the output?
+What have you learnt?
+Introduction
+--- notes for slide3.xml ---
+Image source: https://pixabay.com/vectors/camera-digital-photographer-29052/
+
+=== slide4.xml ===
+Digital devices must have an input, a process, and an output
+Introduction
+Input
+You press a button on the keyboard
+Output
+Process
+The computer follows a program that tells it what to do when you press a button
+You see the letter on the screen that matches the button that you pressed
+Hello world
+When ‘H’ key pressed, display ‘H’
+When ‘e’ key pressed,
+display ‘e’
+When...
+--- notes for slide4.xml ---
+Image sources: 
+https://pixabay.com/photos/computer-keyboard-typing-1869236/
+https://pixabay.com/illustrations/monitor-isolated-display-white-313011/
+
+=== slide5.xml ===
+Input or output?
+Activity 1
+input
+output
+mouse
+speakers
+keyboard
+microphone
+monitor
+touchscreen
+cable
+printer
+webcam
+--- notes for slide5.xml ---
+Image sources:
+https://pixabay.com/vectors/mouse-computer-technology-internet-34688/ 
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/photos/micro-usb-microphone-1335142/
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/usb-cable-cable-connect-mini-usb-154767/ 
+https://pixabay.com/vectors/printer-copier-modern-office-1293116/
+https://pixabay.com/vectors/webcam-video-camera-movie-record-295440/ 
+
+=== slide6.xml ===
+Input or output?
+Activity 1
+input
+output
+crossing lights
+crossing button
+--- notes for slide6.xml ---
+Image sources:
+https://pixabay.com/vectors/mouse-computer-technology-internet-34688/ 
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/photos/micro-usb-microphone-1335142/
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/usb-cable-cable-connect-mini-usb-154767/ 
+https://pixabay.com/vectors/printer-copier-modern-office-1293116/
+https://pixabay.com/vectors/webcam-video-camera-movie-record-295440/ 
+https://pixabay.com/photos/traffic-light-green-light-1024768/
+https://pixabay.com/photos/london-united-kingdom-678711/
+
+=== slide7.xml ===
+Device inputs and outputs
+Activity 2
+Keyboard
+Touchscreen
+Games controller
+Button
+Laptop
+Games console
+Tablet
+Pedestrian crossing
+button
+Input device
+Digital device
+Output device
+Printer
+Screen
+Speaker
+Pedestrian crossing lights
+--- notes for slide7.xml ---
+Image sources:
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/video-game-controller-game-computer-147039/
+https://pixabay.com/vectors/help-button-red-emergency-support-153094/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/photos/ipad-tab-tablet-3d-2462599/
+https://pixabay.com/photos/london-united-kingdom-678711/
+https://pixabay.com/vectors/printer-copier-modern-office-1293116/
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+https://pixabay.com/photos/traffic-light-green-light-1024768/
+
+=== slide8.xml ===
+Can you design a machine that uses inputs and produces an output?
+Can you describe how its processing works?
+Design a digital device
+Activity 3
+Some ideas
+A device that: 
+Makes lights flash to music
+Tells jokes
+Takes a picture and changes it
+Records a voice and changes it
+Makes music
+
+=== slide9.xml ===
+Invention name: ___________________________
+Design a digital device
+Activity 3
+Dazzling disco lights
+Different coloured lights that flash
+Microphone that can hear sound
+Process
+Music from the disco goes into the microphone.
+The device measures how loud the music is.
+The louder the music, the brighter the lights glow.
+Devices
+Inputs
+Outputs
+--- notes for slide9.xml ---
+Image sources:
+https://pixabay.com/vectors/help-button-red-emergency-support-153094/ (edited)
+https://pixabay.com/vectors/keyboard-keys-computer-hardware-162134/
+https://pixabay.com/photos/micro-usb-microphone-1335142/
+https://pixabay.com/vectors/mouse-computer-technology-internet-34688/ 
+https://pixabay.com/vectors/african-african-american-black-2029825/
+https://pixabay.com/vectors/webcam-video-camera-movie-record-295440/
+https://pixabay.com/vectors/rainbow-colors-diodes-electronic-26389/ (cropped)
+https://pixabay.com/vectors/monitor-display-computer-screen-309582/
+https://pixabay.com/vectors/loudspeakers-speakers-music-sound-29634/
+
+=== slide10.xml ===
+“Yesterday evening, I got home from school and turned on the TV to watch a programme on a streaming service. There wasn’t much on, so I played on my games console instead. I was tired after I finished my homework on my laptop, so I went to bed, not forgetting to set the alarm on my smart speaker. I woke up this morning and listened to some music from my morning playlist. I got to school just in time, because the satnav in the car found the quickest route.”
+Plenary
+Plenary
+
+=== slide11.xml ===
+“Yesterday evening, I got home from school and turned on the TV to watch a programme on a streaming service. There wasn’t much on, so I played on my games console instead. I was tired after I finished my homework on my laptop, so I went to bed, not forgetting to set the alarm on my smart speaker. I woke up this morning and listened to some music from my morning playlist. I got to school just in time, because the satnav in the car found the quickest route.”
+Plenary
+Plenary
+
+=== slide12.xml ===
+I can classify input and output devices
+I can describe a simple process
+I can design a digital device
+How confident are you? (1–3)
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide13.xml ===
+In this lesson, you...
+Looked at devices with different inputs and outputs and designed your own digital device
+Next lesson
+Next lesson, you will…
+Compare using a digital tool with using a non-digital tool
+Summary

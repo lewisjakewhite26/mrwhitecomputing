@@ -1,0 +1,344 @@
+
+############################################################
+FILE: ../LKS2/L4_src/L4 - How am I connected_/A1 Activity sheet – My connections.pptx
+############################################################
+
+=== slide1.xml ===
+Year 3 – Connecting computers 
+Lesson 4 – How am I connected?
+Learner activity sheet
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+My connections
+Me
+--- notes for slide1.xml ---
+Last updated: 02-07-21
+
+############################################################
+FILE: ../LKS2/L4_src/L4 - How am I connected_/A2 Activity sheet– Becoming a computer network.docx
+############################################################
+Becoming a computer network 
+From:               To:
+Message: 
+_________________
+_________________
+_________________
+From:               To:
+Message: 
+_________________
+_________________
+_________________
+From:               To:
+Message: 
+_________________
+_________________
+_________________
+From:               To:
+Message: 
+_________________
+_________________
+_________________
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L4_src/L4 - How am I connected_/L4 Lesson plan – Connecting computers – Y3.docx
+############################################################
+Lesson 4: How am I connected?
+Introduction
+Lesson 3 focused on the benefits of digital devices compared with non-digital tools. Many digital devices are now connected to other digital devices, eg computers through wires, tablets through Wi-Fi, and smartphones through mobile phone networks. The benefit of connecting digital devices is that it allows information to be shared between users and systems.
+This lesson introduces the concept of connections and moving information between connected devices. Learners will learn to explain how and why computers are joined together to form networks.
+Learning objectives
+To explain how a computer network can be used to share information
+I can recognise different connections
+I can explain how messages are passed through multiple connections
+I can discuss why we need a network switch
+Key vocabulary
+Connection, network, network switch
+Preparation
+Subject knowledge:
+You will need a basic understanding of how information (data) flows around a computer network, and how this benefits us. A computer network is simply two or more computers joined together to enable information to be shared between them. In the context of this lesson, the networks discussed are small, and self-contained. Some learners may associate a network with the internet. This is correct — the internet is a network of networks. The internet is introduced in Lesson 6 of this unit and is then the focus of the Year 4 ‘Computing systems and networks’ unit.
+You will need to know that a network switch manages the way in which data moves around a network.
+You will need:
+Slides 
+Activities:
+A1 Activity sheet – My connections 
+A2 Activity sheet – Becoming a computer network (several message squares per learner) 
+Pencils
+Assessment opportunities
+Activity 1: You can assess learners’ understanding of connections and how information can flow between connections.
+Activity 2: You can assess learners’ feedback on the method of sharing information explored in this activity.
+Activity 3: You can assess learners’ understanding of the function of a switch in a network.
+Plenary: You can evaluate learners’ answers in the ‘think, pair, share’ activity.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–2)
+5 mins
+Display slide 2 and introduce the lesson, the learning objective, and the success criteria.
+Note: Lessons 1 to 3 focused on the ‘computing systems’ element of the ‘Computing systems and networks’ strand. The remaining lessons in the unit focus on how computers can be joined together to create networks.
+Activity 1
+(Slides 3–7)
+10 mins
+My connections
+Display slide 3. Introduce the word ‘connection’ and ask learners what they think this word means. Click on the slide to reveal the answer. Discuss how learners might be connected to different people. 
+Display slide 4. Explain to learners that they will be looking at the connections that they have to other people. Ask them to write their name in the centre of a piece of paper or the A1 Activity sheet. Then, ask them to add names or drawings of 5 to 10 people that they have a connection to, eg parents, carers, extended family, friends, professionals such as teachers or doctors, etc. Ask them to draw connecting lines between themselves and other people.
+Scaffolding opportunity: Some learners may benefit from a more concrete context for this activity. Tell them to imagine that they had some good news, such as being awarded a school certificate or another achievement, and to think about who they would like to tell about it. Explain that learners have connections to these people.
+Vocabulary
+Display slide 5. Introduce the word ‘network’ and ask learners what they think it means. If required, split the word into the terms ‘net’ and ‘work’ and discuss each term independently. Explain to learners that the people that they are connected to also have connections with each other, which creates a ‘net’ of lines. These connections help us ‘work’ together to do things that we need to. Ask learners to give examples of groups of many people or things connected together.
+Scaffolding opportunity: Some learners may benefit from creating a vocabulary book or glossary for the new terms in this unit. They could draw pictures to remind themselves of what each term means. This would be a working document, which learners could add to each time they encounter a new word.
+My network
+Display slide 6. Ask learners to look at the connections that they have drawn so far and to think about whether there could be any additional lines between people, eg between Mum and Dad. Then, ask them to draw lines in a different colour to represent these connections. 
+Display slide 7 to show learners an example of people that they could be connected to, and explain that this is the network of people that they know. Explain that a network is a number of connections linking things with each other, eg people, roads, or computers.
+Explorer task: Ask learners to discuss how a message might be passed between people in their network (or in the example network on slide 7). For example, ask learners to discuss how they might get a message to Grandma D, and to suggest different ways, eg telling her directly, asking their dad to tell her, asking their brother to ask their grandad to tell her, etc.
+Activity 2(Slides 8–14)
+15 mins
+Becoming a computer network
+Explain to learners that they are now going to represent computers on a network (illustrated on slides 8 to 9) and see whether they can find the best way to send messages around it.
+Display slide 10. Give learners some squares from the A2 Activity sheet to use for their messages. Display slide 11. Explain that they should write a message (such as “I like chicken nuggets” or “Do you want to play at lunch?”) to someone on a different table than their own. Tell them that they can write as many messages as they wish, but for now, they should keep the messages piled on their own table.
+Note: To ensure that no learner feels excluded, either ask learners to send one message to a friend and another message to someone who they spend less time with, or ask them to send their message to the person who comes after them in the register. 
+Ask learners to stop writing. Display slide 12, and explain that learners are now going to become parts of the network passing these messages around. Explain to learners that networks cannot walk, so they need to stay seated. Click on slide 12 to reveal the illustration, then display slide 13. Tell learners that they should pass one message at a time, from one person to the next, checking each time who the message is going to and then sending it roughly in that direction. 
+Note: If required, discuss the importance of patience with learners, as quite often in this activity, someone who they attempt to pass a message to will be looking the other way. Explain that this is not because they are deliberately ignoring them — there are just a lot of messages to be passed!
+Note: Learners seated in the middle of the room will be more involved in this activity than those seated around the edge. You may therefore wish to move learners around and complete the activity twice.
+Discussion
+After learners have passed messages around their network, display slide 14 and ask:
+Is this a good way to share information?
+How is the network working? 
+What is working well? 
+What is frustrating? 
+Some answers that learners might suggest are:
+Messages are going in the correct direction
+It is slow to get messages around
+Some people have more messages to pass than others (people between two tables)
+People are sometimes looking the wrong way
+Explain to the class that the network that they have just made is similar to a computer network, although such a network often includes hundreds of devices, in different rooms, all over the building. Explain that it is not practical for all of these devices to connect directly to each other. To illustrate this point, ask learners to imagine one laptop with 50 things plugged into it, which would be impractical.
+Activity 3
+(Slides 15–16)
+10 mins
+Adding a network switch
+Invite learners to suggest ways in which the sharing of messages could be 
+carried out more efficiently.
+Explain to learners that they will now look at ways to make the process of sharing information more efficient. Display slide 15 and explain the function of a switch (or switches) in a network.
+Nominate one member of the class to represent the network switch. Explain that this person will collect messages from one learner and then distribute them to all of the receivers. Click through slides 15 and 16 to demonstrate the process to the whole class.
+Explain that:
+This is a more efficient way of sending and receiving messages, and it is a representation of how a computer network functions
+A network switch is a device that enables multiple devices on a network to be connected
+When one computer wants to send information to another computer, it can now do so via the network switch; information does not need to go through other computers
+Note: Most school networks have one switch, although some larger schools have more, especially if they are split over more than one site.
+Ask one learner to pass a message from Activity 2 to another learner via the person who represents the network switch.
+Plenary
+(Slide 17)
+5 mins
+Think, pair, share
+Recap the key vocabulary items ‘network’ and ‘network switch’ with learners.
+Ask learners to consider:
+What is a connection?
+How can we share information effectively between connections?
+What does a network switch do?
+Next time
+(Slides 18–19)
+5 mins
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L4_src/L4 - How am I connected_/L4 Slides – Connecting computers – Y3.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 4: How am I connected?
+Year 3 – Computing systems and networks – Connecting computers
+--- notes for slide1.xml ---
+Last updated: 02-07-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+To explain how a computer network can be used to share information
+I can recognise different connections
+I can explain how messages are passed through multiple connections
+I can discuss why we need a network switch
+Lesson 4: How am I connected?
+Objectives
+
+=== slide3.xml ===
+What do you think the word ‘connection’ means?
+Activity 1
+A link between two or more people or things. Can you think of any examples?
+--- notes for slide3.xml ---
+Image source: https://pixabay.com/illustrations/fax-white-male-3d-model-isolated-1889047/ 
+
+=== slide4.xml ===
+My connections
+Activity 1
+Write your name in the middle of a sheet of paper. 
+Write or draw 5 to 10 people that you have links with. These can be family members, carers, and friends.
+Draw a line between you and each of your connections.
+Grandad M
+Grandma M
+Uncle M
+Me
+Parent/carer
+
+=== slide5.xml ===
+What is a network?
+Activity 1
+A group of many people or things connected together. Can you think of any examples?
+--- notes for slide5.xml ---
+Image source: https://pixabay.com/illustrations/network-connections-communication-3537400/ 
+
+=== slide6.xml ===
+My personal network
+Use another colour to draw lines between the people that also have connections.
+Activity 1
+Parent /carer
+Aunt D
+Grandad M
+Grandad D
+Grandma D
+Grandma M
+Uncle M
+Sister
+Brother
+Friend A
+Friend D
+Friend C
+Friend B
+Me
+Parent /carer
+
+=== slide7.xml ===
+My personal network
+Activity 1
+Parent /carer
+Parent /carer
+Aunt D
+Grandad M
+Grandad D
+Grandma D
+Grandma M
+Uncle M
+Sister
+Brother
+Friend A
+Friend D
+Friend C
+Friend B
+Me
+
+=== slide8.xml ===
+Imagine that you are a computer connected to a network.
+Becoming a computer network
+Activity 2
+--- notes for slide8.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide9.xml ===
+Imagine that you are a computer connected to a network.
+Becoming a computer network
+Activity 2
+--- notes for slide9.xml ---
+Image source: https://pixabay.com/vectors/laptop-computer-technology-business-1295373/
+
+=== slide10.xml ===
+Becoming a computer network
+Activity 2
+From:
+Message: 
+To:
+--- notes for slide10.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide11.xml ===
+From:
+Message: 
+To:
+Becoming a computer network
+Activity 2
+Learner 1
+Learner 2
+Learner 2
+Is it sunny today?
+Learner 1
+--- notes for slide11.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide12.xml ===
+Becoming a computer network
+Activity 2
+Learner 1
+Learner 2
+The message will be passed around the classroom, without anyone leaving their seats — laptops don’t need to be moved to send a message.
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide13.xml ===
+Becoming a computer network
+Activity 2
+Now try passing your own messages.
+--- notes for slide13.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide14.xml ===
+Evaluating the effectiveness
+Activity 2
+Is this a good way to share information?
+How is the network working? 
+What is working well? 
+What is frustrating?
+--- notes for slide14.xml ---
+Image source: https://pixabay.com/vectors/cross-legged-child-sitting-153900/
+
+=== slide15.xml ===
+Adding a network switch
+Activity 3
+Learner 1 wants to send a message to learner 2. 
+The message is passed through the switch.
+Let’s look at how this happens.
+Switch
+Learner 1
+Learner 2
+--- notes for slide15.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/ (edited)
+https://pixabay.com/vectors/man-restroom-toilet-male-person-151083/ (edited)
+
+=== slide16.xml ===
+Adding a network switch
+Activity 3
+The switch doesn’t need to read the message. It just reads who the message is going to and then passes the message on.
+Switch
+--- notes for slide16.xml ---
+Image sources: 
+https://pixabay.com/vectors/cross-legged-child-sitting-153900/ (edited)
+https://pixabay.com/vectors/man-restroom-toilet-male-person-151083/ (edited)
+
+=== slide17.xml ===
+Think, pair, share:
+What is a connection?
+How can we share information effectively between connections?
+What does a network switch do?
+Conclusion
+Plenary
+
+=== slide18.xml ===
+I can recognise different connections
+I can explain how messages are passed through multiple connections
+I can discuss why we need a network switch
+How confident are you? (1–3)
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide18.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide19.xml ===
+In this lesson, you…
+Explored how digital devices can be connected and used your own connections to send messages around the room
+Next lesson
+Next lesson, you will…
+Explore how computer networks work and look at other devices that can be connected to a network
+Summary

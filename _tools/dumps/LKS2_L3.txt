@@ -1,0 +1,233 @@
+
+############################################################
+FILE: ../LKS2/L3_src/L3 - How do digital devices help us_/A1 Activity sheet – What can you use a digital device for_.docx
+############################################################
+What can you use a digital device for?
+Tick the box if you can complete the task on the device. Then, add some tasks of your own.
+Digital camera
+Laptop computer
+Games console
+Smartphone
+Take pictures
+Write a story
+Play a game
+Make a phone call
+Send a message
+Image sources:
+https://pixabay.com/photos/nikon-l29-digital-camera-compact-1502599/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/vectors/android-nexus-5-phone-smart-phone-1294370/
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L3_src/L3 - How do digital devices help us_/A3 Activity sheet – Learner review.docx
+############################################################
+Learner review
+Use these questions to help you review the activity:
+How did you feel about doing the activities?
+Which method did you prefer?
+Which bits did you find easier or harder in each activity?
+How did you fix mistakes in each activity?
+What input devices did you use?
+Do you think all artists would use a computer if they had access to one?
+Do you need to be good at using a computer in order to produce good art?
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L3_src/L3 - How do digital devices help us_/L3 Lesson plan – Connecting computers – Y3.docx
+############################################################
+Lesson 3: How do digital devices help us?
+Introduction
+In this lesson, learners will apply their learning from Lessons 1 and 2 by using programs in conjunction with inputs and outputs on a digital device. They will create two pieces of work with the same focus, using digital devices to create one piece of work, and non-digital tools to create the other. Learners will then compare and contrast the two approaches.
+Learning objectives
+To recognise how digital devices can change the way that we work
+I can explain how I use digital devices for different activities
+I can recognise similarities between using digital devices and using non-digital tools
+I can suggest differences between using digital devices and using non-digital tools
+Key vocabulary
+Program, digital, non-digital
+Preparation
+Subject knowledge:
+You will need to be familiar with your chosen digital paint program, including the ‘brush’, ‘fill’, ‘undo’, and ‘redo’ functions.
+You will need:
+Slides
+Activities:
+A1 Activity sheet – What can you use a digital device for?
+A3 Activity sheet – Learner review (optional)
+Paper and paint
+A computer or tablet with a basic graphics program, eg Microsoft Paint (Windows), JS Paint (jspaint.app — online), PaintZ (paintz.app — online), or Brushes Redux (free app for iOS devices, downloadable from the Apple App Store online store)
+Assessment opportunities
+Activity 1: You can assess whether learners can identify the capabilities of digital devices.
+Activity 2: You can assess learners’ understanding of the similarities and differences between digital devices and non-digital tools.
+Activity 3: You can assess whether learners can articulate the differences between producing art digitally and non-digitally and explain which they prefer.
+Plenary: You can assess whether learners can examine how different programs can be used on a digital device.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 1–3)
+5 mins
+Remind learners of Lesson 2. Explain that during this lesson, they will be comparing the use of digital devices and non-digital tools. Display slide 2 and introduce the learning objective and success criteria. 
+Display slide 3. Ask learners whether they can identify how the tasks of writing or painting could be accomplished using a digital device, including what the inputs and outputs would be.
+Activity 1
+(Slides 4–5)
+10 mins
+What do digital devices do?
+Display slide 4. Remind learners that digital devices are all forms of information technology, and that their purpose is to help us to complete certain tasks. Pick one of the devices on the slide and ask learners what tasks could be completed using this device. When they have suggested a task (eg playing a game), ask them if the task that they have suggested could be completed on any of the other devices.
+Display slide 5. Ask learners to complete the A1 Activity sheet. Some tasks that can be completed on a digital device have been included on the activity sheet, and additional space has been provided for learners to add their own ideas of tasks.
+Activity 2
+(Slide 6)
+15 mins
+Comparing art-based activities using digital devices and non-digital tools
+Note: The purpose of this lesson is to compare digital and non-digital approaches when producing creative work. This lesson plan focuses on art, but you could focus it on writing if it suits your context better. If possible, learners should create a similar piece of work both non-digitally and digitally, so that they can make a direct comparison. The activity plan assumes that both approaches will be undertaken, but you can adapt it as necessary. If it is not practical to undertake both approaches, learners could create a piece of work digitally and relate the experience to prior non-digital experiences, ie painting a picture or writing on paper. Ideally, this activity will comprise an art lesson and a computing lesson.
+Display slide 6. Explain to learners that they will be producing the same piece of art using physical materials, such as paint, and using a digital device. Show learners the image of a digitally drawn tree on the slide. You could encourage them to use this image as inspiration for the activity, or you could ask them to create images based on a topic that they are currently studying in class.
+Non-digital activity: Explain to learners that whilst producing their pictures, they should consider the process of creating the artwork, eg how they change the colour of their brush or how they rectify mistakes. 
+Digital activity: Remind learners of the main tools within the graphics program (for this activity, the ‘brush’, ‘fill’, and ‘undo’ and ‘redo’ tools will be sufficient). Depending on learners’ prior knowledge, you may need to give additional information about art techniques when using digital tools.
+Activity 3
+(Slide 7)
+10 mins
+Learner review
+Note: If you have set learners a writing task rather than a painting task, you will need to adapt this activity.
+Once learners have completed both pieces of work, ask them to present their images to the class. Discuss with them the processes involved in creating the images. If you like, give learners the A3 Activity sheet to complete as part of the review. Some example questions are:
+How did you feel about doing the activities?
+Which method did you prefer?
+Which bits did you find easier or harder in each activity?
+How did you fix mistakes in each activity?
+What input devices did you use?
+Do you think all artists would use a computer if they had access to one?
+Do you need to be good at using a computer in order to produce good art?
+Plenary
+(Slides 8–10)
+5 mins
+Discussion
+Note: If you have set learners a writing task rather than a painting task, you will need to adapt this activity.
+Display slide 8. Show learners the sentences “I used a paint program on my digital device to create a picture that I can display in the classroom. This is different to using paints and paintbrushes because I can edit my picture by changing colours or using the ‘undo’ function.”
+Display slide 9. Ask learners to produce an example sentence for a word processing program, applying the knowledge and skills that they developed in the painting task. 
+Display slide 10. Ask learners whether there are times when it is better to use a non-digital tool rather than a digital device. Learners should have an open discussion, which could include examining how long it takes to begin or complete a task, how easy it is to use a tool or device (fitness for purpose), etc.
+Next time
+(Slides 11–12)
+5 mins
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../LKS2/L3_src/L3 - How do digital devices help us_/L3 Slides – Connecting computers – Y3.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 3: How do digital devices help us?
+Year 3 – Computing systems and networks – Connecting computers
+--- notes for slide1.xml ---
+Last updated: 02-07-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+To recognise how digital devices can change the way that we work
+I can explain how I use digital devices for different activities
+I can recognise similarities between using digital devices and using non-digital tools
+I can suggest differences between using digital devices and using non-digital tools
+Lesson 3: How do digital devices help us?
+Objectives
+
+=== slide3.xml ===
+Introduction
+Can you think of a digital version of these two things?
+--- notes for slide3.xml ---
+Image sources:
+https://pixabay.com/photos/brush-watercolor-paint-art-color-3445376/
+https://pixabay.com/photos/paper-table-record-notebook-2541687/
+
+=== slide4.xml ===
+What can you use a digital device for?
+Activity 1
+--- notes for slide4.xml ---
+Image sources:
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/vectors/android-nexus-5-phone-smart-phone-1294370/
+https://pixabay.com/photos/nikon-l29-digital-camera-compact-1502599/
+
+=== slide5.xml ===
+Digital camera
+Laptop computer
+Games console
+Smartphone
+Take pictures
+Write a story
+Play a game
+Make a phone call
+Send a message
+Do devices have one purpose?
+Activity 1
+--- notes for slide5.xml ---
+Image sources:
+https://pixabay.com/photos/nikon-l29-digital-camera-compact-1502599/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+https://pixabay.com/photos/video-game-console-video-game-play-2202666/
+https://pixabay.com/vectors/android-nexus-5-phone-smart-phone-1294370/
+
+=== slide6.xml ===
+Activity 2
+Painting or digital painting?
+--- notes for slide6.xml ---
+Image sources:
+https://pixabay.com/photos/brush-color-paint-play-watercolor-96240/
+https://pixabay.com/illustrations/painting-art-artistic-artistry-81177/
+Screenshot from Tux Paint
+https://pixabay.com/vectors/tree-forest-trunk-nature-leaves-576847/
+
+=== slide7.xml ===
+Questions
+Activity 3
+How did you feel about doing the activities?
+Which method did you prefer?
+Which bits did you find easier or harder in each activity?
+How did you fix mistakes in each activity?
+What input devices did you use?
+Do you think all artists would use a computer if they had access to one?
+Do you need to be good at using a computer in order to produce good art?
+
+=== slide8.xml ===
+“I used a paint program on my digital device to create a picture that I can display in the classroom.
+This is different to using paints and paintbrushes because I can edit my picture by changing colours or using the ‘undo’ function.”
+Example:
+Plenary
+
+=== slide9.xml ===
+I use a ________ to ___________ so that I can ________________.
+This is different to __________ because I can ___________.
+How is writing similar and different on a digital device?
+Plenary
+--- notes for slide9.xml ---
+Image sources:
+Screenshot of Google Docs, with text from: https://www.gutenberg.org/files/11/11-h/11-h.htm
+https://pixabay.com/photos/writing-write-fountain-pen-ink-1209121/
+
+=== slide10.xml ===
+Are there times when it’s better to use a non-digital tool rather than a digital device?
+Plenary
+
+=== slide11.xml ===
+I can explain how I use digital devices for different activities
+I can recognise similarities between using digital devices and using non-digital tools
+I can suggest differences between using digital devices and using non-digital tools
+How confident are you? (1–3)
+Assessment
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide11.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide12.xml ===
+In this lesson, you…
+Compared digital and non-digital tools for tasks that you do regularly
+Next lesson
+Next lesson, you will…
+Explore how digital devices can be connected and use your own connections to send messages around the room
+Summary

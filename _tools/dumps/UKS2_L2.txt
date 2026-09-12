@@ -1,0 +1,484 @@
+
+############################################################
+FILE: ../UKS2/L2_src/L2 Computer systems and us_v1.2/A1 Activity sheet - Comparing pedestrian crossings.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 2 – Computer systems and us
+Learner activity sheet
+Comparing pedestrian crossings
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Timed crossing
+Sensor crossing
+Allows pedestrians to stop the traffic, to help them cross safely
+Gives pedestrians time to cross the road
+Stops the traffic for no longer than necessary
+Adapts to pedestrians who are walking at different speeds
+Indicates when to cross and when not to
+If someone presses the button and then walks away, it doesn’t stop the traffic
+When someone presses the button, the lights will eventually change
+The lights will change only if you’re standing in the correct place
+When there is a lot of traffic, the lights may wait for a few seconds before changing, to let the traffic pass
+--- notes for slide1.xml ---
+Late updated 21-02-24
+
+=== slide2.xml ===
+Attribution statement
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education.
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3.
+The original version can be made available on request via info@teachcomputing.org.
+
+############################################################
+FILE: ../UKS2/L2_src/L2 Computer systems and us_v1.2/A1 Teacher notes - Comparing pedestrian crossings.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 2 – Computer systems and us
+Teacher notes
+Comparing pedestrian crossings
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Timed crossing
+Sensor crossing
+Allows pedestrians to stop the traffic, to help them cross safely
+✔️
+✔️
+Gives pedestrians time to cross the road
+✔️
+✔️
+Stops the traffic for no longer than necessary
+✔️
+Adapts to pedestrians who are walking at different speeds
+✔️
+Indicates when to cross and when not to
+✔️
+✔️
+If someone presses the button and then walks away, it doesn’t stop the traffic
+✔️
+When someone presses the button, the lights will eventually change
+✔️
+✔️
+The lights will change only if you’re standing in the correct place
+✔️
+When there is a lot of traffic, the lights may wait for a few seconds before changing, to let the traffic pass
+✔️
+--- notes for slide1.xml ---
+Last updated: 21-02-24
+
+=== slide2.xml ===
+Attribution statement
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education.
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3.
+The original version can be made available on request via info@teachcomputing.org.
+
+############################################################
+FILE: ../UKS2/L2_src/L2 Computer systems and us_v1.2/A2 Activity sheet - Catalogue store.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 2 – Computer systems and us
+Learner activity sheet
+Catalogue store
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Order point
+Warehouse
+Collection point
+Tablet is used to look at items to buy
+Tablet shows what’s in stock and shows the price
+Tablet is used to choose items
+Customer pays for items; this is their order
+Order is sent to the warehouse
+Warehouse computers keep an up-to-date stocklist
+Order is received from the shop floor
+Ordered items are picked from the shelf 
+Items are marked off as picked
+Items are taken to the shop floor collection point
+Ordered items arrive at the collection point ready for collection
+‘Order ready for collection’ message is displayed in store
+Receipt showing items ordered is given to staff
+Shop staff tick off items on the customer’s receipt
+Items are marked as collected on the computer
+Receipt showing items ordered is printed
+Computer shows staff where items are in the warehouse
+Items are handed over to the customer
+--- notes for slide1.xml ---
+Late updated 21-02-24
+
+=== slide2.xml ===
+Attribution statement
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education.
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3.
+The original version can be made available on request via info@teachcomputing.org.
+
+############################################################
+FILE: ../UKS2/L2_src/L2 Computer systems and us_v1.2/A2 Solutions - Catalogue store.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 2 – Computer systems and us
+Solutions
+Catalogue store
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Order point
+Warehouse
+Collection point
+Tablet is used to look at items to buy
+Tablet shows what’s in stock and shows the price
+Tablet is used to choose items
+Customer pays for items; this is their order
+Order is sent to the warehouse
+Warehouse computers keep an up-to-date stocklist
+Order is received from theshop floor
+Ordered items are picked from the shelf 
+Items are marked off as picked
+Items are taken to the shop floor collection point
+Ordered items arrive at the collection point ready for collection
+‘Order ready for collection’ message is displayed in store
+Receipt showing items ordered is given to staff
+Shop staff tick off items on the customer’s receipt
+Items are marked as collected on the computer
+Receipt showing items ordered is printed
+Computer shows staff where items are in the warehouse
+Items are handed over to the customer
+--- notes for slide1.xml ---
+Late updated 21-02-24
+
+=== slide2.xml ===
+Attribution statement
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education.
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3.
+The original version can be made available on request via info@teachcomputing.org.
+
+############################################################
+FILE: ../UKS2/L2_src/L2 Computer systems and us_v1.2/L2 Lesson plan Systems and Searching Lesson 2.docx
+############################################################
+Lesson 2: Computer systems and us
+Introduction
+Learners consider how larger computer systems work and how to keep our personal information safe online. They see how devices and processes are connected, and reflect on how computer systems can help them.
+Learning objectives
+To recognise the role of computer systems in our lives
+I can identify tasks that are managed by computer systems
+I can identify the human elements of a computer system
+I can explain the benefits of a given computer system
+I can explain how to keep my personal information safe online.
+Key vocabulary
+System, connection, digital, input, process, output 
+Preparation
+Subject knowledge:
+Digital systems are used in a wide range of public contexts, e.g. airport, rail, or bus station arrival and departure boards. You may wish to consider systems that might be familiar to learners in advance of the lesson.
+Activity 1: You will need to be familiar with puffin crossings. This type of pedestrian crossing uses sensors to detect pedestrians and vehicles. These sensors provide input to the system, making it more intelligent. Additional information is available in this video (www.youtube.com/watch?v=t-7knZXbj_4). The different pedestrian crossing processes are described in the teacher notes.
+Activity 2: You will need to be familiar with online shopping, or shopping in stores (such as Argos) where items can be ordered using a customer tablet.
+Activity 3: You will need to be familiar with how to stay safe online and the procedures in place within your own setting to do this.
+You will need:
+L2 Slides
+A1 Activity sheet – Comparing pedestrian crossings
+A1 Teacher notes – Comparing pedestrian crossings
+A2 Activity sheet – Catalogue store
+A2 Solutions – Catalogue store   
+Assessment opportunities
+Introduction: Learners can revisit the term ‘system’ from Lesson 1.
+Activity 1: Learners can show their understanding of sensors in a computer system and their understanding of how these systems affect those who use them.
+Activity 2: Learners are encouraged to break a larger process down into small steps, and can show their understanding of what must come before and after, to ensure all the parts work together.
+Activity 3: Learners can show their understanding of how to stay safe online and how they can protect their private information.
+Plenary: Learners can show that they recognise the impact of computer systems on humans.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slides 2–3)
+5 mins
+Systems
+Introduce the lesson and the learning objectives.
+Show slide 3. Remind learners that in the previous lesson they were introduced to a smart locker system. Ask learners to think back to the previous lesson and identify how computers help the smart locker system to function effectively. Learners should identify that computers are needed so that the different parts of the system can communicate with each other.
+Activity 1
+(Slides 4–8)
+15 mins
+Road safety
+Show learners slide 4. Ask them to share with a partner how to cross the road safely using the pedestrian crossing that is pictured on the slide. 
+Move on to slide 5 and ask the questions on the slide. Click to show learners the second image and additional information.
+Show slide 6 and give learners the activity sheet. Allow them some time to complete it. Learners should place ticks in the appropriate column; some things will be in both columns.
+Ask learners to consider how the sensors make the puffin crossing better, and to discuss this with a partner for a minute. Gather feedback from the class. Answers might include: 
+The sensors stop pedestrians and cars waiting too long (compared to a timed crossing)
+The sensors can detect multiple people crossing, and people stepping onto the crossing late (after the signal has changed)
+The sensor will detect a pedestrian pressing the button to cross and then changing their mind, not crossing, and walking away; cars won’t be stopped unnecessarily (not having a car idling is better for the environment too)
+The sensors cater for one or many pedestrians crossing
+The sensors cater for pedestrians who cross at different paces
+The system watches for people starting and completing their crossing
+Show learners slide 8 and ask them to describe other larger digital systems they have encountered. Examples might include arrival and departure boards, digital bus stop signs, sign-in at doctors’ surgeries, ‘next patient’ boards in hospitals, and ordering and payment systems in shops and cafes.
+Activity 2(Slides 9–12)
+10 mins
+Catalogue store
+Tell learners that they are going to think about the systems in a catalogue store, such as Argos. Organise learners into groups of three or six. Show slides 9 and 10. Give learners the activity sheet and ask them to cut the statements up and then group and order them under the headings. Explain that each of the headings is part of the shop system. 
+Once the groups have sorted their statements, show them slide 11 and ask them to identify which tasks are done by people and which are done by computers. Ask learners to mark the statements with stick characters and computer screens to show whether a task is done by a person or a computer respectively. 
+Show slide 12. Ask learners to look at their task lists and consider these scenarios:
+1. A customer returns an item. The item can be resold.
+2. The price of an item changes.
+3. An item is recalled by the manufacturer and can no longer be sold.
+Ask learners which stages in the system will be affected by each scenario.
+Activity 3(Slides 9–12)
+10 mins
+Online Safety – what systems do we have to protect ourselves online?
+Just like using systems to stay safe on the road, we must consider what systems we use to stay safe online.
+Ask learners ‘What do we do to keep our information safe online?’ What systems are in place to protect us? Pair/share ideas to feedback to the class i.e. we have passwords, use trustworthy websites, do not share personal information online, only game with friends and not people we don’t know. Link to own school online safety rules e.g. SMART rules and discuss why these are important. 
+Ask them to think about any apps they use – do they ask for personal information? If so, what? Explain that these apps gather your information and share it with other companies. When you download an app it will ask you if you wish to share your information – make sure you click no to keep your private information secure. 
+Plenary
+(Slide 13)
+5 mins
+How do systems help us?
+In Activity 1, learners considered how sensors made the puffin crossing a better system. Ask learners to consider the catalogue store system, and how it helps customers and employees.
+Next time 
+(Slides 14–15)
+5 mins
+This lesson, next lesson
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../UKS2/L2_src/L2 Computer systems and us_v1.2/L2 Slides Systems and searching Y5.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 2: Computer systems and us
+Year 5 – Computing systems and networks – Systems and searching
+--- notes for slide1.xml ---
+Last updated: 18-09-24
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+To recognise the role of computer systems in our lives
+I can identify tasks that are managed by computer systems
+I can identify the human elements of a computer system
+I can explain the benefits of a given computer system
+I can explain how to keep my personal information safe online.
+Lesson 2: Computer systems and us
+2
+Objectives
+
+=== slide3.xml ===
+3
+Introduction
+Smart locker
+In the previous lesson you looked at a smart locker system. How do computers help this system work successfully?
+--- notes for slide3.xml ---
+Image sources: 
+https://pixabay.com/illustrations/computer-web-internet-apple-imac-908893
+https://pixabay.com/vectors/browser-internet-www-global-98386
+https://pixabay.com/vectors/custom-code-flat-icon-custom-code-2440939
+https://pixabay.com/vectors/box-paper-delivery-box-1252639
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/vectors/minivan-automobile-transportation-41476
+https://pixabay.com/illustrations/iphone-hand-smartphone-mobile-1935983
+https://pixabay.com/illustrations/warehouse-shipping-box-business-3688280
+Smart locker: Raspberry Pi Foundation
+
+=== slide4.xml ===
+4
+Activity 1
+Tell your partner what you need to do to cross the road safely here.
+--- notes for slide4.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide5.xml ===
+Have you ever noticed this on  crossing?
+What do you think it is?
+5
+Activity 1
+Puffin pedestrian crossing
+It’s a set of sensors. The sensors can detect: 
+People by the crossing
+People on the crossing
+Cars approaching the crossing
+--- notes for slide5.xml ---
+Image sources: Raspberry Pi Foundation
+
+=== slide6.xml ===
+6
+Activity 1
+Complete the activity sheet to compare a crossing with sensors to a timed crossing.
+--- notes for slide6.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide7.xml ===
+7
+Activity 1
+How do you think the system uses the sensors to make the crossing better?
+--- notes for slide7.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide8.xml ===
+8
+Activity 1
+Where else do you think you might find big digital systems?
+Digital systems around us
+--- notes for slide8.xml ---
+Image source: https://pixabay.com/illustrations/binoculars-search-see-to-find-1026425
+
+=== slide9.xml ===
+Catalogue store
+9
+Activity 2
+Order point
+Warehouse
+Collection point
+You are running a catalogue store. Sort the steps into order under each of the headings.
+--- notes for slide9.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/vectors/shopping-cart-grocery-animal-44640
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide10.xml ===
+Catalogue store
+10
+Activity 2
+Order point
+Warehouse
+Collection point
+--- notes for slide10.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030 (edited)
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide11.xml ===
+Catalogue store: people
+11
+Activity 2
+Order point
+Warehouse
+Collection point
+Look at your groups of tasks. Which ones are done by people and which ones are done by computers?
+--- notes for slide11.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030 (edited)
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide12.xml ===
+12
+Activity 2
+Look at your tasks. Which tasks would be affected by the following?
+A customer returns an item that can be resold
+The price of an item changes
+An item is recalled by the manufacturer and can no longer be sold
+Catalogue store: people
+Order point
+Warehouse
+Collection point
+
+=== slide13.xml ===
+Grown-ups can order from the catalogue store using the website, or using an app. 
+This uses the internet.
+This starts the same process as someone ordering in the store
+These systems often now use the internet
+13
+Activity 3
+--- notes for slide13.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/vectors/shopping-cart-grocery-animal-44640
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide14.xml ===
+What systems do we have to protect ourselves online?
+14
+Activity 3
+What do we do to keep out information safe online?
+What systems are in place to protect us? 
+Pair/share with your partner…
+--- notes for slide14.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/vectors/shopping-cart-grocery-animal-44640
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide15.xml ===
+What systems do we have to protect ourselves online?
+15
+Activity 3
+Have own passwords
+Use trustworthy websites 
+Do not share personal information online 
+Only game with friends and not people we don’t know
+Never agree to meet someone online
+What else can you add to this list?
+--- notes for slide15.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030 (edited)
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide16.xml ===
+Apps – what personal information do they ask for?
+16
+Activity 3
+Apps gather your personal information and share it with other companies. 
+When you download an app it will ask you if you wish to share your information – make sure you click no to keep your private information secure. 
+--- notes for slide16.xml ---
+Image sources:
+https://pixabay.com/vectors/technology-internet-comm-connection-2277030 (edited)
+https://pixabay.com/vectors/double-click-touch-android-gesture-161563
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/illustrations/feedback-white-male-3d-model-1889007
+https://pixabay.com/illustrations/males-3d-model-isolated-3d-model-2065219
+
+=== slide17.xml ===
+Earlier in the lesson, you considered the puffin crossing. The system includes sensors, which help keep pedestrians safe. It can cope with people walking at different speeds and keeps the traffic stationary for only as long as is necessary.
+Then, you considered the systems in a calatogue store.
+How does the catalogue store system help customers?
+How does it help employees?
+How does a system help?
+17
+Plenary
+
+=== slide18.xml ===
+18
+Assessment
+I can identify tasks that are managed by computer systems
+I can identify the human elements of a computer system
+I can explain the benefits of a given computer system
+I can explain how to keep my personal information safe online.
+How confident are you? (1–3)
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide18.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176
+
+=== slide19.xml ===
+In this lesson, you...
+Explored how devices and processes are connected in systems
+Considered the benefits of computer systems
+Next lesson
+19
+Next lesson, you will…
+Describe how to complete a web search and then refine and improve your searching
+Summary
+
+=== slide20.xml ===
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+Attribution statement
+20

@@ -1163,7 +1163,7 @@
       openHref:"#/y12/lesson/1", sheetBase:"#/y12/sheet/1/",
       resources:[["help","How technology helps us"],["sort","Is it technology?"],["home","Technology at home"]]},
     {n:2,live:true,title:"Using computer technology",obj:"Name the main parts of a computer, turn it on and log in, and use a mouse to click and drag.",vocab:["computer","screen","keyboard","mouse","base unit"],dur:"40 min",openHref:"#/y12/lesson/2",sheetBase:"#/y12/sheet/2/",resources:[["parts","Label the computer"],["same","Desktop and laptop"],["home","A computer at home"]]},
-    {n:3,live:false,title:"Developing mouse skills",obj:"Practise clicking, dragging and moving the pointer with a mouse.",vocab:["mouse","click","drag"],dur:"40 min"},
+    {n:3,live:true,title:"Developing mouse skills",obj:"Recap the parts of a computer, learn to double-click to open a program, and click and drag with a mouse or trackpad to make a picture.",vocab:["mouse","trackpad","double-click","click and drag"],dur:"40 min",openHref:"#/y12/lesson/3",sheetBase:"#/y12/sheet/3/",resources:[["steps","Double-click steps"],["picture","My picture"],["home","A mouse at home"]]},
     {n:4,live:false,title:"Using a computer keyboard",obj:"Find the letter keys, the space bar and backspace, and type some words.",vocab:["keyboard","space bar","backspace"],dur:"40 min"},
     {n:5,live:false,title:"Developing keyboard skills",obj:"Type more quickly, and fix mistakes as you go.",vocab:["keyboard","edit","delete"],dur:"40 min"},
     {n:6,live:false,title:"Using a computer responsibly",obj:"Look after shared computers, and know who to tell if something online worries you.",vocab:["responsible","share","trusted adult"],dur:"40 min"}
@@ -2673,6 +2673,111 @@
     }
   };
 
+  /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 3 =================== */
+  var Y12META3 = { eyebrow:'Technology around us &middot; Lesson 3', exitHash:'#/g/y12' };
+  var Y12_NOTES3 = [
+    ["Introduction · 3 min","Developing mouse skills","Recap the parts of a computer from Lesson 2. Ask pupils to name what the screen, keyboard, mouse and base unit each do."],
+    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 5 min","Name that part","Show each part in turn. Take an answer before revealing the name."],
+    ["Activity 1 · 4 min","Not every mouse looks the same","Some have wires, some don't, some are built into the case as a trackpad. They all do the same job: point, select, move."],
+    ["Activity 1 · 4 min","Opening a program","Explain that a program opens with a double-click, two clicks close together."],
+    ["Activity 1 · 3 min","Practise without a mouse","Ask pupils to clap twice, quickly, or tap their leg twice. That's the speed a double-click needs. Then show it for real on a mouse."],
+    ["Activity 2 · 15 min","Click and drag to paint","Open a simple paint program on the class computers. Model holding the button down, moving, then letting go to draw a line. Let pupils draw their own picture."],
+    ["Activity 2 · 5 min","Explorer task","Early finishers try the fill tool, drawing shapes, and the eraser."],
+    ["Plenary · 4 min","What's changed?","Show three pictures. For each, ask what tool was used: thicker line, a new colour, then the fill tool."],
+    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: using a computer keyboard."]
+  ];
+  var Y12_SLIDES3 = [
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Developing <em>mouse</em> skills</h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('mouse-simple',56)+ph('cpu',56)+ph('pencil-simple',56) + '</div>' }; },
+    function(){
+      var items = ["Use a mouse to open a program","Click and drag to make marks on a screen","Use a mouse to create a picture"];
+      return { steps:items.length, html:
+        '<h1 class="pp">Today you will…</h1>' +
+        '<div style="display:flex;flex-direction:column;gap:14px;text-align:left;max-width:26ch">' +
+        items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.2vw,1.4rem);font-weight:600">' +
+          '<span style="flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
+    },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Name that part</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('&#128421; Screen','shows what the computer is doing','ou-c') +
+        rc('&#9000; Keyboard','lets you type letters and numbers','in-c') +
+        rc('&#128433; Mouse or trackpad','lets you point, click and move things','in-c') +
+        rc('&#128187; Base unit','stores your work and does the thinking','pr-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<div class="pp" style="color:var(--proc)">' + ph('mouse-simple',72) + '</div>' +
+      '<h1 class="pp">Not every mouse looks the same</h1>' +
+      '<p class="lead pp">Some have wires. Some don\'t. Some are built into the case, called a trackpad.</p>' +
+      '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">However they look, they all do the same job.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Opening a program</h1>' +
+      '<p class="lead pp">Before you can draw, you need to open a paint program.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">To do that, you double-click: two clicks, close together.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Practise a double-click</h1>' +
+      '<p class="lead pp">No mouse needed yet. Clap twice, fast, like this.</p>' +
+      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' +
+      '<p class="lead pp">Now try it for real, on the mouse.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Click and drag to paint</h1>' +
+      '<p class="lead pp">Hold the button down, move the mouse, then let go. That draws a line.</p>' +
+      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Explorer task</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('Fill tool','changes the whole background to a new colour','in-c') +
+        rc('Shape tool','draws a circle, square or line for you','pr-c') +
+        rc('Eraser','rubs out a mistake so you can try again','ou-c') +
+      '</div>', init: revealInit }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">What&rsquo;s changed?</h1>' +
+      '<div class="d2-reveal pp">' +
+        rc('A thicker line','the brush size was made bigger','in-c') +
+        rc('A different colour line','the brush colour was changed','pr-c') +
+        rc('One flat colour behind everything','the fill tool was used','ou-c') +
+      '</div>', init: revealInit }; },
+    confidenceSlide,
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Great work</h1>' +
+      '<p class="lead pp">You double-clicked to open a program, then clicked and dragged to make a picture.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: using a computer keyboard.</p>' }; }
+  ];
+  var Y12_QUIZ3 = [
+    {q:"To open a program, you…", o:["single-click","double-click","hold down for ten seconds"], a:1},
+    {q:"On a laptop, the mouse is often called a…", o:["trackpad","base unit","keyboard"], a:0},
+    {q:"Click and drag means…", o:["click twice quickly","hold the button, move, then let go","press two buttons at once"], a:1},
+    {q:"To make one flat colour fill a whole area, you use the…", o:["eraser","fill tool","keyboard"], a:1}
+  ];
+  var Y12_SHEETS3 = {
+    steps: function(){
+      return shell(Y12META3,'Double-click steps',
+        'Number the steps in order, 1 to 3.',
+        '<div style="display:flex;flex-direction:column;gap:14px;margin-top:12px">' +
+          ['Start painting a picture','Double-click to open the program','Choose a brush colour'].map(function(t){
+            return '<div style="display:flex;gap:14px;align-items:center"><div style="width:36px;height:36px;border:1.6px solid #c3c8d4;border-radius:8px;flex:none"></div><div style="flex:1;border-bottom:1.5px solid #c3c8d4;padding-bottom:6px">'+t+'</div></div>';
+          }).join('') +
+        '</div>');
+    },
+    picture: function(){
+      return shell(Y12META3,'My picture',
+        'Draw the picture you made with the mouse. Tick the tools you used.',
+        '<div class="draw" data-hint="Draw your picture" style="height:220px"></div>' +
+        '<div style="display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-weight:600">' +
+          ['Brush','Fill','Eraser','A new colour'].map(function(t){ return '<label style="display:flex;gap:8px;align-items:center"><span style="width:22px;height:22px;border:1.6px solid #c3c8d4;border-radius:6px;display:inline-block"></span>'+t+'</label>'; }).join('') +
+        '</div>');
+    },
+    home: function(){
+      return shell(Y12META3,'A mouse at home',
+        'Find a mouse or trackpad at home, or on a games console. Draw it, and label the part you click.',
+        '<div class="draw" data-hint="Draw the mouse or trackpad" style="height:220px"></div>' +
+        '<h2>What you click</h2><div class="lines s2"></div>');
+    }
+  };
+
   /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 2 =================== */
   var Y56META2 = { eyebrow:'Systems and Searching &middot; Lesson 2', exitHash:'#/g/y56' };
   var Y56_NOTES2 = [
@@ -2817,6 +2922,12 @@
       exitHash:Y12META2.exitHash, lessonHash:'#/y12/lesson/2',
       taskTk:'Technology around us · Lesson 2', taskH1:'Using computer technology',
       taskIntro:'<div class="tcard"><h2>Your task</h2><p>Draw a computer. Label the <strong>screen</strong>, the <strong>keyboard</strong>, the <strong>mouse</strong> and the <strong>base unit</strong>.</p></div>' },
+    'y12/3':{ notes:Y12_NOTES3, slides:Y12_SLIDES3, quiz:Y12_QUIZ3, sheets:Y12_SHEETS3,
+      exitHash:Y12META3.exitHash, lessonHash:'#/y12/lesson/3',
+      taskTk:'Technology around us · Lesson 3', taskH1:'Developing mouse skills',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Use a mouse or trackpad to draw a picture in a paint program. Then:</p>' +
+        '<ul><li>say what you changed, the <strong>colour</strong> or the <strong>thickness</strong></li>' +
+        '<li>show a grown-up your double-click</li></ul></div>' },
     'y56/2':{ notes:Y56_NOTES2, slides:Y56_SLIDES2, quiz:Y56_QUIZ2, sheets:Y56_SHEETS2,
       exitHash:Y56META2.exitHash, lessonHash:'#/y56/lesson/2',
       taskTk:'Systems and Searching · Lesson 2', taskH1:'Computer systems and us',

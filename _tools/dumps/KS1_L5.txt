@@ -1,0 +1,267 @@
+
+############################################################
+FILE: ../KS1/L5_src/L5 - Developing keyboard skills/A0 Resource – Keyboard and mouse.docx
+############################################################
+Keyboard: https://pixabay.com/vectors/computer-keyboard-home-computer-158770/ 
+Mouse: https://pixabay.com/vectors/computer-mouse-computer-device-152249/ 
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L5_src/L5 - Developing keyboard skills/A2 Worksheet – Scaffolded learning.docx
+############################################################
+Activity 2 - Editing text
+Can you complete the sentences below and type them on the computer?
+my name is _______
+I live in _______
+my school is _______
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L5_src/L5 - Developing keyboard skills/L5 Lesson plan – Technology around us – Y1.docx
+############################################################
+Lesson 5: Developing keyboard skills
+Introduction
+Learners will begin by opening a file they have previously created. They will demonstrate their ability to use a keyboard to edit text, by writing a sentence and then deleting letters. They will also use the keyboard arrow keys to move the text cursor in their textbox. 
+Learning objectives
+To use the keyboard to edit text
+I can open my work from a file
+I can use the arrow keys to move the cursor 
+I can delete letters
+Key vocabulary
+Keyboard, computer
+Preparation
+Subject knowledge:
+Teachers will need to know where to access the files that are saved in this lesson. In the Paintz.app program, these are saved locally to the downloads folder. 
+You will need:
+L5 Slides
+A0 Resource: Keyboard and mouse (A3 size, printed)
+A1 Worksheet – Scaffolded learning
+A1 – Desktop or laptop computers (tablet devices could be used as an alternative)
+A1 – Learner access to the pictures they saved in the previous lesson.
+Assessment opportunities
+Activity 1: Assess whether learners are able to locate and open their saved file. 
+Activity 2: Assess whether learners can use arrow keys to move their cursor and backspace to delete letters. 
+Plenary: Assess whether learners can understand the importance of naming their files sensibly. 
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*timings are rough guides
+Introduction
+(Slides 2 – 4)
+10 mins
+Review of keyboard and mouse skills
+Share the learning objective with the learners. 
+Share slide 3 and remind the learners that they have used two different devices in this unit so far. Ask the learners if they can name them. Click to reveal the mice and keyboards illustrating the different kinds. 
+Display slide 4. Display the printed images of a computer keyboard and computer mouse on opposite sides of the classroom. 
+Read the statements below and ask learners to move to the device that matches the statement:
+You can move a pointer around the screen with this device (mouse)
+You can type letters using this device (keyboard)
+You would use this device to write a sentence (keyboard)
+You can draw a picture with this device (mouse)
+You input instructions to the computer by clicking on this device (mouse)
+Activity 1
+(Slides 5 – 8)
+10 mins
+Opening a file
+Note: This part of the activity is best modelled for the learners within the program, however screenshots of the program have been provided in slides 6-7 as an alternative. 
+Share slide 5 with the learners and explain that they will be learning how to open a file they have saved. Remind the learners that they saved their self-portraits in Lesson 4. 
+Open a browser and navigate to the Paintz program. Highlight the ‘open image’ icon. Explain that this button will allow the learners to select the image they saved in the Lesson 4.  
+Model clicking the button and share the box that appears. Explain that learners will need to find the file they saved. Ask  learners, ‘How can we ensure we are selecting the correct file?’ Remind the learners of the importance of naming a file sensibly when it is saved. 
+Note: By default, the Downloads folder will be opened when opening an image in Paintz.app. If you have saved the learners images to a separate folder, searching for this folder will need to be modelled before the learners begin opening their files. 
+Display slide 8 and ask the learners to log on to their computers to open their work.
+Activity 2
+(Slides 9 - 14)
+20 mins
+Editing text
+Note: This part of the activity is best modelled for the learners within the program, however screenshots of the program have been provided in slides 10-13 as an alternative. 
+Display slide 9 and explain that the learners will be developing their keyboard skills further. To do this, the learners will be writing a sentence and not just a word. Click to animate the highlighting of the space bar on the keyboard. Explain that this button allows the learners to create a space between words, just like they would if they were writing on paper. Animate the highlight over the backspace button. Explain to the learners that this will allow them to remove letters and spaces. Finally, animate the arrow keys. Explain that this allows them to move the text cursor to the left of right. This makes it easier to edit text if they have made a mistake.
+Note: Expectations for capital letters in the learners’ sentences should be considered for this activity. This will depend on whether the learners have been taught this skill in your setting. This skill is introduced in the Y1 – Digital writing unit.
+Return to the Paintz program and recap that the learners used the letter keys in Lesson 4 to write their name above their self-portrait. Model selecting the ‘text’ icon and drawing a textbox at the top of the paint area. 
+Write an example sentence into the text box. Examples could include:
+my name is … 
+my school is …
+Demonstrate how to move the cursor between letters, and the backspace key to delete letters. 
+Display slide 14 as a prompt for learners to use as they write their own sentences. Ask the learners to write a short simple sentence below or above their self-portrait. 
+Scaffolded learning: Provide learners with A2 Worksheet – Scaffolded learning, which provides the learners with pre-written sentences they could use to support them. The primary objective is for learners to experience the use of the keyboard. 
+Plenary
+(Slides 15)
+5 mins
+Importance of naming
+Share slide 15 and ask the learners to think, pair, share, ‘Why is it important to give a file a sensible name when it is saved?’
+Explain that it enables the learners to locate their file quickly, and it ensures the purpose of the file is clear.
+Next time
+(Slides 16-17)
+5 mins
+This time, next time
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../KS1/L5_src/L5 - Developing keyboard skills/L5 Slides – Technology around us – Y1.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 5: Developing keyboard skills
+Year 1 – Computing systems and networks – Technology around us
+--- notes for slide1.xml ---
+Last updated: 03-06-21
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 5: Developing keyboard skills
+Objectives
+To use a keyboard to edit text
+I can open my work from a file
+I can use the arrow keys to move the cursor 
+I can delete letters
+
+=== slide3.xml ===
+Keyboards
+Mice
+Introduction
+There are many different styles for mice and keyboards. 
+You have used two different devices so far. Can you name them?
+--- notes for slide3.xml ---
+Remind the learners that they have used two different devices in this unit so far. Ask the learners if they can name them. Click to reveal the mice and keyboards illustrating the different kinds.
+Wired mouse: https://pixabay.com/vectors/computer-mouse-computer-device-152249/ 
+Single button mouse: https://pixabay.com/photos/workplace-mouse-computer-apple-2341642/ 
+Wireless mouse: https://pixabay.com/vectors/computer-mouse-hardware-wheel-click-23266/ 
+Two button trackpad: https://pixabay.com/vectors/mousepad-finger-mouse-pad-point-160223/ 
+Wired keyboard: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+Wireless keyboard: https://pixabay.com/photos/workplace-office-desk-business-2303849/ 
+Laptop: https://pixabay.com/illustrations/laptop-macbook-computer-technology-4353711/ 
+
+=== slide4.xml ===
+Introduction
+You can move a pointer around the screen with this device 
+You can type letters using this device 
+You would use this device to write a sentence
+You can draw a picture with this device 
+You input instructions to the computer by clicking on this device 
+Which devices matches the statement?
+or
+--- notes for slide4.xml ---
+Display the printed images of a computer keyboard and computer mouse on opposite sides of the classroom. 
+Read the statements below and ask learners to move to the device that matches the statement:
+You can move a pointer around the screen with this device (mouse)
+You can type letters using this device (keyboard)
+You would use this device to write a sentence (keyboard)
+You can draw a picture with this device (mouse)
+You input instructions to the computer by clicking on this device (mouse)
+Wired mouse: https://pixabay.com/vectors/computer-mouse-computer-device-152249/ 
+Wired keyboard: https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+
+=== slide5.xml ===
+Opening a file
+Activity 1
+You will need to open your self-portrait file that you created in lesson 4. 
+--- notes for slide5.xml ---
+Explain that they will be learning how to open a file they have saved. Remind the learners that they saved their self-portraits in Lesson 4. 
+Screenshot: https://paintz.app 
+
+=== slide6.xml ===
+Activity 1
+Click the ‘Open image’ icon
+--- notes for slide6.xml ---
+Open a browser and navigate to the Paintz program. Highlight the ‘open image’ icon. Explain that this button will allow the learners to select the image they saved in the Lesson 4.  
+Model clicking the button and share the box that appears.
+Screenshot: https://paintz.app 
+
+=== slide7.xml ===
+Activity 1
+Find the correct file and select it. 
+Press ‘Open’
+--- notes for slide7.xml ---
+Explain that learners will need to find the file they saved. Ask the learners, ‘How can we ensure we are selecting the correct file?’ Remind the learners of the importance of naming a file sensibly when it is saved. 
+Note: By default, the Downloads folder will be opened when opening an image in Paintz.app. If you have saved the learners images to a separate folder, searching for this folder will need to be modelled before the learners begin opening their files. 
+Screenshot: https://paintz.app 
+
+=== slide8.xml ===
+Activity 1
+Opening a file
+Open the Paintz program:
+paintz.app
+Open your self-portrait. 
+--- notes for slide8.xml ---
+Ask the learners to log on to their computers to open their work.
+Screenshot: https://paintz.app
+
+=== slide9.xml ===
+You will be writing sentences, not just words!
+Editing text
+‹#›
+Activity 2
+--- notes for slide9.xml ---
+Click to animate the highlighting of the space bar on the keyboard. Explain that this button allows the learners to create a space between words, just like they would if they were writing on paper. 
+Animate the highlight over the backspace button. Explain to the learners that this will allow them to remove letters and spaces. 
+Finally, animate the arrow keys. Explain that this allows them to move the text cursor to the left of right. This makes it easier to edit text if they have made a mistake.
+Note: Expectations for capital letters in the learners’ sentences should be considered for this activity. This will depend on whether the learners have been taught this skill in your setting. This skill is introduced in the Y1 – Digital writing unit.
+Keyboard: https://pixabay.com/vectors/computer-keyboard-home-computer-158770/ 
+
+=== slide10.xml ===
+In lesson 4, you used the letters to write your name
+Activity 2
+--- notes for slide10.xml ---
+Recap that the learners used the letter keys in Lesson 4 to write their name above their self-portrait. 
+Screenshot: https://paintz.app 
+
+=== slide11.xml ===
+Click on the text tool
+Activity 2
+--- notes for slide11.xml ---
+Highlight the text function on the toolbar (dotted square with a T in the middle). Select this function with a single click.
+Screenshot: https://paintz.app 
+
+=== slide12.xml ===
+Click and drag in the paint area to draw a textbox
+Activity 2
+--- notes for slide12.xml ---
+Demonstrate clicking and dragging a text box onto the paint area. 
+Screenshot: https://paintz.app 
+
+=== slide13.xml ===
+Write a sentence in the textbox
+Activity 2
+My name is ...
+--- notes for slide13.xml ---
+Demonstrate writing a sentence into the text box.  
+Screenshot: https://paintz.app 
+
+=== slide14.xml ===
+Write a short sentence above or below your self-portrait.
+Writing a sentence
+‹#›
+Activity 2
+--- notes for slide14.xml ---
+Ask the learners to write a short simple sentence below or above their self-portrait. 
+Keyboard: https://pixabay.com/vectors/computer-keyboard-home-computer-158770/ 
+
+=== slide15.xml ===
+Plenary
+Why is it important to give a file a sensible name when it is saved?
+It allows you to locate a file quickly and makes it clear what the file is!
+
+=== slide16.xml ===
+I can open my work from a file
+I can use the arrow keys to move the cursor 
+I can delete letters
+How confident are you? (from 1 to 3)
+‹#›
+Assessment
+3 = very confident
+1 = not confident
+2 = unsure 
+--- notes for slide16.xml ---
+https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide17.xml ===
+In this lesson, you…
+Used a computer keyboard to edit text
+Next lesson
+‹#›
+Next lesson, you will…
+Learn how to use technology safely and responsibly.
+Summary

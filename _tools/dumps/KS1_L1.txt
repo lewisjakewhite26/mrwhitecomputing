@@ -1,0 +1,351 @@
+
+############################################################
+FILE: ../KS1/L1_src/L1_Technology in our classroom_1.3/A1 Handout_Is it technology.pptx
+############################################################
+
+=== slide1.xml ===
+Activity 1 - Is it technology?
+Year 1 - Technology around us
+Lesson 1 – Technology in our classroom
+Learner activity sheet
+Technology
+Not technology
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+--- notes for slide1.xml ---
+Last updated: 21-02-24
+
+=== slide2.xml ===
+--- notes for slide2.xml ---
+Tree: https://pixabay.com/vectors/tree-forest-trunk-nature-leaves-576847/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+People: https://pixabay.com/illustrations/kids-silhouette-party-children-3297107/
+Dog: https://pixabay.com/illustrations/dog-hound-mammal-animal-pet-puppy-2404286/
+Desktop computer: https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+Sun: https://pixabay.com/vectors/cloud-weather-forecast-weather-sky-346710/
+Glue: https://pixabay.com/illustrations/glue-pool-adhesive-fixed-1135242/
+Flower: https://pixabay.com/vectors/flower-water-lily-lily-lotus-159951/ 
+
+=== slide3.xml ===
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+Attribution statement 
+
+############################################################
+FILE: ../KS1/L1_src/L1_Technology in our classroom_1.3/A1 Solutions_Is it technology.pptx
+############################################################
+
+=== slide1.xml ===
+Activity 1 solutions - Is it technology?
+Year 1 - Technology around us
+Lesson 1 – Technology in our classroom
+Learner activity sheet
+Technology
+Not technology
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+--- notes for slide1.xml ---
+Last updated: 21-02-24
+
+=== slide2.xml ===
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+ 
+
+############################################################
+FILE: ../KS1/L1_src/L1_Technology in our classroom_1.3/A3 Solutions_How technology helps us.docx
+############################################################
+A2 Solution – How technology helps us
+Technology
+Helps us to...
+Pencil
+Keep food cold
+Write down my ideas
+Get to school
+Mobile phone
+Talk to people
+Write on a piece of paper
+Play football
+Laptop computer
+Brush our teeth
+Tidy our house
+Learn
+Scissors
+Eat our food
+Cut paper
+Stay healthy
+Car
+Go to places
+Write a story
+Sleep at night
+Games console
+Stay warm
+See in the dark
+Have fun
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../KS1/L1_src/L1_Technology in our classroom_1.3/A3 Worksheet_How technology helps us.docx
+############################################################
+Activity 2 – How technology helps us
+Technology
+Helps us to...
+Pencil
+Keep food cold
+Write down my ideas
+Get to school
+Mobile phone
+Talk to people
+Write on a piece of paper
+Play football
+Laptop computer
+Brush our teeth
+Tidy our house
+Learn
+Scissors
+Eat our food
+Cut paper
+Stay healthy
+Car
+Go to places
+Write a story
+Sleep at night
+Games console
+Stay warm
+See in the dark
+Have fun
+Activity 2 – Explorer task
+Technology
+Helps us to...
+Get to school
+Play football
+Tidy a house
+Eat food
+Sleep at night
+See in the dark
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../KS1/L1_src/L1_Technology in our classroom_1.3/L1 Lesson plan_Technology around us_Y1.docx
+############################################################
+Lesson 1: Technology in our classroom
+Introduction
+Learners will become familiar with the term ‘technology’. They will classify what is and what is not technology in their school and/or classroom. Learners will demonstrate their understanding of how technology helps us in different ways. 
+Learning objectives
+To identify technology
+I can explain technology as something that helps us
+I can locate examples of technology in the classroom
+I can explain how these technology examples help us
+Key vocabulary
+Technology
+Preparation
+Subject knowledge:
+Teachers need to know that the definition of technology is something that has been made with a specific purpose to help other people. Teachers should familiarise themselves with objects which are and are not examples of technology. Teachers should be aware of the dangers of using technology online and how to keep themselves and others safe when using the Internet.
+You will need:
+While you teach this lesson, you should make some examples of technology available in the classroom.
+L1 Slides 
+A1 Handout – Is it technology? (printed images cut out ready)
+A1 Solutions – Is it technology?
+A2 – sticky notes (optional)
+A3 Worksheet – How technology helps us (page 1 should be printed, page 2 optional)
+A3 Solutions – How technology helps us
+Assessment opportunities
+Activity 1: Assess whether learners understand which items can be defined as technology and if they are able to identify technology within their school or classroom environment.
+Activity 2: Assess whether learners understand how different technology can help them.
+Activities 3: Assess whether learners can explain where to go for help when they have concerns about content or contact which makes them feel uncomfortable when using online technology.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*timings are rough guides
+Introduction
+(Slides 2 – 5)
+5 mins
+What is technology?
+Share the learning objective with the learners. 
+Show slide 3 and ask learners what they think the word ‘technology’ means. Responses may include: something electronic/computers/things which are man made.
+Display slide 4 and share some examples of technology in the classroom (or use physical objects), for example:
+Desktop computer
+Laptop computer
+Pencil
+Mobile phone
+Pencil sharpener (manual, electric, or both)
+Scissors
+Click to share the animated question with the learners. Ask what the purpose of each of these examples of technology is. Prompt learners to include the phrase “it helps us to…”.
+Share slide 5 with the learners and explain to learners that technology is something which has been made by people to help us. The distinction between ‘natural’ and ‘made by people (= manufactured)’ is important. For example, a guide dog helps people, but it has not been made by people, so it is not technology.
+Note: A common misconception about the term technology, is that it must be digital or electronic. Throughout this lesson, learners will look at different kinds of technology, which is not limited to digital or electronic items.
+Activity 1
+(Slide 6)
+15 mins
+Is this technology?
+Display slide 6 and explain to the learners that they will be deciding if the images should be considered technology or not technology. 
+Provide each learner with the A1 Handout cut up ready- Is it technology? Put the learners into a small group or pair and give them 2 minutes to sort into Technology or Not Technology. Then allow some learners to share their two groups with the class and discuss any differing opinions. Note: Photograph for evidence if needed.
+Scaffolding opportunity: Use the prompts “Does it help us?” and “Has it been made by people?” to aid learners in their classification.
+Activity 2
+(Slide 7)
+10 mins
+Technology hunt
+Share slide 7 with the learners. Explain that they are going to use sticky notes to label examples of technology in the classroom or school. Split the learners into groups and ask the learners to place sticky notes on things they think are technology. If possible you could provide each group with a different coloured sticky note for assessment purposes. 
+Note: This activity could include learners using a tablet, camera, or similar device to take photos of the technology examples they find. This provides an opportunity to highlight the use of technology during the activity. 
+Explorer task: Ask learners to consider which of the technology examples they’ve found contain a computer.
+Activity 2(Slide 8)
+10 mins
+How technology helps us
+Display slide 7. Share the A3 Worksheet – How technology helps us with the learners and provide each learner with page 1. Explain that they should match the pictures of technology with one of the sentences next to it. For example, a pencil helps us to... write down ideas. Learners should draw lines from the image to the correct sentence. 
+Explorer task: Provide learners with page 2 of the A3 Worksheet – How technology helps us. Explain that the learners need to write or draw an example of technology which would help them to do the stated sentence. For example, learners may draw a car which helps them get to school. 
+Plenary
+(Slide 9)
+5 mins
+Examples of technology
+Share slide 11 with the learners and ask them whether the objects have anything in common. If necessary, prompt further by asking whether any of the items are computers.
+Review the lesson and explain to learners in the next lesson they will use technology and find out about the main parts of a computer.
+Next time
+(Slides 10 - 11)
+5 mins
+This time, next time
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../KS1/L1_src/L1_Technology in our classroom_1.3/L1 Slides_Technology around us_Y1.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 1: Technology in our classroom
+Year 1 – Computing systems and networks – Technology around us
+--- notes for slide1.xml ---
+Last updated: 18-09-24
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson objective: To identify technology
+I can explain technology as something which help us
+I can locate examples of technology in the classroom
+I can explain how this technology helps us
+Lesson 1: Technology in our classroom
+Objectives
+2
+
+=== slide3.xml ===
+What does the word technology mean?
+Introduction
+3
+
+=== slide4.xml ===
+Here are some examples of technology
+Introduction
+4
+What would we use these things for?
+--- notes for slide4.xml ---
+Scissors: https://pixabay.com/vectors/cut-scissors-tool-1295044/
+Pencil: https://pixabay.com/vectors/school-pencil-pen-write-sketch-153561/
+Sharpener:https://pixabay.com/vectors/pencil-sharpener-sharpener-office-159427/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+Desktop computer: https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+Phone: https://pixabay.com/vectors/iphone-cellphone-smartphone-mobile-37856/ 
+
+=== slide5.xml ===
+What does the word technology mean?
+Technology is anything made by people to help us.
+Introduction
+5
+
+=== slide6.xml ===
+Is this technology?
+Activity 1
+6
+--- notes for slide6.xml ---
+Tree: https://pixabay.com/vectors/tree-forest-trunk-nature-leaves-576847/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+People: https://pixabay.com/illustrations/kids-silhouette-party-children-3297107/
+Dog: https://pixabay.com/illustrations/dog-hound-mammal-animal-pet-puppy-2404286/
+Desktop computer: https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+Sun: https://pixabay.com/vectors/cloud-weather-forecast-weather-sky-346710/
+Glue: https://pixabay.com/illustrations/glue-pool-adhesive-fixed-1135242/
+Flower: https://pixabay.com/vectors/flower-water-lily-lily-lotus-159951/ 
+
+=== slide7.xml ===
+Technology hunt
+Activity 2
+7
+What examples of technology can you find around the classroom?
+Explorer task: Which examples of technology contain a computer?
+--- notes for slide7.xml ---
+Sticky notes: https://pixabay.com/illustrations/notes-adhesive-note-memory-memo-1014547/ 
+
+=== slide8.xml ===
+Technology
+Helps us to...
+Pencil
+Keep food cold
+Write down my ideas
+Get to school
+Mobile phone
+Talk to people
+Write on a piece of paper
+Play football
+How technology helps us
+Activity 3
+8
+--- notes for slide8.xml ---
+Pencil: https://pixabay.com/vectors/school-pencil-pen-write-sketch-153561/ 
+Phone: https://pixabay.com/vectors/iphone-cellphone-smartphone-mobile-37856/   
+
+=== slide9.xml ===
+Do any of these items have anything in common?
+Here are some examples of technology
+Plenary
+9
+--- notes for slide9.xml ---
+If necessary, prompt further by asking whether any of the items are computers.
+Scissors: https://pixabay.com/vectors/cut-scissors-tool-1295044/
+Pencil: https://pixabay.com/vectors/school-pencil-pen-write-sketch-153561/
+Sharpener:https://pixabay.com/vectors/pencil-sharpener-sharpener-office-159427/
+Laptop: https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+Desktop computer: https://pixabay.com/vectors/computer-desktop-pc-workstation-1295529/
+Phone: https://pixabay.com/vectors/iphone-cellphone-smartphone-mobile-37856/ 
+
+=== slide10.xml ===
+I can explain technology as something which help us
+I can locate examples of technology in the classroom
+I can explain how this technology helps us
+How confident are you? (from 1 to 3)
+10
+Assessment
+3 = very confident
+1 = not confident
+2 = unsure 
+--- notes for slide10.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide11.xml ===
+In this lesson, you…
+Learned what the word technology means
+Found examples of technology in our classroom
+Next lesson
+11
+Next lesson, you will…
+Learn how to use technology and find the main parts of a computer
+Summary
+
+=== slide12.xml ===
+Attribution statement 
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+Attribution statement 

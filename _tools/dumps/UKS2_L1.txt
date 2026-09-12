@@ -1,0 +1,337 @@
+
+############################################################
+FILE: ../UKS2/L1_src/L1 – Systems/A1 Activity sheet – Bicycle system.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 1 – Systems
+Learner activity sheet
+Bicycle system
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+--- notes for slide1.xml ---
+Late updated 31-01-22
+Image source: https://pixabay.com/vectors/racing-bicycle-racer-racing-bike-161449/
+
+############################################################
+FILE: ../UKS2/L1_src/L1 – Systems/A2 Activity sheet – Digital Ted.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 1 – Systems
+Learner activity sheet
+Digital Ted
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Inputs
+Outputs
+Processes
+--- notes for slide1.xml ---
+Last updated: 31-01-22
+Image source: https://pixabay.com/vectors/teddy-bear-bear-knuffig-cuddly-447415/
+
+############################################################
+FILE: ../UKS2/L1_src/L1 – Systems/A3 Activity sheet – Smart locker.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 1 – Systems
+Learner activity sheet
+Smart locker
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+How does the order get to the warehouse?
+How does the order get picked from the warehouse shelves?
+How is the order protected from damage?
+Order placed
+How does the order get from the warehouse to the right smart locker?
+How does the customer know their order is ready for collection?
+How does the customer get access to only their parcel?
+How will workers know where the order is to be sent?
+How does the company know the parcel has been collected?
+--- notes for slide1.xml ---
+Late updated 31-01-22
+
+############################################################
+FILE: ../UKS2/L1_src/L1 – Systems/L1 Homework – Systems and searching – Y5.pptx
+############################################################
+
+=== slide1.xml ===
+Year 5 – Systems and searching
+Lesson 1 – Systems
+Homework sheet
+System
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+Inputs
+Processes
+Task: Find something at home that is a system. 
+Draw the system in the box and then write down the inputs, processes, and outputs.
+Outputs
+--- notes for slide1.xml ---
+Late updated 31-01-22
+
+############################################################
+FILE: ../UKS2/L1_src/L1 – Systems/L1 Lesson plan – Systems and searching – Y5.docx
+############################################################
+Lesson 1: Systems
+Introduction
+Learners are introduced to the concept of a system. They begin to understand that components can work together to perform a task. Finally, learners explore how digital systems can work and learn about physical and electronic connections. 
+Learning objectives
+To explain that computers can be connected together to form systems
+I can explain that systems are built using a number of parts
+I can describe the input, process, and output of a digital system
+I can explain that computer systems communicate with other devices
+Key vocabulary
+System, connection, digital, input, process, output 
+Preparation
+Subject knowledge:
+You will need to be familiar with the concept of a computerised locker. A computerised locker allows customers to collect parcels they have ordered online: 
+The customer places their order on the company website and requests that the parcel is delivered to a convenient locker. 
+The order is then picked from a warehouse and taken to the locker by a courier. 
+Once the item is secure inside a locker, the customer receives an email to say their order is ready for collection. A barcode or code is also sent to the customer. 
+The customer goes to the designated smart locker. They scan the barcode, or key in the code. 
+When that code is recognised by the system, the appropriate locker unlocks and opens. The customer can take their parcel and close the locker. 
+The locker is connected to the company’s system, which means the company will know when parcels have been collected. The company will also know how many lockers are free and available for other deliveries. 
+There are a number of videos on YouTube showing ‘smart lockers’ or ‘Amazon lockers’.
+You will need:
+L1 Slides
+A1 Activity sheet – Bicycle system
+A2 Activity sheet – Digital Ted 
+A3 Activity sheet – Smart lockers 
+Homework sheet (optional) 
+Assessment opportunities
+Introduction: You can record learners’ initial understanding of ‘system’, which can be revisited later to show the growth in the learners’ understanding.
+Activity 2: Learners can demonstrate their understanding of input and output devices as introduced in Year 3 – ‘Connecting computers’.
+Activity 3: Learners can show their understanding of the different steps that make up a system.
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*Timings are rough guides
+Introduction
+(Slide 3)
+3 mins
+What is a system?
+Ask learners what they think the word ‘system’ means. Record their suggestions in a way that means that they are kept and can be referred to at the end of the lesson. For example, you could use sticky notes or an online tool such as Pingboard or Padlet. 
+Activity 1
+(Slides 4–6)
+10 mins
+A bicycle as a system
+Using the image on slide 4, ask learners to name as many parts of the bicycle as they can. Introduce the idea that different parts of the bike work together for different purposes. The handlebars are connected directly to the front forks in such a way that turning the handlebars alters the direction that the front wheel points in, allowing the bike to be steered. This could be described as the steering system.
+Ask learners to choose another set of components on the bike and describe how those parts work together and for what purpose. Hand out the activity sheet, and ask learners to write and draw on the sheet to describe how the parts work together, e.g. pedals, brakes, wheels.
+Examples:
+Wheel: The centre connects to the rim with spokes. The tyre fits on the rim. The centre allows the wheel to spin.
+Drive: The pedals connect to the front sprocket. The front sprocket is connected to the back sprocket with a chain. The back sprocket is connected to the back wheel. Pushing on the pedals makes the back wheel turn.
+Brake: The brake lever is connected to a cable. The cable then connects to the brake caliper. Brake pads are attached to the caliper. When the brake lever is pulled, the brake pads are pushed against the wheel.
+Gather the learners back together. Ask for volunteers to describe the part of the bike they chose.
+Once several different aspects have been described, ask learners whether they think the bicycle can be described as a system. 
+Activity 2(Slides 7–9)
+15 mins
+A digital system
+Show slide 7. Explain that a modern washing machine is an example of a digital system. Tell learners that the buttons and dials on the front enable people to input instructions into the washing machine. Click the slide to show the animation of the arrow pointing towards the dial. Explain that the outputs are the machine washing the clothes and the digital display. Click the slide to show the animation of these features. 
+Using slide 8, introduce the idea of a talking soft toy. Learners may have experience of talking, moving, or dancing toys. Ask learners to give examples of toys they can think of and what they can do, for example a talking teddy: when the teddy’s paw is squeezed, the bear speaks. Click the slide to show the animation of this example.
+Show slide 9 and introduce the activity sheet. Tell learners to imagine they work at a toy factory. They need to design a new talking teddy toy. The teddy shape has been designed, but not the internal workings. Tell learners to draw and write on the activity sheet. They should outline what they think the internal parts of the toy are, e.g. a button, a switch, a speaker, a computer, a battery. Once the learners have drawn and connected the parts, ask them to describe the input, process, and output.
+Finally, ask learners to consider how the same toy could have additional functions, e.g. pressing a paw causes it to move, light up, blink, or say something else.
+Activity 3
+(Slides 10–11)
+15 mins
+Computers in a system
+Show learners the slide and ask if anyone has seen a smart locker and if anyone has used one. Tell learners that smart lockers allow customers to order products online and collect them from a convenient location.
+Ask learners to think through the processes and steps that might be involved from order to collection. Tell them to complete the activity sheet, and to use the questions and images on the slide as prompts. Learners should consider the connections and communication in the system.
+Plenary
+(Slide 12)
+4 mins
+Summary
+Tell learners to review the suggestions made at the start of the lesson about what a system is. Ask learners how they would describe a system to someone else. A system is a number of things (parts, components, people) that work together to complete or perform a task. 
+Next time
+(Slides 13–14)
+3 mins
+This lesson, next lesson
+Review the ‘Assessment’ and ‘Summary’ slides.
+Homework (optional)
+Ask learners to look at a digital system at home and complete the homework sheet to list the inputs, processes, and outputs.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+############################################################
+FILE: ../UKS2/L1_src/L1 – Systems/L1 Slides – Systems and searching – Y5.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 1: Systems
+Year 5 – Computing systems and networks – Systems and searching
+--- notes for slide1.xml ---
+Last updated: 31-01-22
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 1: Systems
+Objectives
+To explain that computers can be connected together to form systems
+I can show that systems are built using a number of parts
+I can describe the input, process, and output of a digital system
+I can explain that computer systems communicate with other devices
+‹#›
+
+=== slide3.xml ===
+What do you think the word 
+system 
+means?
+‹#›
+Introduction
+
+=== slide4.xml ===
+Can you name any parts of this bicycle?
+‹#›
+Activity 1
+Seat
+Wheel
+Tyre
+Spoke
+Chain
+Pedal
+Handlebars
+Brake lever
+Brake cable
+Brake caliper
+Brake pad
+Sprocket
+Front fork
+Frame
+--- notes for slide4.xml ---
+Image source: https://pixabay.com/vectors/racing-bicycle-racer-racing-bike-161449
+
+=== slide5.xml ===
+The handlebars are connected to the front fork. Moving the handlebars allows the rider to steer the bike. This could be called the steering system.
+‹#›
+Activity 1
+Handlebars
+Front fork
+--- notes for slide5.xml ---
+Image source: https://pixabay.com/vectors/racing-bicycle-racer-racing-bike-161449
+
+=== slide6.xml ===
+Can you describe a different system on this bicycle?
+‹#›
+Activity 1
+Seat
+Wheel
+Tyre
+Spoke
+Chain
+Pedal
+Handlebars
+Brake lever
+Brake cable
+Brake caliper
+Brake pad
+Sprocket
+Front fork
+Frame
+--- notes for slide6.xml ---
+Image source: https://pixabay.com/vectors/racing-bicycle-racer-racing-bike-161449
+
+=== slide7.xml ===
+The dials and buttons on the front of a washing machine are the inputs.
+The computer inside the washing machine follows a program based on the inputs.
+The clothes are washed and spun. The display indicates how long the wash is taking. These are outputs.
+A digital system
+‹#›
+Activity 2
+input
+output
+output
+--- notes for slide7.xml ---
+Image source: https://pixabay.com/vectors/washing-machine-clothes-laundry-1994661
+
+=== slide8.xml ===
+‹#›
+Activity 2
+You’re going to design your own talking teddy. 
+It will need an input, process, and an output.
+For example, if you press its paw, it will say “hello”. 
+Designing a talking teddy
+Hello!
+--- notes for slide8.xml ---
+Image sources: 
+https://pixabay.com/vectors/teddy-bear-bear-knuffig-cuddly-447415
+https://pixabay.com/vectors/index-finger-pointing-pointer-hand-309826/
+https://pixabay.com/vectors/button-red-round-shiny-155149/ 
+
+=== slide9.xml ===
+Your design should include:
+Parts you would need
+Inputs
+Process
+Outputs
+What else could you make it do?
+Task
+‹#›
+Inputs
+Activity 2
+Process
+Outputs
+--- notes for slide9.xml ---
+https://pixabay.com/vectors/teddy-bear-bear-knuffig-cuddly-447415
+
+=== slide10.xml ===
+This locker allows customers to collect items they have ordered online.
+The customer is sent a code, which they can scan or key into the locker.
+Describe what you think happens after the customer places their order. 
+Computers in a system
+‹#›
+Activity 3
+--- notes for slide10.xml ---
+Image source: Raspberry Pi Foundation
+
+=== slide11.xml ===
+Smart locker
+‹#›
+Activity 3
+--- notes for slide11.xml ---
+Image sources: 
+https://pixabay.com/illustrations/computer-web-internet-apple-imac-908893
+https://pixabay.com/vectors/browser-internet-www-global-98386
+https://pixabay.com/vectors/custom-code-flat-icon-custom-code-2440939
+https://pixabay.com/illustrations/box-packing-cardboard-package-686314
+https://pixabay.com/vectors/box-paper-delivery-box-1252639
+https://pixabay.com/vectors/box-cardboard-closed-carton-moving-40302
+https://pixabay.com/photos/high-bay-stock-range-warenlager-408222
+https://pixabay.com/vectors/minivan-automobile-transportation-41476
+https://pixabay.com/illustrations/iphone-hand-smartphone-mobile-1935983
+https://pixabay.com/illustrations/warehouse-shipping-box-business-3688280
+Smart locker: Raspberry Pi Foundation
+
+=== slide12.xml ===
+‹#›
+Plenary
+Can you explain to the person next to you what a system is?
+--- notes for slide12.xml ---
+Image source: https://pixabay.com/vectors/speech-bubbles-comments-orange-303206
+
+=== slide13.xml ===
+‹#›
+Assessment
+I can show that systems are built using a number of parts
+I can describe the input, process, and output of a digital system
+I can explain that computer systems communicate with other devices
+How confident are you? (1–3)
+3 – Very confident
+1 – Not confident
+2 – Unsure 
+--- notes for slide13.xml ---
+Image source: https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176
+
+=== slide14.xml ===
+In this lesson, you…
+Recognised that systems are built up of lots of parts
+Explored how the parts within different systems work together
+Next lesson
+‹#›
+Next lesson, you will…
+Explore how devices and processes are connected in systems
+Consider the benefits of computer systems
+Summary

@@ -163,10 +163,10 @@ Anything meant for paper (worksheets, printable tasks): Phosphor icons only,
 inlined as SVG. No emoji. Emoji print inconsistently and depend on the machine's
 installed fonts.
 
-On screen:
-- KS2 lesson decks (Year 3/4, Year 5/6) use Phosphor icons.
-- KS1 lesson decks (Year 1/2) use emoji, because young readers recognise a
-  coloured picture faster than a line icon.
+On screen: all lesson decks (Year 1/2, Year 3/4, Year 5/6) use Phosphor icons,
+inlined from the `PH` map. An earlier draft of this rule called for emoji on
+Year 1/2 screens; the built decks never followed that, so this rule now
+matches what's actually shipped rather than what to change.
 
 When a printable lists the same items as its deck, use the Phosphor version of
 those items so the sheet and the slide line up. Keep the item list identical

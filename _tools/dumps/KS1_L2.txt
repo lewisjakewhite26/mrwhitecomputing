@@ -1,0 +1,246 @@
+
+############################################################
+FILE: ../KS1/L2_src/L2 - Using computer technology_v1.2/L2 Lesson plan_Technology around us_Y1.docx
+############################################################
+Lesson 2: Using technology
+Introduction
+Learners will get to know the main parts of a desktop or laptop computer. They will practise turning on and logging in to a computer. The learners will apply their knowledge of the different parts of a computer, to complete a mouse-based task.
+Learning objectives
+To identify a computer and its main parts
+I can name the main parts of a computer
+I can switch on and log into a computer
+I can use a mouse to click and drag
+Key vocabulary
+Computer, mouse, trackpad, keyboard, screen
+Preparation
+Subject knowledge:
+Teachers will need to know the key parts of a computer, including screen, base unit, mouse/trackpad and keyboard. Teachers will also need to be familiar with the skills required to access the code.org activity in the ‘you will need’ section. 
+You will need:
+L2 Slides 
+A2 – Desktop or laptop computers (tablet devices could be used as an alternative)
+A2 – Learner access to ncce.io/drag
+Assessment opportunities
+Activity 1: Assess whether learners are able to demonstrate their knowledge of the different parts of a computer. 
+Activity 2: Assess whether learners are able to turn on and log into a computer, and whether they can use a mouse to click and drag objects on the screen
+Outline plan
+Please note that the slide deck labels the activities in the top right-hand corner to help you navigate the lesson. 
+*timings are rough guides
+Introduction
+(Slides 2-3)
+5 mins
+Technology
+Share the learning objective with the learners. 
+Show slide 3 and ask what technology is. Ask the learners to think, pair, share, with their partner. Click to show the definition of technology as something which helps us and has been made by people. 
+Explain to the learners that they will be learning about computer technology in this lesson. They will find out what the main parts of a computer are and they will use a computer to complete an activity.
+Activity 1
+(Slides 4-8)
+10 mins
+Introducing technology 
+Display slide 4 and explain to the learners that you will be showing them the different parts of a computer. 
+Display slides 5. Ask the learners to think, pair, share what the circle is showing on the computer. Take suggestions from the learners and click to animate what the part is and what it does. 
+Note: Learners may ask why there is no base unit needed for a laptop. Explain to the learners that this is because the laptop has all of these components inside the case. It is like having all of the parts mentioned previously, in one case. 
+Repeat for slides 6-8. 
+Note: If appropriate, you may wish to share a physical computer and laptop with the learners for this activity. 
+Activity 2(Slide 9-10)
+25 mins
+Staying safe online
+In this lesson, pupils go online for the first time. Take this opportunity to recap some basic online safety rules, and ensure that pupils know to talk to a trusted adult if they see something online which makes them uncomfortable.
+Mouse skills
+Show slide 9 and ask the learners to switch on and log in to a computer. 
+Note: It may be necessary to support learners by breaking the logging in process into small steps (e.g. click in the user name box with the left mouse button, type user name, etc). If appropriate, log the learners in yourself to ensure they are able to move on to the next part of the activity. 
+Open the URL in the ‘you will need’ section. Explain to the learners that the activity is to click and drag the puzzle pieces to complete the picture. Each level gets slightly more challenging than the previous level and allows the learners to practise their clicking and dragging skills. Model clicking and holding down the left mouse key, in order to drag the picture to the target. 
+Note: If learners need to fix a puzzle that is already clicked together, they must take the blocks away from the bottom before they can rearrange. 
+Support the learners with opening a web browser and accessing the URL on slide 9. Learners may not complete this activity in its entirety. If the learners are working in pairs, ensure each partner gets to practise their clicking and dragging skills. 
+After 25 minutes, ask the learners to log off / shut down their computers safely.
+Note: If learners are using a trackpad on a laptop, it is suggested that they use two hands; one hand for holding down the button and another for the finger to move across the trackpad
+Plenary
+(Slide 10-12)
+5 mins
+Matching computer parts
+Share slide 10 and ask the learners what is the difference between the laptop and desktop computer. Ask the learners to discuss with a partner and share their ideas. 
+Display slide 11-12 and ask the learners to fill in the spaces for each computer. Click to animate the answers. 
+Next time
+(Slides 13-14)
+5 mins
+This time, next time
+Review the ‘Assessment’ and ‘Summary’ slides.
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+Attribution statement
+This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+The original version can be made available on request via info@teachcomputing.org. 
+
+############################################################
+FILE: ../KS1/L2_src/L2 - Using computer technology_v1.2/L2 Slides_Technology around us_Y1.pptx
+############################################################
+
+=== slide1.xml ===
+Lesson 2: Using technology
+Year 1 – Computing systems and networks – Technology around us
+--- notes for slide1.xml ---
+Last updated: 18-09-24
+Resources are updated regularly — the latest version is available at: ncce.io/tcc.
+This resource is licensed under the Open Government Licence, version 3. For more information on this licence, see ncce.io/ogl.
+
+=== slide2.xml ===
+Lesson 2: Using technology
+To identify a computer and its main parts
+I can name the main parts of a computer
+I can switch on and log into a computer
+I can use a mouse to click and drag objects
+Objectives
+2
+--- notes for slide2.xml ---
+Sh
+
+=== slide3.xml ===
+Think, pair, share
+Introduction
+What does the word 
+technology 
+mean?
+Technology is anything made by people to help us.
+3
+--- notes for slide3.xml ---
+Ask the learners to think, pair, share, with their partner. Click to show the definition of technology as something which helps us and has been made by people. 
+
+=== slide4.xml ===
+Desktop computers, or...
+Most of the computers we use in school are either...
+4
+Laptop computers
+Activity 1
+--- notes for slide4.xml ---
+Explain to the learners that you will be showing them the different parts of a computer. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+
+=== slide5.xml ===
+5
+Activity 1
+What can you see in this picture?
+The screen shows what the computer is doing.
+Screen
+--- notes for slide5.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide6.xml ===
+6
+Activity 1
+What can you see in this picture?
+The keyboard lets you type letters and numbers.
+Keyboard
+--- notes for slide6.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide7.xml ===
+7
+Activity 1
+What can you see in this picture?
+The mouse lets you select and move objects. On a laptop, this is called a trackpad.
+Mouse
+--- notes for slide7.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/ 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide8.xml ===
+Base unit
+The base unit stores and processes information.
+8
+Activity 1
+What can you see in this picture?
+--- notes for slide8.xml ---
+Take suggestions from the learners and click to animate what the part is and what it does. 
+Note: Learners may ask why there is no base unit needed for a laptop. Explain to the learners that this is because the laptop has all of these components inside the case. It is like having all of the parts mentioned previously, in one case. 
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/ 
+
+=== slide9.xml ===
+Today, we are going online to complete a task.
+We should we be careful when using technology online. 
+Who can you talk to if you have a problemwith something you see online?
+Using technology safely
+9
+
+=== slide10.xml ===
+Mouse skills
+Turn on the computer and log in. 
+Open a web browser and visit this website:
+Drag and drop
+Activity 2
+--- notes for slide10.xml ---
+Note: It may be necessary to support learners by breaking the logging in process into small steps (e.g. click in the user name box with the left mouse button, type user name, etc). If appropriate, log the learners in yourself to ensure they are able to move on to the next part of the activity. 
+Support the learners with opening a web browser and opening code.org using the short link provided in the ‘you will need’ section of this plan and displayed on the slide. 
+Screenshot: https://studio.code.org/courses/coursea-2025/units/1/lessons/2/levels/1
+
+=== slide11.xml ===
+What are the differences between these?
+Desktop computer
+Laptop computer
+Plenary
+--- notes for slide11.xml ---
+Ask the learners what is the difference between the laptop and desktop computer. Ask the learners to discuss with a partner and share their ideas. 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+https://pixabay.com/vectors/laptop-notebook-mobile-computer-154091/
+
+=== slide12.xml ===
+12
+Plenary
+Can you remember the parts of a desktop computer?
+Screen
+Keyboard
+Base unit
+Mouse
+--- notes for slide12.xml ---
+Answers will animate on click in order:
+Screen
+Keyboard
+Base unit
+Mouse 
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+
+=== slide13.xml ===
+13
+Summary
+Can you remember the parts of a laptop computer?
+Screen
+Keyboard
+Mouse or trackpad
+--- notes for slide13.xml ---
+Answers will animate on click in order:
+Screen
+Keyboard
+Mouse / trackpad
+https://pixabay.com/vectors/computer-desktop-workstation-office-158675/
+
+=== slide14.xml ===
+I can name the main parts of a computer
+I can switch on and log into a computer
+I can use a mouse to click and drag objects
+How confident are you? (from 1 to 3)
+14
+Assessment
+3 = very confident
+1 = not confident
+2 = unsure 
+--- notes for slide14.xml ---
+https://pixabay.com/vectors/hot-temperature-thermometer-weather-159386/
+https://pixabay.com/vectors/thumb-up-hand-like-confirm-go-top-307176/
+
+=== slide15.xml ===
+In this lesson, you…
+Learned what the main parts of a computer are.
+Next lesson
+15
+Next lesson, you will…
+Look at technology in the world around us.
+Summary
+
+=== slide16.xml ===
+	This resource was created by Raspberry Pi Foundation and updated by STEM Learning for the National Centre for Computing Education. 
+	The contents of this resource are available for use under the Open Government License (OGL v3) meaning you can copy, adapt, distribute and publish the information. You must acknowledge the source of the Information in your product or application, by attributing Raspberry Pi Foundation and STEM Learning as stated here and are asked to provide a link to the OGL v3. 
+	The original version can be made available on request via info@teachcomputing.org. 
