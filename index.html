@@ -834,9 +834,6 @@
   .lv-block-text textarea{width:100%;min-height:clamp(280px,50vh,480px);border:2px solid var(--hair);border-radius:16px;padding:18px;font-family:var(--font);font-size:1.15rem;color:var(--ink);resize:vertical;box-sizing:border-box;transition:border-color .15s}
   .lv-block-text textarea:focus{outline:none;border-color:var(--proc)}
   .lv-draw-wrap{position:relative;border:2px solid var(--hair);border-radius:16px;overflow:hidden;background:#fff}
-  .lv-zoom-reset{position:absolute;top:10px;right:10px;z-index:2;border:1px solid var(--paper-edge);background:var(--paper);
-    color:var(--ink);border-radius:999px;padding:8px 14px;font-family:var(--font);font-weight:700;font-size:.85rem;
-    box-shadow:var(--shadow-sm);cursor:pointer}
   .lv-canvas{display:block;width:100%;height:clamp(340px,58vh,560px);touch-action:none;background:#fff}
   /* toolbar: colour swatches on their own row, then brush-size + action buttons */
   .lv-bar{display:flex;flex-direction:column;gap:14px;padding:16px 14px;background:var(--ground-2);border-top:1px solid var(--hair)}
@@ -862,10 +859,10 @@
   .lv-send-col .lv-send svg{width:22px;height:22px;flex:none}
   .lv-send-col .lv-send:hover:not(:disabled){transform:translateY(-1px) scale(1.01)}
   .lv-send-col .lv-send:disabled{opacity:.5;cursor:default;transform:none}
-  .lv-status{color:var(--muted);font-size:1.05rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center}
+  .lv-status{color:var(--muted);font-size:1.05rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;text-align:center}
   .lv-status.err{color:var(--red)}
   .lv-status.ok{color:var(--out);font-size:1.2rem}
-  .lv-status .lv-check{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:999px;background:currentColor;color:#fff;font-size:1.05rem;flex:none}
+  .lv-status .lv-check{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:999px;background:currentColor;color:#fff;font-size:1.15rem;flex:none}
   .lv-status.lv-pop{animation:lvPop .5s cubic-bezier(.34,1.56,.64,1)}
   @keyframes lvPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1)}}
   .lv-send-col .lv-send{position:relative;overflow:visible}
@@ -4688,15 +4685,14 @@
   var pvCode = null, pvRound = 0, pvCanvas = null, pvCtx = null, pvStrokes = [], pvColor = COLORS[0], pvSize = SIZES[0],
       pvTool = 'pen', pvDrawing = false, pvCur = null, pvDpr = 1, pvPollTimer = null, pvCooldownTimer = null,
       pvActiveTab = 'draw';
-  // pinch-to-zoom state for the canvas -- kids reflexively two-finger-pinch
-  // like any touch screen, so a second finger has to zoom/pan, not draw
-  var pvPointers = {}, pvPinching = false, pvScale = 1, pvPanX = 0, pvPanY = 0,
-      pvPinchStartDist = 0, pvPinchStartScale = 1, pvPinchStartMid = null, pvPinchStartPan = null;
+  // tracks currently-down pointers so a second finger can't smear the first
+  // finger's stroke into one fat, wandering line -- see pvDown
+  var pvPointers = {};
 
   function renderPupilView(el, code){
     if(!code){ buildJoinForm(el); return; }
     pvCode = code; pvRound = 0; pvStrokes = []; pvTool = 'pen'; pvColor = COLORS[0]; pvSize = SIZES[0]; pvActiveTab = 'draw';
-    pvScale = 1; pvPanX = 0; pvPanY = 0; pvPinching = false; pvPointers = {};
+    pvPointers = {};
     el.innerHTML = '<div class="lv-inactive">Loading…</div>';
     getRoom(code, function(err, data){
       if(err || !data || !data.question){
@@ -4734,7 +4730,7 @@
     var h1 = el.querySelector('.lv-question'); if(h1) h1.textContent = question;
     var ta = el.querySelector('.lv-block-text textarea'); if(ta) ta.value = '';
     pvStrokes = []; pvTool = 'pen'; pvRedraw();
-    pvPinching = false; pvPointers = {}; pvResetZoom();
+    pvPointers = {};
     var barEl = el.querySelector('.lv-bar');
     if(barEl){ markPvTool(barEl); }
     var sendBtn = el.querySelector('.lv-send'), statusEl = el.querySelector('.lv-status');
@@ -4784,7 +4780,6 @@
           '<div class="lv-block lv-block-draw">' +
             '<div class="lv-draw-wrap">' +
               '<canvas class="lv-canvas"></canvas>' +
-              '<button type="button" class="lv-zoom-reset" hidden>Reset zoom</button>' +
               '<div class="lv-bar">' +
                 '<div class="lv-swatches">' +
                   COLORS.map(function(c){
@@ -4848,9 +4843,6 @@
     barEl.querySelector('.lv-sw').classList.add('sel');
     barEl.querySelector('[data-size]').classList.add('sel');
 
-    var zoomResetBtn = el.querySelector('.lv-zoom-reset');
-    if(zoomResetBtn) zoomResetBtn.addEventListener('click', pvResetZoom);
-
     pvCanvas.addEventListener('pointerdown', pvDown);
     pvCanvas.addEventListener('pointermove', pvMove);
     pvCanvas.addEventListener('pointerup', pvUp);
@@ -4901,7 +4893,7 @@
         textarea.value = '';
         pvStrokes = []; pvRedraw();
         statusEl.classList.add('ok');
-        statusEl.innerHTML = '<span class="lv-check">&#10003;</span> Sent!';
+        statusEl.innerHTML = '<span class="lv-check">&#10003;</span><span>Sent!</span>';
         void statusEl.offsetWidth; statusEl.classList.add('lv-pop');
         pvCelebrate(sendBtn);
         // re-enable after a short cooldown rather than a one-shot lock, so a
@@ -4982,42 +4974,18 @@
     pvStrokes.forEach(pvDrawStroke);
     pvCtx.globalCompositeOperation = 'source-over';
   }
-  function pvDist(a, b){ var dx = a.x - b.x, dy = a.y - b.y; return Math.sqrt(dx*dx + dy*dy); }
-  function pvMidpoint(a, b){ return {x:(a.x + b.x) / 2, y:(a.y + b.y) / 2}; }
-  function pvApplyZoom(){
-    if(!pvCanvas) return;
-    pvCanvas.style.transform = 'translate(' + pvPanX + 'px,' + pvPanY + 'px) scale(' + pvScale + ')';
-    var btn = pvCanvas.parentElement && pvCanvas.parentElement.querySelector('.lv-zoom-reset');
-    if(btn) btn.hidden = pvScale <= 1.02;
-  }
-  function pvResetZoom(){
-    pvScale = 1; pvPanX = 0; pvPanY = 0;
-    pvApplyZoom();
-  }
+  // Only the FIRST finger down ever draws. Any additional finger that lands
+  // while one is already drawing is tracked but completely inert -- this is
+  // what stops the "two fingers smear one fat, wandering line" bug without
+  // the drift/jank a hand-rolled pinch-zoom introduced (tried it, felt
+  // uncontrollable without real anchor-point math and a touchscreen to tune
+  // it against, so dropped it rather than ship something that feels broken).
   function pvDown(e){
     if(!pvCtx) return;
     e.preventDefault();
-    pvPointers[e.pointerId] = {x:e.clientX, y:e.clientY};
+    pvPointers[e.pointerId] = true;
     var ids = Object.keys(pvPointers);
-    if(ids.length >= 2){
-      // a second finger landed -- this is a pinch, not a stroke. Cancel
-      // whatever the first finger had just started drawing (this is the bug
-      // being fixed: without this, both fingers used to smear one shared
-      // stroke into a single fat, wandering line).
-      if(pvDrawing){
-        var idx = pvStrokes.indexOf(pvCur);
-        if(idx > -1) pvStrokes.splice(idx, 1);
-        pvDrawing = false; pvCur = null; pvRedraw();
-      }
-      pvPinching = true;
-      var pA = pvPointers[ids[0]], pB = pvPointers[ids[1]];
-      pvPinchStartDist = pvDist(pA, pB) || 1;
-      pvPinchStartScale = pvScale;
-      pvPinchStartMid = pvMidpoint(pA, pB);
-      pvPinchStartPan = {x:pvPanX, y:pvPanY};
-      return;
-    }
-    if(pvPinching) return;                                   // a stray extra finger while pinching -- ignore
+    if(ids.length > 1) return;                                // an extra finger -- ignore it entirely
     pvResize();
     pvDrawing = true;
     pvCur = {tool:pvTool, col:pvColor, size:pvSize, pts:[pvPos(e)]};
@@ -5026,28 +4994,16 @@
     pvRedraw();
   }
   function pvMove(e){
-    if(pvPointers[e.pointerId]) pvPointers[e.pointerId] = {x:e.clientX, y:e.clientY};
-    var ids = Object.keys(pvPointers);
-    if(pvPinching && ids.length >= 2){
-      var pA = pvPointers[ids[0]], pB = pvPointers[ids[1]];
-      var dist = pvDist(pA, pB) || 1;
-      var mid = pvMidpoint(pA, pB);
-      pvScale = Math.max(1, Math.min(4, pvPinchStartScale * (dist / pvPinchStartDist)));
-      pvPanX = pvPinchStartPan.x + (mid.x - pvPinchStartMid.x);
-      pvPanY = pvPinchStartPan.y + (mid.y - pvPinchStartMid.y);
-      pvApplyZoom();
-      return;
-    }
-    if(!pvDrawing) return;
+    if(!pvDrawing || !pvCur) return;
+    // ignore movement from any finger that wasn't the one that started the stroke
+    if(pvCanvas.hasPointerCapture && !pvCanvas.hasPointerCapture(e.pointerId)) return;
     var evts = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     for(var i=0;i<evts.length;i++) pvCur.pts.push(pvPos(evts[i]));
     pvRedraw();
   }
   function pvUp(e){
     if(e && pvPointers[e.pointerId] !== undefined) delete pvPointers[e.pointerId];
-    var ids = Object.keys(pvPointers);
-    if(ids.length < 2) pvPinching = false;                    // lifting one finger of a pinch doesn't resume drawing
-    if(ids.length === 0){ pvDrawing = false; pvCur = null; }
+    if(Object.keys(pvPointers).length === 0){ pvDrawing = false; pvCur = null; }
   }
 
   /* ---------- board view ---------- */
