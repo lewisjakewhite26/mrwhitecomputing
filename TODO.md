@@ -1,6 +1,14 @@
 # To do
 
-## Live "answer the question" task (Route B, cloud room)
+## ⭐ PRIORITY — Live "answer the question" task (Route B, cloud room)
+
+Next thing to build, full stop. A UI-only prototype is approved — see
+[Answer Wall](https://claude.ai/code/artifact/2ff8197b-b479-46aa-b451-927577d79137),
+pupil iPad view and teacher board view side by side, wired together live
+in the browser with no backend. Verdict: liked it, wants a fuller drawing
+toolbar closer to onlineboard.eu (colour swatches, brush sizes, an
+eraser, undo) — added to the prototype's second version and to the pupil
+view spec below.
 
 See `ipad-board-plan.md` for the actual build plan: submit-once (not
 live-stroke) drawing/text answers, plain HTTPS polling instead of

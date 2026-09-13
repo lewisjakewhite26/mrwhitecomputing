@@ -5,6 +5,12 @@ recreate the mechanic inside the app, not license someone else's. What
 follows is the actual design: what it's built from, in what order, and
 how big each piece really is.
 
+A UI-only prototype of both screens exists and is approved:
+[Answer Wall](https://claude.ai/code/artifact/2ff8197b-b479-46aa-b451-927577d79137)
+— pupil iPad view and teacher board view side by side, wired together
+live in the browser, no backend behind it. Treat it as the visual
+reference for the real build, not a separate design pass to redo.
+
 ## Decisions this plan locks in
 
 **Submit-once, not live-stroke.** A pupil draws or types locally, hits
@@ -67,6 +73,13 @@ offline, just pointing at `#/live/<code>` instead of `#/task/1`):
 
 - the question, read from the room
 - a textarea and a small canvas, pupil picks whichever fits the answer
+- a proper drawing toolbar on the canvas, not just a pen — confirmed
+  priority after the UI prototype: six colour swatches, three brush
+  sizes, an eraser, and undo (a canvas snapshot pushed before each
+  stroke, popped on undo — no server round-trip, purely a client-side
+  history). One Clear-all still sits alongside it for starting over
+  completely. Modelled loosely on onlineboard.eu's toolbar, not copied
+  pixel for pixel.
 - one Send button, disabled after one send so a pupil can't spam tiles
 - no name field, ever
 
