@@ -1047,26 +1047,40 @@
   .d2-ipo .arr{display:grid;place-items:center;color:var(--soft);font-size:1.6rem;flex:0 0 auto}
   @media (max-width:900px){ .d2-ipo{flex-direction:column;align-items:center} .d2-ipo .arr{transform:rotate(90deg)} }
 
-  /* timeline: a coloured growth-arc with a comb of ticks beneath it, all visible at once */
-  .d2-tl-wrap{width:100%;max-width:960px;margin:0 auto}
-  .d2-tl-stage{position:relative;width:100%;padding-top:34%}
-  .d2-tl-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-  .d2-tl-tick{stroke:url(#d2tlGrad);stroke-width:2.5;stroke-linecap:round;opacity:.45}
-  .d2-tl-path{fill:none;stroke:url(#d2tlGrad);stroke-width:4;stroke-linecap:round}
-  .d2-tl-node{fill:#fff;stroke-width:3.5}
-  .d2-tl-ms{
-    position:absolute;width:clamp(100px,16vw,158px);text-align:center;cursor:pointer;
-    left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transition:transform .18s var(--bounce,cubic-bezier(.34,1.56,.64,1));
-  }
-  .d2-tl-ms.below{transform:translate(-50%, 16px) rotate(var(--rot,0deg))}
-  .d2-tl-ms.above{transform:translate(-50%, calc(-100% - 16px)) rotate(var(--rot,0deg))}
-  .d2-tl-ms.below:hover,.d2-tl-ms.below:active{transform:translate(-50%, 16px) rotate(0deg) scale(1.08)}
-  .d2-tl-ms.above:hover,.d2-tl-ms.above:active{transform:translate(-50%, calc(-100% - 16px)) rotate(0deg) scale(1.08)}
-  .d2-tl-yr{font-weight:800;font-size:clamp(.9rem,1.8vw,1.1rem);color:var(--c,var(--proc))}
-  .d2-tl-lb{font-weight:600;font-size:clamp(.7rem,1.35vw,.8rem);line-height:1.3;color:var(--muted)}
-  .d2-tl-today{position:absolute;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);transform:translate(-50%,-50%);width:14px;height:14px;border-radius:999px;background:var(--out);box-shadow:0 0 0 5px color-mix(in srgb,var(--out) 22%,transparent);animation:d2tlpulse 1.8s ease-in-out infinite}
-  html.rm .d2-tl-today{animation:none}
-  @keyframes d2tlpulse{0%,100%{box-shadow:0 0 0 5px color-mix(in srgb,var(--out) 22%,transparent)}50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--out) 10%,transparent)}}
+  /* timeline: a draggable snap-to-year scrubber with a crossfading focal card */
+  .tl2-wrap{width:100%;max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:28px}
+  .tl2-card{width:100%;min-height:148px;background:var(--paper);border:1px solid var(--paper-edge);border-radius:20px;
+    box-shadow:var(--shadow-sm);padding:22px 26px;box-sizing:border-box;text-align:left}
+  .tl2-card > *{transition:opacity .16s ease,transform .16s ease}
+  .tl2-card.tl2-swap > *{opacity:0;transform:translateY(4px)}
+  .tl2-yr{font-weight:800;font-size:clamp(1.5rem,4vw,2rem);line-height:1;margin-bottom:6px}
+  .tl2-hd{font-weight:700;font-size:clamp(1.05rem,2.3vw,1.3rem);margin-bottom:8px}
+  .tl2-bd{color:var(--muted);font-size:clamp(.9rem,1.8vw,1.05rem);line-height:1.5}
+  .tl2-track-row{width:100%;display:flex;align-items:center;gap:10px}
+  .tl2-arrow{flex:none;width:40px;height:40px;border-radius:999px;border:1px solid var(--paper-edge);background:var(--paper);
+    color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-sm)}
+  .tl2-arrow svg{width:18px;height:18px}
+  .tl2-arrow:disabled{opacity:.35;cursor:default}
+  .tl2-track{position:relative;flex:1;height:56px;touch-action:none}
+  .tl2-track::before{content:'';position:absolute;left:0;right:0;top:20px;height:6px;border-radius:999px;background:var(--paper-edge)}
+  .tl2-fill{position:absolute;left:0;top:20px;height:6px;border-radius:999px;background:var(--proc);width:0;transition:width .35s cubic-bezier(.34,1.1,.64,1),background .2s}
+  .tl2-node{position:absolute;top:0;transform:translateX(-50%);background:none;border:0;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 8px;color:var(--muted)}
+  .tl2-dot{width:12px;height:12px;border-radius:999px;background:var(--paper);border:2.5px solid var(--c,var(--muted));margin-top:17px;transition:transform .2s var(--bounce,cubic-bezier(.34,1.56,.64,1))}
+  .tl2-node:hover .tl2-dot{transform:scale(1.25)}
+  .tl2-tyr{font-size:.7rem;font-weight:700}
+  .tl2-node.sel{color:var(--c,var(--proc))}
+  .tl2-node.sel .tl2-dot{background:var(--c,var(--proc));transform:scale(1.15)}
+  .tl2-handle{position:absolute;top:23px;width:24px;height:24px;border-radius:999px;background:var(--paper);
+    border:4px solid var(--c,var(--proc));box-shadow:var(--shadow-md);transform:translate(-50%,-50%);
+    transition:left .35s cubic-bezier(.34,1.1,.64,1),border-color .2s;cursor:grab;z-index:2}
+  .tl2-handle:active{cursor:grabbing}
+  .tl2-handle:focus-visible{outline:3px solid color-mix(in srgb,var(--proc) 50%,transparent);outline-offset:2px}
+  .tl2-play{border:1px solid var(--paper-edge);background:var(--paper);color:var(--ink);border-radius:999px;
+    padding:10px 22px;font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:var(--shadow-sm)}
+  .tl2-play svg{width:16px;height:16px}
+  .tl2-play.sel{background:var(--proc);border-color:var(--proc);color:#fff}
+  html.rm .tl2-fill,html.rm .tl2-handle,html.rm .tl2-card > *{transition:none}
 
   /* sort activity */
   .d2-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:44ch}
@@ -3117,58 +3131,104 @@
           '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
     },
     function(){
-      // a smooth rising-then-falling arc; ticks and labels sit on it, all visible at once
-      var W = 1000, H = 340, BASE = 300, AMP = 220;
-      function curveY(t){ return BASE - AMP * Math.sin(Math.PI * t); }
+      // a draggable, snap-to-year scrubber: grab the handle (or tap a year, or
+      // tap Play) and a big focal card crossfades to that moment in history
       var items = [
-        {t:0.04, y:'1989', c:'var(--in)', l:'The World Wide Web is invented', f:'Tim Berners-Lee, a physicist at CERN, wanted scientists to share documents more easily.', side:-1},
-        {t:0.22, y:'1991', c:'var(--proc)', l:'The first website goes online', f:'It explained what the World Wide Web even was. A copy is still online today.', side:1},
-        {t:0.40, y:'1993', c:'var(--out)', l:'Mosaic, one of the first web browsers', f:'Before it, browsing meant typing commands. Mosaic added pictures and clickable links.', side:-1},
-        {t:0.58, y:'1994', c:'var(--in)', l:'Yahoo!, the first widely used search engine', f:'It began as a simple list of favourite websites, sorted by two Stanford students.', side:1},
-        {t:0.76, y:'1998', c:'var(--proc)', l:'Google is founded', f:'It started life in a rented garage in California.', side:-1},
-        {t:0.94, y:'Today', c:'var(--out)', l:'Billions of searches, every single day', f:'Search engines now index over a billion websites for you in a fraction of a second.', side:1}
+        {t:0.02, y:'1989', c:'var(--in)', l:'The World Wide Web is invented', f:'Tim Berners-Lee, a physicist at CERN, wanted scientists to share documents more easily.'},
+        {t:0.20, y:'1991', c:'var(--proc)', l:'The first website goes online', f:'It explained what the World Wide Web even was. A copy is still online today.'},
+        {t:0.38, y:'1993', c:'var(--out)', l:'Mosaic, one of the first web browsers', f:'Before it, browsing meant typing commands. Mosaic added pictures and clickable links.'},
+        {t:0.56, y:'1994', c:'var(--in)', l:'Yahoo!, the first widely used search engine', f:'It began as a simple list of favourite websites, sorted by two Stanford students.'},
+        {t:0.76, y:'1998', c:'var(--proc)', l:'Google is founded', f:'It started life in a rented garage in California.'},
+        {t:0.98, y:'Today', c:'var(--out)', l:'Billions of searches, every single day', f:'Search engines now index over a billion websites for you in a fraction of a second.'}
       ];
-      var SAMPLES = 60, pathD = '';
-      for(var i = 0; i <= SAMPLES; i++){
-        var t = i / SAMPLES, x = t * W, y = curveY(t);
-        pathD += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
-      }
-      var TICKS = 46, ticksSvg = '';
-      for(var k = 1; k < TICKS; k++){
-        var tt = k / TICKS, tx = tt * W, ty = curveY(tt);
-        ticksSvg += '<line class="d2-tl-tick" x1="' + tx.toFixed(1) + '" y1="' + (ty - 10).toFixed(1) + '" x2="' + tx.toFixed(1) + '" y2="' + (ty + 10).toFixed(1) + '"/>';
-      }
-      var nodesSvg = items.map(function(it){
-        var y = curveY(it.t);
-        return '<circle class="d2-tl-node" style="stroke:' + it.c + '" cx="' + (it.t * W).toFixed(1) + '" cy="' + y.toFixed(1) + '" r="7"/>';
+      var ARROW_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+      var ARROW_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+      var ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+      var nodesHtml = items.map(function(it, i){
+        return '<button type="button" class="tl2-node" data-i="' + i + '" style="left:' + (it.t * 100).toFixed(1) + '%;--c:' + it.c + '" aria-label="' + it.y + ': ' + it.l.replace(/"/g,'&quot;') + '">' +
+          '<span class="tl2-dot"></span><span class="tl2-tyr">' + it.y + '</span></button>';
       }).join('');
-      var lastT = items[items.length - 1].t, lastY = curveY(lastT);
-      var labelsHtml = items.map(function(it, i){
-        var y = curveY(it.t);
-        var xPct = (it.t * W / W) * 100, yPct = (y / H) * 100;
-        var rot = it.side * (5 + (i % 3) * 3);
-        var side = it.side < 0 ? 'above' : 'below';
-        return '<div class="d2-tl-ms ' + side + '" style="--x:' + xPct.toFixed(2) + ';--y:' + yPct.toFixed(2) + ';--rot:' + rot + 'deg;--c:' + it.c + '" title="' + it.f.replace(/"/g,'') + '">' +
-          '<div class="d2-tl-yr">' + it.y + '</div>' +
-          '<div class="d2-tl-lb">' + it.l + '</div>' +
-        '</div>';
-      }).join('');
-      var todayHtml = '<div class="d2-tl-today" style="--x:' + ((lastT * W / W) * 100).toFixed(2) + ';--y:' + ((lastY / H) * 100).toFixed(2) + '"></div>';
       return { steps:0, html:
         '<h1 class="pp">A brief history of the web</h1>' +
-        '<div class="d2-tl-wrap pp">' +
-          '<div class="d2-tl-stage">' +
-            '<svg class="d2-tl-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">' +
-              '<defs><linearGradient id="d2tlGrad" x1="0" y1="0" x2="1" y2="0">' +
-                '<stop offset="0%" style="stop-color:var(--in)"/><stop offset="50%" style="stop-color:var(--proc)"/><stop offset="100%" style="stop-color:var(--out)"/>' +
-              '</linearGradient></defs>' +
-              ticksSvg +
-              '<path class="d2-tl-path" d="' + pathD + '"/>' +
-              nodesSvg +
-            '</svg>' +
-            labelsHtml + todayHtml +
+        '<div class="tl2-wrap pp">' +
+          '<div class="tl2-card"><div class="tl2-yr"></div><div class="tl2-hd"></div><div class="tl2-bd"></div></div>' +
+          '<div class="tl2-track-row">' +
+            '<button type="button" class="tl2-arrow tl2-prev" aria-label="Earlier">' + ARROW_L + '</button>' +
+            '<div class="tl2-track">' +
+              '<div class="tl2-fill"></div>' +
+              nodesHtml +
+              '<div class="tl2-handle" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="' + (items.length - 1) + '" aria-valuenow="0" aria-label="Year on the timeline"></div>' +
+            '</div>' +
+            '<button type="button" class="tl2-arrow tl2-next" aria-label="Later">' + ARROW_R + '</button>' +
           '</div>' +
-        '</div>' }; },
+          '<button type="button" class="tl2-play">' + ICON_PLAY + '<span>Play through history</span></button>' +
+        '</div>',
+        init: function(sec){
+          var track = sec.querySelector('.tl2-track'), handle = sec.querySelector('.tl2-handle'), fill = sec.querySelector('.tl2-fill');
+          var card = sec.querySelector('.tl2-card'), yrEl = sec.querySelector('.tl2-yr'), hdEl = sec.querySelector('.tl2-hd'), bdEl = sec.querySelector('.tl2-bd');
+          var playBtn = sec.querySelector('.tl2-play'), prevBtn = sec.querySelector('.tl2-prev'), nextBtn = sec.querySelector('.tl2-next');
+          var nodeBtns = Array.prototype.slice.call(sec.querySelectorAll('.tl2-node'));
+          var idx = 0, dragging = false, playTimer = null;
+          var noMotion = document.documentElement.classList.contains('rm');
+
+          function stopPlay(){
+            if(!playTimer) return;
+            clearInterval(playTimer); playTimer = null;
+            playBtn.classList.remove('sel'); playBtn.querySelector('span').textContent = 'Play through history';
+          }
+          function setActive(i, force){
+            i = Math.max(0, Math.min(items.length - 1, i));
+            var changed = i !== idx || force;
+            idx = i;
+            var it = items[idx];
+            handle.style.left = (it.t * 100).toFixed(1) + '%';
+            handle.style.setProperty('--c', it.c);
+            handle.setAttribute('aria-valuenow', idx);
+            fill.style.width = (it.t * 100).toFixed(1) + '%';
+            fill.style.background = it.c;
+            nodeBtns.forEach(function(b, bi){ b.classList.toggle('sel', bi === idx); });
+            prevBtn.disabled = idx === 0; nextBtn.disabled = idx === items.length - 1;
+            if(!changed) return;
+            var apply = function(){ yrEl.textContent = it.y; yrEl.style.color = it.c; hdEl.textContent = it.l; bdEl.textContent = it.f; };
+            if(noMotion){ apply(); return; }
+            card.classList.add('tl2-swap');
+            setTimeout(function(){ apply(); card.classList.remove('tl2-swap'); }, 160);
+          }
+          function nearestIndexAt(clientX){
+            var r = track.getBoundingClientRect();
+            var p = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+            var best = 0, bestD = Infinity;
+            items.forEach(function(it, i){ var d = Math.abs(it.t - p); if(d < bestD){ bestD = d; best = i; } });
+            return best;
+          }
+          track.addEventListener('pointerdown', function(e){
+            if(e.target.closest('.tl2-node')) return;
+            dragging = true; stopPlay();
+            try{ track.setPointerCapture(e.pointerId); }catch(err){}
+            setActive(nearestIndexAt(e.clientX));
+          });
+          track.addEventListener('pointermove', function(e){ if(dragging) setActive(nearestIndexAt(e.clientX)); });
+          track.addEventListener('pointerup', function(){ dragging = false; });
+          track.addEventListener('pointercancel', function(){ dragging = false; });
+          nodeBtns.forEach(function(b, i){ b.addEventListener('click', function(){ stopPlay(); setActive(i); }); });
+          prevBtn.addEventListener('click', function(){ stopPlay(); setActive(idx - 1); });
+          nextBtn.addEventListener('click', function(){ stopPlay(); setActive(idx + 1); });
+          handle.addEventListener('keydown', function(e){
+            if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){ e.preventDefault(); stopPlay(); setActive(idx + 1); }
+            else if(e.key === 'ArrowLeft' || e.key === 'ArrowDown'){ e.preventDefault(); stopPlay(); setActive(idx - 1); }
+          });
+          playBtn.addEventListener('click', function(){
+            if(playTimer){ stopPlay(); return; }
+            if(idx >= items.length - 1) setActive(0, true);
+            playBtn.classList.add('sel'); playBtn.querySelector('span').textContent = 'Pause';
+            playTimer = setInterval(function(){
+              if(idx >= items.length - 1){ stopPlay(); return; }
+              setActive(idx + 1);
+            }, noMotion ? 400 : 1700);
+          });
+          setActive(0, true);
+        }
+      }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">The web grew fast</h1>' +
       '<p class="lead pp">1 website in 1991. 2.4 million by 1998.</p>' +
