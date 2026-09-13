@@ -10,12 +10,17 @@ toolbar closer to onlineboard.eu (colour swatches, brush sizes, an
 eraser, undo) — added to the prototype's second version and to the pupil
 view spec below.
 
-Backend wiring is now fully planned too (`ipad-board-plan.md`, "Wiring it
+Backend wiring is planned and mostly built (`ipad-board-plan.md`, "Wiring it
 up, step by step"): room codes generated client-side, a teacher-only
-token closing the anyone-can-clear-the-board gap, the finalised
-four-action API, where "start a live task" lives in the deck, and the
-deploy/test order. Nothing built yet — next session starts from that
-checklist.
+token closing the anyone-can-clear-the-board gap, the four-action API,
+the QR-side "start a live task" entry point, and `HB_LIVE` all done in
+`index.html`. Backend moved from the original PartyKit plan to Supabase
+after PartyKit's shared hosting hit a capacity limit on deploy day — see
+`_supabase/schema.sql` for the actual tables/functions. **What's left:**
+create a Supabase project, run that schema file once in its SQL editor,
+and paste the project's URL + anon key into `SUPABASE_URL`/
+`SUPABASE_ANON_KEY` at the top of the `HB_LIVE` module — then test as
+described in `ipad-board-plan.md` step 7.
 
 See `ipad-board-plan.md` for the actual build plan: submit-once (not
 live-stroke) drawing/text answers, plain HTTPS polling instead of
@@ -28,8 +33,8 @@ Pupils scan the QR on the slide, a question opens on their iPad, they type or
 draw an answer and send it. Answers tile onto the teacher's board view in real
 time.
 
-**Backend:** a hosted realtime room. PartyKit or Firebase Realtime Database,
-free tier. A fresh random room code per lesson.
+**Backend:** Supabase, free tier — two tables plus a handful of Postgres
+functions (see `_supabase/schema.sql`). A fresh random room code per lesson.
 
 **Pupil view** `#/live/<room>`:
 - question text at the top
@@ -53,7 +58,7 @@ school will ask about this before it goes near real pupils.
 third-party service. The rest of the file runs fully offline. Keep the live task
 self-contained enough that the deck still works with it switched off.
 
-Rough size: ~200 lines in `index.html` plus the room code on PartyKit.
+Rough size: ~200 lines in `index.html` plus a small Supabase schema.
 
 ## Also outstanding
 

@@ -39,14 +39,19 @@ new. No persistent connection to babysit, no reconnect-on-sleep logic, no
 special handling for an iPad's Smart Cover cutting the network — a
 dropped poll just tries again next tick.
 
-**PartyKit for the backend**, per the original plan already in
-`TODO.md`. It's a small hosted key-value store with a generous free tier
-and no server to run yourself — a room is just a namespaced bucket of
-answers, which fits the polling model above with almost no backend code.
-Firebase's Realtime Database over its plain REST API is the fallback if
-PartyKit's free tier ever gets tight; either works with the design below
-unchanged, since the pupil and board views only ever see "POST an answer"
-and "GET this room's answers."
+**Supabase for the backend.** PartyKit was the original choice (still
+described below in a couple of places kept for context) but its free
+shared hosting domain hit a hard capacity limit on deploy day, with no
+ETA to fix — a genuine outage on their end, not a code problem. Switched
+to Supabase since an account already existed. The shape barely changes:
+a `rooms` table and an `answers` table, with all writes going through a
+handful of Postgres functions (`live_get_room`, `live_set_question`,
+`live_submit_answer`, `live_hide_answer`, `live_clear_all`) called over
+Supabase's auto-generated REST endpoint — plain `fetch`, no SDK. The
+functions run as `security definer`, so Row Level Security stays "deny
+everything" on the tables themselves and the teacher-token check happens
+inside the functions instead. Same "POST an answer, GET this room's
+answers" shape either way.
 
 ## Data model
 
@@ -148,30 +153,30 @@ than the one it was drawn at.
 
 What's still worth testing before trusting this in front of a class,
 even at this scope: whether the school's wifi and web filter are happy
-with plain POST/GET traffic to PartyKit (should be fine — it's ordinary
+with plain POST/GET traffic to Supabase (should be fine — it's ordinary
 HTTPS, not a websocket a filter might flag), and whether iPads on the
-school's actual network can reach PartyKit at all if there's a
+school's actual network can reach Supabase at all if there's a
 restrictive allowlist. Both are five-minute checks on a real school
 iPad, not engineering risk.
 
 ## Decided
 
-- **Room lifetime: in-memory only, no disk.** A PartyKit room (a
-  Cloudflare Durable Object under the hood) holds its answers in a plain
-  array for as long as it's active. No storage quota to worry about, no
-  cleanup job to write. One caveat worth stating plainly rather than
-  assuming: nothing in a pure HTTP-polling design tells the room a
-  teacher closed the board tab — there's no live connection to notice
-  that. The room's contents sit in memory until Cloudflare's own idle
-  eviction reclaims it, on its own schedule, not on any classroom action.
-  Functionally this is still "ephemeral, never touches disk"; it just
-  isn't "wiped the instant the tab closes."
+- **Room lifetime: two small Postgres tables, never queried outside a
+  room's own code.** Supabase replaced PartyKit's in-memory Durable
+  Object with an actual `rooms` row and its `answers` rows — a real
+  disk-backed table, not memory. Nothing auto-deletes a room when the
+  teacher closes the tab, same as the original PartyKit design; unlike
+  PartyKit there's also no automatic idle eviction, so a stale room's
+  rows just sit there until something explicitly clears them. Worth a
+  periodic manual clear-out in the Supabase table view, or a small
+  scheduled cleanup query later, if this runs for a full term. Not
+  urgent at classroom scale — a few dozen rows a day is nothing.
 - **Moderation: after-the-fact hide, not pre-approval.** Vetting 30
   submissions one by one before they're visible stalls the lesson.
   New answers land on the board immediately; the hide button pulls one
   back if it needs pulling. Fine for a primary classroom, not fine if
   this ever needed to run genuinely unsupervised.
-- **No wifi, or PartyKit unreachable:** silent retry on the board (a
+- **No wifi, or Supabase unreachable:** silent retry on the board (a
   failed poll just tries again in two seconds, no error overlay
   interrupting the class), sticky feedback on the pupil side (a failed
   Send re-enables the button and says plainly that it didn't go through
@@ -208,13 +213,13 @@ as a working room. Given rooms are meant to be single-lesson and
 short-lived, a pupil hitting an expired one needs to be told that
 plainly, not left assuming it's working.
 
-**`clear-all` and `hide-answer` are unauthenticated.** Anyone with the
-room code, or who finds the URL shape, can wipe the board or hide a
-tile. Low stakes for an activity nobody outside the room knows exists —
-but worth being a deliberate choice. Once the app has a real host (the
-separate, already-listed "QR code needs a real host" item), restricting
-the PartyKit server's CORS to that origin instead of `*` closes most of
-this for free.
+**`clear-all` and `hide-answer` need the teacher token.** This is now
+enforced inside Postgres itself, not just in client code: `live_hide_answer`
+and `live_clear_all` check the stored `teacher_token` before touching a
+row, and Row Level Security denies the `answers`/`rooms` tables to the
+public API entirely — the only door in is those `security definer`
+functions. So even someone reading the anon key straight out of the
+page's source can't bypass the check by hitting the tables directly.
 
 **Styling needs to become hub's, not generic.** A first pass came back
 in ad hoc hex colours and system sans-serif — functional, but visually
@@ -223,13 +228,13 @@ from the same custom properties everything else in `index.html` already
 uses (`--proc`, `--paper`, `--ink`, the existing border-radius and
 shadow scale), not introduce a second visual language.
 
-**A `partykit.json` manifest is still needed.** The server file alone
-(`party/main.ts`) doesn't deploy without a couple of lines naming it as
-the project's "main" party — easy to forget if following the server code
-in isolation.
+**The schema has to actually be run once.** `_supabase/schema.sql` isn't
+applied automatically — it has to be pasted into the Supabase project's
+SQL editor and run by hand the first time a project exists, same kind of
+easy-to-forget step the old `partykit.json` manifest was.
 
 **Worth keeping regardless:** the pre-flight check — open Safari on an
-actual school iPad, on the school's pupil wifi, and hit the PartyKit URL
+actual school iPad, on the school's pupil wifi, and hit the Supabase URL
 directly before writing another line of code. A content-filter block or
 a DNS failure there is a five-minute finding; the same problem
 discovered mid-lesson in front of a class is not.
@@ -273,89 +278,99 @@ wiping needs a token nobody but the teacher's own device ever saw.
 
 ### 3. The API, finalised
 
-One PartyKit room, one `onRequest` handler, four actions:
+Rewritten for Supabase after the PartyKit deploy hit a capacity wall on
+their shared domain (see the top of this file). Same four actions, now
+Postgres functions called over Supabase's REST RPC endpoint
+(`POST /rest/v1/rpc/<function>` with the args as a JSON body) rather than
+one `onRequest` handler — `_supabase/schema.sql` has the real SQL.
 
 ```
-GET  /parties/main/<code>
-     -> { question, answers: Answer[] }   (hidden answers already filtered out)
+live_get_room(p_code)
+     -> rows of { question, id, kind, content, ts }, one per non-hidden
+        answer (or one row with null answer fields if there are none yet);
+        zero rows means the room was never started
 
-POST /parties/main/<code>
-     { action:'set-question', teacherToken, question }
-       -> first call for a room stores teacherToken and question, ok:true
-       -> later calls must match the stored token, else 403
+live_set_question(p_code, p_token, p_question)
+     -> first call for a room stores p_token, returns true
+     -> later calls must match the stored token, else returns false
 
-     { action:'submit-answer', kind:'text'|'drawing', content }
-       -> no token needed; appends, returns { ok:true, id }
+live_submit_answer(p_code, p_kind, p_content)
+     -> no token needed; appends, returns the new answer's id
 
-     { action:'hide-answer', teacherToken, id }
-       -> token must match; marks that answer hidden (not deleted, just
-          filtered out of GET, in case "undo the hide" is ever wanted)
+live_hide_answer(p_code, p_token, p_id)
+     -> token must match; marks that answer hidden (not deleted, just
+        filtered out of live_get_room, in case "undo the hide" is ever wanted)
 
-     { action:'clear-all', teacherToken }
-       -> token must match; empties the room's answers
+live_clear_all(p_code, p_token)
+     -> token must match; deletes the room's answers
 ```
 
-Everything else about the server (in-memory array, no disk, CORS headers)
-is as already drafted — the only change from that draft is the token
-check guarding three of the four actions.
+The token check happens inside the SQL functions themselves, and Row
+Level Security denies the underlying tables to everyone else — so this
+is actually a stronger guarantee than the PartyKit draft had, not just a
+like-for-like swap.
 
-### 4. Where "start a live task" actually lives in the deck
+### 4. Where "start a live task" actually lives in the deck — done
 
-This needs one visible entry point inside a lesson, not just a URL
-someone has to know to type. The natural home is right next to the
-existing QR box (`buildQR()`, `index.html:1737`) — a button there, "Start
-live answer wall," that: generates a code and a token, stores both in
-`sessionStorage` (survives a refresh, gone when the tab closes, which
-matches the room's own lifetime), sends the first `set-question` using
-whatever the current slide's `taskH1`/`taskIntro` text already says
-(editable before sending, for the moments that need a different prompt
-than the printed task), points the existing QR at `#/live/<code>`
-instead of `#/task/1` while a live task is active, and sends the
-teacher's own screen to `#/board/<code>/<token>`.
+Built as planned: a button next to the existing QR box (`buildQR()`,
+`index.html`), "Start live answer wall." One judgement call — the current
+QR box only exists on the Year 5/6 bespoke deck's task slide, and that
+unit doesn't carry `taskH1`/`taskIntro` fields the way the Year 1-4
+`HB_DECK` unit data does, so the question text is read straight from
+that slide's own rendered `#view-task h1` / `.task-card p` DOM instead,
+falling back to "What do you think?" if it's ever missing. Generates a
+code and a token, stores both in `sessionStorage`, sends `set-question`,
+repoints the QR at `#/live/<code>`, and opens the teacher's own board at
+`#/board/<code>/<token>` in a new tab (so starting a live task never
+loses the teacher's place in the deck they were on).
 
-### 5. Client-side wiring
+### 5. Client-side wiring — done
 
-Two new `<section>` elements (`view-live`, `view-board`) added next to
-the existing ones, added to the `views` object, and two branches inside
-the real `route()` (`index.html:1137`) — not a competing router, per the
-earlier review. A new `HB_LIVE` module, same shape as `HB_DECK`, owns:
-
-- `renderPupilView(el, code)` — GETs once for the question (a missing or
-  never-set question means the room doesn't exist; show that plainly,
-  the gap the review flagged), then wires the toolbar, tabs, and Send
-  exactly as prototyped in Answer Wall.
-- `renderBoardView(el, code, token)` — GETs immediately, then every two
-  seconds; diffs by answer `id` against a `Set` of ones already tiled;
-  an empty `answers` array when the known-set isn't empty means the
-  board was cleared elsewhere, so wipe local tiles to match; hide and
-  clear-all send their POST with `token` attached.
-- `cleanup()` — clears the poll interval, called at the top of `route()`
-  before any branch runs, so leaving the board view never leaves a timer
-  ticking in the background against a room nobody's looking at.
+Two new `<section>` elements (`view-live`, `view-board`), registered in
+the `views` object, two new branches inside the real `route()` — not a
+competing router. A new `HB_LIVE` module owns `renderPupilView`,
+`renderBoardView`, and `cleanup()`, exactly as specced: pupil view shows
+a plain "this room isn't active" message when `live_get_room` comes back
+with no question; board view polls every two seconds, diffs by answer
+`id` against a `Set`, wipes local tiles if the answers array comes back
+empty while the known-set isn't; `cleanup()` clears the poll interval
+and runs as the literal first line of `route()`. The drawing canvas
+reuses the existing whiteboard's stroke-array-plus-full-redraw approach
+(`wbData`/`wbCol`-style) rather than inventing a second drawing engine.
 
 ### 6. Deployment
 
-A PartyKit project is its own small thing, not part of `index.html` —
-sits in a `_party/` folder alongside `_tools/` for co-location, but
-deploys separately with its own `partykit.json` naming the server file
-as the project's `main` party. `partykit deploy` gives back a
-`https://<project>.<account>.partykit.dev` URL; that's the one constant
-(`PARTY_HOST`) the client module needs to know about. Free tier limits
-are not a real concern at this scale — a handful of rooms a day, a few
-dozen requests each, is nowhere near what would need a paid plan.
+Supabase, not PartyKit — see the top of this file for why. Steps:
+
+1. Create a Supabase project (free tier) from the account that already
+   exists — takes about a minute, no card needed.
+2. Open the project's SQL editor, paste in the whole of
+   `_supabase/schema.sql`, and run it once. Safe to re-run later if the
+   schema ever changes, since every statement is create-or-replace.
+3. From Project Settings -> API, copy the Project URL and the `anon`
+   `public` key — these are meant to be public, they're what every
+   Supabase web app ships in its client-side code; the actual security
+   is the Row Level Security + `security definer` functions in the
+   schema, not keeping this key secret.
+4. Paste those two values into `SUPABASE_URL` and `SUPABASE_ANON_KEY` at
+   the top of the `HB_LIVE` module in `index.html`.
+
+Free tier limits are not a real concern at this scale — a handful of
+rooms a day, a few dozen requests each, is nowhere near what would need
+a paid plan.
 
 ### 7. Testing order, before this is in front of a class
 
-1. `partykit dev` locally; confirm GET/POST behave, and that a
-   mismatched token genuinely gets rejected — this is the one part of
-   the whole feature with a real security property to verify, worth
-   checking on purpose rather than assuming the code does what it says.
-2. Deploy for real; point `PARTY_HOST` at the live URL.
-3. Wire `HB_LIVE` into `index.html`; run both views in two browser tabs
-   on the same laptop first — cheapest possible way to catch a wiring
-   mistake before a second device is involved at all.
-4. The pre-flight check from the section above: an actual school iPad,
-   on the school's pupil wifi, hitting the PartyKit URL directly in
-   Safari.
-5. A small pilot — a handful of pupils, not a full class — before
+1. With the two Supabase values filled in, open `index.html` in two
+   browser tabs on the same laptop — cheapest possible way to catch a
+   wiring mistake before a second device is involved at all. Confirm a
+   mismatched teacher token genuinely gets rejected (try hitting
+   `live_hide_answer` or `live_clear_all` with the wrong token) — this is
+   the one part of the whole feature with a real security property to
+   verify, worth checking on purpose rather than assuming the code does
+   what it says.
+2. The pre-flight check from the section above: an actual school iPad,
+   on the school's pupil wifi, hitting the Supabase project's URL
+   directly in Safari.
+3. A small pilot — a handful of pupils, not a full class — before
    trusting it in front of thirty children at once.

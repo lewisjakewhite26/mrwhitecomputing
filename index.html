@@ -662,6 +662,7 @@
             <div class="qr-wrap">
               <div class="qr-box" id="qrbox"></div>
               <p>Scan to open the task on an iPad</p>
+              <button class="btn ghost" id="btn-start-live" type="button">Start live answer wall</button>
             </div>
           </div>
         </section>
@@ -803,6 +804,160 @@
 </section>
 
 <section id="view-worksheet" class="view"></section>
+
+<!-- ================= LIVE ANSWER WALL: PUPIL ================= -->
+<section id="view-live" class="view"></section>
+
+<!-- ================= LIVE ANSWER WALL: BOARD ================= -->
+<section id="view-board" class="view"></section>
+
+<style>
+  /* ================= LIVE ANSWER WALL ================= */
+  #view-live{max-width:680px;margin:0 auto;padding:28px 18px 90px}
+  #view-live .lv-tk{font-weight:700;color:var(--proc);font-size:1rem;margin:0 0 10px;letter-spacing:.02em}
+  #view-live .lv-question{font-weight:800;font-size:clamp(1.6rem,5.5vw,2.3rem);letter-spacing:-0.02em;margin:0 0 22px;line-height:1.2}
+  .lv-card{position:relative;background:var(--paper);border:1px solid var(--paper-edge);border-radius:24px;box-shadow:var(--shadow-md);padding:30px 24px 26px;margin-bottom:20px;overflow:hidden}
+  .lv-card p{color:var(--muted);line-height:1.55;font-size:1.05rem}
+  .lv-card.lv-flash{animation:lvFlash .8s var(--ease,ease)}
+  @keyframes lvFlash{
+    0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--proc) 55%,transparent), var(--shadow-md)}
+    100%{box-shadow:0 0 0 22px color-mix(in srgb,var(--proc) 0%,transparent), var(--shadow-md)}
+  }
+  /* Draw/Write segmented toggle — big touch targets, Draw selected by default */
+  .lv-tabs{display:flex;gap:10px;margin-bottom:18px}
+  .lv-tab{flex:1;min-height:60px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:16px;border:2px solid var(--hair);background:var(--paper);color:var(--muted);font-family:var(--font);font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .12s var(--ease,ease)}
+  .lv-tab svg{width:22px;height:22px;flex:none}
+  .lv-tab:hover{transform:translateY(-1px)}
+  .lv-tab.sel{background:var(--proc);border-color:var(--proc);color:#fff}
+  .lv-answer{display:flex;flex-direction:column}
+  .lv-label{margin:0 0 10px;font-weight:800;color:var(--ink);font-size:1.08rem}
+  .lv-block-text textarea{width:100%;min-height:clamp(280px,50vh,480px);border:2px solid var(--hair);border-radius:16px;padding:18px;font-family:var(--font);font-size:1.15rem;color:var(--ink);resize:vertical;box-sizing:border-box;transition:border-color .15s}
+  .lv-block-text textarea:focus{outline:none;border-color:var(--proc)}
+  .lv-draw-wrap{position:relative;border:2px solid var(--hair);border-radius:16px;overflow:hidden;background:#fff}
+  .lv-zoom-reset{position:absolute;top:10px;right:10px;z-index:2;border:1px solid var(--paper-edge);background:var(--paper);
+    color:var(--ink);border-radius:999px;padding:8px 14px;font-family:var(--font);font-weight:700;font-size:.85rem;
+    box-shadow:var(--shadow-sm);cursor:pointer}
+  .lv-canvas{display:block;width:100%;height:clamp(340px,58vh,560px);touch-action:none;background:#fff}
+  /* toolbar: colour swatches on their own row, then brush-size + action buttons */
+  .lv-bar{display:flex;flex-direction:column;gap:14px;padding:16px 14px;background:var(--ground-2);border-top:1px solid var(--hair)}
+  .lv-swatches{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .lv-sw{width:56px;height:56px;border-radius:16px;border:3px solid transparent;cursor:pointer;flex:none;padding:0;display:grid;place-items:center;transition:transform .12s var(--ease,ease),box-shadow .12s}
+  .lv-sw:hover{transform:scale(1.06)}
+  .lv-sw-check{width:24px;height:24px;color:#fff;opacity:0;transform:scale(.5);transition:opacity .12s,transform .12s}
+  .lv-sw.sel{box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--ink);transform:scale(1.04)}
+  .lv-sw.sel .lv-sw-check{opacity:1;transform:scale(1)}
+  .lv-tools{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .lv-sizes{display:flex;gap:6px;background:var(--paper);border-radius:16px;padding:5px;box-shadow:var(--shadow-sm)}
+  .lv-size-btn{width:56px;height:56px;border:0;background:transparent;border-radius:12px;cursor:pointer;color:var(--muted);font-weight:700;font-size:.78rem;font-family:var(--font);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:background .12s,color .12s}
+  .lv-size-btn:hover{background:var(--ground-2)}
+  .lv-size-btn.sel{background:var(--proc);color:#fff}
+  .lv-size-btn .lv-size-dot{border-radius:999px;background:currentColor;display:block}
+  .lv-actions{display:flex;gap:8px}
+  .lv-act-btn{width:56px;height:56px;border:1px solid var(--paper-edge);background:var(--paper);border-radius:14px;cursor:pointer;color:var(--ink);font-weight:600;font-size:.72rem;font-family:var(--font);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:transform .12s var(--ease,ease),background .12s}
+  .lv-act-btn:hover{transform:translateY(-1px)}
+  .lv-act-btn.sel{background:var(--proc);color:#fff;border-color:var(--proc)}
+  .lv-act-btn svg{width:20px;height:20px}
+  .lv-send-col{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:26px}
+  .lv-send-col .lv-send{width:100%;min-height:64px;background:var(--proc);color:#fff;border:0;border-radius:20px;padding:16px 20px;font-weight:800;font-size:1.3rem;cursor:pointer;font-family:var(--font);box-shadow:var(--shadow-md);display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .12s var(--ease,ease),opacity .15s}
+  .lv-send-col .lv-send svg{width:22px;height:22px;flex:none}
+  .lv-send-col .lv-send:hover:not(:disabled){transform:translateY(-1px) scale(1.01)}
+  .lv-send-col .lv-send:disabled{opacity:.5;cursor:default;transform:none}
+  .lv-status{color:var(--muted);font-size:1.05rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center}
+  .lv-status.err{color:var(--red)}
+  .lv-status.ok{color:var(--out);font-size:1.2rem}
+  .lv-status .lv-check{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:999px;background:currentColor;color:#fff;font-size:1.05rem;flex:none}
+  .lv-status.lv-pop{animation:lvPop .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes lvPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1)}}
+  .lv-send-col .lv-send{position:relative;overflow:visible}
+  .lv-send.lv-sent{animation:lvSendPulse .5s var(--ease,ease)}
+  @keyframes lvSendPulse{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .lv-confetti{position:absolute;top:50%;left:50%;width:10px;height:10px;border-radius:3px;pointer-events:none;
+    transform:translate(-50%,-50%);animation:lvConfetti .8s cubic-bezier(.15,.8,.3,1) forwards}
+  @keyframes lvConfetti{
+    0%{transform:translate(-50%,-50%) rotate(0deg) scale(1);opacity:1}
+    100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) rotate(var(--rot)) scale(.5);opacity:0}
+  }
+  .lv-inactive{text-align:center;color:var(--muted);padding:60px 20px}
+  .lv-code-input{width:100%;box-sizing:border-box;border:2px solid var(--hair);border-radius:16px;padding:18px;font-family:var(--font);font-size:1.7rem;font-weight:700;letter-spacing:.2em;text-align:center;color:var(--ink);text-transform:uppercase;transition:border-color .15s}
+  .lv-code-input:focus{outline:none;border-color:var(--proc)}
+  .lv-send-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px}
+  .lv-join{width:100%;min-height:60px;background:var(--proc);color:#fff;border:0;border-radius:20px;padding:14px 20px;font-weight:800;font-size:1.15rem;cursor:pointer;font-family:var(--font);box-shadow:var(--shadow-sm);transition:transform .12s var(--ease,ease),opacity .15s}
+  .lv-join:hover{transform:translateY(-1px) scale(1.01)}
+  .lv-join:active{transform:translateY(0) scale(.99)}
+
+  #view-board{min-height:100vh;box-sizing:border-box}
+  /* two states live in the DOM together — .bd-view-join and .bd-view-wall —
+     and a class on #view-board picks which is visible. Nothing about bdTimer,
+     bdStage or the poll loop cares which one is showing; this is a pure
+     CSS/DOM visibility switch over state that keeps updating regardless. */
+  .bd-view{display:none;min-height:100vh;box-sizing:border-box}
+  #view-board.bd-state-join .bd-view-join{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(18px,4vw,40px)}
+  #view-board.bd-state-wall .bd-view-wall{display:flex;flex-direction:column}
+  /* hero block: QR + room code + join counter, the whole screen while pupils are joining */
+  .bd-view-join .bd-hero{width:100%;max-width:900px}
+  .bd-hero{background:var(--paper);border:1px solid var(--paper-edge);border-radius:26px;box-shadow:var(--shadow-md);padding:28px 30px;margin-bottom:0}
+  .bd-hero-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .bd-kicker{margin:0;font-weight:700;color:var(--proc);font-size:.95rem}
+  .bd-hero-join-pill{display:inline-flex;align-items:center;gap:8px;background:var(--ground-2);border-radius:999px;padding:8px 16px;font-weight:700;color:var(--out);font-size:.95rem;white-space:nowrap}
+  .bd-hero-dot{width:9px;height:9px;border-radius:999px;background:var(--out);display:inline-block;flex:none;animation:bdPulse 1.6s ease infinite}
+  @keyframes bdPulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .bd-hero-row{display:flex;gap:32px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+  .bd-hero-qr{flex:none;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--ground-2);border-radius:20px;padding:18px}
+  .bd-hero-qrbox{width:220px;height:220px;padding:10px;box-sizing:border-box;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .bd-hero-qrbox img,.bd-hero-qrbox canvas,.bd-hero-qrbox table{width:100%!important;height:100%!important}
+  .bd-hero-qr-cap{margin:0;font-weight:700;color:var(--muted);font-size:.92rem;text-align:center;max-width:200px}
+  .bd-hero-info{flex:1;min-width:260px;display:flex;flex-direction:column;gap:14px}
+  .bd-hero-code-card{background:var(--ground-2);border-radius:18px;padding:16px 22px;display:flex;flex-direction:column;gap:2px}
+  .bd-hero-code-label{font-weight:700;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em}
+  .bd-hero-code{font-weight:800;color:var(--proc);font-size:clamp(2.6rem,6vw,4.6rem);letter-spacing:.14em;line-height:1.1;word-break:break-all}
+  .bd-hero-alt{margin:0;color:var(--muted);font-size:1rem;line-height:1.5}
+  .bd-hero-alt strong{color:var(--ink);word-break:break-all}
+  .bd-question{font-weight:800;font-size:clamp(1.3rem,2.4vw,2rem);letter-spacing:-0.02em;margin:0 0 20px;line-height:1.2;max-width:70ch}
+  .bd-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .bd-next-input{border:1px solid var(--paper-edge);border-radius:999px;padding:10px 16px;font-family:var(--font);font-size:.92rem;min-width:220px;box-shadow:var(--shadow-sm);color:var(--ink)}
+  .bd-controls button{background:var(--paper);border:1px solid var(--paper-edge);border-radius:999px;padding:10px 20px;font-weight:600;font-family:var(--font);font-size:.92rem;cursor:pointer;box-shadow:var(--shadow-sm);color:var(--ink)}
+  .bd-controls button.bd-next-btn{background:var(--proc);color:#fff;border-color:var(--proc)}
+  .bd-controls button.bd-toggle-btn{background:var(--ink);color:#fff;border-color:var(--ink)}
+  @media (max-width:560px){
+    .bd-hero{padding:20px 18px}
+    .bd-hero-qrbox{width:150px;height:150px}
+    .bd-hero-row{gap:18px}
+  }
+  /* compact header for the wall state: small reference question + code, and
+     the same set-next-task / clear-all / toggle controls, taking as little
+     height as possible so the tile stage below gets the rest of the screen */
+  .bd-wall-header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--hair);background:var(--paper);flex:none}
+  .bd-wall-header-main{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+  .bd-wall-code{margin:0;font-weight:700;color:var(--muted);font-size:.85rem;white-space:nowrap}
+  .bd-wall-code strong{color:var(--proc);font-size:1.05rem;letter-spacing:.1em}
+  .bd-wall-question{margin:0;font-weight:700;font-size:1.05rem;color:var(--ink);line-height:1.3;max-width:60ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bd-wall-controls{flex-wrap:wrap}
+  @media (max-width:560px){
+    .bd-wall-header{padding:10px 14px}
+    .bd-wall-question{max-width:100%;white-space:normal}
+    .bd-next-input{min-width:140px}
+  }
+  .bd-view-wall .bd-stage{flex:1;min-height:0;margin:14px 16px 16px;border-radius:20px}
+  .bd-stage{position:relative;min-height:60vh;border-radius:20px;overflow:hidden}
+  .bd-tile{position:absolute;left:0;top:0;background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;box-shadow:var(--shadow-sm);padding:14px;cursor:grab;width:220px;min-height:120px;display:flex;align-items:center;touch-action:none;user-select:none}
+  .bd-tile.bd-grabbing{cursor:grabbing;box-shadow:var(--shadow-lg);z-index:20}
+  .bd-tile p{margin:0;color:var(--ink);font-size:1.05rem;line-height:1.4}
+  .bd-tile img{max-width:100%;max-height:200px;display:block;margin:0 auto;border-radius:8px;pointer-events:none}
+  .bd-tile.enter{animation:bdTileIn .38s cubic-bezier(.34,1.56,.64,1) both}
+  @keyframes bdTileIn{
+    0%{opacity:0;transform:scale(.4) translateY(16px)}
+    60%{opacity:1;transform:scale(1.06) translateY(0)}
+    100%{opacity:1;transform:scale(1) translateY(0)}
+  }
+  .bd-hide{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:999px;border:1px solid var(--paper-edge);background:var(--paper);color:var(--muted);display:grid;place-items:center;cursor:pointer;font-size:.85rem;line-height:1}
+  .bd-empty{position:absolute;left:0;right:0;top:40%;color:var(--muted);text-align:center;padding:60px 20px}
+  .bd-overlay{position:fixed;inset:0;background:color-mix(in srgb, var(--ink) 82%, transparent);display:none;align-items:center;justify-content:center;padding:40px;z-index:50}
+  .bd-overlay.on{display:flex}
+  .bd-overlay .bd-ov-inner{background:var(--paper);border-radius:18px;box-shadow:var(--shadow-lg);padding:26px;max-width:90vw;max-height:90vh;overflow:auto}
+  .bd-overlay .bd-ov-inner p{font-size:1.6rem;line-height:1.4;color:var(--ink);margin:0}
+  .bd-overlay .bd-ov-inner img{max-width:80vw;max-height:80vh;display:block}
+  .bd-ov-close{position:fixed;top:20px;right:24px;background:var(--paper);border:0;border-radius:999px;width:40px;height:40px;font-size:1.2rem;cursor:pointer;z-index:51;box-shadow:var(--shadow-md)}
+</style>
 
 <style>
   /* ================= YEAR 3/4 DECK ================= */
@@ -1131,10 +1286,11 @@
   ];
 
   /* ---------- router ---------- */
-  var views = {picker:document.getElementById('view-picker'),hub:document.getElementById('view-hub'),deck:document.getElementById('view-deck'),deck2:document.getElementById('view-deck2'),task:document.getElementById('view-task'),task2:document.getElementById('view-task2'),sheet:document.getElementById('view-worksheet')};
+  var views = {picker:document.getElementById('view-picker'),hub:document.getElementById('view-hub'),deck:document.getElementById('view-deck'),deck2:document.getElementById('view-deck2'),task:document.getElementById('view-task'),task2:document.getElementById('view-task2'),sheet:document.getElementById('view-worksheet'),live:document.getElementById('view-live'),board:document.getElementById('view-board')};
   var GROUP_KEYS = ['y12','y34','y56'];
   var lastRoute = null, selfHash = false;
   function route(){
+    if(window.HB_LIVE) window.HB_LIVE.cleanup();             // never leave a board poll timer running against a room nobody's watching
     if(selfHash){ selfHash = false; return; }               // ignore the hashchange we caused ourselves
     var h = location.hash.replace(/^#\/?/,'');
     if(h === lastRoute) return;                              // nothing actually changed
@@ -1151,6 +1307,8 @@
     else if(parts[0] === 'lesson' && parts[1] === '1'){ v = 'deck'; slide = parts[2] ? Math.max(0, parseInt(parts[2],10) || 0) : 0; }
     else if(parts[0] === 'task' && parts[1] === '1'){ v = 'task'; }
     else if(parts[0] === 'sheet'){ v = 'sheet'; }
+    else if(parts[0] === 'live'){ v = 'live'; }
+    else if(parts[0] === 'board' && parts[1]){ v = 'board'; }
     for(var k in views){ views[k].classList.toggle('on', k === v); }
     document.body.style.overflow = (v === 'deck' || v === 'deck2') ? 'hidden' : 'auto';
     try{
@@ -1160,6 +1318,8 @@
       else if(v === 'task'){ initQuiz(); }
       else if(v === 'task2'){ window.HB_DECK.task(unit); window.scrollTo(0,0); }
       else if(v === 'sheet'){ if(unit){ window.HB_DECK.sheet(unit, parts[3]); } else { renderSheet(parts[1], parts[2]); } window.scrollTo(0,0); }
+      else if(v === 'live'){ window.HB_LIVE.renderPupilView(views.live, parts[1]); window.scrollTo(0,0); }
+      else if(v === 'board'){ window.HB_LIVE.renderBoardView(views.board, parts[1], parts[2]); window.scrollTo(0,0); }
     }catch(err){
       if(window.console) console.error('route', err);
       for(var kk in views){ views[kk].classList.toggle('on', kk === 'picker'); }
@@ -1736,10 +1896,24 @@
   /* QR */
   function buildQR(){
     var box = document.getElementById('qrbox');
-    var url = location.origin + location.pathname + '#/task/1';
+    var liveCode = null;
+    try{ liveCode = sessionStorage.getItem('hb_live_code'); }catch(e){}
+    var hash = liveCode ? ('#/live/' + liveCode) : '#/task/1';
+    var url = location.origin + location.pathname + hash;
+    box.innerHTML = '';
     try{ new QRCode(box, {text:url, width:240, height:240, colorDark:'#1C2431', colorLight:'#ffffff'}); }
     catch(e){ box.textContent = url; }
+    var startBtn = document.getElementById('btn-start-live');
+    if(startBtn && !startBtn._wired){
+      startBtn._wired = true;
+      startBtn.addEventListener('click', function(){
+        if(window.HB_LIVE) window.HB_LIVE.startFromQR();
+      });
+    }
   }
+  // lets the HB_LIVE module (loaded later in the file) repoint this QR at a live-task
+  // room once the teacher starts one, without exposing the rest of buildQR's internals
+  window.__hbRebuildQR = buildQR;
 
   /* notes */
   function setupNotes(){
@@ -4394,5 +4568,767 @@
   // if the page loaded straight onto a Year 1-4 lesson route, the first router pass
   // ran before this module existed. Re-drive it now.
   try{ if(/(^#\/?|\/)(y12|y34|y56)(\/|$)/.test(location.hash) && window.__hbRoute) setTimeout(window.__hbRoute, 0); }catch(e){}
+})();
+</script>
+
+<script>
+/* ============ LIVE ANSWER WALL · HB_LIVE ============ */
+(function(){
+  // filled in once a Supabase project exists and _supabase/schema.sql has been
+  // run in it; until then, network calls below just fail (callers already
+  // handle that as "offline" / "room isn't active")
+  var SUPABASE_URL = 'https://tbmvnyzwigolpfbnnwqy.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRibXZueXp3aWdvbHBmYm5ud3F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzMjI5NjgsImV4cCI6MjEwNDg5ODk2OH0.7bNsCcniJAZ0BZdvvhc5ohvu01X_L1a41-yjE8HOEQo';
+  var ROOM_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  var COLORS = ['#1C2431','#2F6BE0','#6C4CE0','#0E9C6A','#D8443C','#F5B544'];
+  var SIZES = [3, 7, 14];
+
+  function genCode(){
+    var out = '';
+    for(var i=0;i<5;i++) out += ROOM_CHARS.charAt(Math.floor(Math.random() * ROOM_CHARS.length));
+    return out;
+  }
+  function genToken(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var out = ''; for(var i=0;i<32;i++) out += Math.floor(Math.random()*16).toString(16);
+    return out;
+  }
+
+  // every server action is a Postgres function (see _supabase/schema.sql),
+  // called through Supabase's auto-generated REST RPC endpoint — this keeps
+  // the client as plain fetch, no supabase-js library needed
+  function rpc(name, args, cb){
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){ cb(new Error('no-host')); return; }
+    fetch(SUPABASE_URL + '/rest/v1/rpc/' + name, {
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer ' + SUPABASE_ANON_KEY},
+      body:JSON.stringify(args)
+    }).then(function(res){
+      if(!res.ok) throw new Error('bad-status');
+      return res.json();
+    }).then(function(data){ cb(null, data); }).catch(function(err){ cb(err); });
+  }
+  function getRoom(code, cb){
+    rpc('live_get_room', {p_code:code}, function(err, rows){
+      if(err) return cb(err);
+      if(!rows || !rows.length) return cb(null, {question:'', round:0, joined:0, answers:[]});
+      var answers = rows.filter(function(r){ return r.id; })
+        .map(function(r){ return {id:r.id, kind:r.kind, content:r.content, ts:r.ts}; });
+      cb(null, {question: rows[0].question || '', round: rows[0].round || 1, joined: rows[0].joined || 0, answers: answers});
+    });
+  }
+  function setQuestion(code, token, question, cb){
+    rpc('live_set_question', {p_code:code, p_token:token, p_question:question}, function(err, ok){
+      cb(err || (ok ? null : new Error('rejected')));
+    });
+  }
+  function submitAnswer(code, kind, content, cb){
+    rpc('live_submit_answer', {p_code:code, p_kind:kind, p_content:content}, function(err, id){
+      cb(err || (id ? null : new Error('rejected')), id);
+    });
+  }
+  function hideAnswer(code, token, id, cb){
+    rpc('live_hide_answer', {p_code:code, p_token:token, p_id:id}, function(err, ok){
+      cb(err || (ok ? null : new Error('rejected')));
+    });
+  }
+  function clearAllRoom(code, token, cb){
+    rpc('live_clear_all', {p_code:code, p_token:token}, function(err, ok){
+      cb(err || (ok ? null : new Error('rejected')));
+    });
+  }
+  // fire-and-forget headcount ping: once per pupil per room, not on every poll
+  // tick (see startPvPoll) — the board just picks the new count up on its own
+  // next live_get_room poll, no separate wiring needed on that side
+  function markJoined(code, pupilId, cb){
+    rpc('live_mark_joined', {p_code:code, p_pupil_id:pupilId}, function(err, ok){
+      cb(err || (ok ? null : new Error('rejected')));
+    });
+  }
+  // a per-browser-tab id, generated once and cached so a page refresh doesn't
+  // read as a "new" pupil and inflate the joined count
+  function getPupilId(){
+    var id = null;
+    try{ id = sessionStorage.getItem('hb_live_pupil_id'); }catch(e){}
+    if(!id){
+      id = genToken();
+      try{ sessionStorage.setItem('hb_live_pupil_id', id); }catch(e){}
+    }
+    return id;
+  }
+
+  /* ---------- start a live task from the teacher's QR slide ---------- */
+  function currentQuestionText(){
+    try{
+      var h1 = document.querySelector('#view-task h1');
+      var p = document.querySelector('#view-task .task-card p');
+      var t = h1 ? h1.textContent.trim() : '';
+      var i = p ? p.textContent.trim() : '';
+      var combined = (t + (i ? ' — ' + i : '')).trim();
+      return combined || 'What do you think?';
+    }catch(e){ return 'What do you think?'; }
+  }
+  function startFromQR(){
+    var code = genCode(), token = genToken();
+    try{ sessionStorage.setItem('hb_live_code', code); sessionStorage.setItem('hb_live_token', token); }catch(e){}
+    if(window.__hbRebuildQR) window.__hbRebuildQR();
+    setQuestion(code, token, currentQuestionText(), function(){});
+    var boardUrl = location.origin + location.pathname + '#/board/' + code + '/' + token;
+    window.open(boardUrl, '_blank');
+  }
+
+  /* ---------- pupil view ---------- */
+  var ICON_ERASE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 6-6 8 8-4 4H9Z"/><path d="M22 20H7"/></svg>';
+  var ICON_UNDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10H9"/></svg>';
+  var ICON_CLEAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>';
+  var ICON_SEND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="M13 6l6 6-6 6"/></svg>';
+  var ICON_TAB_DRAW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+  var ICON_TAB_WRITE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>';
+
+  var pvCode = null, pvRound = 0, pvCanvas = null, pvCtx = null, pvStrokes = [], pvColor = COLORS[0], pvSize = SIZES[0],
+      pvTool = 'pen', pvDrawing = false, pvCur = null, pvDpr = 1, pvPollTimer = null, pvCooldownTimer = null,
+      pvActiveTab = 'draw';
+  // pinch-to-zoom state for the canvas -- kids reflexively two-finger-pinch
+  // like any touch screen, so a second finger has to zoom/pan, not draw
+  var pvPointers = {}, pvPinching = false, pvScale = 1, pvPanX = 0, pvPanY = 0,
+      pvPinchStartDist = 0, pvPinchStartScale = 1, pvPinchStartMid = null, pvPinchStartPan = null;
+
+  function renderPupilView(el, code){
+    if(!code){ buildJoinForm(el); return; }
+    pvCode = code; pvRound = 0; pvStrokes = []; pvTool = 'pen'; pvColor = COLORS[0]; pvSize = SIZES[0]; pvActiveTab = 'draw';
+    pvScale = 1; pvPanX = 0; pvPanY = 0; pvPinching = false; pvPointers = {};
+    el.innerHTML = '<div class="lv-inactive">Loading…</div>';
+    getRoom(code, function(err, data){
+      if(err || !data || !data.question){
+        buildJoinForm(el, "Couldn't find that room — check the code and try again.");
+        return;
+      }
+      pvRound = data.round || 1;
+      buildPupilUI(el, data.question);
+      startPvPoll(el);
+      markJoined(code, getPupilId(), function(){});     // once per room load, not per poll tick
+    });
+  }
+
+  // polls the room every 2s purely to notice a round change (a new task
+  // unlocked by the teacher on the same code/QR) — only touches the DOM
+  // when the round actually differs from what this pupil last saw
+  function startPvPoll(el){
+    if(pvPollTimer) clearInterval(pvPollTimer);
+    pvPollTimer = setInterval(function(){
+      if(!pvCode) return;
+      getRoom(pvCode, function(err, data){
+        if(err || !data || !pvCode) return;
+        if(data.round && data.round !== pvRound){
+          pvApplyNewRound(el, data.question, data.round);
+        }
+      });
+    }, 2000);
+  }
+
+  // a new round landed: swap in the new question, wipe the textarea and the
+  // canvas back to blank, and re-enable Send — undoes whatever "already
+  // sent" / cooldown state the pupil was left in on the previous task
+  function pvApplyNewRound(el, question, round){
+    pvRound = round;
+    var h1 = el.querySelector('.lv-question'); if(h1) h1.textContent = question;
+    var ta = el.querySelector('.lv-block-text textarea'); if(ta) ta.value = '';
+    pvStrokes = []; pvTool = 'pen'; pvRedraw();
+    pvPinching = false; pvPointers = {}; pvResetZoom();
+    var barEl = el.querySelector('.lv-bar');
+    if(barEl){ markPvTool(barEl); }
+    var sendBtn = el.querySelector('.lv-send'), statusEl = el.querySelector('.lv-status');
+    if(pvCooldownTimer){ clearTimeout(pvCooldownTimer); pvCooldownTimer = null; }
+    if(sendBtn) sendBtn.disabled = false;
+    if(statusEl){ statusEl.classList.remove('err','ok','lv-pop'); statusEl.textContent = ''; }
+    var card = el.querySelector('.lv-card');
+    if(card){ card.classList.remove('lv-flash'); void card.offsetWidth; card.classList.add('lv-flash'); }
+  }
+
+  // shown when the pupil opens the app with no room code in the URL at all
+  // (didn't scan, or scanning failed) — a manual fallback next to the QR flow
+  function buildJoinForm(el, errMsg){
+    el.innerHTML =
+      '<p class="lv-tk">Live answer wall</p>' +
+      '<h1>Enter the room code</h1>' +
+      '<div class="lv-card">' +
+        '<p>Ask your teacher for the 5-character code shown on their screen.</p>' +
+        '<input class="lv-code-input" type="text" maxlength="5" placeholder="ABCDE" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false">' +
+        '<div class="lv-send-row"><button type="button" class="lv-join">Join</button><span class="lv-status' + (errMsg ? ' err' : '') + '">' + (errMsg || '') + '</span></div>' +
+      '</div>';
+    var input = el.querySelector('.lv-code-input');
+    var go = function(){
+      var code = input.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if(!code) return;
+      location.hash = '#/live/' + code;
+    };
+    el.querySelector('.lv-join').addEventListener('click', go);
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter') go(); });
+    input.addEventListener('input', function(){ input.value = input.value.toUpperCase(); });
+  }
+
+  function buildPupilUI(el, question){
+    el.innerHTML =
+      '<p class="lv-tk">Live answer wall</p>' +
+      '<h1 class="lv-question"></h1>' +
+      '<div class="lv-card">' +
+        '<div class="lv-tabs">' +
+          '<button type="button" class="lv-tab sel" data-tab="draw">' + ICON_TAB_DRAW + '<span>Draw</span></button>' +
+          '<button type="button" class="lv-tab" data-tab="write">' + ICON_TAB_WRITE + '<span>Write</span></button>' +
+        '</div>' +
+        '<div class="lv-answer">' +
+          '<div class="lv-block lv-block-text" hidden>' +
+            '<p class="lv-label">Write your answer</p>' +
+            '<textarea maxlength="500" placeholder="Type here…"></textarea>' +
+          '</div>' +
+          '<div class="lv-block lv-block-draw">' +
+            '<div class="lv-draw-wrap">' +
+              '<canvas class="lv-canvas"></canvas>' +
+              '<button type="button" class="lv-zoom-reset" hidden>Reset zoom</button>' +
+              '<div class="lv-bar">' +
+                '<div class="lv-swatches">' +
+                  COLORS.map(function(c){
+                    return '<button type="button" class="lv-sw" data-col="' + c + '" style="background:' + c + '" aria-label="Colour">' +
+                      '<svg class="lv-sw-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L19 7"/></svg>' +
+                    '</button>';
+                  }).join('') +
+                '</div>' +
+                '<div class="lv-tools">' +
+                  '<div class="lv-sizes">' +
+                    SIZES.map(function(s, i){
+                      var label = ['Fine', 'Mid', 'Bold'][i];
+                      return '<button type="button" class="lv-size-btn" data-size="' + s + '" aria-label="' + label + ' brush"><span class="lv-size-dot" style="width:' + (4+i*6) + 'px;height:' + (4+i*6) + 'px"></span><span>' + label + '</span></button>';
+                    }).join('') +
+                  '</div>' +
+                  '<div class="lv-actions">' +
+                    '<button type="button" class="lv-act-btn" data-tool="erase" aria-label="Eraser">' + ICON_ERASE + '<span>Erase</span></button>' +
+                    '<button type="button" class="lv-act-btn" data-tool="undo" aria-label="Undo">' + ICON_UNDO + '<span>Undo</span></button>' +
+                    '<button type="button" class="lv-act-btn" data-tool="clear" aria-label="Clear drawing">' + ICON_CLEAR + '<span>Clear</span></button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="lv-send-col"><button type="button" class="lv-send">Send answer' + ICON_SEND + '</button><span class="lv-status"></span></div>' +
+      '</div>';
+    el.querySelector('.lv-question').textContent = question;
+
+    var tabsEl = el.querySelector('.lv-tabs');
+    tabsEl.querySelectorAll('.lv-tab').forEach(function(b){
+      b.addEventListener('click', function(){ pvSetTab(el, b.getAttribute('data-tab')); });
+    });
+
+    pvCanvas = el.querySelector('.lv-canvas'); pvCtx = pvCanvas.getContext('2d');
+    pvResize();                                                // Draw is the default visible tab, size it now
+    var barEl = el.querySelector('.lv-bar');
+    barEl.querySelectorAll('.lv-sw').forEach(function(sw){
+      sw.addEventListener('click', function(){
+        pvColor = sw.getAttribute('data-col');
+        barEl.querySelectorAll('.lv-sw').forEach(function(x){ x.classList.toggle('sel', x === sw); });
+        if(pvTool === 'erase') pvTool = 'pen';
+        markPvTool(barEl);
+      });
+    });
+    barEl.querySelectorAll('[data-size]').forEach(function(b){
+      b.addEventListener('click', function(){
+        pvSize = parseInt(b.getAttribute('data-size'), 10);
+        barEl.querySelectorAll('[data-size]').forEach(function(x){ x.classList.toggle('sel', x === b); });
+      });
+    });
+    barEl.querySelectorAll('[data-tool]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var t = b.getAttribute('data-tool');
+        if(t === 'undo'){ pvStrokes.pop(); pvRedraw(); return; }
+        if(t === 'clear'){ pvStrokes = []; pvRedraw(); return; }
+        pvTool = (pvTool === 'erase') ? 'pen' : 'erase';
+        markPvTool(barEl);
+      });
+    });
+    barEl.querySelector('.lv-sw').classList.add('sel');
+    barEl.querySelector('[data-size]').classList.add('sel');
+
+    var zoomResetBtn = el.querySelector('.lv-zoom-reset');
+    if(zoomResetBtn) zoomResetBtn.addEventListener('click', pvResetZoom);
+
+    pvCanvas.addEventListener('pointerdown', pvDown);
+    pvCanvas.addEventListener('pointermove', pvMove);
+    pvCanvas.addEventListener('pointerup', pvUp);
+    pvCanvas.addEventListener('pointerleave', pvUp);
+    pvCanvas.addEventListener('pointercancel', pvUp);
+
+    var sendBtn = el.querySelector('.lv-send'), statusEl = el.querySelector('.lv-status');
+    var textarea = el.querySelector('.lv-block-text textarea');
+    sendBtn.addEventListener('click', function(){
+      if(sendBtn.disabled) return;
+      statusEl.classList.remove('err','ok','lv-pop');
+      // the toggle makes Draw/Write exclusive per visit, so Send only ever
+      // submits whichever tab is currently active — not both
+      var jobs = [];
+      if(pvActiveTab === 'draw'){
+        if(pvStrokes.length === 0){
+          statusEl.classList.add('err');
+          statusEl.textContent = 'Draw something first!';
+          return;
+        }
+        jobs.push({kind:'drawing', content:pvCanvas.toDataURL('image/png')});
+      } else {
+        var text = textarea.value.trim();
+        if(!text){
+          statusEl.classList.add('err');
+          statusEl.textContent = 'Write something first!';
+          return;
+        }
+        jobs.push({kind:'text', content:text});
+      }
+      sendBtn.disabled = true;
+      statusEl.textContent = 'Sending…';
+      var remaining = jobs.length, failed = false;
+      jobs.forEach(function(job){
+        submitAnswer(pvCode, job.kind, job.content, function(err){
+          if(err) failed = true;
+          remaining--;
+          if(remaining === 0) finishSend();
+        });
+      });
+      function finishSend(){
+        if(failed){
+          sendBtn.disabled = false;
+          statusEl.classList.add('err');
+          statusEl.textContent = "Didn't send — check your connection and try again.";
+          return;
+        }
+        textarea.value = '';
+        pvStrokes = []; pvRedraw();
+        statusEl.classList.add('ok');
+        statusEl.innerHTML = '<span class="lv-check">&#10003;</span> Sent!';
+        void statusEl.offsetWidth; statusEl.classList.add('lv-pop');
+        pvCelebrate(sendBtn);
+        // re-enable after a short cooldown rather than a one-shot lock, so a
+        // pupil can send more than once per task if they think of more to add
+        pvCooldownTimer = setTimeout(function(){
+          sendBtn.disabled = false;
+          pvCooldownTimer = null;
+        }, 1500);
+      }
+    });
+  }
+  function markPvTool(barEl){
+    barEl.querySelectorAll('[data-tool]').forEach(function(b){ b.classList.toggle('sel', b.getAttribute('data-tool') === pvTool); });
+  }
+  // switches which of {canvas, textarea} has the answer area — the other
+  // stays in the DOM with [hidden] rather than being torn down, so its
+  // content survives a flip back. A canvas sized while display:none is a
+  // classic 0x0 trap, so switching TO draw explicitly re-runs pvResize()
+  // now that it's visible again (pvResize no-ops harmlessly if called while
+  // still hidden, since getBoundingClientRect().width is 0 then).
+  function pvSetTab(el, tab){
+    pvActiveTab = tab;
+    el.querySelectorAll('.lv-tab').forEach(function(b){ b.classList.toggle('sel', b.getAttribute('data-tab') === tab); });
+    var textBlock = el.querySelector('.lv-block-text'), drawBlock = el.querySelector('.lv-block-draw');
+    textBlock.hidden = (tab !== 'write');
+    drawBlock.hidden = (tab !== 'draw');
+    if(tab === 'draw') pvResize();
+  }
+  // a little celebration on a successful send: a burst of confetti in the
+  // app's own drawing-swatch colours, plus a quick pulse on the button itself
+  function pvCelebrate(sendBtn){
+    sendBtn.classList.remove('lv-sent'); void sendBtn.offsetWidth; sendBtn.classList.add('lv-sent');
+    var n = 14;
+    for(var i=0;i<n;i++){
+      var el = document.createElement('span');
+      el.className = 'lv-confetti';
+      var angle = (Math.PI * 2 * i / n) + (Math.random() * 0.6 - 0.3);
+      var dist = 60 + Math.random() * 50;
+      el.style.setProperty('--tx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+      el.style.setProperty('--ty', (Math.sin(angle) * dist).toFixed(1) + 'px');
+      el.style.setProperty('--rot', Math.round(Math.random() * 360 - 180) + 'deg');
+      el.style.background = COLORS[i % COLORS.length];
+      if(Math.random() < 0.5) el.style.borderRadius = '999px';
+      sendBtn.appendChild(el);
+      el.addEventListener('animationend', function(){ this.remove(); });
+    }
+  }
+  function pvResize(){
+    if(!pvCanvas) return;
+    var r = pvCanvas.getBoundingClientRect();
+    if(!r.width) return;
+    pvDpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    pvCanvas.width = Math.round(r.width * pvDpr); pvCanvas.height = Math.round(r.height * pvDpr);
+    pvRedraw();
+  }
+  function pvPos(e){
+    var r = pvCanvas.getBoundingClientRect();
+    return {x:(e.clientX - r.left) / r.width, y:(e.clientY - r.top) / r.height};
+  }
+  function pvStyle(st){
+    pvCtx.lineCap = 'round'; pvCtx.lineJoin = 'round';
+    if(st.tool === 'erase'){ pvCtx.globalCompositeOperation = 'destination-out'; pvCtx.strokeStyle = 'rgba(0,0,0,1)'; pvCtx.lineWidth = (st.size + 12) * pvDpr; }
+    else { pvCtx.globalCompositeOperation = 'source-over'; pvCtx.strokeStyle = st.col; pvCtx.lineWidth = st.size * pvDpr; }
+  }
+  function pvDrawStroke(st){
+    var pts = st.pts; if(!pts || !pts.length) return;
+    var W = pvCanvas.width, H = pvCanvas.height;
+    pvStyle(st);
+    pvCtx.beginPath();
+    pvCtx.moveTo(pts[0].x * W, pts[0].y * H);
+    if(pts.length === 1){ pvCtx.lineTo(pts[0].x * W + 0.01, pts[0].y * H); }
+    for(var i=1;i<pts.length;i++){ pvCtx.lineTo(pts[i].x * W, pts[i].y * H); }
+    pvCtx.stroke();
+  }
+  function pvRedraw(){
+    if(!pvCtx || !pvCanvas.width) return;
+    pvCtx.clearRect(0, 0, pvCanvas.width, pvCanvas.height);
+    pvStrokes.forEach(pvDrawStroke);
+    pvCtx.globalCompositeOperation = 'source-over';
+  }
+  function pvDist(a, b){ var dx = a.x - b.x, dy = a.y - b.y; return Math.sqrt(dx*dx + dy*dy); }
+  function pvMidpoint(a, b){ return {x:(a.x + b.x) / 2, y:(a.y + b.y) / 2}; }
+  function pvApplyZoom(){
+    if(!pvCanvas) return;
+    pvCanvas.style.transform = 'translate(' + pvPanX + 'px,' + pvPanY + 'px) scale(' + pvScale + ')';
+    var btn = pvCanvas.parentElement && pvCanvas.parentElement.querySelector('.lv-zoom-reset');
+    if(btn) btn.hidden = pvScale <= 1.02;
+  }
+  function pvResetZoom(){
+    pvScale = 1; pvPanX = 0; pvPanY = 0;
+    pvApplyZoom();
+  }
+  function pvDown(e){
+    if(!pvCtx) return;
+    e.preventDefault();
+    pvPointers[e.pointerId] = {x:e.clientX, y:e.clientY};
+    var ids = Object.keys(pvPointers);
+    if(ids.length >= 2){
+      // a second finger landed -- this is a pinch, not a stroke. Cancel
+      // whatever the first finger had just started drawing (this is the bug
+      // being fixed: without this, both fingers used to smear one shared
+      // stroke into a single fat, wandering line).
+      if(pvDrawing){
+        var idx = pvStrokes.indexOf(pvCur);
+        if(idx > -1) pvStrokes.splice(idx, 1);
+        pvDrawing = false; pvCur = null; pvRedraw();
+      }
+      pvPinching = true;
+      var pA = pvPointers[ids[0]], pB = pvPointers[ids[1]];
+      pvPinchStartDist = pvDist(pA, pB) || 1;
+      pvPinchStartScale = pvScale;
+      pvPinchStartMid = pvMidpoint(pA, pB);
+      pvPinchStartPan = {x:pvPanX, y:pvPanY};
+      return;
+    }
+    if(pvPinching) return;                                   // a stray extra finger while pinching -- ignore
+    pvResize();
+    pvDrawing = true;
+    pvCur = {tool:pvTool, col:pvColor, size:pvSize, pts:[pvPos(e)]};
+    pvStrokes.push(pvCur);
+    try{ pvCanvas.setPointerCapture(e.pointerId); }catch(err){}
+    pvRedraw();
+  }
+  function pvMove(e){
+    if(pvPointers[e.pointerId]) pvPointers[e.pointerId] = {x:e.clientX, y:e.clientY};
+    var ids = Object.keys(pvPointers);
+    if(pvPinching && ids.length >= 2){
+      var pA = pvPointers[ids[0]], pB = pvPointers[ids[1]];
+      var dist = pvDist(pA, pB) || 1;
+      var mid = pvMidpoint(pA, pB);
+      pvScale = Math.max(1, Math.min(4, pvPinchStartScale * (dist / pvPinchStartDist)));
+      pvPanX = pvPinchStartPan.x + (mid.x - pvPinchStartMid.x);
+      pvPanY = pvPinchStartPan.y + (mid.y - pvPinchStartMid.y);
+      pvApplyZoom();
+      return;
+    }
+    if(!pvDrawing) return;
+    var evts = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    for(var i=0;i<evts.length;i++) pvCur.pts.push(pvPos(evts[i]));
+    pvRedraw();
+  }
+  function pvUp(e){
+    if(e && pvPointers[e.pointerId] !== undefined) delete pvPointers[e.pointerId];
+    var ids = Object.keys(pvPointers);
+    if(ids.length < 2) pvPinching = false;                    // lifting one finger of a pinch doesn't resume drawing
+    if(ids.length === 0){ pvDrawing = false; pvCur = null; }
+  }
+
+  /* ---------- board view ---------- */
+  var bdTimer = null, bdKnown = null, bdCode = null, bdToken = null, bdEl = null, bdStage = null, bdOverlay = null,
+      bdRound = 0, bdQuestion = '', bdTileIndex = 0;
+  // which of the two board states is showing — a plain variable + a class on
+  // #view-board, nothing more. bdLastCode lets it survive renderBoardView
+  // being called again for the SAME room (rather than snapping back to
+  // "join" every time); a real page reload re-runs this whole script so the
+  // var reinitialises anyway, which is exactly the "not persisted across
+  // reload" behaviour wanted.
+  var bdState = 'join', bdLastCode = null;
+
+  function bdSetState(state){
+    bdState = state;
+    if(bdEl){ bdEl.classList.remove('bd-state-join', 'bd-state-wall'); bdEl.classList.add('bd-state-' + state); }
+  }
+  // shared wiring so the "set next task" input/button work identically
+  // whichever state's copy of them the teacher is using
+  function wireNextControls(scopeEl){
+    var nextInput = scopeEl.querySelector('.bd-next-input'), nextBtn = scopeEl.querySelector('.bd-next-btn');
+    var goNext = function(){
+      var q = nextInput.value.trim();
+      if(!q) return;
+      nextBtn.disabled = true;
+      setQuestion(bdCode, bdToken, q, function(err){
+        nextBtn.disabled = false;
+        if(!err){ nextInput.value = ''; poll(); }             // don't wait 2s to see it land
+      });
+    };
+    nextBtn.addEventListener('click', goNext);
+    nextInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') goNext(); });
+  }
+  function wireClearControl(scopeEl){
+    scopeEl.querySelector('.bd-clear').addEventListener('click', function(){
+      clearAllRoom(bdCode, bdToken, function(err){
+        if(!err){ bdStage.innerHTML = ''; bdKnown.clear(); bdTileIndex = 0; }
+      });
+    });
+  }
+
+  function renderBoardView(el, code, token){
+    cleanup();
+    bdCode = code; bdToken = token; bdEl = el; bdKnown = new Set();
+    bdRound = 0; bdQuestion = ''; bdTileIndex = 0;
+    if(code !== bdLastCode) bdState = 'join';                 // a genuinely new room -> start on the join screen
+    bdLastCode = code;
+    var joinUrl = location.origin + location.pathname + '#/live/' + code;
+    var joinFormUrl = location.origin + location.pathname + '#/live';
+    el.innerHTML =
+      '<div class="bd-view bd-view-join">' +
+        '<div class="bd-hero">' +
+          '<div class="bd-hero-topline">' +
+            '<p class="bd-kicker">Live answer wall</p>' +
+            '<div class="bd-hero-join-pill"><span class="bd-hero-dot"></span><span><span class="bd-hero-join-count">0</span> pupils joined</span></div>' +
+          '</div>' +
+          '<div class="bd-hero-row">' +
+            '<div class="bd-hero-qr">' +
+              '<div class="bd-hero-qrbox"></div>' +
+              '<p class="bd-hero-qr-cap">Scan with a phone or iPad camera</p>' +
+            '</div>' +
+            '<div class="bd-hero-info">' +
+              '<div class="bd-hero-code-card">' +
+                '<span class="bd-hero-code-label">Room code</span>' +
+                '<div class="bd-hero-code"></div>' +
+              '</div>' +
+              '<p class="bd-hero-alt">Or go to <strong>' + joinFormUrl + '</strong> and type the code.</p>' +
+            '</div>' +
+          '</div>' +
+          '<h1 class="bd-question">Waiting for a question…</h1>' +
+          '<div class="bd-controls">' +
+            '<input type="text" class="bd-next-input" placeholder="Type the next question…">' +
+            '<button type="button" class="bd-next-btn">Set next task</button>' +
+            '<button type="button" class="bd-clear">Clear all</button>' +
+            '<button type="button" class="bd-go-wall bd-toggle-btn">Answer wall &rarr;</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="bd-view bd-view-wall">' +
+        '<div class="bd-wall-header">' +
+          '<div class="bd-wall-header-main">' +
+            '<p class="bd-wall-code">Code <strong></strong></p>' +
+            '<h2 class="bd-wall-question">Waiting for a question…</h2>' +
+          '</div>' +
+          '<div class="bd-controls bd-wall-controls">' +
+            '<input type="text" class="bd-next-input" placeholder="Type the next question…">' +
+            '<button type="button" class="bd-next-btn">Set next task</button>' +
+            '<button type="button" class="bd-clear">Clear all</button>' +
+            '<button type="button" class="bd-go-join bd-toggle-btn">&larr; Join screen</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="bd-stage"></div>' +
+      '</div>' +
+      '<div class="bd-overlay"><div class="bd-ov-inner"></div></div>' +
+      '<button type="button" class="bd-ov-close" hidden>&times;</button>';
+    el.querySelector('.bd-hero-code').textContent = code;
+    el.querySelector('.bd-wall-code strong').textContent = code;
+    var qrBox = el.querySelector('.bd-hero-qrbox');
+    try{ new QRCode(qrBox, {text:joinUrl, width:260, height:260, colorDark:'#1C2431', colorLight:'#ffffff'}); }
+    catch(e){ qrBox.textContent = joinUrl; }
+    bdStage = el.querySelector('.bd-stage');
+    bdOverlay = el.querySelector('.bd-overlay');
+    var closeBtn = el.querySelector('.bd-ov-close');
+    bdOverlay.addEventListener('click', function(e){ if(e.target === bdOverlay) closeOverlay(); });
+    closeBtn.addEventListener('click', closeOverlay);
+    var joinView = el.querySelector('.bd-view-join'), wallView = el.querySelector('.bd-view-wall');
+    wireNextControls(joinView); wireNextControls(wallView);
+    wireClearControl(joinView); wireClearControl(wallView);
+    el.querySelector('.bd-go-wall').addEventListener('click', function(){ bdSetState('wall'); });
+    el.querySelector('.bd-go-join').addEventListener('click', function(){ bdSetState('join'); });
+    bdSetState(bdState);                                      // apply whichever state we're starting on
+    poll();
+    bdTimer = setInterval(poll, 2000);
+  }
+  function closeOverlay(){
+    bdOverlay.classList.remove('on');
+    bdEl.querySelector('.bd-ov-close').hidden = true;
+  }
+  function poll(){
+    if(!bdCode) return;
+    getRoom(bdCode, function(err, data){
+      if(err || !data || !bdCode) return;                    // silent retry next tick
+      var joinCountEl = bdEl.querySelector('.bd-hero-join-count');
+      if(joinCountEl) joinCountEl.textContent = data.joined || 0;
+      if(data.question !== bdQuestion){
+        bdQuestion = data.question;
+        var h1 = bdEl.querySelector('.bd-question');
+        if(h1) h1.textContent = bdQuestion || 'Waiting for a question…';
+        var wq = bdEl.querySelector('.bd-wall-question');
+        if(wq) wq.textContent = bdQuestion || 'Waiting for a question…';
+      }
+      var round = data.round || 0;
+      if(round !== bdRound){
+        // a new round: wipe last round's tiles from the DOM immediately,
+        // not just when the answers array happens to come back empty
+        bdRound = round;
+        bdStage.innerHTML = '';
+        bdKnown.clear();
+        bdTileIndex = 0;
+      }
+      var answers = data.answers || [];
+      if(answers.length === 0 && bdKnown.size > 0){ bdStage.innerHTML = ''; bdKnown.clear(); bdTileIndex = 0; return; }
+      answers.forEach(function(a){
+        if(bdKnown.has(a.id)) return;
+        bdKnown.add(a.id);
+        addTile(a);
+      });
+    });
+  }
+  function addTile(a){
+    var tile = document.createElement('div'); tile.className = 'bd-tile';
+    if(a.kind === 'drawing'){
+      var img = document.createElement('img'); img.src = a.content; tile.appendChild(img);
+    } else {
+      var p = document.createElement('p'); p.textContent = a.content; tile.appendChild(p);
+    }
+    var hide = document.createElement('button');
+    hide.type = 'button'; hide.className = 'bd-hide'; hide.textContent = '×'; hide.setAttribute('aria-label', 'Hide this answer');
+    hide.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    hide.addEventListener('click', function(e){
+      e.stopPropagation();
+      hideAnswer(bdCode, bdToken, a.id, function(err){
+        if(!err){ tile.remove(); bdKnown.delete(a.id); }
+      });
+    });
+    tile.appendChild(hide);
+    bdStage.appendChild(tile);
+    placeInitialTile(tile);
+    makeTileDraggable(tile, a);
+    requestAnimationFrame(function(){ tile.classList.add('enter'); });
+    tile.addEventListener('animationend', function(){ tile.classList.remove('enter'); }, {once:true});
+  }
+  // scatters new tiles across the stage in a loose grid (plus a little jitter)
+  // so they don't all pile on top of each other at (0,0) — the teacher is
+  // free to drag any of them anywhere the moment they land
+  function placeInitialTile(tile){
+    var stageW = bdStage.clientWidth || 900, stageH = Math.max(bdStage.clientHeight, 480);
+    var tw = 220, th = 130;
+    var cols = Math.max(1, Math.floor(stageW / (tw + 24)));
+    var col = bdTileIndex % cols, row = Math.floor(bdTileIndex / cols);
+    bdTileIndex++;
+    var jitterX = (Math.random() - 0.5) * 30, jitterY = (Math.random() - 0.5) * 20;
+    var x = col * (tw + 24) + 16 + jitterX;
+    var y = (row % 6) * (th + 22) + 16 + jitterY;
+    x = Math.max(0, Math.min(x, Math.max(0, stageW - tw)));
+    y = Math.max(0, Math.min(y, Math.max(0, stageH - th)));
+    tile.style.left = x + 'px'; tile.style.top = y + 'px';
+    tile._x = x; tile._y = y;
+  }
+  function clampPos(tile, x, y){
+    var stageW = bdStage.clientWidth, stageH = bdStage.clientHeight;
+    var tw = tile.offsetWidth, th = tile.offsetHeight;
+    var maxX = Math.max(0, stageW - tw), maxY = Math.max(0, stageH - th);
+    return {x: Math.max(0, Math.min(x, maxX)), y: Math.max(0, Math.min(y, maxY)), maxX:maxX, maxY:maxY};
+  }
+  function setTilePos(tile, x, y){
+    var c = clampPos(tile, x, y);
+    tile.style.left = c.x + 'px'; tile.style.top = c.y + 'px';
+    tile._x = c.x; tile._y = c.y;
+    return c;
+  }
+  // pointer-based drag with a small tap-vs-drag threshold (so tapping a tile
+  // still opens the enlarge overlay), plus a momentum glide on release:
+  // velocity is tracked from the last couple of pointermove samples and
+  // decays by a friction factor each animation frame until it's negligible —
+  // not a real physics engine, just enough to feel like one has weight
+  function makeTileDraggable(tile, a){
+    var TAP_THRESHOLD = 6, FRICTION = 0.94, MIN_SPEED = 0.02;
+    var dragging = false, moved = false, startX = 0, startY = 0, offX = 0, offY = 0, pts = [], raf = null;
+    function stopMomentum(){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
+    tile.addEventListener('pointerdown', function(e){
+      if(e.target.closest('.bd-hide')) return;
+      stopMomentum();
+      dragging = true; moved = false;
+      var rect = tile.getBoundingClientRect();
+      startX = e.clientX; startY = e.clientY;
+      offX = e.clientX - rect.left; offY = e.clientY - rect.top;
+      pts = [{x:e.clientX, y:e.clientY, t:performance.now()}];
+      try{ tile.setPointerCapture(e.pointerId); }catch(err){}
+    });
+    tile.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if(!moved && (Math.abs(dx) + Math.abs(dy)) > TAP_THRESHOLD){ moved = true; tile.classList.add('bd-grabbing'); }
+      if(moved){
+        var stageRect = bdStage.getBoundingClientRect();
+        var nx = e.clientX - stageRect.left - offX, ny = e.clientY - stageRect.top - offY;
+        setTilePos(tile, nx, ny);
+        pts.push({x:e.clientX, y:e.clientY, t:performance.now()});
+        if(pts.length > 5) pts.shift();
+      }
+    });
+    function endDrag(e){
+      if(!dragging) return;
+      dragging = false;
+      tile.classList.remove('bd-grabbing');
+      try{ tile.releasePointerCapture(e.pointerId); }catch(err){}
+      if(!moved){ openOverlay(a); return; }
+      var vx = 0, vy = 0;
+      if(pts.length >= 2){
+        var p0 = pts[0], p1 = pts[pts.length - 1];
+        var dt = Math.max(1, p1.t - p0.t);
+        vx = ((p1.x - p0.x) / dt) * 16;                        // px per ~frame
+        vy = ((p1.y - p0.y) / dt) * 16;
+      }
+      raf = requestAnimationFrame(function step(){
+        var next = setTilePos(tile, tile._x + vx, tile._y + vy);
+        if(next.x <= 0 || next.x >= next.maxX) vx = -vx * 0.4;  // soft bounce off the sides
+        if(next.y <= 0 || next.y >= next.maxY) vy = -vy * 0.4;
+        vx *= FRICTION; vy *= FRICTION;
+        if(Math.abs(vx) < MIN_SPEED && Math.abs(vy) < MIN_SPEED){ raf = null; return; }
+        raf = requestAnimationFrame(step);
+      });
+    }
+    tile.addEventListener('pointerup', endDrag);
+    tile.addEventListener('pointercancel', endDrag);
+  }
+  function openOverlay(a){
+    var inner = bdEl.querySelector('.bd-ov-inner');
+    inner.innerHTML = '';
+    if(a.kind === 'drawing'){ var img = document.createElement('img'); img.src = a.content; inner.appendChild(img); }
+    else { var p = document.createElement('p'); p.textContent = a.content; inner.appendChild(p); }
+    bdEl.querySelector('.bd-ov-close').hidden = false;
+    bdOverlay.classList.add('on');
+  }
+  function cleanup(){
+    if(bdTimer){ clearInterval(bdTimer); bdTimer = null; }
+    bdCode = null;
+    if(pvPollTimer){ clearInterval(pvPollTimer); pvPollTimer = null; }
+    if(pvCooldownTimer){ clearTimeout(pvCooldownTimer); pvCooldownTimer = null; }
+    pvCode = null;
+  }
+
+  window.HB_LIVE = {
+    renderPupilView: renderPupilView,
+    renderBoardView: renderBoardView,
+    cleanup: cleanup,
+    startFromQR: startFromQR
+  };
+  // the page may have loaded straight onto a #/live or #/board URL — the first router
+  // pass ran before this module existed, so re-drive it now that HB_LIVE is ready.
+  try{ if(/(^#\/?|\/)(live|board)(\/|$)/.test(location.hash) && window.__hbRoute) setTimeout(window.__hbRoute, 0); }catch(e){}
 })();
 </script>
