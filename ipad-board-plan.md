@@ -233,3 +233,129 @@ actual school iPad, on the school's pupil wifi, and hit the PartyKit URL
 directly before writing another line of code. A content-filter block or
 a DNS failure there is a five-minute finding; the same problem
 discovered mid-lesson in front of a class is not.
+
+## Wiring it up, step by step
+
+Everything above is design. This is the sequence for actually connecting
+the two views to a real backend next session — plan only, no code yet.
+
+### 1. Room codes: how one gets made, and by whom
+
+The teacher's device makes the code, client-side, the moment they start
+a live task — there's no "create room" call to PartyKit at all. A
+PartyKit room is addressed by whatever string sits in its URL and comes
+into existence the first time anything hits that URL, so the code itself
+*is* the room; nothing has to register it first.
+
+Format: five characters, uppercase, drawn from a set with the
+easily-confused ones removed (`0/O`, `1/I/L`) — `ABCDEFGHJKMNPQRSTUVWXYZ23456789`.
+Plain `Math.random()` is fine; nothing about this needs to be
+unguessable, only short enough to read off a projector and type once.
+
+### 2. Telling the two roles apart: the teacher-token
+
+The gap flagged in the implementation review — anyone with the room code
+can clear the board — gets closed with one extra value, not a login
+system. When the teacher starts a live task, the client generates a
+second, longer random string (a token) alongside the room code. That
+token travels only in the teacher's own board URL
+(`#/board/<code>/<token>`), never in the QR pupils scan
+(`#/live/<code>` only carries the code). The very first `set-question`
+call a room receives stores whatever token came with it as that room's
+`teacherToken`, permanently, for the room's lifetime. Every later call to
+`set-question`, `hide-answer`, or `clear-all` must include a token that
+matches, or the server rejects it. `submit-answer` needs no token —
+that's the one action a pupil is supposed to be able to take, by design.
+
+This means a stray or malicious guess of a five-character room code can,
+at worst, add a submission to a board — it can't wipe one, because
+wiping needs a token nobody but the teacher's own device ever saw.
+
+### 3. The API, finalised
+
+One PartyKit room, one `onRequest` handler, four actions:
+
+```
+GET  /parties/main/<code>
+     -> { question, answers: Answer[] }   (hidden answers already filtered out)
+
+POST /parties/main/<code>
+     { action:'set-question', teacherToken, question }
+       -> first call for a room stores teacherToken and question, ok:true
+       -> later calls must match the stored token, else 403
+
+     { action:'submit-answer', kind:'text'|'drawing', content }
+       -> no token needed; appends, returns { ok:true, id }
+
+     { action:'hide-answer', teacherToken, id }
+       -> token must match; marks that answer hidden (not deleted, just
+          filtered out of GET, in case "undo the hide" is ever wanted)
+
+     { action:'clear-all', teacherToken }
+       -> token must match; empties the room's answers
+```
+
+Everything else about the server (in-memory array, no disk, CORS headers)
+is as already drafted — the only change from that draft is the token
+check guarding three of the four actions.
+
+### 4. Where "start a live task" actually lives in the deck
+
+This needs one visible entry point inside a lesson, not just a URL
+someone has to know to type. The natural home is right next to the
+existing QR box (`buildQR()`, `index.html:1737`) — a button there, "Start
+live answer wall," that: generates a code and a token, stores both in
+`sessionStorage` (survives a refresh, gone when the tab closes, which
+matches the room's own lifetime), sends the first `set-question` using
+whatever the current slide's `taskH1`/`taskIntro` text already says
+(editable before sending, for the moments that need a different prompt
+than the printed task), points the existing QR at `#/live/<code>`
+instead of `#/task/1` while a live task is active, and sends the
+teacher's own screen to `#/board/<code>/<token>`.
+
+### 5. Client-side wiring
+
+Two new `<section>` elements (`view-live`, `view-board`) added next to
+the existing ones, added to the `views` object, and two branches inside
+the real `route()` (`index.html:1137`) — not a competing router, per the
+earlier review. A new `HB_LIVE` module, same shape as `HB_DECK`, owns:
+
+- `renderPupilView(el, code)` — GETs once for the question (a missing or
+  never-set question means the room doesn't exist; show that plainly,
+  the gap the review flagged), then wires the toolbar, tabs, and Send
+  exactly as prototyped in Answer Wall.
+- `renderBoardView(el, code, token)` — GETs immediately, then every two
+  seconds; diffs by answer `id` against a `Set` of ones already tiled;
+  an empty `answers` array when the known-set isn't empty means the
+  board was cleared elsewhere, so wipe local tiles to match; hide and
+  clear-all send their POST with `token` attached.
+- `cleanup()` — clears the poll interval, called at the top of `route()`
+  before any branch runs, so leaving the board view never leaves a timer
+  ticking in the background against a room nobody's looking at.
+
+### 6. Deployment
+
+A PartyKit project is its own small thing, not part of `index.html` —
+sits in a `_party/` folder alongside `_tools/` for co-location, but
+deploys separately with its own `partykit.json` naming the server file
+as the project's `main` party. `partykit deploy` gives back a
+`https://<project>.<account>.partykit.dev` URL; that's the one constant
+(`PARTY_HOST`) the client module needs to know about. Free tier limits
+are not a real concern at this scale — a handful of rooms a day, a few
+dozen requests each, is nowhere near what would need a paid plan.
+
+### 7. Testing order, before this is in front of a class
+
+1. `partykit dev` locally; confirm GET/POST behave, and that a
+   mismatched token genuinely gets rejected — this is the one part of
+   the whole feature with a real security property to verify, worth
+   checking on purpose rather than assuming the code does what it says.
+2. Deploy for real; point `PARTY_HOST` at the live URL.
+3. Wire `HB_LIVE` into `index.html`; run both views in two browser tabs
+   on the same laptop first — cheapest possible way to catch a wiring
+   mistake before a second device is involved at all.
+4. The pre-flight check from the section above: an actual school iPad,
+   on the school's pupil wifi, hitting the PartyKit URL directly in
+   Safari.
+5. A small pilot — a handful of pupils, not a full class — before
+   trusting it in front of thirty children at once.

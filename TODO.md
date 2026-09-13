@@ -10,6 +10,13 @@ toolbar closer to onlineboard.eu (colour swatches, brush sizes, an
 eraser, undo) — added to the prototype's second version and to the pupil
 view spec below.
 
+Backend wiring is now fully planned too (`ipad-board-plan.md`, "Wiring it
+up, step by step"): room codes generated client-side, a teacher-only
+token closing the anyone-can-clear-the-board gap, the finalised
+four-action API, where "start a live task" lives in the deck, and the
+deploy/test order. Nothing built yet — next session starts from that
+checklist.
+
 See `ipad-board-plan.md` for the actual build plan: submit-once (not
 live-stroke) drawing/text answers, plain HTTPS polling instead of
 WebSockets, vanilla JS reusing the existing QR and router patterns, and a
