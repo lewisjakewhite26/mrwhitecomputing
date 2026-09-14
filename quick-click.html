@@ -76,15 +76,15 @@
   <h1>Quick Click</h1>
   <p>A dot will pop up and start to grow. Click or tap it &mdash; the quicker and the closer to the middle you are, the higher your score!</p>
   <div class="rounds" id="rounds">
-    <button data-n="5">5 dots</button>
-    <button data-n="6" class="sel">6 dots</button>
+    <button data-n="6">6 dots</button>
+    <button data-n="10" class="sel">10 dots</button>
   </div>
   <button class="big-btn go" id="startBtn">Start</button>
 </div>
 
 <div class="screen" id="s-play">
   <div class="hud">
-    <span class="pill" id="hudRound">Dot 1 of 6</span>
+    <span class="pill" id="hudRound">Dot 1 of 10</span>
     <span class="pill score" id="hudScore">Score: 0</span>
   </div>
   <div class="arena" id="arena"></div>
@@ -107,7 +107,7 @@
 <script>
 (function(){
   var MIN_R = 15, MAX_R = 85, GROW_MS = 2600;
-  var totalDots = 6, currentRound = 0, scores = [], dotEl = null, spawnTime = 0, growFrame = null;
+  var totalDots = 10, currentRound = 0, scores = [], dotEl = null, spawnTime = 0, growFrame = null;
 
   var arena = document.getElementById('arena');
   var intro = document.getElementById('s-intro'), play = document.getElementById('s-play'), end = document.getElementById('s-end');
