@@ -416,7 +416,7 @@
 
   /* whiteboard */
   .wb{position:absolute;inset:0;z-index:11;pointer-events:none}
-  .wb canvas{position:absolute;inset:0;width:100%;height:100%}
+  .wb canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
   .wb.blank{background:#fff}
   .wb.active{pointer-events:auto;cursor:crosshair}
   .wb-bar{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:none;gap:8px;align-items:center;
@@ -2063,7 +2063,11 @@
   }
   function wbDown(e){
     if(!wbActive || !wbCtx) return;
-    if(e.pointerType === 'touch' && wbHasPen) return;
+    // brief palm-rejection window after real pen use, not a permanent
+    // touch block - some IWBs (e.g. Promethean) fire a stray pointerType
+    // "pen" event even for finger input, which used to disable touch
+    // drawing for the rest of the session
+    if(e.pointerType === 'touch' && Date.now() - wbLastPenTs < 700) return;
     e.preventDefault();
     drawing = true;
     wbRedo[si] = [];
@@ -2072,9 +2076,9 @@
     try{ wbCanvas.setPointerCapture(e.pointerId); }catch(err){}
     strokeTip();
   }
-  var wbHasPen = false;
+  var wbLastPenTs = 0;
   function wbMove(e){
-    if(e.pointerType === 'pen') wbHasPen = true;
+    if(e.pointerType === 'pen') wbLastPenTs = Date.now();
     if(!drawing || !wbActive) return;
     var evts = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     for(var i=0;i<evts.length;i++){ curStroke.pts.push(wbPos(evts[i])); }
@@ -4059,7 +4063,9 @@
     ["Activity 1 · 4 min","Not every mouse looks the same","Some have wires, some don't, some are built into the case as a trackpad. They all do the same job: point, select, move."],
     ["Activity 1 · 4 min","Opening a program","Explain that a program opens with a double-click, two clicks close together."],
     ["Activity 1 · 3 min","Practise without a mouse","Ask pupils to clap twice, quickly, or tap their leg twice. That's the speed a double-click needs. Then show it for real on a mouse."],
-    ["Activity 2 · 15 min","Click and drag to paint","Open a simple paint program on the class computers. Model holding the button down, moving, then letting go to draw a line. Let pupils draw their own picture."],
+    ["Activity 2 · 4 min","A click makes a dot, a drag makes a line","Model it, but don't stop there - pupils need to do this themselves, not just watch."],
+    ["Activity 2 · 12 min","Have a go in PaintZ","Pupils open PaintZ (free, no login, works with mouse or touch) and make at least one dot and one line before tapping the checked card. This is the real practice the animation alone couldn't give them."],
+    ["Activity 2 · 4 min","Extra drag practice","Early finishers open Dragon Drop for repeated click-and-drag practice with pass/fail feedback."],
     ["Activity 2 · 5 min","Explorer task","Early finishers try the fill tool, drawing shapes, and the eraser."],
     ["Plenary · 4 min","What's changed?","Show three pictures. For each, ask what tool was used: thicker line, a new colour, then the fill tool."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
@@ -4099,10 +4105,25 @@
       '<p class="lead pp">No mouse needed yet. Clap twice, fast, like this.</p>' +
       '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' +
       '<p class="lead pp">Now try it for real, on the mouse.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Click and drag to paint</h1>' +
+    function(){ return { steps:1, html:
+      '<h1 class="pp">A click makes a dot. A drag makes a line.</h1>' +
       '<p class="lead pp">Hold the button down, move the mouse, then let go. That draws a line.</p>' +
-      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' }; },
+      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">Now you try it for real &mdash; watching isn&rsquo;t the same as doing it.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Have a go!</h1>' +
+      '<p class="lead pp">Open PaintZ and practise: tap once for a dot, click and drag for a line.</p>' +
+      '<div class="d2-photobar pp">' +
+        '<a class="d2-photobtn" href="https://paintz.lovable.app/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('pencil-simple',20)+' Open PaintZ</a>' +
+      '</div>' +
+      '<div class="d2-rc pp" style="max-width:32ch;margin-top:8px" id="d2paintdone"><b>Tap when you&rsquo;ve made a dot AND a line</b><span class="ans">That\'s the whole idea: click for a dot, drag for a line.</span></div>',
+      init:function(el){ var c = el.querySelector('#d2paintdone'); c.addEventListener('click', function(){ if(c.classList.contains('open')) return; c.classList.add('open'); c.querySelector('b').textContent = 'You had a go!'; burst(); }); } }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Extra drag practice</h1>' +
+      '<p class="lead pp">Early finishers: 20 levels of pure click-and-drag.</p>' +
+      '<div class="d2-photobar pp">' +
+        '<a class="d2-photobtn" href="https://www.roomrecess.com/games/DragonDrop/play.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Dragon Drop</a>' +
+      '</div>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Explorer task</h1>' +
       '<div class="d2-reveal pp">' +
