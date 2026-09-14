@@ -3261,6 +3261,7 @@
     ["Activity 1 · 4 min","Try an index yourself","Pupils use the index of a real non-fiction book to find a specific word, then discuss how hard that would be without one."],
     ["Activity 2 · 6 min","How search engines use an index","Search engines use programs called web crawlers, or bots, that visit web pages and note what's on them. That builds an index, stored in huge data centres."],
     ["Activity 2 · 4 min","Searching the index, not the web","When you search, the engine looks in its own index rather than searching every page on the internet again. That's what makes it fast."],
+    ["Activity 2 · 4 min","Search the index, not the book","A checked activity, not just an explanation: a small pre-built index is on screen, and pupils answer 'which page has this word?' using only the index, never flicking through a real book. Directly practises the concept just explained."],
     ["Activity 2 · 10 min","Indexing the classroom","In pairs, pupils pick five items in the classroom and list where each can be found. They swap sheets and test each other's index."],
     ["Activity 3 · 6 min","So many results","Most search engines show how many results a search returned. Ask why some terms return far more than others."],
     ["Activity 3 · 8 min","Narrowing a search","Dogs, then black dogs, then black Labrador dog: the results shrink each time. Pupils try their own broad term, narrowing it twice, in speech marks."],
@@ -3400,6 +3401,38 @@
       '<h1 class="pp">Searching the index, not the web</h1>' +
       '<p class="lead pp">When you search, the engine looks in its own index.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">It doesn&rsquo;t search every page on the internet again. That&rsquo;s what makes it fast.</p>' }; },
+    function(){
+      var INDEX = [["dog","p.12"],["cat","p.45"],["rabbit","p.78"],["hamster","p.101"],["parrot","p.33"]];
+      var Q = [{word:"rabbit", correct:"p.78"}, {word:"hamster", correct:"p.101"}];
+      return { steps:0, html:
+        '<h1 class="pp">Search the index, not the book</h1>' +
+        '<p class="lead pp">This index was already built. Use it to answer, don&rsquo;t flick through the book.</p>' +
+        '<div class="pp" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem;background:var(--ground-2);border-radius:14px;padding:14px 20px">' +
+          INDEX.map(function(p){ return '<span>'+p[0]+' &rarr; '+p[1]+'</span>'; }).join('&nbsp;&nbsp;&middot;&nbsp;&nbsp;') +
+        '</div>' +
+        '<div class="pp" id="d2idxquiz" style="display:flex;flex-direction:column;gap:16px;margin-top:8px"></div>',
+        init:function(el){
+          var host = el.querySelector('#d2idxquiz');
+          Q.forEach(function(q, qi){
+            var opts = [q.correct].concat(INDEX.map(function(p){ return p[1]; }).filter(function(p){ return p !== q.correct; }).sort(function(){ return Math.random()-0.5; }).slice(0,2)).sort(function(){ return Math.random()-0.5; });
+            var row = document.createElement('div');
+            row.innerHTML = '<p style="font-weight:700;margin:0 0 8px">Which page has &lsquo;' + q.word + '&rsquo;?</p>' +
+              '<div style="display:flex;gap:8px;justify-content:center">' + opts.map(function(o){ return '<button class="d2-odd" data-ok="'+(o===q.correct?1:0)+'" style="color:var(--ink);background:var(--paper);border:0;border-radius:14px;padding:10px 20px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm)">'+o+'</button>'; }).join('') + '</div>';
+            host.appendChild(row);
+            row.querySelectorAll('.d2-odd').forEach(function(b){
+              b.addEventListener('click', function(){
+                if(row.getAttribute('data-done')) return;
+                if(b.getAttribute('data-ok') === '1'){
+                  row.setAttribute('data-done','1');
+                  b.style.background = 'var(--out)'; b.style.color = '#fff';
+                  if(qi === Q.length-1) burst();
+                } else {
+                  b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}], {duration:240});
+                }
+              });
+            });
+          });
+        } }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Indexing the classroom</h1>' +
       '<p class="lead pp" style="max-width:34ch">In pairs, pick five items in the classroom. List where each can be found, one or more places.</p>' +
@@ -3573,7 +3606,7 @@
     ["Activity 1 · 20 min","Create your own webpage","Groups of four make a paper webpage on the same topic: a URL, a heading, subheadings, paragraphs, and pictures or diagrams. Fifteen minutes."],
     ["Activity 2 · 10 min","Linking your webpage","Show a real webpage with links at the bottom. Each group picks one other group's webpage to link to, choosing a good one, and writes down why."],
     ["Activity 3 · 4 min","How search engines score a page","Search engines use an algorithm: a set of rules that gives a page points for different things, then ranks by the total."],
-    ["Activity 3 · 8 min","Score your page","1 point per mention in the paragraphs, 5 for a subheading, 10 for the heading, 20 for the URL, 50 for each inbound link from another group. Total it up and rank the group's pages."],
+    ["Activity 3 · 8 min","Score your page, live","A real interactive counter, not reveal cards: groups count occurrences on their own paper webpage and tap + for each one; the total tallies live on screen. Compare group totals to rank the pages once everyone's done."],
     ["Plenary · 5 min","Search engine optimisation","Website creators try to rank higher on purpose. That's called SEO. Give groups five minutes to improve their score, then rank again."],
     ["Plenary · 3 min","Would this page score well?","Show a page that repeats its keyword dozens of times. Search engines can detect that and penalise the page instead of rewarding it."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
@@ -3615,15 +3648,36 @@
       '<h1 class="pp">How search engines score a page</h1>' +
       '<p class="lead pp">A search engine follows an algorithm: a set of rules that scores a page.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">The highest-scoring page ranks first.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Score your page</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('In the paragraphs','1 point each time','in-c') +
-        rc('In a subheading','5 points each time','pr-c') +
-        rc('In the heading','10 points','ou-c') +
-        rc('In the URL','20 points') +
-        rc('An inbound link from another page','50 points each') +
-      '</div>', init: revealInit }; },
+    function(){
+      var ROWS = [["Paragraph mention",1],["Subheading",5],["Heading",10],["URL",20],["Inbound link",50]];
+      return { steps:0, html:
+        '<h1 class="pp">Score your page, live</h1>' +
+        '<p class="lead pp">Count real occurrences on your paper page, then tap + for each one you find.</p>' +
+        '<div class="pp" style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:480px" id="d2scorerows">' +
+        ROWS.map(function(r,i){ return '<div style="display:flex;align-items:center;gap:12px;background:var(--ground-2);border-radius:12px;padding:10px 16px" data-pts="'+r[1]+'">' +
+          '<span style="flex:1;font-weight:600">'+r[0]+' <span style="color:var(--muted);font-weight:500">&times;'+r[1]+'</span></span>' +
+          '<button class="d2-gbtn ghost" data-minus style="padding:4px 14px">&minus;</button>' +
+          '<span class="d2-cnt" style="min-width:1.6em;text-align:center;font-weight:800">0</span>' +
+          '<button class="d2-gbtn ghost" data-plus style="padding:4px 14px">+</button>' +
+        '</div>'; }).join('') +
+        '</div>' +
+        '<p class="lead pp" style="font-size:1.6rem;font-weight:800;color:var(--proc)">Total: <span id="d2scoretotal">0</span></p>',
+        init:function(el){
+          var burst80 = false;
+          function total(){
+            var t = 0;
+            [].forEach.call(el.querySelectorAll('#d2scorerows > div'), function(row){
+              t += parseInt(row.getAttribute('data-pts'),10) * parseInt(row.querySelector('.d2-cnt').textContent,10);
+            });
+            el.querySelector('#d2scoretotal').textContent = t;
+            if(t >= 80 && !burst80){ burst80 = true; burst(); }
+          }
+          [].forEach.call(el.querySelectorAll('#d2scorerows > div'), function(row){
+            var cnt = row.querySelector('.d2-cnt');
+            row.querySelector('[data-plus]').addEventListener('click', function(){ cnt.textContent = parseInt(cnt.textContent,10)+1; total(); });
+            row.querySelector('[data-minus]').addEventListener('click', function(){ cnt.textContent = Math.max(0, parseInt(cnt.textContent,10)-1); total(); });
+          });
+        } }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Search engine optimisation</h1>' +
       '<p class="lead pp">Website creators try to rank higher on purpose. That&rsquo;s called SEO.</p>' +
@@ -3902,12 +3956,11 @@
     ["Introduction · 3 min","How are searches influenced?","With a partner, agree definitions for selection and ranking from Lessons 4 and 5."],
     ["Introduction · 2 min","Today you will…","Read the three together."],
     ["Activity 1 · 3 min","Three points of view","A search involves the searcher, the search engine company, and the webpage creator. Each one can influence what you see."],
-    ["Activity 1 · 4 min","What influences the searcher?","The search engine they chose, the words they typed, the links they've clicked before, their browsing history."],
-    ["Activity 1 · 4 min","What influences the search engine company?","Their own ethics, the rules their crawlers follow, how they rank pages, and how much they make from advertising."],
-    ["Activity 1 · 4 min","What influences the webpage creator?","The words, text and headings they choose, which pages they link to and from, and decisions about advertising."],
-    ["Activity 2 · 12 min","Ambiguous searches","Priya searches 'firefox' hoping for the animal. Marcus searches 'pasta recipes' hoping to learn to make pasta. Sophie searches 'Parks' remembering only a surname. Each first search misses; a better second search finds it."],
+    ["Activity 1 · 10 min","Sort what influences each one","A checked sort, not three separate slides of reveal cards: pupils sort 11 real factors between the searcher, the search engine company, and the webpage creator."],
+    ["Activity 2 · 12 min","Put each search in the right order","A checked sequence, not reveal cards: pupils reorder three scrambled steps per scenario (Priya, Marcus, Sophie), the same mechanic as Lesson 3."],
     ["Activity 3 · 8 min","What can't you find on the web?","Discuss in groups of four: private information, feelings and smells, your own thoughts, and face-to-face contact don't live on the web."],
     ["Plenary · 4 min","How do search engines make money?","Search 'guitar'. The top results are often sponsored, paid for by companies who want to rank higher for that term."],
+    ["Plenary · 3 min","Watch: Social media algorithms explained","A short TED-Ed video applying the same influence-and-money idea to social media instead of search, as a bridge to the next unit."],
     ["Plenary · 4 min","Targeted or not?","A bus-side advert reaches everyone who passes, whether they're interested or not. A search advert reaches people already looking for that exact thing."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
@@ -3937,36 +3990,39 @@
         rc('Search engine company','Google, Bing, DuckDuckGo','pr-c') +
         rc('Webpage creator','the BBC, your school, a local club','ou-c') +
       '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">What influences the searcher?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Their search engine','','in-c') +
-        rc('The words they use','','pr-c') +
-        rc('Links they\'ve clicked before','','ou-c') +
-        rc('Their browsing history') +
-      '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">What influences the search engine company?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Their own ethics and beliefs','','in-c') +
-        rc('The rules their crawlers follow','','pr-c') +
-        rc('How they rank pages','','ou-c') +
-        rc('How much they earn from advertising') +
-      '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">What influences the webpage creator?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Their words, text and headings','','in-c') +
-        rc('Which pages they link to and from','','pr-c') +
-        rc('Their decisions about advertising','','ou-c') +
-      '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Ambiguous searches</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Priya searches &ldquo;firefox&rdquo;, hoping for the animal','she gets the web browser instead; &ldquo;firefox animal&rdquo; finds it','in-c') +
-        rc('Marcus searches &ldquo;pasta recipes&rdquo;','he gets dishes, not how to make pasta; &ldquo;how to make pasta&rdquo; works better','pr-c') +
-        rc('Sophie searches &ldquo;Parks&rdquo;, remembering a surname','she gets national parks; &ldquo;famous people named Parks&rdquo; finds Rosa Parks','ou-c') +
-      '</div>', init: revealInit }; },
+    function(){
+      var FACTORS = [
+        ["Which search engine they chose","searcher"], ["The words they typed","searcher"], ["Links they've clicked before","searcher"], ["Their browsing history","searcher"],
+        ["Their own ethics and beliefs","company"], ["The rules their crawlers follow","company"], ["How they rank pages","company"], ["How much they earn from advertising","company"],
+        ["Their words, headings and text","creator"], ["Which pages they link to and from","creator"], ["Their decisions about advertising","creator"]
+      ];
+      return { steps:0, html:
+        '<h1 class="pp">Sort what influences each one</h1>' +
+        '<p class="lead pp">Searcher, search engine company, or webpage creator: who does each factor belong to?</p>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + FACTORS.map(function(f){ return '<button class="d2-chip" data-cat="'+f[1]+'">'+f[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins three pp">' +
+          '<div class="d2-bin d" data-key="searcher"><h4>Searcher</h4><div class="items"></div></div>' +
+          '<div class="d2-bin s3" data-key="company"><h4>Search engine company</h4><div class="items"></div></div>' +
+          '<div class="d2-bin n" data-key="creator"><h4>Webpage creator</h4><div class="items"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+        init: sortInitN }; },
+    function(){
+      var GROUPS = [
+        ["Priya", ["Searches &lsquo;firefox&rsquo;, hoping for the animal", "Gets the web browser instead, not the animal", "Searches &lsquo;firefox animal&rsquo; and finds it"]],
+        ["Marcus", ["Searches &lsquo;pasta recipes&rsquo;", "Gets dishes to cook, not how to make the pasta itself", "Searches &lsquo;how to make pasta&rsquo; and finds it"]],
+        ["Sophie", ["Searches &lsquo;Parks&rsquo;, remembering only a surname", "Gets national parks, not the person", "Searches &lsquo;famous people named Parks&rsquo; and finds Rosa Parks"]]
+      ];
+      return { steps:0, html:
+        '<h1 class="pp">Put each search in the right order</h1>' +
+        '<p class="lead pp">Same idea as Lesson 3: the first search, why it missed, then the better search.</p>' +
+        '<div class="pp" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;width:100%">' +
+          GROUPS.map(function(g){ return '<div style="flex:1;min-width:240px;max-width:340px"><h4 style="margin:0 0 8px;color:var(--proc);text-align:center">'+g[0]+'</h4>' +
+            '<div class="seq d2-seqgrp" data-steps=\'' + JSON.stringify(g[1]) + '\'></div></div>'; }).join('') +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2seqcheck">Check the order</button>' +
+        '<p class="lead" id="d2seqres" style="min-height:1.4em;font-weight:700"></p>',
+        init: seqInit }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">What can&rsquo;t you find on the web?</h1>' +
       '<div class="d2-reveal pp">' +
@@ -3979,6 +4035,13 @@
       '<h1 class="pp">How do search engines make money?</h1>' +
       '<p class="lead pp">You search &ldquo;guitar&rdquo;. Look at the first few results.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Some are sponsored: a company paid to rank higher for that term. That\'s how search engines make most of their money.</p>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Watch: how does this work elsewhere?</h1>' +
+      '<p class="lead pp">The same idea, on social media instead of search.</p>' +
+      '<div class="d2-photobar pp">' +
+        '<a class="d2-photobtn" href="https://www.youtube.com/watch?v=F5tz887wXCY" target="_blank" rel="noopener" style="text-decoration:none">'+ph('monitor',20)+' Watch: Social media algorithms explained</a>' +
+      '</div>' +
+      '<p class="lead" style="font-size:.95rem;color:var(--muted)">TED-Ed, about 3 minutes.</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Targeted, or not?</h1>' +
       '<div class="d2-reveal pp">' +
