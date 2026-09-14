@@ -1099,6 +1099,8 @@
   .d2-bin h4{margin:0;font-size:1rem;color:var(--soft)}
   .d2-bin.d{border-color:color-mix(in srgb,var(--in) 40%,transparent)}
   .d2-bin.n{border-color:color-mix(in srgb,var(--soft) 40%,transparent)}
+  .d2-bin.s3{border-color:color-mix(in srgb,var(--proc) 40%,transparent)}
+  .d2-bins.three{max-width:920px}
   .d2-bin .items{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
   .d2-bin .items span{
     font-size:.86rem;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--paper);
@@ -2260,6 +2262,26 @@
     });
   }
 
+  // shared: 3-bin sort game init, chips carry data-cat of "h"/"c"/"s" and fly into #d2binH/#d2binC/#d2binS
+  function sortInit3(el){
+    var go = el.querySelector('#d2sortgo'),
+        pool = el.querySelector('#d2sortpool'),
+        bins = { h: el.querySelector('#d2binH'), c: el.querySelector('#d2binC'), s: el.querySelector('#d2binS') },
+        done = false;
+    var chips = pool.querySelectorAll('.d2-chip');
+    go.addEventListener('click', function(){
+      if(done) return; done = true; go.disabled = true; go.textContent = 'Sorted!';
+      [].forEach.call(chips, function(chip, k){
+        setTimeout(function(){
+          chip.classList.add('placed');
+          var tag = document.createElement('span'); tag.textContent = chip.textContent;
+          (bins[chip.getAttribute('data-cat')] || bins.s).appendChild(tag);
+          if(k === chips.length - 1) burst();
+        }, RM ? 0 : k * 220);
+      });
+    });
+  }
+
   // shared: confidence slide
   function confidenceSlide(){
     var faces = [
@@ -2718,7 +2740,8 @@
     ["Activity 1 · 3 min","Some do both, some do neither","A touchscreen is both: you tap it (input) and it shows things (output). A cable is neither. A multifunction printer that also scans is both."],
     ["Activity 2 · 4 min","One input, many outputs","Pressing one key can change the screen and make a speaker beep and make a printer print. Many inputs can also feed one output: a mouse and a keyboard both making one document."],
     ["Activity 2 · 6 min","Match it up","Model a full sentence: pressing the keys on the keyboard of a laptop can change what is on the screen, or make the speaker play sounds. Then hand out the A2 sheet to draw the arrows."],
-    ["Activity 3 · 15 min","Invent your own device","Pupils design a device on the A3 sheet. It needs inputs, a process and outputs. The disco lights example is on this slide. Push for multiple inputs or outputs as an extension."],
+    ["Activity 3 · 12 min","Invent your own device","Pupils design a device on the A3 sheet. It needs inputs, a process and outputs. The disco lights example is on this slide. Push for multiple inputs or outputs as an extension."],
+    ["Activity 3 · 3 min","Peer-check the design","Pupils swap sheets in pairs and tap the three ticks together, only when they both agree it's true. This is the checked moment the design task was missing."],
     ["Plenary · 4 min","Spot the devices","Read the passage. Ask pupils to count the digital devices and interactions. Our world is full of them."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread tells you who needs a recap."],
     ["Next time · 1 min","Next lesson","Recap inputs and outputs. Next lesson: the many ways digital devices help us."]
@@ -2789,6 +2812,31 @@
         rc('Example: disco lights','Microphone hears the music (input). The device measures how loud it is (process). The lights glow brighter (output).','pr-c') +
       '</div>' +
       '<p class="lead pp">Design yours on the sheet.</p>', init: revealInit }; },
+    function(){
+      var TICKS = ["It has an input &mdash; something you do to it","It has an output &mdash; something it does back","The process makes sense &mdash; the output is a sensible result of the input"];
+      return { steps:0, html:
+        '<h1 class="pp">Check your design with a partner</h1>' +
+        '<p class="lead pp">Swap sheets. Tap a tick only when you both agree it&rsquo;s true.</p>' +
+        '<div class="pp" style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:38ch;width:100%" id="d2rubric">' +
+        TICKS.map(function(t,i){ return '<button class="d2-rtick" data-i="'+i+'" style="display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--hair);background:var(--ground-2);border-radius:14px;padding:12px 16px;font-family:var(--font);font-size:1rem;font-weight:600;cursor:pointer;color:var(--ink)">' +
+          '<span class="tickmark" style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--hair);display:grid;place-items:center;color:transparent">'+ICON.check+'</span>' + t + '</button>'; }).join('') +
+        '</div>' +
+        '<p class="lead" id="d2rubricmsg" style="min-height:1.4em"></p>',
+        init:function(el){
+          var done = 0, total = TICKS.length, msg = el.querySelector('#d2rubricmsg');
+          [].forEach.call(el.querySelectorAll('.d2-rtick'), function(b){
+            b.addEventListener('click', function(){
+              if(b.classList.contains('on')) return;
+              b.classList.add('on');
+              b.style.borderColor = 'var(--out)'; b.style.background = 'color-mix(in srgb,var(--out) 12%,var(--paper))';
+              b.querySelector('.tickmark').style.color = 'var(--out)'; b.querySelector('.tickmark').style.borderColor = 'var(--out)';
+              done++;
+              msg.style.color = 'var(--out)';
+              if(done === total){ msg.textContent = 'All three checked - great design!'; burst(); }
+              else msg.textContent = done + ' of ' + total + ' checked';
+            });
+          });
+        } }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Spot the devices</h1>' +
       '<p class="lead pp" style="max-width:44ch;font-size:clamp(1rem,1.9vw,1.25rem)">&ldquo;I turned on the TV to watch a streaming service. I played on my games console, then finished my homework on my laptop. I set the alarm on my smart speaker. In the morning the satnav in the car found the quickest route.&rdquo;</p>' +
@@ -3901,11 +3949,11 @@
     ["Introduction · 1 min","Using computer technology","Recap: technology is anything people make to help us. A computer is technology that can do many jobs."],
     ["Introduction · 1 min","Today you will…","Read the three together."],
     ["Introduction · 1 min","A computer is technology","Made by people, helps us, does lots of different jobs. Today we name its parts and use one."],
-    ["Activity 1 · 8 min","The parts of a desktop","Tap each part. Screen shows the work, keyboard types, mouse points and clicks, base unit stores and does the thinking. Show a real computer if you can."],
+    ["Activity 1 · 8 min","Sort the computer's parts","Pupils sort real peripherals (not just the desktop's four) into 'I use it' and 'It tells me', checked as a group. Show a real computer alongside a microphone, printer or speaker if you have one."],
     ["Activity 1 · 2 min","A laptop","Same parts, one case. No separate base unit, it is all inside. The mouse is built in and called a trackpad."],
-    ["Activity 1 · 3 min","Which part?","Say a job, ask pupils which part does it. Keep it quick."],
     ["Activity 2 · 2 min","Staying safe online","Pupils go online today. If they see anything that worries them, they tell a trusted adult. Say who that is in your school."],
-    ["Activity 2 · 20 min","Click and drag","Model holding the button down, moving, and letting go. Then pupils use ncce.io/drag. On a trackpad, two hands: one holds, one moves."],
+    ["Activity 2 · 5 min","Click and drag: the idea","Model holding the button down, moving, and letting go, before pupils try it for real."],
+    ["Activity 2 · 15 min","Have a go","Pupils open Mouse House or Dragon Drop on their own device and practise clicking and dragging for real, not just watching a demo. Tap the checked card when they've had a go."],
     ["Plenary · 3 min","Desktop or laptop?","What is the same, what is different? A laptop folds and travels, a desktop stays put."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap the parts. Next lesson: getting really good with a mouse."]
@@ -3926,27 +3974,23 @@
       '<h1 class="pp">A computer is technology</h1>' +
       '<p class="lead pp">People made it. It helps us.</p>' +
       '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">And it can do lots of different jobs.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Tap each part of the computer</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('&#128421; Screen','shows what the computer is doing','ou-c') +
-        rc('&#9000; Keyboard','lets you type letters and numbers','in-c') +
-        rc('&#128433; Mouse','lets you point, click and move things','in-c') +
-        rc('&#128187; Base unit','stores your work and does the thinking','pr-c') +
-      '</div>', init: revealInit }; },
+    function(){
+      var PARTS = [["Keyboard","keyboard",1],["Mouse","mouse-simple",1],["Microphone","microphone",1],["Screen","monitor",0],["Printer","printer",0],["Speaker","speaker-high",0]];
+      return { steps:0, html:
+        '<h1 class="pp">Sort the computer&rsquo;s parts</h1>' +
+        '<p class="lead pp">The base unit does the thinking in the middle. Sort the rest: do you use it, or does it tell you something?</p>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + PARTS.map(function(p){ return '<button class="d2-chip" data-ok="'+p[2]+'">'+ph(p[1],18)+' '+p[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins pp">' +
+          '<div class="d2-bin d"><h4>I use it</h4><div class="items" id="d2binD"></div></div>' +
+          '<div class="d2-bin n"><h4>It tells me</h4><div class="items" id="d2binN"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+        init: sortInit }; },
     function(){ return { steps:1, html:
       '<div class="pp" style="color:var(--proc)">' + ph('laptop',80) + '</div>' +
       '<h1 class="pp">A laptop</h1>' +
       '<p class="lead pp">The same parts, folded into one case.</p>' +
       '<p class="lead pp" data-step="1">No base unit on the outside. It is all inside. The mouse is built in, called a trackpad.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Which part does the job?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Type your name','the keyboard','in-c') +
-        rc('See your work','the screen','ou-c') +
-        rc('Move the arrow','the mouse','in-c') +
-        rc('Do the thinking','the base unit','pr-c') +
-      '</div>', init: revealInit }; },
     function(){ return { steps:1, html:
       '<div class="pp" style="color:var(--proc)">' + ph('shield-check',72) + '</div>' +
       '<h1 class="pp">Going online today</h1>' +
@@ -3954,7 +3998,16 @@
     function(){ return { steps:0, html:
       '<h1 class="pp">Click and drag</h1>' +
       '<p class="lead pp">Hold the button down, move the mouse, then let go.</p>' +
-      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>', init:function(){} }; },
+      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' }; },
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Have a go!</h1>' +
+      '<p class="lead pp">Open one of these on your own computer and practise clicking and dragging for real.</p>' +
+      '<div class="d2-photobar pp">' +
+        '<a class="d2-photobtn" href="https://mouse-practice.com/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Mouse House</a>' +
+        '<a class="d2-photobtn" href="https://www.roomrecess.com/games/DragonDrop/play.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Dragon Drop</a>' +
+      '</div>' +
+      '<div class="d2-rc pp" style="max-width:32ch;margin-top:8px" id="d2mousedone"><b>Tap when you&rsquo;ve had a go</b><span class="ans">Nice work &mdash; that\'s real click-and-drag practice, not just watching.</span></div>',
+      init:function(el){ var c = el.querySelector('#d2mousedone'); c.addEventListener('click', function(){ if(c.classList.contains('open')) return; c.classList.add('open'); c.querySelector('b').textContent = 'You had a go!'; burst(); }); } }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Desktop or laptop?</h1>' +
       '<p class="lead pp">Both are computers with the same parts.</p>' +
@@ -4303,7 +4356,7 @@
     ["Activity 1 · 3 min","Big systems elsewhere","Arrival and departure boards, doctors' sign-in screens, hospital 'next patient' boards, and ordering systems in shops and cafes."],
     ["Activity 2 · 3 min","Catalogue store","Like Argos: a system with an order point, a warehouse, and a collection point. Sort the given steps under the right heading."],
     ["Activity 2 · 6 min","Order point, warehouse, collection point","Each part of the store has its own tasks. Talk through an example of each."],
-    ["Activity 2 · 4 min","Person, or computer?","Mark each task with a person or a computer. Some jobs, like picking an item off the shelf, still need a person."],
+    ["Activity 2 · 6 min","Who does the job?","A checked sort, not reveal cards: pupils drag 12 real jobs from four systems (self-checkout, warehouse robot, smart thermostat, traffic lights) into Person / Both together / Computer. Discuss the 'both together' ones most - that's where the interesting thinking is."],
     ["Activity 2 · 4 min","What if…","A returned item is resold. A price changes. An item is recalled. Which stages would each affect?"],
     ["Activity 3 · 6 min","Staying safe online","Just like the road, going online needs systems to keep us safe: passwords, trustworthy sites, keeping information private."],
     ["Activity 3 · 3 min","What apps ask for","Apps can gather personal information and share it with other companies. Choose not to share, if you're asked."],
@@ -4362,15 +4415,24 @@
         rc('Warehouse','the order arrives, items are picked from the shelf and marked off','pr-c') +
         rc('Collection point','items arrive, a message says they\'re ready, staff check and hand them over','ou-c') +
       '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Person, or computer?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Showing stock and price on the tablet','computer','in-c') +
-        rc('Choosing items to buy','person','ou-c') +
-        rc('Picking the item off the shelf','person','ou-c') +
-        rc('Keeping the stocklist up to date','computer','in-c') +
-        rc('Showing where items are in the warehouse','computer','in-c') +
-      '</div>', init: revealInit }; },
+    function(){
+      var TASKS = [
+        ["Scanning your items", "s"], ["Deciding what to buy", "h"], ["Weighing the bagging area to catch mistakes", "c"],
+        ["Picking a box off the warehouse shelf", "h"], ["Working out the fastest route round the warehouse", "c"], ["Driving the delivery van", "h"],
+        ["Sensing the room is getting cold", "c"], ["Deciding what temperature feels comfortable", "h"], ["Turning the heating on automatically", "c"],
+        ["Choosing to stop at a red light", "h"], ["Timing how long the light stays red", "c"], ["Pressing the button to cross", "s"]
+      ];
+      return { steps:0, html:
+        '<h1 class="pp">Who does the job: self-checkout, warehouse robot, smart thermostat, traffic lights?</h1>' +
+        '<p class="lead pp">Sort these real jobs from four systems. Some need a person and a computer together.</p>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + TASKS.map(function(t){ return '<button class="d2-chip" data-cat="'+t[1]+'">'+t[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins three pp">' +
+          '<div class="d2-bin d"><h4>Person</h4><div class="items" id="d2binH"></div></div>' +
+          '<div class="d2-bin s3"><h4>Both together</h4><div class="items" id="d2binS"></div></div>' +
+          '<div class="d2-bin n"><h4>Computer</h4><div class="items" id="d2binC"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+        init: sortInit3 }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">What if…</h1>' +
       '<p class="lead pp" style="max-width:34ch">A returned item is resold. A price changes. An item is recalled and can\'t be sold.</p>' +
