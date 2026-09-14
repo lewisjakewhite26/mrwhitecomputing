@@ -2275,6 +2275,28 @@
     });
   }
 
+  // shared: N-bin sort, any number of labelled bins with a data-key,
+  // chips carry a matching data-cat
+  function sortInitN(el){
+    var go = el.querySelector('#d2sortgo'), pool = el.querySelector('#d2sortpool'), done = false;
+    var binEls = [].slice.call(el.querySelectorAll('.d2-bin[data-key]'));
+    var bins = {};
+    binEls.forEach(function(b){ bins[b.getAttribute('data-key')] = b.querySelector('.items'); });
+    var chips = pool.querySelectorAll('.d2-chip');
+    go.addEventListener('click', function(){
+      if(done) return; done = true; go.disabled = true; go.textContent = 'Sorted!';
+      [].forEach.call(chips, function(chip, k){
+        setTimeout(function(){
+          chip.classList.add('placed');
+          var tag = document.createElement('span'); tag.textContent = chip.textContent;
+          var target = bins[chip.getAttribute('data-cat')] || binEls[0].querySelector('.items');
+          target.appendChild(tag);
+          if(k === chips.length - 1) burst();
+        }, RM ? 0 : k * 220);
+      });
+    });
+  }
+
   // shared: sequence-check activity, one or more scenario groups on one slide,
   // reusing the .seq/.step styling already built for the Year 5/6 Systems deck
   function seqInit(el){
@@ -3644,10 +3666,9 @@
   var Y12_NOTES6 = [
     ["Introduction · 3 min","Using a computer responsibly","Think, pair, share: what rules are already in place at school? Note them down for Activity 1."],
     ["Introduction · 2 min","Today you will…","Read the three together."],
-    ["Activity 1 · 4 min","Why do we have rules?","Four reasons: to stay safe, to be happy, so we can learn, and to be kind to each other."],
-    ["Activity 1 · 8 min","Sort the rules","In pairs, match the school rules from the introduction to one of the four reasons. There's no single right answer."],
-    ["Activity 2 · 5 min","Rules for using computers safely","Think about rules that would help you use computers safely in school. An example set is on the next slide."],
-    ["Activity 2 · 3 min","Some example rules","Hold your device carefully. Stop using it when someone's talking to you. Take turns. Use only the apps you've been asked to. Don't share your passwords."],
+    ["Activity 1 · 10 min","Why do we have rules? Sort them.","A checked sort, not reveal cards: pupils sort 8 real rules into the four reasons (safe, happy, learn, kind), checked as a group. A few genuinely fit more than one bin - that's worth talking about, not a bug."],
+    ["Activity 2 · 5 min","Rules for using computers safely","Think about rules that would help you use computers safely in school. Talk with a partner, then share."],
+    ["Activity 2 · 5 min","Jessie and Friends","Watch CEOP's short animation about what to do if something online upsets you. It's aimed at this exact age group and covers the same ground as 'tell a trusted adult'."],
     ["Activity 2 · 15 min","Make a poster","In groups, take one rule each and make a poster for it, for using technology safely at home and at school."],
     ["Plenary · 2 min","What is technology?","Technology is something made to help us."],
     ["Plenary · 2 min","The parts of a computer","Screen, base unit, keyboard, mouse or trackpad. You used them to draw pictures and write words."],
@@ -3670,30 +3691,36 @@
       '<h1 class="pp">Think, pair, share</h1>' +
       '<p class="lead pp">What rules are already in place at your school?</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Tell your partner one rule, and why you think it exists.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Why do we have rules?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('To stay safe','','in-c') +
-        rc('To make sure we are all happy','','pr-c') +
-        rc('So that we can learn','','ou-c') +
-        rc('To be kind to each other','') +
-      '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Sort the rules</h1>' +
-      '<p class="lead pp" style="max-width:32ch">In pairs, match your school\'s rules to one of the four reasons. There\'s no single right answer.</p>' }; },
+    function(){
+      var RULES = [
+        ["Hold your device carefully", "safe"], ["Don&rsquo;t share your passwords", "safe"],
+        ["Take turns", "happy"], ["Say thank you when someone helps you", "happy"],
+        ["Use only the apps you&rsquo;ve been asked to", "learn"], ["Put your hand up if you get stuck", "learn"],
+        ["Stop using it when someone is talking to you", "kind"], ["Let a friend have a turn if they&rsquo;re waiting", "kind"]
+      ];
+      return { steps:0, html:
+        '<h1 class="pp">Why do we have rules? Sort them.</h1>' +
+        '<p class="lead pp">Match each rule to the reason it&rsquo;s there for. Some could fit more than one, talk about it!</p>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + RULES.map(function(r){ return '<button class="d2-chip" data-cat="'+r[1]+'">'+r[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins three pp">' +
+          '<div class="d2-bin d" data-key="safe"><h4>To stay safe</h4><div class="items"></div></div>' +
+          '<div class="d2-bin s3" data-key="happy"><h4>To be happy</h4><div class="items"></div></div>' +
+          '<div class="d2-bin n" data-key="learn"><h4>So we can learn</h4><div class="items"></div></div>' +
+          '<div class="d2-bin d" data-key="kind"><h4>To be kind</h4><div class="items"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+        init: sortInitN }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Rules for using computers safely</h1>' +
       '<p class="lead pp">What rules would help you use a computer safely in school?</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Talk with your partner, then share with the class.</p>' }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Some example rules</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Hold your device carefully','','in-c') +
-        rc('Stop using it when someone is talking to you','','pr-c') +
-        rc('Take turns','','ou-c') +
-        rc('Use only the apps you have been asked to') +
-        rc('Don&rsquo;t share your passwords') +
-      '</div>', init: revealInit }; },
+      '<h1 class="pp">Jessie and Friends</h1>' +
+      '<p class="lead pp">A short video about what to do if something online upsets you.</p>' +
+      '<div class="d2-photobar pp">' +
+        '<a class="d2-photobtn" href="https://www.ceopeducation.co.uk/parents/jessie-and-friends-videos/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('shield-check',20)+' Watch Jessie and Friends</a>' +
+      '</div>' +
+      '<p class="lead" style="font-size:.95rem;color:var(--muted)">Made by CEOP, the UK&rsquo;s child safety organisation.</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Make a poster</h1>' +
       '<p class="lead pp" style="max-width:30ch">Take one rule. Make a poster for using technology safely, at home and at school.</p>' }; },
@@ -4197,7 +4224,7 @@
     ["Activity 1 · 5 min","Explorer task","Change the size, colour or font of your text before you click away from the box."],
     ["Activity 2 · 5 min","Saving my work","Think, pair, share: how could you keep this to add to another day? Show the save icon, and explain it appears in lots of programs."],
     ["Activity 2 · 5 min","Name it sensibly","Type your own name as the file name, then click save. A sensible name helps you find it again, and tells you what it is without opening it."],
-    ["Plenary · 4 min","What's been used?","Look at a piece of work. More than one colour? Text added? Any other tools?"],
+    ["Plenary · 4 min","Look at your own picture","A checked self-review, not reveal cards: pupils look at their own saved work and tick which of the three features they actually used."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: using the keyboard to edit text."]
   ];
@@ -4244,13 +4271,31 @@
       '<h1 class="pp">Name it sensibly</h1>' +
       '<p class="lead pp">Type your own name as the file name, then click save.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">A sensible name helps you find it again, and tells you what it is without opening it.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">What&rsquo;s been used?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('More than one colour?','look closely at the picture','in-c') +
-        rc('Has text been added?','check for typed words','pr-c') +
-        rc('Any other tools?','fill, shapes, or the eraser','ou-c') +
-      '</div>', init: revealInit }; },
+    function(){
+      var TICKS = ["I used more than one colour","I added text with the keyboard","I used another tool, like fill, shapes, or the eraser"];
+      return { steps:0, html:
+        '<h1 class="pp">Look at your own picture</h1>' +
+        '<p class="lead pp">Tap each one you really did.</p>' +
+        '<div class="pp" style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:38ch;width:100%" id="d2rubric4">' +
+        TICKS.map(function(t,i){ return '<button class="d2-rtick" data-i="'+i+'" style="display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--hair);background:var(--ground-2);border-radius:14px;padding:12px 16px;font-family:var(--font);font-size:1rem;font-weight:600;cursor:pointer;color:var(--ink)">' +
+          '<span class="tickmark" style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--hair);display:grid;place-items:center;color:transparent">'+ICON.check+'</span>' + t + '</button>'; }).join('') +
+        '</div>' +
+        '<p class="lead" id="d2rubric4msg" style="min-height:1.4em"></p>',
+        init:function(el){
+          var done = 0, total = TICKS.length, msg = el.querySelector('#d2rubric4msg');
+          [].forEach.call(el.querySelectorAll('.d2-rtick'), function(b){
+            b.addEventListener('click', function(){
+              if(b.classList.contains('on')) return;
+              b.classList.add('on');
+              b.style.borderColor = 'var(--out)'; b.style.background = 'color-mix(in srgb,var(--out) 12%,var(--paper))';
+              b.querySelector('.tickmark').style.color = 'var(--out)'; b.querySelector('.tickmark').style.borderColor = 'var(--out)';
+              done++;
+              msg.style.color = 'var(--out)';
+              if(done === total){ msg.textContent = 'You used lots of tools!'; burst(); }
+              else msg.textContent = done + ' of ' + total + ' ticked';
+            });
+          });
+        } }; },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Well typed</h1>' +
@@ -4289,7 +4334,8 @@
     ["Introduction · 2 min","Today you will…","Read the three together."],
     ["Activity 1 · 5 min","Opening a file","Open the paint program, click the open-image icon, and find last lesson's self-portrait by its file name."],
     ["Activity 1 · 3 min","Why the name mattered","A sensible file name from Lesson 4 makes it easy to find the right file now."],
-    ["Activity 2 · 5 min","Three new keys","Space bar: a gap between words. Backspace: removes the letter just before the cursor. Arrow keys: move the cursor left or right without deleting anything."],
+    ["Activity 2 · 4 min","Three new keys","Space bar: a gap between words. Backspace: removes the letter just before the cursor. Arrow keys: move the cursor left or right without deleting anything."],
+    ["Activity 2 · 4 min","Fix the typo","A checked on-slide activity, not just a definition: pupils move the cursor with the arrow buttons, then backspace to remove one extra letter from CATT until it reads CAT. Checked automatically when the word's fixed."],
     ["Activity 2 · 15 min","Write a sentence","Not just a word this time. Add a text box above or below the self-portrait and write a short sentence, using backspace and the arrow keys to fix mistakes."],
     ["Activity 2 · 5 min","Need a starter?","Pupils who want one can use a sentence starter: my name is…, my school is…, I live in…"],
     ["Plenary · 4 min","Why name it sensibly?","Think, pair, share. It helps you find the file quickly, and shows what it is without opening it."],
@@ -4327,6 +4373,37 @@
         rc('Backspace','removes the letter just before the cursor','pr-c') +
         rc('Arrow keys','move the cursor left or right, without deleting anything','ou-c') +
       '</div>', init: revealInit }; },
+    function(){
+      var TYPO = "CATT", TARGET = "CAT";
+      return { steps:0, html:
+        '<h1 class="pp">Fix the typo</h1>' +
+        '<p class="lead pp">Move the cursor with the arrows, then backspace to remove the extra letter.</p>' +
+        '<div class="pp" id="d2fixword" style="display:flex;gap:6px;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(2rem,6vw,3.2rem);font-weight:700;min-height:1.6em"></div>' +
+        '<div class="pp" style="display:flex;gap:10px;justify-content:center">' +
+          '<button class="d2-gbtn ghost" id="d2fixleft">&larr;</button>' +
+          '<button class="d2-gbtn" id="d2fixback">Backspace</button>' +
+          '<button class="d2-gbtn ghost" id="d2fixright">&rarr;</button>' +
+        '</div>' +
+        '<p class="lead" id="d2fixmsg" style="min-height:1.4em;font-weight:700"></p>',
+        init:function(el){
+          var letters = TYPO.split(''), pos = letters.length, done = false;
+          var word = el.querySelector('#d2fixword'), msg = el.querySelector('#d2fixmsg');
+          function render(){
+            word.innerHTML = letters.map(function(ch,i){
+              return (i === pos ? '<span style="width:3px;height:1em;background:var(--proc);display:inline-block;margin:0 1px"></span>' : '') +
+                '<span>' + ch + '</span>';
+            }).join('') + (pos === letters.length ? '<span style="width:3px;height:1em;background:var(--proc);display:inline-block;margin:0 1px"></span>' : '');
+          }
+          render();
+          el.querySelector('#d2fixleft').addEventListener('click', function(){ if(done) return; pos = Math.max(0, pos-1); render(); });
+          el.querySelector('#d2fixright').addEventListener('click', function(){ if(done) return; pos = Math.min(letters.length, pos+1); render(); });
+          el.querySelector('#d2fixback').addEventListener('click', function(){
+            if(done || pos === 0) return;
+            letters.splice(pos-1, 1); pos--;
+            render();
+            if(letters.join('') === TARGET){ done = true; msg.style.color = 'var(--out)'; msg.textContent = 'Fixed it! ' + TARGET; burst(); }
+          });
+        } }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Write a sentence</h1>' +
       '<p class="lead pp">Last lesson you typed a word: your name.</p>' +
