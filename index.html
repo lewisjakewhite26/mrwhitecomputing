@@ -2814,7 +2814,7 @@
       init:function(el){ var c = el.querySelector('#d2cyber'); c.addEventListener('click', function(){ c.classList.add('open'); c.querySelector('b').textContent = 'A cyber-attack is…'; }); } }; },
     function(){
       var TRY = ["password","fredsmith65","Dogc&tmeAn25"];
-      var WEAK = ["password","123456","qwerty","letmein","password1","abc123","111111","iloveyou"];
+      var WEAK = ["password","123456","12345678","123456789","qwerty","admin","welcome","letmein","password1","abc123","111111","iloveyou"];
       return { steps:0, html:
         '<h1 class="pp">How strong is your password?</h1>' +
         '<div class="d2-pwlive pp">' +
@@ -2827,18 +2827,42 @@
         init:function(el){
           var input = el.querySelector('#d2pwin'), card = el.querySelector('#d2pwcard'), verdict = card.querySelector('.verdict');
           var lastLvl = null;
+          // brute-force crack-time estimate: pool size to the power of
+          // length gives total combinations (worst case, not halved),
+          // divided by a realistic offline fast-hash attack rate
+          // (10 billion guesses/second) - same approach and thresholds
+          // as security.org's own password strength tool
+          var GUESSES_PER_SECOND = 1e10;
+          function humanizeSeconds(s){
+            var MINUTE = 60, HOUR = MINUTE * 60, DAY = HOUR * 24, MONTH = DAY * 30.44, YEAR = DAY * 365.25;
+            function n(x){ return Math.round(x).toLocaleString(); }
+            function unit(x, w){ var v = Math.round(x); return v.toLocaleString() + ' ' + w + (v === 1 ? '' : 's'); }
+            if(s < 1) return {label:'Instantly', lvl:'lvl1'};
+            if(s < MINUTE) return {label:unit(s, 'second'), lvl:'lvl1'};
+            if(s < HOUR) return {label:unit(s / MINUTE, 'minute'), lvl:'lvl1'};
+            if(s < DAY) return {label:unit(s / HOUR, 'hour'), lvl:'lvl1'};
+            if(s < MONTH) return {label:unit(s / DAY, 'day'), lvl:'lvl2'};
+            if(s < YEAR) return {label:unit(s / MONTH, 'month'), lvl:'lvl2'};
+            if(s < YEAR * 100) return {label:unit(s / YEAR, 'year'), lvl:'lvl2'};
+            if(s < YEAR * 1000) return {label:n(s / (YEAR * 100)) + ' hundred years', lvl:'lvl3'};
+            if(s < YEAR * 1e6) return {label:n(s / (YEAR * 1000)) + ' thousand years', lvl:'lvl3'};
+            if(s < YEAR * 1e9) return {label:n(s / (YEAR * 1e6)) + ' million years', lvl:'lvl3'};
+            if(s < YEAR * 1e12) return {label:n(s / (YEAR * 1e9)) + ' billion years', lvl:'lvl3'};
+            return {label:n(s / (YEAR * 1e12)) + ' trillion years', lvl:'lvl3'};
+          }
           function score(pw){
             if(!pw) return {lvl:null, label:'Type to check'};
             var lower = pw.toLowerCase();
-            if(WEAK.indexOf(lower) > -1) return {lvl:'lvl1', label:'Guessed instantly'};
-            var pts = 0;
-            if(pw.length >= 12) pts += 2; else if(pw.length >= 8) pts += 1;
-            if(/[A-Z]/.test(pw)) pts += 1;
-            if(/[0-9]/.test(pw)) pts += 1;
-            if(/[^A-Za-z0-9]/.test(pw)) pts += 1;
-            if(pts <= 1) return {lvl:'lvl1', label:'Guessed in minutes'};
-            if(pts <= 3) return {lvl:'lvl2', label:'A few hours'};
-            return {lvl:'lvl3', label:'Thousands of years'};
+            if(WEAK.indexOf(lower) > -1) return {lvl:'lvl1', label:'Instantly'};
+            var pool = 0;
+            if(/[a-z]/.test(pw)) pool += 26;
+            if(/[A-Z]/.test(pw)) pool += 26;
+            if(/[0-9]/.test(pw)) pool += 10;
+            if(/[^A-Za-z0-9]/.test(pw)) pool += 33;
+            if(pool === 0) pool = 1;
+            var combinations = Math.pow(pool, pw.length);
+            var seconds = combinations / GUESSES_PER_SECOND;
+            return humanizeSeconds(seconds);
           }
           function update(){
             var r = score(input.value.trim());
