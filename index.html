@@ -1144,6 +1144,45 @@
   .d2-feed{font-weight:700;font-size:1.1rem;min-height:1.4em}
   .d2-feed.ok{color:var(--out)}.d2-feed.no{color:var(--red)}
 
+  /* spot the mistake */
+  .d2-spot{display:flex;flex-direction:column;gap:20px;align-items:center;width:100%}
+  .d2-spot-progress{
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:.95rem;
+    background:var(--ground-2);border-radius:999px;padding:8px 18px;color:var(--proc)
+  }
+  .d2-spotline{display:flex;flex-wrap:wrap;gap:.35em;justify-content:center;line-height:1.7}
+  .d2-spotline.sz-y12{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:700;gap:.4em}
+  .d2-spotline.sz-y34{font-size:clamp(1.1rem,2.6vw,1.5rem);font-weight:600}
+  .d2-spotline.sz-y56{font-size:clamp(1rem,2.1vw,1.25rem);font-weight:500;line-height:1.85;max-width:62ch}
+  .d2-spotword{
+    border:0;background:transparent;font:inherit;font-family:inherit;color:var(--ink);cursor:pointer;
+    padding:.05em .12em;border-radius:.3em;transition:background .16s var(--ease), color .16s var(--ease), transform .16s var(--ease)
+  }
+  .d2-spotword:hover{background:var(--ground-2)}
+  .d2-spotword.found{background:color-mix(in srgb,var(--out) 20%,var(--paper));color:var(--out);font-weight:800;animation:d2spotfound .4s var(--bounce,cubic-bezier(.34,1.56,.64,1))}
+  .d2-spotword.miss{animation:d2spotshake .32s}
+  @keyframes d2spotfound{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+  @keyframes d2spotshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  html.rm .d2-spotword.found{animation:none}
+  html.rm .d2-spotword.miss{animation:none}
+
+  .d2-spot-sentence{
+    display:flex;flex-direction:column;gap:10px;align-items:center;width:100%;max-width:640px;
+    background:var(--ground-2);border-radius:18px;padding:18px 22px;border:2px solid transparent;transition:border-color .2s
+  }
+  .d2-spot-sentence.resolved.right{border-color:var(--out)}
+  .d2-spot-sentence.resolved.wrong{border-color:var(--red)}
+  .d2-spot-nomistake{
+    border:2px solid var(--hair);background:var(--paper);border-radius:999px;padding:7px 18px;font-weight:700;
+    font-family:var(--font);font-size:.92rem;cursor:pointer;color:var(--muted);transition:transform .16s var(--ease)
+  }
+  .d2-spot-nomistake:hover{transform:scale(1.04)}
+  .d2-spot-nomistake.miss{animation:d2spotshake .32s}
+  html.rm .d2-spot-nomistake.miss{animation:none}
+  .d2-spot-sentence.resolved .d2-spot-nomistake{pointer-events:none}
+  .d2-spot-sentence.resolved.right .d2-spot-nomistake.was-picked{background:var(--out);color:#fff;border-color:var(--out)}
+  .d2-spot-verdict{font-size:1.3rem;line-height:1;min-width:1.4em;text-align:center}
+
   /* password meter */
   .d2-pw{display:flex;flex-direction:column;gap:12px;width:100%;max-width:560px}
   .d2-dragdemo{position:relative;width:min(320px,70vw);height:100px;margin-top:6px}
@@ -2356,6 +2395,111 @@
     });
   }
 
+  // shared: spot-the-mistake, three tiers.
+  // Y1/2: spotY12(words, mistakeIndex) - one short sentence, one mistake, large font
+  // Y3/4: spotY34(sentences) - sentences = [{words, mistakeIndex}], mistakeIndex null means the
+  //   sentence has no mistake and the correct tap is the "No mistake here" button
+  // Y5/6: spotY56(words, mistakeIndices) - one longer passage, 2-3 hidden mistakes to find
+  function spotY12(words, mistakeIndex){
+    return { steps:0, html:
+      '<h1 class="pp">Spot the mistake</h1>' +
+      '<p class="lead pp">Tap the word that&rsquo;s wrong.</p>' +
+      '<div class="d2-spot pp">' +
+        '<div class="d2-spotline sz-y12">' + words.map(function(w,i){ return '<button class="d2-spotword" data-i="'+i+'">'+w+'</button>'; }).join('') + '</div>' +
+      '</div>' +
+      '<p class="lead" id="d2spotmsg" style="min-height:1.4em;font-weight:700"></p>',
+      init:function(el){
+        var found = false, msg = el.querySelector('#d2spotmsg');
+        [].forEach.call(el.querySelectorAll('.d2-spotword'), function(b){
+          b.addEventListener('click', function(){
+            if(found) return;
+            if(parseInt(b.getAttribute('data-i'),10) === mistakeIndex){
+              found = true; b.classList.add('found');
+              msg.style.color = 'var(--out)'; msg.textContent = 'You found it!'; burst();
+            } else {
+              b.classList.add('miss'); setTimeout(function(){ b.classList.remove('miss'); }, 350);
+              msg.style.color = 'var(--red)'; msg.textContent = 'Not that one. Try again.';
+            }
+          });
+        });
+      } }; }
+  function spotY34(sentences){
+    var total = sentences.length;
+    return { steps:0, html:
+      '<h1 class="pp">Spot the mistake</h1>' +
+      '<p class="lead pp">Some sentences have a mistake, some don&rsquo;t. Tap the wrong word, or tap &lsquo;No mistake here&rsquo; if it&rsquo;s correct.</p>' +
+      '<div class="d2-spot-progress pp" id="d2spotprog">0 of ' + total + ' checked</div>' +
+      '<div class="d2-spot pp">' +
+        sentences.map(function(s,si){
+          return '<div class="d2-spot-sentence" data-si="' + si + '">' +
+            '<div class="d2-spotline sz-y34">' + s.words.map(function(w,wi){ return '<button class="d2-spotword" data-i="'+wi+'">'+w+'</button>'; }).join('') + '</div>' +
+            '<div style="display:flex;align-items:center;gap:10px">' +
+              '<button class="d2-spot-nomistake" type="button">No mistake here</button>' +
+              '<span class="d2-spot-verdict"></span>' +
+            '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>',
+      init:function(el){
+        var prog = el.querySelector('#d2spotprog'), doneCount = 0;
+        function resolve(box, verdictIcon, colorVar){
+          box.classList.add('resolved','right');
+          box.querySelector('.d2-spot-verdict').textContent = verdictIcon;
+          box.querySelector('.d2-spot-verdict').style.color = colorVar;
+          doneCount++;
+          prog.textContent = doneCount + ' of ' + total + ' checked';
+          if(doneCount === total){ prog.style.color = 'var(--out)'; burst(); }
+        }
+        [].forEach.call(el.querySelectorAll('.d2-spot-sentence'), function(box){
+          var si = parseInt(box.getAttribute('data-si'),10), s = sentences[si];
+          var noBtn = box.querySelector('.d2-spot-nomistake');
+          [].forEach.call(box.querySelectorAll('.d2-spotword'), function(b){
+            b.addEventListener('click', function(){
+              if(box.classList.contains('resolved')) return;
+              if(s.mistakeIndex != null && parseInt(b.getAttribute('data-i'),10) === s.mistakeIndex){
+                b.classList.add('found'); resolve(box, '✓', 'var(--out)');
+              } else {
+                b.classList.add('miss'); setTimeout(function(){ b.classList.remove('miss'); }, 350);
+              }
+            });
+          });
+          noBtn.addEventListener('click', function(){
+            if(box.classList.contains('resolved')) return;
+            if(s.mistakeIndex == null){
+              noBtn.classList.add('was-picked'); resolve(box, '✓', 'var(--out)');
+            } else {
+              noBtn.classList.add('miss'); setTimeout(function(){ noBtn.classList.remove('miss'); }, 350);
+            }
+          });
+        });
+      } }; }
+  function spotY56(words, mistakeIndices){
+    var total = mistakeIndices.length;
+    return { steps:0, html:
+      '<h1 class="pp">Spot the mistakes</h1>' +
+      '<p class="lead pp">Tap each wrong word you find.</p>' +
+      '<div class="d2-spot-progress pp" id="d2spotprog">0 of ' + total + ' found</div>' +
+      '<div class="d2-spot pp">' +
+        '<div class="d2-spotline sz-y56">' + words.map(function(w,i){ return '<button class="d2-spotword" data-i="'+i+'">'+w+'</button>'; }).join('') + '</div>' +
+      '</div>' +
+      '<p class="lead" id="d2spotmsg" style="min-height:1.4em;font-weight:700"></p>',
+      init:function(el){
+        var foundSet = {}, foundCount = 0, prog = el.querySelector('#d2spotprog'), msg = el.querySelector('#d2spotmsg');
+        [].forEach.call(el.querySelectorAll('.d2-spotword'), function(b){
+          b.addEventListener('click', function(){
+            var i = parseInt(b.getAttribute('data-i'),10);
+            if(foundSet[i]) return;
+            if(mistakeIndices.indexOf(i) > -1){
+              foundSet[i] = true; foundCount++; b.classList.add('found');
+              prog.textContent = foundCount + ' of ' + total + ' found';
+              if(foundCount === total){ prog.style.color = 'var(--out)'; msg.style.color = 'var(--out)'; msg.textContent = 'You found them all!'; burst(); }
+            } else {
+              b.classList.add('miss'); setTimeout(function(){ b.classList.remove('miss'); }, 350);
+            }
+          });
+        });
+      } }; }
+
   // shared: confidence slide
   function confidenceSlide(){
     var faces = [
@@ -2394,6 +2538,7 @@
     ["Activity 3 · 3 min","What is a cyber-attack?","Jot ideas on whiteboards with a partner first, then reveal. Keep it calm and matter-of-fact."],
     ["Activity 3 · 8 min","How strong is your password?","Pupils type made-up passwords into the live checker and watch the bar/verdict change. Try the three preset examples first, then let them invent their own. Reassure them: nothing typed here is saved or sent anywhere, and they should never type a real password."],
     ["Plenary · 3 min","A real digital device","Bring it back to something real. Take answers before revealing each card."],
+    ["Plenary · 4 min","Spot the mistake","New: three sentences, some right, some wrong. Pupils tap the wrong word, or tap 'No mistake here' if it's correct. Demo of the new spot-the-mistake slide type for this year group."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread tells you who needs a recap before Lesson 2."],
     ["Next time · 1 min","Next lesson","Recap the three jobs. Next lesson: the parts of a device, and design your own."]
   ];
@@ -2587,6 +2732,11 @@
       '</div>' +
       '<p class="lead pp">Tap each card.</p>',
       init:function(el){ [].forEach.call(el.querySelectorAll('.d2-rc'), function(c){ c.addEventListener('click', function(){ c.classList.toggle('open'); }); }); } }; },
+    function(){ return spotY34([
+      { words:["Pressing","a","key","is","an","input"], mistakeIndex:null },
+      { words:["The","screen","showing","your","work","is","a","process"], mistakeIndex:7 },
+      { words:["A","weak","password","uses","three","random","words"], mistakeIndex:1 }
+    ]); },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Nice work</h1>' +
@@ -2657,6 +2807,7 @@
     ["Introduction · 3 min","Technology is made by people","Made by people, on purpose, to help us. A guide dog helps people but was not made by people, so it is not technology. Technology does not have to be electronic."],
     ["Introduction · 2 min","It helps us to…","Say each one as 'it helps us to…'. A pencil helps us to write. Scissors help us to cut."],
     ["Activity 1 · 12 min","Is it technology?","Let pupils sort in pairs first, with the A1 cards if you printed them. Prompts: does it help us, and was it made by people? Press Sort to check together."],
+    ["Activity 1 · 2 min","Spot the mistake","New: pupils tap the one wrong word in 'A tree is technology'. Demo of the new spot-the-mistake slide type - large font, one mistake, unlimited retries."],
     ["Activity 2 · 8 min","Photo hunt","In pairs, pupils use the iPad's own Camera app to photograph technology round the room. Back together, look through a few photos as a class and sort them: Technology, or not? Talk through any disagreements."],
     ["Activity 3 · 8 min","How does it help us?","Tap each card. Then hand out the A3 worksheet to match pictures to jobs."],
     ["Plenary · 3 min","What is the same?","A laptop, a phone and a clock all have a computer inside. That links to next lesson."],
@@ -2703,6 +2854,7 @@
         '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
         init: sortInit };
     },
+    function(){ return spotY12(["A","tree","is","technology"], 1); },
     function(){ return { steps:2, html:
       '<h1 class="pp">Photo hunt: find technology in our room</h1>' +
       '<p class="lead pp">In pairs, use the iPad&rsquo;s <b>Camera</b> app to take a photo of something you think is technology.</p>' +
@@ -3979,6 +4131,7 @@
     ["Plenary · 4 min","How do search engines make money?","Search 'guitar'. The top results are often sponsored, paid for by companies who want to rank higher for that term."],
     ["Plenary · 3 min","Watch: Social media algorithms explained","A short TED-Ed video applying the same influence-and-money idea to social media instead of search, as a bridge to the next unit."],
     ["Plenary · 4 min","Targeted or not?","A bus-side advert reaches everyone who passes, whether they're interested or not. A search advert reaches people already looking for that exact thing."],
+    ["Plenary · 5 min","Spot the mistakes","New: a short passage with two mistakes hidden in it (search engines don't crawl live, and they make money from advertising, not selling computers). Pupils tap each wrong word; progress shows how many they've found. Demo of the new spot-the-mistake slide type for this year group."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
   ];
@@ -4065,6 +4218,12 @@
         rc('An advert on the side of a bus','seen by everyone nearby, whether interested or not','in-c') +
         rc('An advert after searching &ldquo;guitar&rdquo;','seen only by people already looking for one','ou-c') +
       '</div>', init: revealInit }; },
+    function(){ return spotY56(
+      ["A","search","engine","crawls","the","whole","web","again","every","time","you","search.",
+       "It","stores","websites","in","an","index","built","by","web","crawlers.",
+       "Search","engines","mostly","make","their","money","from","selling","computers."],
+      [3, 30]
+    ); },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">That&rsquo;s the unit done</h1>' +
