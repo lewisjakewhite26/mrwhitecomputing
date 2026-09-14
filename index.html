@@ -2286,6 +2286,48 @@
     });
   }
 
+  // shared: sequence-check activity, one or more scenario groups on one slide,
+  // reusing the .seq/.step styling already built for the Year 5/6 Systems deck
+  function seqInit(el){
+    var groups = [].slice.call(el.querySelectorAll('.d2-seqgrp'));
+    function renumber(host){
+      [].slice.call(host.children).forEach(function(r,i){ r.querySelector('.n').textContent = i + 1; r.classList.remove('right','wrong'); });
+    }
+    function render(host, steps){
+      host.innerHTML = '';
+      steps.forEach(function(s){
+        var d = document.createElement('div');
+        d.className = 'step'; d.setAttribute('data-correct', s.correct);
+        d.innerHTML = '<span class="n"></span><span class="txt">' + s.t + '</span>' +
+          '<span class="mv"><button type="button" data-up>&#9650;</button>' +
+          '<button type="button" data-down>&#9660;</button></span>';
+        host.appendChild(d);
+      });
+      renumber(host);
+      host.querySelectorAll('[data-up]').forEach(function(b){ b.addEventListener('click', function(){ var row=b.closest('.step'), prev=row.previousElementSibling; if(prev){ host.insertBefore(row, prev); renumber(host); } }); });
+      host.querySelectorAll('[data-down]').forEach(function(b){ b.addEventListener('click', function(){ var row=b.closest('.step'), next=row.nextElementSibling; if(next){ host.insertBefore(next, row); renumber(host); } }); });
+    }
+    groups.forEach(function(host){
+      var steps = JSON.parse(host.getAttribute('data-steps'));
+      render(host, steps.map(function(t,i){ return {t:t,correct:i}; }).sort(function(){ return Math.random()-0.5; }));
+    });
+    var checkBtn = el.querySelector('#d2seqcheck'), res = el.querySelector('#d2seqres');
+    if(checkBtn) checkBtn.addEventListener('click', function(){
+      var ok = 0, total = 0;
+      groups.forEach(function(host){
+        [].slice.call(host.children).forEach(function(r,i){
+          total++;
+          var right = parseInt(r.getAttribute('data-correct'),10) === i;
+          r.classList.toggle('right', right); r.classList.toggle('wrong', !right);
+          if(right) ok++;
+        });
+      });
+      res.textContent = ok + ' of ' + total + ' in the right place';
+      res.style.color = (ok === total) ? 'var(--out)' : 'var(--red)';
+      if(ok === total) burst();
+    });
+  }
+
   // shared: confidence slide
   function confidenceSlide(){
     var faces = [
@@ -2898,7 +2940,7 @@
     ["Activity 1 · 8 min","One device, many tasks","A digital camera, laptop, games console and smartphone can each do more than one job. Ask which of the listed tasks each device could do."],
     ["Activity 1 · 4 min","Devices rarely do one thing","A smartphone alone takes photos, sends messages, plays games and makes calls. Hand out the A1 sheet for pupils to tick which device can do which task."],
     ["Activity 2 · 15 min","Paint it two ways","Pupils create the same picture twice: once with paint on paper, once in a digital paint program using brush, fill, and undo."],
-    ["Activity 2 · 3 min","What's different?","Undo lets you fix a mistake instantly. Fill covers a whole area in one tap. Paper has neither, but needs no charging."],
+    ["Activity 2 · 4 min","Sort the good points","A checked sort, not reveal cards: pupils sort 8 real advantages into Digital / Paper and paint. Discuss any they disagree on - some are genuinely arguable."],
     ["Activity 3 · 6 min","Think back","Pupils reflect on both pieces of work. Which did they prefer, and why?"],
     ["Plenary · 4 min","Sometimes non-digital wins","Discuss: is a digital tool always the better choice? Paper starts instantly and never runs out of battery."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
@@ -2937,13 +2979,18 @@
       '<h1 class="pp">Paint it two ways</h1>' +
       '<p class="lead pp">Make the same picture twice: once with paint on paper, once in a digital paint program.</p>' +
       '<p class="lead pp">This time, notice how you change colour, and how you fix a mistake.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">What&rsquo;s different?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Undo','fixes a mistake instantly, no need to start again','in-c') +
-        rc('Fill tool','covers a whole area in one tap','pr-c') +
-        rc('Paper and paint','needs no charging, and never lags','ou-c') +
-      '</div>', init: revealInit }; },
+    function(){
+      var TRAITS = [["Undo fixes a mistake instantly",1],["Fill tool covers a whole area in one tap",1],["Easy to share or print lots of copies",1],["Colours never run dry",1],
+        ["Needs no charging",0],["Starts instantly, no loading",0],["Still works if the wifi or power is down",0],["You can feel the texture as you draw",0]];
+      return { steps:0, html:
+        '<h1 class="pp">Sort the good points</h1>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + TRAITS.map(function(t){ return '<button class="d2-chip" data-ok="'+t[1]+'">'+t[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins pp">' +
+          '<div class="d2-bin d"><h4>Digital</h4><div class="items" id="d2binD"></div></div>' +
+          '<div class="d2-bin n"><h4>Paper and paint</h4><div class="items" id="d2binN"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+        init: sortInit }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Think back</h1>' +
       '<div class="d2-rc pp" data-step="1" style="max-width:34ch" id="d2think"><b>Which did you prefer, and why?</b><span class="ans">There is no wrong answer. Some people prefer paper because it feels direct; some prefer digital because mistakes are easy to fix.</span></div>',
@@ -3002,8 +3049,7 @@
     ["Introduction · 3 min","These are all search engines","Bing, Google, DuckDuckGo, Ecosia and Swisscows. Ask which pupils recognise. Note what makes each one different."],
     ["Introduction · 2 min","A search engine is a system","Input: your search term. Process: the search engine works out what to show. Output: the results list. The next three lessons cover the process."],
     ["Activity 1 · 15 min","Write the instructions","Pairs write full instructions to answer a set question by searching, without naming the answer itself. Swap with another pair, test the instructions on a real device, and give feedback."],
-    ["Activity 2 · 6 min","Same word, different meaning","Search Rugby, Sale and Boot. Most results are the sport, the shop event, and the footwear, not the three UK places."],
-    ["Activity 2 · 4 min","Refine the search","Ask how to fix it. Adding a county name or the word 'village' usually narrows it to the place."],
+    ["Activity 2 · 8 min","Put each search in the right order","A checked sequence, not reveal cards: pupils reorder three scrambled steps per place name (Rugby, Sale, Boot) into first search, why it missed, and the better second search. Tap Check the order when done."],
     ["Activity 3 · 10 min","Comparing search engines","As a class, agree one search term. Pupils try it in all five search engines and record the top result, the number of adverts, and anything they notice."],
     ["Plenary · 6 min","Search box or address bar?","Typing into a search engine's own box searches with that engine. Typing into the browser's address bar uses whichever search engine the browser is set to by default."],
     ["Plenary · 4 min","Is this website trustworthy?","Check for spelling errors, low-quality images, and a web address that looks right. If unsure, check the same fact on two other sites."],
@@ -3049,17 +3095,22 @@
       '<h1 class="pp">Write the instructions</h1>' +
       '<p class="lead pp" style="max-width:38ch">In what year was Mahatma Gandhi born? Write full steps for someone else to follow to find out, without telling them the answer.</p>' +
       '<p class="lead pp">Swap with another pair. Test their steps on a real device.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Same word, different meaning</h1>' +
-      '<p class="lead pp">Search these three words, and note what comes up.</p>' +
-      '<div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-weight:700;font-size:clamp(1.2rem,3vw,1.7rem);color:var(--proc)">' +
-        '<span>Rugby</span><span>Sale</span><span>Boot</span></div>' }; },
-    function(){ return { steps:1, html:
-      '<h1 class="pp">Not what you meant?</h1>' +
-      '<p class="lead pp">Most results are about the sport, the shop event, and the footwear.</p>' +
-      '<p class="lead pp" data-step="1" style="font-weight:700">You wanted Rugby in Warwickshire, Sale in Greater Manchester, and Boot in Cumbria.</p>' +
-      '<div class="d2-rc pp" data-step="1" style="max-width:30ch" id="d2refine"><b>How could you refine your search?</b><span class="ans">Add a word that narrows it down, like a county name, or the word &lsquo;village&rsquo;.</span></div>',
-      init:function(el){ var c=el.querySelector('#d2refine'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    function(){
+      var GROUPS = [
+        ["Rugby", ["Search &lsquo;Rugby&rsquo;", "Mostly results about the sport, not the town", "Search &lsquo;Rugby Warwickshire&rsquo; and find the town"]],
+        ["Sale", ["Search &lsquo;Sale&rsquo;", "Mostly results about shop discounts, not the town", "Search &lsquo;Sale Greater Manchester&rsquo; and find the town"]],
+        ["Boot", ["Search &lsquo;Boot&rsquo;", "Mostly results about footwear, not the village", "Search &lsquo;Boot Cumbria&rsquo; and find the village"]]
+      ];
+      return { steps:0, html:
+        '<h1 class="pp">Put each search in the right order</h1>' +
+        '<p class="lead pp">You wanted the place, not the other meaning. Drag &mdash; or use the arrows &mdash; to put each set of three in the order it really happens.</p>' +
+        '<div class="pp" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;width:100%">' +
+          GROUPS.map(function(g){ return '<div style="flex:1;min-width:240px;max-width:320px"><h4 style="margin:0 0 8px;color:var(--proc);text-align:center">'+g[0]+'</h4>' +
+            '<div class="seq d2-seqgrp" data-steps=\'' + JSON.stringify(g[1]) + '\'></div></div>'; }).join('') +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2seqcheck">Check the order</button>' +
+        '<p class="lead" id="d2seqres" style="min-height:1.4em;font-weight:700"></p>',
+        init: seqInit }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Comparing search engines</h1>' +
       '<p class="lead pp">As a class, agree one search term. Try it in all five search engines. Record the top result, the number of adverts, and anything you notice.</p>' }; },
