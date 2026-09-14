@@ -63,8 +63,12 @@ Sometimes just stop.
 
 ## Punctuation rules
 
-**Em dashes:** at most one per 500 words. The most cited AI tell there is. Use
-commas, semicolons, colons, parentheses, or a new sentence.
+**Em dashes:** zero, full stop, anywhere on this website (`index.html`,
+`quick-click.html`, and any other file that ships to the live site) - a
+stricter rule than the general anti-slop guideline below, which allows one
+per 500 words. Use commas, semicolons, colons, parentheses, or a new
+sentence instead. This applies to code comments in those files too, not
+just pupil-facing copy: the whole codebase should read as free of the tell.
 
 **Exclamation marks:** at most one per 1,000 words. Enthusiasm comes from word
 choice.

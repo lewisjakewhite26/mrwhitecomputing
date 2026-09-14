@@ -5361,6 +5361,11 @@
     setupWhiteboard2();
     document.addEventListener('keydown', function(e){
       if(!document.getElementById('view-deck2').classList.contains('on')) return;
+      // same guard as the Year 5/6 deck's own shortcut handler: never
+      // hijack keys while a pupil is typing into a slide's own input,
+      // e.g. the password checker, or letters like N/F/W/O trigger tools
+      var tag = (e.target && e.target.tagName) || '';
+      if(/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || (e.target && e.target.isContentEditable)) return;
       if(e.key === 'ArrowRight' || e.key === ' '){ e.preventDefault(); fwd(); }
       else if(e.key === 'ArrowLeft'){ e.preventDefault(); back(); }
       else if(e.key === 'n' || e.key === 'N'){ toggleNotes(); }
@@ -5629,7 +5634,7 @@
   }
 
   // polls the room every 2s purely to notice a round change (a new task
-  // unlocked by the teacher on the same code/QR) — only touches the DOM
+  // unlocked by the teacher on the same code/QR); only touches the DOM
   // when the round actually differs from what this pupil last saw
   function startPvPoll(el){
     if(pvPollTimer) clearInterval(pvPollTimer);
@@ -5645,7 +5650,7 @@
   }
 
   // a new round landed: swap in the new question, wipe the textarea and the
-  // canvas back to blank, and re-enable Send — undoes whatever "already
+  // canvas back to blank, and re-enable Send; undoes whatever "already
   // sent" / cooldown state the pupil was left in on the previous task
   function pvApplyNewRound(el, question, round){
     pvRound = round;
@@ -5664,7 +5669,7 @@
   }
 
   // shown when the pupil opens the app with no room code in the URL at all
-  // (didn't scan, or scanning failed) — a manual fallback next to the QR flow
+  // (didn't scan, or scanning failed): a manual fallback next to the QR flow
   function buildJoinForm(el, errMsg){
     el.innerHTML =
       '<p class="lv-tk">Live answer wall</p>' +
@@ -5777,7 +5782,7 @@
       if(sendBtn.disabled) return;
       statusEl.classList.remove('err','ok','lv-pop');
       // the toggle makes Draw/Write exclusive per visit, so Send only ever
-      // submits whichever tab is currently active — not both
+      // submits whichever tab is currently active, not both
       var jobs = [];
       if(pvActiveTab === 'draw'){
         if(pvStrokes.length === 0){
@@ -5830,7 +5835,7 @@
   function markPvTool(barEl){
     barEl.querySelectorAll('[data-tool]').forEach(function(b){ b.classList.toggle('sel', b.getAttribute('data-tool') === pvTool); });
   }
-  // switches which of {canvas, textarea} has the answer area — the other
+  // switches which of {canvas, textarea} has the answer area; the other
   // stays in the DOM with [hidden] rather than being torn down, so its
   // content survives a flip back. A canvas sized while display:none is a
   // classic 0x0 trap, so switching TO draw explicitly re-runs pvResize()
@@ -5931,7 +5936,7 @@
   /* ---------- board view ---------- */
   var bdTimer = null, bdKnown = null, bdCode = null, bdToken = null, bdEl = null, bdStage = null, bdOverlay = null,
       bdRound = 0, bdQuestion = '', bdTileIndex = 0;
-  // which of the two board states is showing — a plain variable + a class on
+  // which of the two board states is showing: a plain variable + a class on
   // #view-board, nothing more. bdLastCode lets it survive renderBoardView
   // being called again for the SAME room (rather than snapping back to
   // "join" every time); a real page reload re-runs this whole script so the
@@ -6099,7 +6104,7 @@
     tile.addEventListener('animationend', function(){ tile.classList.remove('enter'); }, {once:true});
   }
   // scatters new tiles across the stage in a loose grid (plus a little jitter)
-  // so they don't all pile on top of each other at (0,0) — the teacher is
+  // so they don't all pile on top of each other at (0,0); the teacher is
   // free to drag any of them anywhere the moment they land
   function placeInitialTile(tile){
     var stageW = bdStage.clientWidth || 900, stageH = Math.max(bdStage.clientHeight, 480);
@@ -6130,8 +6135,8 @@
   // pointer-based drag with a small tap-vs-drag threshold (so tapping a tile
   // still opens the enlarge overlay), plus a momentum glide on release:
   // velocity is tracked from the last couple of pointermove samples and
-  // decays by a friction factor each animation frame until it's negligible —
-  // not a real physics engine, just enough to feel like one has weight
+  // decays by a friction factor each animation frame until it's negligible.
+  // Not a real physics engine, just enough to feel like one has weight
   function makeTileDraggable(tile, a){
     var TAP_THRESHOLD = 6, FRICTION = 0.94, MIN_SPEED = 0.02;
     var dragging = false, moved = false, startX = 0, startY = 0, offX = 0, offY = 0, pts = [], raf = null;
@@ -6205,7 +6210,7 @@
     cleanup: cleanup,
     startFromQR: startFromQR
   };
-  // the page may have loaded straight onto a #/live or #/board URL — the first router
+  // the page may have loaded straight onto a #/live or #/board URL; the first router
   // pass ran before this module existed, so re-drive it now that HB_LIVE is ready.
   try{ if(/(^#\/?|\/)(live|board)(\/|$)/.test(location.hash) && window.__hbRoute) setTimeout(window.__hbRoute, 0); }catch(e){}
 })();
