@@ -823,7 +823,7 @@
     0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--proc) 55%,transparent), var(--shadow-md)}
     100%{box-shadow:0 0 0 22px color-mix(in srgb,var(--proc) 0%,transparent), var(--shadow-md)}
   }
-  /* Draw/Write segmented toggle — big touch targets, Draw selected by default */
+  /* Draw/Write segmented toggle: big touch targets, Draw selected by default */
   .lv-tabs{display:flex;gap:10px;margin-bottom:18px}
   .lv-tab{flex:1;min-height:60px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:16px;border:2px solid var(--hair);background:var(--paper);color:var(--muted);font-family:var(--font);font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .12s var(--ease,ease)}
   .lv-tab svg{width:22px;height:22px;flex:none}
@@ -883,7 +883,7 @@
   .lv-join:active{transform:translateY(0) scale(.99)}
 
   #view-board{min-height:100vh;box-sizing:border-box}
-  /* two states live in the DOM together — .bd-view-join and .bd-view-wall —
+  /* two states live in the DOM together: .bd-view-join and .bd-view-wall,
      and a class on #view-board picks which is visible. Nothing about bdTimer,
      bdStage or the poll loop cares which one is showing; this is a pure
      CSS/DOM visibility switch over state that keeps updating regardless. */
@@ -972,6 +972,7 @@
     padding:clamp(40px,7vh,72px) clamp(30px,6vw,86px);
     opacity:0;transform:scale(.94);pointer-events:none;
     transition:opacity .34s var(--ease), transform .34s var(--ease);
+    overflow-y:auto;
   }
   .d2-slide.active{opacity:1;transform:none;pointer-events:auto}
   .d2-slide.leaving{opacity:0;transform:scale(1.05)}
@@ -990,7 +991,7 @@
   html.rm .d2-slide .pp.in{transition-duration:.001s}
 
   /* chrome */
-  .d2-top{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:flex-start;z-index:8;pointer-events:none}
+  .d2-top{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:flex-start;z-index:12;pointer-events:none}
   .d2-top button{pointer-events:auto}
   .d2-rbtn{
     width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:999px;
@@ -998,8 +999,13 @@
     transition:transform .16s var(--ease), background .16s;
   }
   .d2-rbtn:hover{transform:scale(1.08);background:var(--paper)}
+  .d2-rbtn.act{background:var(--ink);color:#fff}
   .d2-rbtn svg{width:21px;height:21px}
   .d2-toolgroup{display:flex;gap:8px}
+  .d2-toolpop{position:absolute;top:56px;right:16px;background:var(--paper);border:1px solid var(--hair);
+    border-radius:12px;box-shadow:var(--shadow-md);padding:6px;display:none;z-index:30;min-width:210px;
+    pointer-events:auto}
+  .d2-toolpop.on{display:flex;flex-direction:column}
   .d2-home{
     display:inline-flex;align-items:center;gap:6px;padding:9px 15px 9px 11px;border:0;border-radius:999px;
     background:var(--ground-2);color:var(--ink);font-family:var(--font);font-weight:600;font-size:.9rem;
@@ -1149,15 +1155,15 @@
   .d2-feed.ok{color:var(--out)}.d2-feed.no{color:var(--red)}
 
   /* spot the mistake */
-  .d2-spot{display:flex;flex-direction:column;gap:20px;align-items:center;width:100%}
+  .d2-spot{display:flex;flex-direction:column;gap:10px;align-items:center;width:100%}
   .d2-spot-progress{
-    font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:.95rem;
-    background:var(--ground-2);border-radius:999px;padding:8px 18px;color:var(--proc)
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:.85rem;
+    background:var(--ground-2);border-radius:999px;padding:6px 16px;color:var(--proc)
   }
-  .d2-spotline{display:flex;flex-wrap:wrap;gap:.35em;justify-content:center;line-height:1.7}
-  .d2-spotline.sz-y12{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:700;gap:.4em}
-  .d2-spotline.sz-y34{font-size:clamp(1.1rem,2.6vw,1.5rem);font-weight:600}
-  .d2-spotline.sz-y56{font-size:clamp(1rem,2.1vw,1.25rem);font-weight:500;line-height:1.85;max-width:62ch}
+  .d2-spotline{display:flex;flex-wrap:wrap;gap:.3em;justify-content:center;line-height:1.4}
+  .d2-spotline.sz-y12{font-size:clamp(1.4rem,4vw,2rem);font-weight:700;gap:.35em}
+  .d2-spotline.sz-y34{font-size:clamp(.95rem,1.9vw,1.15rem);font-weight:600}
+  .d2-spotline.sz-y56{font-size:clamp(.85rem,1.6vw,1rem);font-weight:500;line-height:1.5;max-width:62ch}
   .d2-spotword{
     border:0;background:transparent;font:inherit;font-family:inherit;color:var(--ink);cursor:pointer;
     padding:.05em .12em;border-radius:.3em;transition:background .16s var(--ease), color .16s var(--ease), transform .16s var(--ease)
@@ -1171,8 +1177,8 @@
   html.rm .d2-spotword.miss{animation:none}
 
   .d2-spot-sentence{
-    display:flex;flex-direction:column;gap:10px;align-items:center;width:100%;max-width:640px;
-    background:var(--ground-2);border-radius:18px;padding:18px 22px;border:2px solid transparent;transition:border-color .2s
+    display:flex;flex-direction:column;gap:6px;align-items:center;width:100%;max-width:640px;
+    background:var(--ground-2);border-radius:14px;padding:10px 18px;border:2px solid transparent;transition:border-color .2s
   }
   .d2-spot-sentence.resolved.right{border-color:var(--out)}
   .d2-spot-sentence.resolved.wrong{border-color:var(--red)}
@@ -1267,8 +1273,14 @@
     <div class="d2-top">
       <button class="d2-home" id="d2-exit" aria-label="Back to lessons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Lessons</button>
       <div class="d2-toolgroup">
+        <button class="d2-rbtn" id="d2-wb-btn" aria-label="Whiteboard" data-tip="Pen &amp; whiteboard (W)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+        <button class="d2-rbtn" id="d2-ov-btn" aria-label="Overview" data-tip="All slides (O)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+        <button class="d2-rbtn" id="d2-set-btn" aria-label="Settings" data-tip="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         <button class="d2-rbtn" id="d2-notes-btn" aria-label="Teacher notes" data-tip="Teacher notes (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4z"/></svg></button>
         <button class="d2-rbtn" id="d2-fs-btn" aria-label="Fullscreen" data-tip="Fullscreen (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button>
+      </div>
+      <div class="set-pop d2-toolpop" id="d2-setPop">
+        <label class="set-row"><span>Reduce motion</span><input type="checkbox" id="d2-setRM"></label>
       </div>
     </div>
     <button class="d2-chev prev" id="d2-prev" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -1276,6 +1288,26 @@
 
     <div class="d2-stage"><div class="d2-slides" id="d2-slides"></div></div>
     <div class="d2-dots" id="d2-dots"></div>
+
+    <div class="wb" id="d2-wb"><canvas id="d2-wbCanvas"></canvas></div>
+    <div class="wb-bar" id="d2-wbBar">
+      <span class="sw" data-col="#1C2431" style="background:#1C2431"></span>
+      <span class="sw" data-col="#2F6BE0" style="background:#2F6BE0"></span>
+      <span class="sw" data-col="#6C4CE0" style="background:#6C4CE0"></span>
+      <span class="sw" data-col="#0E9C6A" style="background:#0E9C6A"></span>
+      <span class="sw" data-col="#D8443C" style="background:#D8443C"></span>
+      <span class="sep"></span>
+      <button data-tool="pen" data-tip="Pen" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+      <button data-tool="hi" data-tip="Highlighter" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 4 16v4h4l5-5"/><path d="m13 7 4 4 4-4-4-4Z"/></svg></button>
+      <button data-tool="erase" data-tip="Rubber" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 6-6 8 8-4 4H9Z"/><path d="M22 20H7"/></svg></button>
+      <span class="sep"></span>
+      <button data-tool="undo" data-tip="Undo" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10H9"/></svg></button>
+      <button data-tool="redo" data-tip="Redo" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h6"/></svg></button>
+      <button data-tool="clear" data-tip="Clear this slide" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button>
+      <button data-tool="blank" data-tip="Blank sheet" data-tip-below><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/></svg></button>
+    </div>
+
+    <div class="overview" id="d2-overview"></div>
 
     <div class="d2-notes" id="d2-notes">
       <div class="meta" id="d2-notes-meta"></div>
@@ -2494,8 +2526,8 @@
   function spotY34(sentences){
     var total = sentences.length;
     return { steps:0, html:
-      '<h1 class="pp">Spot the mistake</h1>' +
-      '<p class="lead pp">Some sentences have a mistake, some don&rsquo;t. Tap the wrong word, or tap &lsquo;No mistake here&rsquo; if it&rsquo;s correct.</p>' +
+      '<h1 class="pp" style="font-size:clamp(1.6rem,3.4vw,2.4rem)">Spot the mistake</h1>' +
+      '<p class="lead pp" style="font-size:clamp(.95rem,1.6vw,1.15rem);max-width:44ch">Some sentences have a mistake, some don&rsquo;t. Tap the wrong word, or tap &lsquo;No mistake here&rsquo; if it&rsquo;s correct.</p>' +
       '<div class="d2-spot-progress pp" id="d2spotprog">0 of ' + total + ' checked</div>' +
       '<div class="d2-spot pp">' +
         sentences.map(function(s,si){
@@ -2600,7 +2632,7 @@
     ["Warm-up · 2 min","Which one is digital?","Take a vote before tapping. A digital device does something beyond just on/off. It has a tiny computer inside that follows instructions."],
     ["Activity 1 · 8 min","Digital or not digital?","Ask pupils how they'd sort these before you press Sort. Watch for the 'electrical / not electrical' misconception. The torch and lamp are electrical but not digital: they only switch on and off."],
     ["Activity 2 · 4 min","Three jobs, every time","Do the hand-jive: input = point down, process = roll hands, output = point out. The process is the device following its program."],
-    ["Activity 2 · 3 min","Press a key","Model it live in a word processor if you can. Press H, the computer follows its program, then H shows on screen."],
+    ["Activity 2 · 3 min","Press a key","Now interactive, not a stepped illustration: pupils tap different on-screen letters themselves and watch the input/process/output boxes update live each time, so they see it happen more than once, not just one fixed example."],
     ["Activity 2 · 12 min","Find the rule","This is a function machine. Show 2 to 4, then 5 to 7, and let pupils argue about the rule before revealing + 2. The concept matters more than the arithmetic."],
     ["Activity 3 · 3 min","You are the boss","When pupils use their own device they give the input, so they are in control. If a device is not protected, someone else can provide the input."],
     ["Activity 3 · 3 min","What is a cyber-attack?","Jot ideas on whiteboards with a partner first, then reveal. Keep it calm and matter-of-fact."],
@@ -2670,60 +2702,92 @@
         '<div class="arr pp" data-step="3">→</div>' +
         '<div class="box ou pp" data-step="3"><b>3 · Output</b><span>Something it does back. Point your fingers out. '+ph('arrow-right',18)+'</span></div>' +
       '</div>' }; },
-    function(){ return { steps:3, html:
+    function(){
+      var LETTERS = ["H","A","T","S","M","P"];
+      return { steps:0, html:
       '<h1 class="pp">Press a key</h1>' +
+      '<p class="lead pp">Tap a letter below and watch what happens.</p>' +
       '<div style="display:flex;align-items:center;gap:clamp(10px,2.5vw,28px);flex-wrap:wrap;justify-content:center">' +
-        '<div class="pp" data-step="1" style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
-          '<div style="width:74px;height:74px;border-radius:16px;background:var(--ground-2);display:grid;place-items:center;font-weight:800;font-size:2rem;box-shadow:var(--shadow-sm)">H</div>' +
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
+          '<div id="d2pkIn" style="width:74px;height:74px;border-radius:16px;background:var(--ground-2);display:grid;place-items:center;font-weight:800;font-size:2rem;box-shadow:var(--shadow-sm);color:var(--soft)">?</div>' +
           '<small style="color:var(--in);font-weight:700">input</small></div>' +
-        '<span class="pp" data-step="2" style="font-size:1.8rem;color:var(--soft)">→</span>' +
-        '<div class="pp" data-step="2" style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
-          '<div style="width:96px;height:74px;border-radius:16px;background:linear-gradient(155deg,#8A63F0,#6C4CE0);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-md)">'+ICON.gear+'</div>' +
+        '<span style="font-size:1.8rem;color:var(--soft)">→</span>' +
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
+          '<div id="d2pkProc" style="width:96px;height:74px;border-radius:16px;background:linear-gradient(155deg,#8A63F0,#6C4CE0);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-md)">'+ICON.gear+'</div>' +
           '<small style="color:var(--proc);font-weight:700">follows its program</small></div>' +
-        '<span class="pp" data-step="3" style="font-size:1.8rem;color:var(--soft)">→</span>' +
-        '<div class="pp" data-step="3" style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
-          '<div style="width:120px;height:74px;border-radius:16px;background:#10131c;color:#7CF0B8;display:grid;place-items:center;font-family:ui-monospace,Consolas,monospace;font-size:1.6rem;box-shadow:var(--shadow-md)">H_</div>' +
+        '<span style="font-size:1.8rem;color:var(--soft)">→</span>' +
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
+          '<div id="d2pkOut" style="width:120px;height:74px;border-radius:16px;background:#10131c;color:#7CF0B8;display:grid;place-items:center;font-family:ui-monospace,Consolas,monospace;font-size:1.6rem;box-shadow:var(--shadow-md)">&nbsp;</div>' +
           '<small style="color:var(--out);font-weight:700">output</small></div>' +
       '</div>' +
-      '<p class="lead pp" data-step="3">The letter you see is the output.</p>' }; },
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">' +
+        LETTERS.map(function(l){ return '<button class="d2-gbtn ghost d2pkkey" data-k="'+l+'" style="font-family:ui-monospace,Consolas,monospace;font-weight:800">'+l+'</button>'; }).join('') +
+      '</div>' +
+      '<p class="lead" id="d2pkmsg" style="min-height:1.4em">The letter you press is the input. The letter you see on screen is the output.</p>',
+      init:function(el){
+        var inBox = el.querySelector('#d2pkIn'), outBox = el.querySelector('#d2pkOut'), proc = el.querySelector('#d2pkProc'), msg = el.querySelector('#d2pkmsg');
+        [].forEach.call(el.querySelectorAll('.d2pkkey'), function(b){
+          b.addEventListener('click', function(){
+            var k = b.getAttribute('data-k');
+            inBox.textContent = k; inBox.style.color = 'var(--ink)';
+            if(!RM) proc.animate([{transform:'rotate(0)'},{transform:'rotate(20deg)'},{transform:'rotate(0)'}], {duration:340});
+            setTimeout(function(){
+              outBox.textContent = k + '_';
+              msg.textContent = 'You pressed ' + k + '. The computer followed its program, and ' + k + ' showed up on screen.';
+            }, RM ? 0 : 220);
+          });
+        });
+      } }; },
     function(){
-      return { steps:2, html:
+      var EXAMPLES = [[2,4],[5,7],[10,12]]; // rule: + 2
+      var lastStep = EXAMPLES.length;
+      return { steps: lastStep, html:
         '<h1 class="pp">Find the rule</h1>' +
         '<div class="d2-machine">' +
-          '<div class="d2-mrow"><span class="d2-num" id="d2mi">2</span>' +
-            '<span style="color:var(--soft);font-size:1.6rem">→</span>' +
-            '<span class="d2-box2">'+ICON.gear+'<span class="rule" id="d2rule" hidden>+ 2</span></span>' +
-            '<span style="color:var(--soft);font-size:1.6rem">→</span>' +
-            '<span class="d2-num out" id="d2mo">4</span></div>' +
-          '<p class="pp" data-step="2" id="d2ex2" style="margin:8px 0 0;color:var(--muted);font-weight:600">Now: 5 goes in, 7 comes out. What is the machine doing?</p>' +
-          '<div class="d2-guess" id="d2guess">' +
+          EXAMPLES.map(function(ex,i){
+            return '<div class="d2-mrow pp"' + (i > 0 ? ' data-step="'+i+'"' : '') + '>' +
+              '<span class="d2-num">'+ex[0]+'</span>' +
+              '<span style="color:var(--soft);font-size:1.6rem">→</span>' +
+              '<span class="d2-box2">'+ICON.gear+'</span>' +
+              '<span style="color:var(--soft);font-size:1.6rem">→</span>' +
+              '<span class="d2-num out">'+ex[1]+'</span></div>';
+          }).join('') +
+          '<p class="lead pp" data-step="'+lastStep+'" style="margin:8px 0 0">What is the machine doing every time?</p>' +
+          '<div class="d2-guess pp" data-step="'+lastStep+'" id="d2guess">' +
             '<button class="d2-gbtn ghost" data-r="add2">+ 2</button>' +
             '<button class="d2-gbtn ghost" data-r="mul2">× 2</button>' +
             '<button class="d2-gbtn ghost" data-r="add10">+ 10</button>' +
           '</div>' +
           '<p class="d2-feed" id="d2feed"></p>' +
-          '<div id="d2play" style="display:none;flex-direction:column;gap:8px;align-items:center">' +
+          '<div id="d2play" style="display:none;flex-direction:column;gap:10px;align-items:center;margin-top:6px">' +
+            '<div class="d2-mrow"><span class="d2-num" id="d2mi">1</span>' +
+              '<span style="color:var(--soft);font-size:1.6rem">→</span>' +
+              '<span class="d2-box2">'+ICON.gear+'</span>' +
+              '<span style="color:var(--soft);font-size:1.6rem">→</span>' +
+              '<span class="d2-num out" id="d2mo">3</span></div>' +
             '<p style="margin:0;font-weight:700;color:var(--proc)">Your turn: feed it a number</p>' +
             '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">' +
-              [1,2,3,4,5,6].map(function(n){ return '<button class="d2-gbtn ghost d2feednum" data-n="'+n+'">'+n+'</button>'; }).join('') +
+              [1,2,3,4,5,6,7,8,9,10].map(function(n){ return '<button class="d2-gbtn ghost d2feednum" data-n="'+n+'">'+n+'</button>'; }).join('') +
             '</div></div>' +
         '</div>',
         init:function(el){
           var mi = el.querySelector('#d2mi'), mo = el.querySelector('#d2mo'),
-              rule = el.querySelector('#d2rule'), feed = el.querySelector('#d2feed'),
-              play = el.querySelector('#d2play'), solved = false;
+              feed = el.querySelector('#d2feed'), play = el.querySelector('#d2play'), solved = false;
           function drop(node, val){ node.textContent = val; if(!RM){ node.classList.remove('drop'); void node.offsetWidth; node.classList.add('drop'); } }
           el.querySelector('#d2guess').addEventListener('click', function(e){
             var b = e.target.closest('button'); if(!b || solved) return;
-            if(b.getAttribute('data-r') === 'add2'){
+            var r = b.getAttribute('data-r');
+            if(r === 'add2'){
               solved = true; b.classList.add('right');
-              rule.hidden = false; feed.textContent = 'Yes! The rule is + 2. It works for every number.'; feed.className = 'd2-feed ok';
+              feed.textContent = 'Yes! The rule is + 2. It works for every number.'; feed.className = 'd2-feed ok';
               play.style.display = 'flex'; burst();
+            } else if(r === 'mul2'){
+              b.classList.add('wrong');
+              feed.textContent = 'Not quite: times 2 fits 2 to 4, but check it against 5 to 7 and 10 to 12 above. The same rule has to work for all three.';
+              feed.className = 'd2-feed no';
             } else {
               b.classList.add('wrong');
-              feed.textContent = b.getAttribute('data-r') === 'mul2'
-                ? 'Close: times 2 turns 2 into 4, but it turns 5 into 10, not 7.'
-                : 'Not quite. Try the examples again.';
+              feed.textContent = 'Not quite: check your guess against all three examples above, not just one.';
               feed.className = 'd2-feed no';
             }
           });
@@ -2757,7 +2821,7 @@
           '<input class="d2-pwbox" id="d2pwin" type="text" autocomplete="off" spellcheck="false" placeholder="Make up a password…" maxlength="40">' +
           '<div class="d2-pwcard" id="d2pwcard"><span class="bar"><i></i></span><span class="verdict" data-v="">Type to check</span></div>' +
           '<div class="d2-pwtry">' + TRY.map(function(t){ return '<button data-fill="'+t+'">'+t+'</button>'; }).join('') + '</div>' +
-          '<p class="d2-pwnote">Never type a real password &mdash; make one up! Nothing here is saved or sent anywhere.</p>' +
+          '<p class="d2-pwnote">Never type a real password. Make one up! Nothing here is saved or sent anywhere.</p>' +
         '</div>' +
         '<p class="lead pp">Strong = three random words, plus a capital, a number and a symbol.</p>',
         init:function(el){
@@ -5065,6 +5129,167 @@
       d.addEventListener('click', function(){ nav(i); });
       dotsEl.appendChild(d);
     });
+    wb2Load();
+    buildOverview2();
+  }
+
+  /* ---------- whiteboard, ported from the Year 5/6 Systems deck so every
+     lesson gets the same pen/highlighter/rubber tool, not just that one ---------- */
+  var wb2Active = false, wb2Blank = false, wb2Canvas, wb2Ctx, wb2Bar, wb2Tool = 'pen', wb2Col = '#1C2431',
+      wb2Data = {}, wb2Redo = {}, wb2Drawing = false, wb2CurStroke = null, wb2Dpr = 1, wb2ResizeT = null, wb2LastPenTs = 0;
+  function wb2Key(){ return 'hb_wb_' + (activeKey || 'x'); }
+  function wb2Load(){
+    try{ wb2Data = JSON.parse(localStorage.getItem(wb2Key()) || '{}'); }catch(e){ wb2Data = {}; }
+    wb2Redo = {};
+  }
+  function wb2Persist(){
+    try{ localStorage.setItem(wb2Key(), JSON.stringify(wb2Data)); }
+    catch(e){ try{ var only = {}; only[cur] = wb2Data[cur]; localStorage.setItem(wb2Key(), JSON.stringify(only)); }catch(e2){} }
+  }
+  function setupWhiteboard2(){
+    wb2Canvas = document.getElementById('d2-wbCanvas'); wb2Ctx = wb2Canvas.getContext('2d');
+    wb2Bar = document.getElementById('d2-wbBar');
+    wb2Bar.querySelectorAll('.sw').forEach(function(sw){
+      sw.addEventListener('click', function(){
+        wb2Col = sw.getAttribute('data-col');
+        wb2Bar.querySelectorAll('.sw').forEach(function(x){ x.classList.toggle('sel', x === sw); });
+        if(wb2Tool === 'erase') wb2Tool = 'pen';
+        wb2MarkTool();
+      });
+    });
+    wb2Bar.querySelectorAll('[data-tool]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var t = b.getAttribute('data-tool');
+        if(t === 'undo'){ var a = wb2Data[cur] || []; if(a.length){ (wb2Redo[cur] = wb2Redo[cur] || []).push(a.pop()); wb2Data[cur] = a; wb2Persist(); redrawWB2(); wb2Buttons(); } return; }
+        if(t === 'redo'){ var r = wb2Redo[cur] || []; if(r.length){ (wb2Data[cur] = wb2Data[cur] || []).push(r.pop()); wb2Persist(); redrawWB2(); wb2Buttons(); } return; }
+        if(t === 'clear'){ if((wb2Data[cur] || []).length){ wb2Redo[cur] = (wb2Data[cur] || []).slice(); wb2Data[cur] = []; wb2Persist(); redrawWB2(); wb2Buttons(); } return; }
+        if(t === 'blank'){ wb2Blank = !wb2Blank; document.getElementById('d2-wb').classList.toggle('blank', wb2Blank); wb2MarkTool(); return; }
+        wb2Tool = t; wb2MarkTool();
+      });
+    });
+    wb2Bar.querySelector('.sw').classList.add('sel');
+    wb2MarkTool(); wb2Buttons();
+    wb2Canvas.addEventListener('pointerdown', wb2Down);
+    wb2Canvas.addEventListener('pointermove', wb2Move);
+    wb2Canvas.addEventListener('pointerup', wb2Up);
+    wb2Canvas.addEventListener('pointerleave', wb2Up);
+    wb2Canvas.addEventListener('pointercancel', wb2Up);
+    window.addEventListener('blur', wb2Up);
+    window.addEventListener('resize', function(){ clearTimeout(wb2ResizeT); wb2ResizeT = setTimeout(resizeWB2Now, 120); });
+    window.addEventListener('orientationchange', function(){ setTimeout(resizeWB2Now, 250); });
+    resizeWB2Now();
+  }
+  function resizeWB2Now(){
+    if(!wb2Canvas) return;
+    var r = wb2Canvas.getBoundingClientRect();
+    if(!r.width) return;
+    wb2Dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    wb2Canvas.width = Math.round(r.width * wb2Dpr); wb2Canvas.height = Math.round(r.height * wb2Dpr);
+    redrawWB2();
+  }
+  function wb2ApplyStroke(st){
+    wb2Ctx.lineCap = 'round'; wb2Ctx.lineJoin = 'round';
+    if(st.tool === 'hi'){ wb2Ctx.globalCompositeOperation = 'source-over'; wb2Ctx.strokeStyle = st.col; wb2Ctx.globalAlpha = 0.28; wb2Ctx.lineWidth = 22 * wb2Dpr; }
+    else if(st.tool === 'erase'){ wb2Ctx.globalCompositeOperation = 'destination-out'; wb2Ctx.strokeStyle = 'rgba(0,0,0,1)'; wb2Ctx.globalAlpha = 1; wb2Ctx.lineWidth = 34 * wb2Dpr; }
+    else { wb2Ctx.globalCompositeOperation = 'source-over'; wb2Ctx.strokeStyle = st.col; wb2Ctx.globalAlpha = 1; wb2Ctx.lineWidth = 3.5 * wb2Dpr; }
+  }
+  function wb2MarkTool(){
+    wb2Bar.querySelectorAll('[data-tool]').forEach(function(b){
+      b.classList.toggle('sel', b.getAttribute('data-tool') === wb2Tool || (b.getAttribute('data-tool') === 'blank' && wb2Blank));
+    });
+  }
+  function wb2Buttons(){
+    if(!wb2Bar) return;
+    var u = wb2Bar.querySelector('[data-tool="undo"]'), r = wb2Bar.querySelector('[data-tool="redo"]'), c = wb2Bar.querySelector('[data-tool="clear"]');
+    var has = (wb2Data[cur] || []).length, canR = (wb2Redo[cur] || []).length;
+    if(u) u.classList.toggle('dim', !has);
+    if(c) c.classList.toggle('dim', !has);
+    if(r) r.classList.toggle('dim', !canR);
+  }
+  function toggleWB2(){
+    wb2Active = !wb2Active;
+    document.getElementById('d2-wb').classList.toggle('active', wb2Active);
+    wb2Bar.classList.toggle('on', wb2Active);
+    document.getElementById('d2-wb-btn').classList.toggle('act', wb2Active);
+    if(!wb2Active && wb2Blank){ wb2Blank = false; document.getElementById('d2-wb').classList.remove('blank'); wb2MarkTool(); }
+    if(wb2Active) resizeWB2Now();
+  }
+  function wb2Pos(e){
+    var r = wb2Canvas.getBoundingClientRect();
+    return {x:(e.clientX - r.left) / r.width, y:(e.clientY - r.top) / r.height};
+  }
+  function wb2Down(e){
+    if(!wb2Active || !wb2Ctx) return;
+    // same 700ms palm-rejection window as the Year 5/6 whiteboard fix, not
+    // a permanent touch block - see that deck's wbDown for why
+    if(e.pointerType === 'touch' && Date.now() - wb2LastPenTs < 700) return;
+    e.preventDefault();
+    wb2Drawing = true;
+    wb2Redo[cur] = [];
+    wb2CurStroke = {tool:wb2Tool, col:wb2Col, pts:[wb2Pos(e)]};
+    (wb2Data[cur] = wb2Data[cur] || []).push(wb2CurStroke);
+    try{ wb2Canvas.setPointerCapture(e.pointerId); }catch(err){}
+    wb2StrokeTip();
+  }
+  function wb2Move(e){
+    if(e.pointerType === 'pen') wb2LastPenTs = Date.now();
+    if(!wb2Drawing || !wb2Active) return;
+    var evts = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    for(var i=0;i<evts.length;i++){ wb2CurStroke.pts.push(wb2Pos(evts[i])); }
+    wb2StrokeTip();
+  }
+  function wb2Up(){
+    if(!wb2Drawing) return;
+    wb2Drawing = false; wb2CurStroke = null; wb2Persist(); wb2Buttons();
+  }
+  function wb2StrokeTip(){
+    if(!wb2CurStroke) return;
+    var pts = wb2CurStroke.pts, n = pts.length, W = wb2Canvas.width, H = wb2Canvas.height;
+    wb2ApplyStroke(wb2CurStroke);
+    wb2Ctx.beginPath();
+    if(n === 1){ wb2Ctx.moveTo(pts[0].x*W, pts[0].y*H); wb2Ctx.lineTo(pts[0].x*W+0.01, pts[0].y*H); }
+    else if(n === 2){ wb2Ctx.moveTo(pts[0].x*W, pts[0].y*H); wb2Ctx.lineTo(pts[1].x*W, pts[1].y*H); }
+    else {
+      var z = pts[n-3], a = pts[n-2], b = pts[n-1];
+      wb2Ctx.moveTo((z.x+a.x)/2*W, (z.y+a.y)/2*H);
+      wb2Ctx.quadraticCurveTo(a.x*W, a.y*H, (a.x+b.x)/2*W, (a.y+b.y)/2*H);
+    }
+    wb2Ctx.stroke();
+    wb2Ctx.globalCompositeOperation = 'source-over'; wb2Ctx.globalAlpha = 1;
+  }
+  function redrawWB2(){
+    if(!wb2Ctx || !wb2Canvas.width) return;
+    wb2Ctx.clearRect(0,0,wb2Canvas.width,wb2Canvas.height);
+    var W = wb2Canvas.width, H = wb2Canvas.height;
+    (wb2Data[cur] || []).forEach(function(st){
+      var pts = st.pts; if(!pts || pts.length < 1) return;
+      wb2ApplyStroke(st);
+      wb2Ctx.beginPath();
+      wb2Ctx.moveTo(pts[0].x * W, pts[0].y * H);
+      if(pts.length === 1){ wb2Ctx.lineTo(pts[0].x*W+0.01, pts[0].y*H); }
+      for(var i=1;i<pts.length;i++){
+        var a = pts[i-1], b = pts[i];
+        wb2Ctx.quadraticCurveTo(a.x * W, a.y * H, (a.x + b.x) / 2 * W, (a.y + b.y) / 2 * H);
+      }
+      wb2Ctx.stroke();
+    });
+    wb2Ctx.globalCompositeOperation = 'source-over';
+    wb2Ctx.globalAlpha = 1;
+    wb2Buttons();
+  }
+
+  /* ---------- overview grid ---------- */
+  function buildOverview2(){
+    var overview = document.getElementById('d2-overview');
+    overview.innerHTML = '';
+    built.forEach(function(sec, idx){
+      var n = (A.notes && A.notes[idx]) || ['','',''];
+      var card = document.createElement('div');
+      card.className = 'ov-card'; card.style.transitionDelay = (idx * 34) + 'ms';
+      card.innerHTML = '<span class="n">' + (idx+1) + '</span><span class="t">' + n[1] + '</span><span class="m">' + n[0] + '</span>';
+      card.addEventListener('click', function(){ nav(idx, 0); document.getElementById('d2-overview').classList.remove('open'); });
+      overview.appendChild(card);
+    });
   }
 
   function wireOnce(){
@@ -5077,13 +5302,27 @@
       if(!document.fullscreenElement){ frame.requestFullscreen && frame.requestFullscreen(); }
       else { document.exitFullscreen && document.exitFullscreen(); }
     });
+    document.getElementById('d2-wb-btn').addEventListener('click', toggleWB2);
+    document.getElementById('d2-ov-btn').addEventListener('click', function(){ document.getElementById('d2-overview').classList.toggle('open'); });
+    var setPop2 = document.getElementById('d2-setPop'), setRM2 = document.getElementById('d2-setRM');
+    setRM2.checked = RM;
+    setRM2.addEventListener('change', function(){
+      RM = setRM2.checked;
+      document.documentElement.classList.toggle('rm', RM);
+      try{ localStorage.setItem('hb_rm', RM ? '1' : '0'); }catch(e){}
+    });
+    document.getElementById('d2-set-btn').addEventListener('click', function(e){ e.stopPropagation(); setPop2.classList.toggle('on'); });
+    document.addEventListener('click', function(e){ if(!setPop2.contains(e.target) && e.target.closest('#d2-set-btn') === null) setPop2.classList.remove('on'); });
+    setupWhiteboard2();
     document.addEventListener('keydown', function(e){
       if(!document.getElementById('view-deck2').classList.contains('on')) return;
       if(e.key === 'ArrowRight' || e.key === ' '){ e.preventDefault(); fwd(); }
       else if(e.key === 'ArrowLeft'){ e.preventDefault(); back(); }
       else if(e.key === 'n' || e.key === 'N'){ toggleNotes(); }
       else if(e.key === 'f' || e.key === 'F'){ document.getElementById('d2-fs-btn').click(); }
-      else if(e.key === 'Escape'){ notesEl.classList.remove('on'); }
+      else if(e.key === 'w' || e.key === 'W'){ toggleWB2(); }
+      else if(e.key === 'o' || e.key === 'O'){ document.getElementById('d2-overview').classList.toggle('open'); }
+      else if(e.key === 'Escape'){ notesEl.classList.remove('on'); document.getElementById('d2-overview').classList.remove('open'); if(wb2Active) toggleWB2(); }
     });
     var x0 = null;
     mount.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
@@ -5117,6 +5356,7 @@
       d.classList.toggle('on', k === cur);
       d.classList.toggle('done', k < cur);
     });
+    redrawWB2();
   }
 
   function fwd(){
