@@ -1085,17 +1085,21 @@
   /* sort activity */
   .d2-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:44ch}
   .d2-chip{
-    border:0;border-radius:999px;padding:10px 16px;font-weight:600;font-size:clamp(.9rem,1.6vw,1.05rem);
-    font-family:var(--font);background:var(--ground-2);color:var(--ink);box-shadow:var(--shadow-sm);cursor:pointer;
-    transition:transform .16s var(--ease), opacity .3s, background .2s;
+    border:2px solid transparent;border-radius:999px;padding:10px 16px;font-weight:600;font-size:clamp(.9rem,1.6vw,1.05rem);
+    font-family:var(--font);background:var(--ground-2);color:var(--ink);box-shadow:var(--shadow-sm);cursor:grab;
+    touch-action:none;user-select:none;transition:transform .16s var(--ease), opacity .3s, background .2s, border-color .2s;
   }
   .d2-chip:hover{transform:translateY(-2px)}
   .d2-chip.placed{opacity:0;pointer-events:none;transform:scale(.4)}
+  .d2-chip.dragging{position:fixed;z-index:80;cursor:grabbing;box-shadow:var(--shadow-lg);pointer-events:none;transform:scale(1.05)}
+  .d2-chip.right{border-color:var(--out);background:color-mix(in srgb,var(--out) 12%,var(--ground-2))}
+  .d2-chip.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,var(--ground-2))}
   .d2-bins{display:flex;gap:clamp(12px,3vw,28px);width:100%;max-width:760px;justify-content:center}
   .d2-bin{
     flex:1;min-height:clamp(120px,20vh,180px);border-radius:20px;border:2.5px dashed var(--hair);
     padding:14px;display:flex;flex-direction:column;gap:8px;align-items:center;transition:border-color .2s, background .2s;
   }
+  .d2-bin.over{border-style:solid;background:color-mix(in srgb,var(--proc) 8%,var(--paper));border-color:var(--proc)}
   .d2-bin h4{margin:0;font-size:1rem;color:var(--soft)}
   .d2-bin.d{border-color:color-mix(in srgb,var(--in) 40%,transparent)}
   .d2-bin.n{border-color:color-mix(in srgb,var(--soft) 40%,transparent)}
@@ -2292,64 +2296,128 @@
     gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>'
   };
 
-  // shared: sort game init (chips fly into two bins on "Sort them")
+  // shared: real drag-and-drop for a pool chip, matching the physical
+  // drag-tile mechanic on the Year 5/6 Systems deck (pointer capture,
+  // fixed positioning while dragging, hit-test against .d2-bin rects)
+  function d2Draggable(el, chip, pool){
+    var ox = 0, oy = 0, active = false;
+    function bins(){ return el.querySelectorAll('.d2-bin'); }
+    function hit(x, y){
+      var found = null;
+      bins().forEach(function(b){
+        var r = b.getBoundingClientRect();
+        var inside = x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+        b.classList.toggle('over', inside);
+        if(inside) found = b;
+      });
+      return found;
+    }
+    chip.addEventListener('pointerdown', function(e){
+      e.preventDefault();
+      var r = chip.getBoundingClientRect();
+      ox = e.clientX - r.left; oy = e.clientY - r.top;
+      chip.style.width = r.width + 'px';
+      chip.style.left = r.left + 'px';
+      chip.style.top = r.top + 'px';
+      chip.classList.add('dragging');
+      chip.classList.remove('right','wrong');
+      active = true;
+      try{ chip.setPointerCapture(e.pointerId); }catch(err){}
+    });
+    chip.addEventListener('pointermove', function(e){
+      if(!active) return;
+      chip.style.left = (e.clientX - ox) + 'px';
+      chip.style.top = (e.clientY - oy) + 'px';
+      hit(e.clientX, e.clientY);
+    });
+    function end(e){
+      if(!active) return;
+      active = false;
+      chip.classList.remove('dragging');
+      var drop = hit(e.clientX, e.clientY);
+      bins().forEach(function(b){ b.classList.remove('over'); });
+      chip.style.left = chip.style.top = chip.style.width = '';
+      var target = drop ? drop.querySelector('.items') : pool;
+      target.appendChild(chip);
+    }
+    chip.addEventListener('pointerup', end);
+    chip.addEventListener('pointercancel', end);
+  }
+
+  // shared: wires up the Check/Reset buttons and result text common to
+  // every drag-sort variant below. checkFn(chip) -> true/false/null
+  // (null means "still in the pool, not placed yet")
+  function sortWireControls(el, pool, chips, checkFn){
+    var go = el.querySelector('#d2sortgo');
+    go.textContent = 'Check';
+    var reset = document.createElement('button');
+    reset.type = 'button'; reset.className = 'd2-gbtn ghost'; reset.textContent = 'Reset';
+    reset.style.marginLeft = '10px';
+    go.insertAdjacentElement('afterend', reset);
+    var res = document.createElement('p');
+    res.className = 'lead'; res.style.minHeight = '1.4em'; res.style.fontWeight = '700';
+    go.parentNode.appendChild(res);
+    go.addEventListener('click', function(){
+      var ok = 0, placed = 0;
+      chips.forEach(function(chip){
+        var right = checkFn(chip);
+        if(right === null) return;
+        placed++;
+        chip.classList.toggle('right', right); chip.classList.toggle('wrong', !right);
+        if(right) ok++;
+      });
+      var inPool = chips.length - placed;
+      res.textContent = ok + ' of ' + chips.length + ' in the right place' + (inPool ? ' · ' + inPool + ' still to sort' : '');
+      res.style.color = (ok === chips.length && !inPool) ? 'var(--out)' : 'var(--red)';
+      if(ok === chips.length && !inPool) burst();
+    });
+    reset.addEventListener('click', function(){
+      chips.forEach(function(chip){ chip.classList.remove('right','wrong'); pool.appendChild(chip); });
+      res.textContent = '';
+    });
+  }
+
+  // shared: 2-bin drag sort. Chips carry data-ok of "1" (belongs in the
+  // "d" bin) or "0" (belongs in the "n" bin)
   function sortInit(el){
-    var go = el.querySelector('#d2sortgo'),
-        pool = el.querySelector('#d2sortpool'),
-        binD = el.querySelector('#d2binD'), binN = el.querySelector('#d2binN'), done = false;
-    var chips = pool.querySelectorAll('.d2-chip');
-    go.addEventListener('click', function(){
-      if(done) return; done = true; go.disabled = true; go.textContent = 'Sorted!';
-      [].forEach.call(chips, function(chip, k){
-        setTimeout(function(){
-          chip.classList.add('placed');
-          var tag = document.createElement('span'); tag.textContent = chip.textContent;
-          (chip.getAttribute('data-ok') === '1' ? binD : binN).appendChild(tag);
-          if(k === chips.length - 1) burst();
-        }, RM ? 0 : k * 220);
-      });
+    var pool = el.querySelector('#d2sortpool'),
+        binD = el.querySelector('#d2binD'), binN = el.querySelector('#d2binN');
+    var chips = [].slice.call(pool.querySelectorAll('.d2-chip'));
+    chips.forEach(function(chip){ d2Draggable(el, chip, pool); });
+    sortWireControls(el, pool, chips, function(chip){
+      var inD = binD.contains(chip), inN = binN.contains(chip);
+      if(!inD && !inN) return null;
+      return (chip.getAttribute('data-ok') === '1') === inD;
     });
   }
 
-  // shared: 3-bin sort game init, chips carry data-cat of "h"/"c"/"s" and fly into #d2binH/#d2binC/#d2binS
+  // shared: 3-bin drag sort. Chips carry data-cat of "h"/"c"/"s" matching
+  // bins #d2binH/#d2binC/#d2binS
   function sortInit3(el){
-    var go = el.querySelector('#d2sortgo'),
-        pool = el.querySelector('#d2sortpool'),
-        bins = { h: el.querySelector('#d2binH'), c: el.querySelector('#d2binC'), s: el.querySelector('#d2binS') },
-        done = false;
-    var chips = pool.querySelectorAll('.d2-chip');
-    go.addEventListener('click', function(){
-      if(done) return; done = true; go.disabled = true; go.textContent = 'Sorted!';
-      [].forEach.call(chips, function(chip, k){
-        setTimeout(function(){
-          chip.classList.add('placed');
-          var tag = document.createElement('span'); tag.textContent = chip.textContent;
-          (bins[chip.getAttribute('data-cat')] || bins.s).appendChild(tag);
-          if(k === chips.length - 1) burst();
-        }, RM ? 0 : k * 220);
-      });
+    var pool = el.querySelector('#d2sortpool');
+    var binEls = { h: el.querySelector('#d2binH'), c: el.querySelector('#d2binC'), s: el.querySelector('#d2binS') };
+    var chips = [].slice.call(pool.querySelectorAll('.d2-chip'));
+    chips.forEach(function(chip){ d2Draggable(el, chip, pool); });
+    sortWireControls(el, pool, chips, function(chip){
+      var cat = null;
+      for(var k in binEls){ if(binEls[k].contains(chip)){ cat = k; break; } }
+      if(!cat) return null;
+      return chip.getAttribute('data-cat') === cat;
     });
   }
 
-  // shared: N-bin sort, any number of labelled bins with a data-key,
+  // shared: N-bin drag sort, any number of labelled bins with a data-key,
   // chips carry a matching data-cat
   function sortInitN(el){
-    var go = el.querySelector('#d2sortgo'), pool = el.querySelector('#d2sortpool'), done = false;
+    var pool = el.querySelector('#d2sortpool');
     var binEls = [].slice.call(el.querySelectorAll('.d2-bin[data-key]'));
-    var bins = {};
-    binEls.forEach(function(b){ bins[b.getAttribute('data-key')] = b.querySelector('.items'); });
-    var chips = pool.querySelectorAll('.d2-chip');
-    go.addEventListener('click', function(){
-      if(done) return; done = true; go.disabled = true; go.textContent = 'Sorted!';
-      [].forEach.call(chips, function(chip, k){
-        setTimeout(function(){
-          chip.classList.add('placed');
-          var tag = document.createElement('span'); tag.textContent = chip.textContent;
-          var target = bins[chip.getAttribute('data-cat')] || binEls[0].querySelector('.items');
-          target.appendChild(tag);
-          if(k === chips.length - 1) burst();
-        }, RM ? 0 : k * 220);
-      });
+    var chips = [].slice.call(pool.querySelectorAll('.d2-chip'));
+    chips.forEach(function(chip){ d2Draggable(el, chip, pool); });
+    sortWireControls(el, pool, chips, function(chip){
+      var homeBin = null;
+      binEls.forEach(function(b){ if(b.contains(chip)) homeBin = b; });
+      if(!homeBin) return null;
+      return chip.getAttribute('data-cat') === homeBin.getAttribute('data-key');
     });
   }
 
