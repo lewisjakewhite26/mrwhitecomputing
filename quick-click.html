@@ -1,0 +1,227 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Quick Click</title>
+<style>
+  :root{
+    --ground-1:#EDEFF7;
+    --ground-2:#F5F5FA;
+    --paper:#FCFCFE;
+    --paper-edge:#E7E9F2;
+    --ink:#1C2431;
+    --muted:#4A5261;
+    --soft:#6B7280;
+    --in:#2F6BE0;
+    --proc:#6C4CE0;
+    --out:#0E9C6A;
+    --red:#D8443C;
+    --hair:rgba(28,36,49,0.12);
+    --shadow-lg:0 26px 64px -20px rgba(24,28,45,0.26), 0 10px 24px -14px rgba(24,28,45,0.18);
+    --shadow-md:0 14px 32px -14px rgba(24,28,45,0.2);
+    --shadow-sm:0 6px 16px -8px rgba(24,28,45,0.18);
+    --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;font-family:var(--font);color:var(--ink);overflow:hidden;
+    background:
+      radial-gradient(50vw 50vw at 8% -10%, rgba(108,76,224,0.08), transparent 60%),
+      radial-gradient(42vw 42vw at 100% 110%, rgba(47,107,224,0.07), transparent 62%),
+      linear-gradient(165deg, var(--ground-1), var(--ground-2));
+  }
+  .screen{display:none;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+  .screen.on{display:flex}
+
+  /* ---------- intro ---------- */
+  #s-intro h1{font-weight:800;font-size:clamp(2.2rem,6vw,3.4rem);letter-spacing:-0.02em;margin:0 0 8px}
+  #s-intro .kick{font-weight:700;color:var(--proc);font-size:1.05rem;margin:0 0 6px}
+  #s-intro p{color:var(--muted);font-size:1.1rem;max-width:44ch;line-height:1.5;margin:0 0 26px}
+  .rounds{display:flex;gap:10px;justify-content:center;margin-bottom:26px}
+  .rounds button{border:2px solid var(--hair);background:var(--paper);border-radius:14px;padding:10px 20px;font-weight:700;font-size:1.05rem;cursor:pointer;color:var(--ink)}
+  .rounds button.sel{border-color:var(--proc);background:color-mix(in srgb,var(--proc) 10%,var(--paper));color:var(--proc)}
+  .big-btn{border:0;border-radius:999px;padding:16px 40px;font-weight:700;font-size:1.2rem;background:var(--ink);color:#fff;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .16s var(--ease)}
+  .big-btn:hover{transform:scale(1.04)}
+  .big-btn.go{background:var(--proc)}
+
+  /* ---------- play ---------- */
+  #s-play{padding:0;justify-content:flex-start}
+  .hud{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px;flex:none}
+  .hud .pill{background:var(--paper);border:1px solid var(--paper-edge);border-radius:999px;padding:8px 16px;font-weight:700;box-shadow:var(--shadow-sm);font-variant-numeric:tabular-nums}
+  .hud .score{color:var(--proc)}
+  .arena{position:relative;flex:1;width:100%;touch-action:none;overflow:hidden}
+  .dot{
+    position:absolute;border-radius:50%;transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 32% 28%, #fff5, transparent 45%), var(--proc);
+    box-shadow:0 6px 18px -6px rgba(108,76,224,0.5);cursor:pointer;
+  }
+  .toast{position:absolute;transform:translate(-50%,-50%);font-weight:800;font-size:1.4rem;pointer-events:none;
+    animation:toastUp .7s var(--ease) forwards;white-space:nowrap}
+  @keyframes toastUp{0%{opacity:1;transform:translate(-50%,-50%) scale(0.9)}100%{opacity:0;transform:translate(-50%,-140%) scale(1.15)}}
+
+  /* ---------- results ---------- */
+  #s-end h1{font-weight:800;font-size:clamp(2rem,5.5vw,2.8rem);margin:0 0 6px}
+  #s-end .tier{font-weight:700;color:var(--proc);font-size:1.2rem;margin:0 0 22px}
+  .stats{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:30px}
+  .stat{background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;padding:18px 26px;box-shadow:var(--shadow-sm);min-width:120px}
+  .stat .n{font-weight:800;font-size:2rem;color:var(--ink);font-variant-numeric:tabular-nums}
+  .stat .l{font-size:.85rem;color:var(--soft);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .again-row{display:flex;gap:12px}
+  .again-row .big-btn.ghost{background:var(--paper);color:var(--ink);border:1px solid var(--hair)}
+</style>
+
+<div class="screen on" id="s-intro">
+  <p class="kick">Hartburn Computing</p>
+  <h1>Quick Click</h1>
+  <p>A dot will pop up and start to grow. Click or tap it &mdash; the quicker and the closer to the middle you are, the higher your score!</p>
+  <div class="rounds" id="rounds">
+    <button data-n="5">5 dots</button>
+    <button data-n="6" class="sel">6 dots</button>
+  </div>
+  <button class="big-btn go" id="startBtn">Start</button>
+</div>
+
+<div class="screen" id="s-play">
+  <div class="hud">
+    <span class="pill" id="hudRound">Dot 1 of 6</span>
+    <span class="pill score" id="hudScore">Score: 0</span>
+  </div>
+  <div class="arena" id="arena"></div>
+</div>
+
+<div class="screen" id="s-end">
+  <h1>Nice clicking!</h1>
+  <p class="tier" id="tier"></p>
+  <div class="stats">
+    <div class="stat"><div class="n" id="totalScore">0</div><div class="l">Total</div></div>
+    <div class="stat"><div class="n" id="avgScore">0</div><div class="l">Average</div></div>
+    <div class="stat"><div class="n" id="bestScore">0</div><div class="l">Best hit</div></div>
+  </div>
+  <div class="again-row">
+    <button class="big-btn go" id="againBtn">Play again</button>
+    <a class="big-btn ghost" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">Back to lessons</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var MIN_R = 15, MAX_R = 85, GROW_MS = 2600;
+  var totalDots = 6, currentRound = 0, scores = [], dotEl = null, spawnTime = 0, growFrame = null;
+
+  var arena = document.getElementById('arena');
+  var intro = document.getElementById('s-intro'), play = document.getElementById('s-play'), end = document.getElementById('s-end');
+  var hudRound = document.getElementById('hudRound'), hudScore = document.getElementById('hudScore');
+
+  document.getElementById('rounds').querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){
+      totalDots = parseInt(b.getAttribute('data-n'), 10);
+      document.querySelectorAll('#rounds button').forEach(function(x){ x.classList.toggle('sel', x === b); });
+    });
+  });
+  document.getElementById('startBtn').addEventListener('click', startGame);
+  document.getElementById('againBtn').addEventListener('click', startGame);
+
+  function showScreen(el){ [intro, play, end].forEach(function(s){ s.classList.toggle('on', s === el); }); }
+
+  function startGame(){
+    currentRound = 0; scores = [];
+    showScreen(play);
+    nextDot();
+  }
+
+  function nextDot(){
+    currentRound++;
+    if(currentRound > totalDots){ finish(); return; }
+    hudRound.textContent = 'Dot ' + currentRound + ' of ' + totalDots;
+    spawnDot();
+  }
+
+  function spawnDot(){
+    var r = arena.getBoundingClientRect();
+    var pad = MAX_R + 8;
+    var x = pad + Math.random() * Math.max(1, (r.width - pad * 2));
+    var y = pad + Math.random() * Math.max(1, (r.height - pad * 2));
+
+    dotEl = document.createElement('div');
+    dotEl.className = 'dot';
+    dotEl.setAttribute('aria-label', 'Tap the growing dot');
+    dotEl.style.left = x + 'px';
+    dotEl.style.top = y + 'px';
+    dotEl.style.width = dotEl.style.height = (MIN_R * 2) + 'px';
+    arena.appendChild(dotEl);
+
+    spawnTime = performance.now();
+    dotEl.addEventListener('pointerdown', onDotHit);
+    growFrame = requestAnimationFrame(grow);
+  }
+
+  function currentRadius(){
+    var elapsed = performance.now() - spawnTime;
+    var t = Math.min(1, elapsed / GROW_MS);
+    return MIN_R + (MAX_R - MIN_R) * t;
+  }
+
+  function grow(){
+    if(!dotEl) return;
+    var rad = currentRadius();
+    dotEl.style.width = dotEl.style.height = (rad * 2) + 'px';
+    growFrame = requestAnimationFrame(grow);
+  }
+
+  function onDotHit(e){
+    if(!dotEl) return;
+    e.preventDefault();
+    cancelAnimationFrame(growFrame);
+    var rect = dotEl.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+    var px = (e.clientX != null ? e.clientX : cx), py = (e.clientY != null ? e.clientY : cy);
+    var dist = Math.hypot(px - cx, py - cy);
+    var radiusNow = rect.width / 2;
+
+    // speed: 100 at instant click, floors at 35 once fully grown - never punished to zero
+    var elapsed = performance.now() - spawnTime;
+    var growT = Math.min(1, elapsed / GROW_MS);
+    var speedScore = 100 - growT * 65;
+
+    // accuracy: full marks dead centre, floors at 0.4x at the very edge of the dot
+    var accRatio = Math.min(1, dist / radiusNow);
+    var accuracyMult = 1 - accRatio * 0.6;
+
+    var score = Math.max(5, Math.round(speedScore * accuracyMult));
+    scores.push(score);
+
+    showToast(px, py, score);
+    var arenaRect = arena.getBoundingClientRect();
+    dotEl.remove();
+    dotEl = null;
+
+    hudScore.textContent = 'Score: ' + scores.reduce(function(a,b){ return a+b; }, 0);
+    setTimeout(nextDot, 420);
+  }
+
+  function showToast(px, py, score){
+    var t = document.createElement('div');
+    t.className = 'toast';
+    var arenaRect = arena.getBoundingClientRect();
+    t.style.left = (px - arenaRect.left) + 'px';
+    t.style.top = (py - arenaRect.top) + 'px';
+    t.style.color = score >= 80 ? 'var(--out)' : (score >= 50 ? 'var(--proc)' : 'var(--red)');
+    t.textContent = '+' + score;
+    arena.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 720);
+  }
+
+  function finish(){
+    showScreen(end);
+    var total = scores.reduce(function(a,b){ return a+b; }, 0);
+    var avg = Math.round(total / scores.length);
+    var best = Math.max.apply(null, scores);
+    document.getElementById('totalScore').textContent = total;
+    document.getElementById('avgScore').textContent = avg;
+    document.getElementById('bestScore').textContent = best;
+    var tier = avg >= 80 ? 'Lightning fingers!' : avg >= 60 ? 'Great clicking!' : avg >= 40 ? 'Good effort - keep practising!' : 'Nice try - have another go!';
+    document.getElementById('tier').textContent = tier;
+  }
+})();
+</script>

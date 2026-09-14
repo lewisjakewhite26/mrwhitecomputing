@@ -1108,22 +1108,11 @@
   }
   .d2-bin .items span.wrong{background:color-mix(in srgb,var(--red) 14%,var(--paper));border-color:var(--red);color:var(--red)}
 
-  /* photo hunt */
+  /* link-out bar (external practice links) */
   .d2-photobar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
   .d2-photobtn{border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:1.05rem;font-family:var(--font);
     background:var(--ink);color:#fff;cursor:pointer;transition:transform .16s var(--ease)}
   .d2-photobtn:hover{transform:scale(1.05)}
-  .d2-photopool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:640px}
-  .d2-photochip{position:relative;width:78px;height:78px;border-radius:14px;overflow:hidden;cursor:pointer;
-    border:3px solid var(--hair);box-shadow:var(--shadow-sm);transition:transform .16s var(--ease), border-color .2s}
-  .d2-photochip:hover{transform:translateY(-2px)}
-  .d2-photochip img{width:100%;height:100%;object-fit:cover;display:block}
-  .d2-photochip .mark{position:absolute;bottom:2px;right:2px;width:24px;height:24px;border-radius:8px;display:none;
-    place-items:center;background:var(--paper);box-shadow:var(--shadow-sm)}
-  .d2-photochip.tech{border-color:var(--out)}
-  .d2-photochip.tech .mark.yes{display:grid;color:var(--out)}
-  .d2-photochip.nottech{border-color:var(--soft);opacity:.7}
-  .d2-photochip.nottech .mark.no{display:grid;color:var(--soft)}
   @keyframes d2pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
 
   /* machine */
@@ -2629,7 +2618,7 @@
     ["Introduction · 3 min","Technology is made by people","Made by people, on purpose, to help us. A guide dog helps people but was not made by people, so it is not technology. Technology does not have to be electronic."],
     ["Introduction · 2 min","It helps us to…","Say each one as 'it helps us to…'. A pencil helps us to write. Scissors help us to cut."],
     ["Activity 1 · 12 min","Is it technology?","Let pupils sort in pairs first, with the A1 cards if you printed them. Prompts: does it help us, and was it made by people? Press Sort to check together."],
-    ["Activity 2 · 8 min","Photo hunt","In pairs, pupils use an iPad to photograph something they think is technology, then tap the photo to mark it Technology or Not technology. Talk through disagreements as a class before moving on. Needs camera permission on first use."],
+    ["Activity 2 · 8 min","Photo hunt","In pairs, pupils use the iPad's own Camera app to photograph technology round the room. Back together, look through a few photos as a class and sort them: Technology, or not? Talk through any disagreements."],
     ["Activity 3 · 8 min","How does it help us?","Tap each card. Then hand out the A3 worksheet to match pictures to jobs."],
     ["Plenary · 3 min","What is the same?","A laptop, a phone and a clock all have a computer inside. That links to next lesson."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread shows who needs another look next lesson."],
@@ -2675,40 +2664,11 @@
         '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
         init: sortInit };
     },
-    function(){
-      return { steps:0, html:
-        '<h1 class="pp">Photo hunt: find technology in our room</h1>' +
-        '<p class="lead pp">In pairs, take a photo of something you think is technology. Then tap your photo: <b>&#10003; Technology</b> or <b>&#10005; Not technology</b>.</p>' +
-        '<div class="d2-photobar pp">' +
-          '<button class="d2-photobtn" id="d2photobtn">'+ph('camera',20)+' Take a photo</button>' +
-          '<input type="file" accept="image/*" capture="environment" id="d2photoin" style="display:none">' +
-        '</div>' +
-        '<div class="d2-photopool pp" id="d2photopool"></div>' +
-        '<p class="lead" id="d2photomsg">0 photos sorted</p>',
-        init:function(el){
-          var btn = el.querySelector('#d2photobtn'), input = el.querySelector('#d2photoin'),
-              pool = el.querySelector('#d2photopool'), msg = el.querySelector('#d2photomsg'), sorted = 0;
-          btn.addEventListener('click', function(){ input.click(); });
-          input.addEventListener('change', function(){
-            if(!input.files || !input.files[0]) return;
-            var url = URL.createObjectURL(input.files[0]);
-            var chip = document.createElement('div');
-            chip.className = 'd2-photochip';
-            chip.innerHTML = '<img src="'+url+'" alt="a pupil photo">' +
-              '<span class="mark yes">'+ICON.check+'</span><span class="mark no">&#10005;</span>';
-            var state = 0; // 0 unsorted, 1 tech, 2 not-tech
-            chip.addEventListener('click', function(){
-              state = (state + 1) % 3;
-              chip.classList.toggle('tech', state === 1);
-              chip.classList.toggle('nottech', state === 2);
-              var n = pool.querySelectorAll('.tech,.nottech').length;
-              if(n !== sorted){ sorted = n; msg.textContent = sorted + ' photo' + (sorted === 1 ? '' : 's') + ' sorted'; if(sorted && sorted % 4 === 0) burst(); }
-            });
-            pool.appendChild(chip);
-            input.value = '';
-          });
-        } };
-    },
+    function(){ return { steps:2, html:
+      '<h1 class="pp">Photo hunt: find technology in our room</h1>' +
+      '<p class="lead pp">In pairs, use the iPad&rsquo;s <b>Camera</b> app to take a photo of something you think is technology.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Take two or three photos if you can find them.</p>' +
+      '<p class="lead pp" data-step="2" style="color:var(--proc);font-weight:700">When everyone&rsquo;s back, we&rsquo;ll look through the photos together and sort them: Technology, or not?</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">What does each one help us do?</h1>' +
       '<div class="d2-reveal pp">' +
@@ -4008,7 +3968,7 @@
     ["Activity 1 · 2 min","A laptop","Same parts, one case. No separate base unit, it is all inside. The mouse is built in and called a trackpad."],
     ["Activity 2 · 2 min","Staying safe online","Pupils go online today. If they see anything that worries them, they tell a trusted adult. Say who that is in your school."],
     ["Activity 2 · 5 min","Click and drag: the idea","Model holding the button down, moving, and letting go, before pupils try it for real."],
-    ["Activity 2 · 15 min","Have a go","Pupils open Mouse House or Dragon Drop on their own device and practise clicking and dragging for real, not just watching a demo. Tap the checked card when they've had a go."],
+    ["Activity 2 · 15 min","Have a go","Since the class doesn't have mice for every pupil, run Quick Click as a 1:1 turn: while most pupils continue another task, one at a time comes to your PC/mouse and plays a round (5-6 dots, real click practice with a score) while everyone else carries on."],
     ["Plenary · 3 min","Desktop or laptop?","What is the same, what is different? A laptop folds and travels, a desktop stays put."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap the parts. Next lesson: getting really good with a mouse."]
@@ -4056,13 +4016,11 @@
       '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Have a go!</h1>' +
-      '<p class="lead pp">Open one of these on your own computer and practise clicking and dragging for real.</p>' +
+      '<p class="lead pp">Take turns on Quick Click: a dot pops up and grows. Click it &mdash; quick and in the middle scores best!</p>' +
       '<div class="d2-photobar pp">' +
-        '<a class="d2-photobtn" href="https://mouse-practice.com/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Mouse House</a>' +
-        '<a class="d2-photobtn" href="https://www.roomrecess.com/games/DragonDrop/play.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Dragon Drop</a>' +
+        '<a class="d2-photobtn" href="quick-click.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Play Quick Click</a>' +
       '</div>' +
-      '<div class="d2-rc pp" style="max-width:32ch;margin-top:8px" id="d2mousedone"><b>Tap when you&rsquo;ve had a go</b><span class="ans">Nice work &mdash; that\'s real click-and-drag practice, not just watching.</span></div>',
-      init:function(el){ var c = el.querySelector('#d2mousedone'); c.addEventListener('click', function(){ if(c.classList.contains('open')) return; c.classList.add('open'); c.querySelector('b').textContent = 'You had a go!'; burst(); }); } }; },
+      '<p class="lead" style="font-size:.95rem;color:var(--muted)">Good as a 1:1 turn while others carry on.</p>' }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Desktop or laptop?</h1>' +
       '<p class="lead pp">Both are computers with the same parts.</p>' +
@@ -4116,7 +4074,7 @@
     ["Activity 1 · 3 min","Practise without a mouse","Ask pupils to clap twice, quickly, or tap their leg twice. That's the speed a double-click needs. Then show it for real on a mouse."],
     ["Activity 2 · 4 min","A click makes a dot, a drag makes a line","Model it, but don't stop there - pupils need to do this themselves, not just watch."],
     ["Activity 2 · 12 min","Have a go in PaintZ","Pupils open PaintZ (free, no login, works with mouse or touch) and make at least one dot and one line before tapping the checked card. This is the real practice the animation alone couldn't give them."],
-    ["Activity 2 · 4 min","Extra drag practice","Early finishers open Dragon Drop for repeated click-and-drag practice with pass/fail feedback."],
+    ["Activity 2 · 4 min","Extra click practice","Early finishers take a 1:1 turn on Quick Click at your PC for repeated click practice with a score, while others keep painting."],
     ["Activity 2 · 5 min","Explorer task","Early finishers try the fill tool, drawing shapes, and the eraser."],
     ["Plenary · 4 min","What's changed?","Show three pictures. For each, ask what tool was used: thicker line, a new colour, then the fill tool."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
@@ -4170,10 +4128,10 @@
       '<div class="d2-rc pp" style="max-width:32ch;margin-top:8px" id="d2paintdone"><b>Tap when you&rsquo;ve made a dot AND a line</b><span class="ans">That\'s the whole idea: click for a dot, drag for a line.</span></div>',
       init:function(el){ var c = el.querySelector('#d2paintdone'); c.addEventListener('click', function(){ if(c.classList.contains('open')) return; c.classList.add('open'); c.querySelector('b').textContent = 'You had a go!'; burst(); }); } }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Extra drag practice</h1>' +
-      '<p class="lead pp">Early finishers: 20 levels of pure click-and-drag.</p>' +
+      '<h1 class="pp">Extra click practice</h1>' +
+      '<p class="lead pp">Early finishers: take a turn on Quick Click while others keep painting.</p>' +
       '<div class="d2-photobar pp">' +
-        '<a class="d2-photobtn" href="https://www.roomrecess.com/games/DragonDrop/play.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Dragon Drop</a>' +
+        '<a class="d2-photobtn" href="quick-click.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Play Quick Click</a>' +
       '</div>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Explorer task</h1>' +
