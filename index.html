@@ -1201,14 +1201,18 @@
   @keyframes d2drag{0%,10%{left:0;transform:translateY(-50%) scale(1)}18%{transform:translateY(-50%) scale(1.08)}46%,56%{left:calc(100% - 60px);transform:translateY(-50%) scale(1.08)}64%,100%{left:calc(100% - 60px);transform:translateY(-50%) scale(1)}}
   html.rm .d2-dragdemo .blk{animation:none;left:calc(100% - 60px)}
   .d2-pwcard{
-    display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:16px;background:var(--ground-2);
+    display:flex;flex-direction:column;gap:10px;padding:14px 18px;border-radius:16px;background:var(--ground-2);
     border:1px solid var(--hair);cursor:pointer;transition:transform .16s var(--ease), background .2s;
   }
   .d2-pwcard:hover{transform:translateX(3px)}
   .d2-pwcard code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(1rem,2vw,1.25rem);font-weight:600}
-  .d2-pwcard .bar{flex:1;height:12px;border-radius:999px;background:var(--hair);overflow:hidden}
+  /* bar sits on its own full-width row so a long crack-time label can
+     never steal width from it - they used to share one flex row, so the
+     bar visually shrank whenever the adjacent label text got longer,
+     regardless of the actual strength level */
+  .d2-pwcard .bar{display:block;width:100%;height:12px;border-radius:999px;background:var(--hair);overflow:hidden}
   .d2-pwcard .bar i{display:block;height:100%;width:0;border-radius:999px;transition:width .7s var(--ease)}
-  .d2-pwcard .verdict{font-weight:700;font-size:.92rem;white-space:nowrap;min-width:8ch;text-align:right}
+  .d2-pwcard .verdict{font-weight:700;font-size:.92rem;white-space:normal;text-align:left}
   .d2-pwcard.lvl1 .bar i{width:12%;background:var(--red)}
   .d2-pwcard.lvl1 .verdict{color:var(--red)}
   .d2-pwcard.lvl2 .bar i{width:45%;background:#E0A32E}
@@ -2833,6 +2837,26 @@
           // (10 billion guesses/second) - same approach and thresholds
           // as security.org's own password strength tool
           var GUESSES_PER_SECOND = 1e10;
+          // short-scale names, every power of a thousand, so a truly huge
+          // password (long, mixed character set) still reads as a real
+          // word instead of collapsing into "12,345,...,000 trillion"
+          var BIG_NAMES = [
+            [3,'thousand'],[6,'million'],[9,'billion'],[12,'trillion'],[15,'quadrillion'],
+            [18,'quintillion'],[21,'sextillion'],[24,'septillion'],[27,'octillion'],[30,'nonillion'],
+            [33,'decillion'],[36,'undecillion'],[39,'duodecillion'],[42,'tredecillion'],
+            [45,'quattuordecillion'],[48,'quindecillion'],[51,'sexdecillion'],[54,'septendecillion'],
+            [57,'octodecillion'],[60,'novemdecillion'],[63,'vigintillion'],[66,'unvigintillion'],
+            [69,'duovigintillion'],[72,'trevigintillion'],[75,'quattuorvigintillion'],[78,'quinvigintillion']
+          ];
+          function bigNumberWords(count){
+            for(var i = BIG_NAMES.length - 1; i >= 0; i--){
+              var exp = BIG_NAMES[i][0], name = BIG_NAMES[i][1];
+              if(count >= Math.pow(10, exp)){
+                return Math.round(count / Math.pow(10, exp)).toLocaleString() + ' ' + name;
+              }
+            }
+            return Math.round(count).toLocaleString();
+          }
           function humanizeSeconds(s){
             var MINUTE = 60, HOUR = MINUTE * 60, DAY = HOUR * 24, MONTH = DAY * 30.44, YEAR = DAY * 365.25;
             function n(x){ return Math.round(x).toLocaleString(); }
@@ -2845,10 +2869,7 @@
             if(s < YEAR) return {label:unit(s / MONTH, 'month'), lvl:'lvl2'};
             if(s < YEAR * 100) return {label:unit(s / YEAR, 'year'), lvl:'lvl2'};
             if(s < YEAR * 1000) return {label:n(s / (YEAR * 100)) + ' hundred years', lvl:'lvl3'};
-            if(s < YEAR * 1e6) return {label:n(s / (YEAR * 1000)) + ' thousand years', lvl:'lvl3'};
-            if(s < YEAR * 1e9) return {label:n(s / (YEAR * 1e6)) + ' million years', lvl:'lvl3'};
-            if(s < YEAR * 1e12) return {label:n(s / (YEAR * 1e9)) + ' billion years', lvl:'lvl3'};
-            return {label:n(s / (YEAR * 1e12)) + ' trillion years', lvl:'lvl3'};
+            return {label: bigNumberWords(s / YEAR) + ' years', lvl:'lvl3'};
           }
           function score(pw){
             if(!pw) return {lvl:null, label:'Type to check'};
@@ -3166,7 +3187,7 @@
       '</div>' +
       '<p class="lead pp">Design yours on the sheet.</p>', init: revealInit }; },
     function(){
-      var TICKS = ["It has an input &mdash; something you do to it","It has an output &mdash; something it does back","The process makes sense &mdash; the output is a sensible result of the input"];
+      var TICKS = ["It has an input, something you do to it","It has an output, something it does back","The process makes sense: the output is a sensible result of the input"];
       return { steps:0, html:
         '<h1 class="pp">Check your design with a partner</h1>' +
         '<p class="lead pp">Swap sheets. Tap a tick only when you both agree it&rsquo;s true.</p>' +
@@ -3410,7 +3431,7 @@
       ];
       return { steps:0, html:
         '<h1 class="pp">Put each search in the right order</h1>' +
-        '<p class="lead pp">You wanted the place, not the other meaning. Drag &mdash; or use the arrows &mdash; to put each set of three in the order it really happens.</p>' +
+        '<p class="lead pp">You wanted the place, not the other meaning. Drag, or use the arrows, to put each set of three in the order it really happens.</p>' +
         '<div class="pp" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;width:100%">' +
           GROUPS.map(function(g){ return '<div style="flex:1;min-width:240px;max-width:320px"><h4 style="margin:0 0 8px;color:var(--proc);text-align:center">'+g[0]+'</h4>' +
             '<div class="seq d2-seqgrp" data-steps=\'' + JSON.stringify(g[1]) + '\'></div></div>'; }).join('') +
@@ -4475,7 +4496,7 @@
       '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Have a go!</h1>' +
-      '<p class="lead pp">Take turns on Quick Click: a dot pops up and grows. Click it &mdash; quick and in the middle scores best!</p>' +
+      '<p class="lead pp">Take turns on Quick Click: a dot pops up and grows. Click it fast and in the middle to score best!</p>' +
       '<div class="d2-photobar pp">' +
         '<a class="d2-photobtn" href="quick-click.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Play Quick Click</a>' +
       '</div>' +
@@ -4577,7 +4598,7 @@
       '<h1 class="pp">A click makes a dot. A drag makes a line.</h1>' +
       '<p class="lead pp">Hold the button down, move the mouse, then let go. That draws a line.</p>' +
       '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' +
-      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">Now you try it for real &mdash; watching isn&rsquo;t the same as doing it.</p>' }; },
+      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">Now you try it for real. Watching isn&rsquo;t the same as doing it.</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Have a go!</h1>' +
       '<p class="lead pp">Open PaintZ and practise: tap once for a dot, click and drag for a line.</p>' +
@@ -5493,7 +5514,7 @@
   }
 
   // every server action is a Postgres function (see _supabase/schema.sql),
-  // called through Supabase's auto-generated REST RPC endpoint — this keeps
+  // called through Supabase's auto-generated REST RPC endpoint. This keeps
   // the client as plain fetch, no supabase-js library needed
   function rpc(name, args, cb){
     if(!SUPABASE_URL || !SUPABASE_ANON_KEY){ cb(new Error('no-host')); return; }
@@ -5536,7 +5557,7 @@
     });
   }
   // fire-and-forget headcount ping: once per pupil per room, not on every poll
-  // tick (see startPvPoll) — the board just picks the new count up on its own
+  // tick (see startPvPoll); the board just picks the new count up on its own
   // next live_get_room poll, no separate wiring needed on that side
   function markJoined(code, pupilId, cb){
     rpc('live_mark_joined', {p_code:code, p_pupil_id:pupilId}, function(err, ok){
@@ -5562,7 +5583,7 @@
       var p = document.querySelector('#view-task .task-card p');
       var t = h1 ? h1.textContent.trim() : '';
       var i = p ? p.textContent.trim() : '';
-      var combined = (t + (i ? ' — ' + i : '')).trim();
+      var combined = (t + (i ? ': ' + i : '')).trim();
       return combined || 'What do you think?';
     }catch(e){ return 'What do you think?'; }
   }
@@ -5597,7 +5618,7 @@
     el.innerHTML = '<div class="lv-inactive">Loading…</div>';
     getRoom(code, function(err, data){
       if(err || !data || !data.question){
-        buildJoinForm(el, "Couldn't find that room — check the code and try again.");
+        buildJoinForm(el, "Couldn't find that room. Check the code and try again.");
         return;
       }
       pvRound = data.round || 1;
@@ -5788,7 +5809,7 @@
         if(failed){
           sendBtn.disabled = false;
           statusEl.classList.add('err');
-          statusEl.textContent = "Didn't send — check your connection and try again.";
+          statusEl.textContent = "Didn't send. Check your connection and try again.";
           return;
         }
         textarea.value = '';
