@@ -1105,6 +1105,23 @@
     border:1px solid var(--hair);animation:d2pop .4s var(--bounce,cubic-bezier(.34,1.56,.64,1));
   }
   .d2-bin .items span.wrong{background:color-mix(in srgb,var(--red) 14%,var(--paper));border-color:var(--red);color:var(--red)}
+
+  /* photo hunt */
+  .d2-photobar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .d2-photobtn{border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:1.05rem;font-family:var(--font);
+    background:var(--ink);color:#fff;cursor:pointer;transition:transform .16s var(--ease)}
+  .d2-photobtn:hover{transform:scale(1.05)}
+  .d2-photopool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:640px}
+  .d2-photochip{position:relative;width:78px;height:78px;border-radius:14px;overflow:hidden;cursor:pointer;
+    border:3px solid var(--hair);box-shadow:var(--shadow-sm);transition:transform .16s var(--ease), border-color .2s}
+  .d2-photochip:hover{transform:translateY(-2px)}
+  .d2-photochip img{width:100%;height:100%;object-fit:cover;display:block}
+  .d2-photochip .mark{position:absolute;bottom:2px;right:2px;width:24px;height:24px;border-radius:8px;display:none;
+    place-items:center;background:var(--paper);box-shadow:var(--shadow-sm)}
+  .d2-photochip.tech{border-color:var(--out)}
+  .d2-photochip.tech .mark.yes{display:grid;color:var(--out)}
+  .d2-photochip.nottech{border-color:var(--soft);opacity:.7}
+  .d2-photochip.nottech .mark.no{display:grid;color:var(--soft)}
   @keyframes d2pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
 
   /* machine */
@@ -1158,6 +1175,18 @@
   .d2-pwcard.lvl2 .verdict{color:#B9791A}
   .d2-pwcard.lvl3 .bar i{width:100%;background:var(--out)}
   .d2-pwcard.lvl3 .verdict{color:var(--out)}
+
+  /* live password checker */
+  .d2-pwlive{display:flex;flex-direction:column;gap:16px;width:100%;max-width:520px}
+  .d2-pwbox{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(1.05rem,2.4vw,1.4rem);
+    padding:14px 18px;border-radius:14px;border:2px solid var(--hair);background:var(--ground-2);color:var(--ink);
+    text-align:center;transition:border-color .2s}
+  .d2-pwbox:focus{outline:none;border-color:var(--proc)}
+  .d2-pwtry{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .d2-pwtry button{border:1px solid var(--hair);background:var(--paper);border-radius:999px;padding:6px 14px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;cursor:pointer;color:var(--muted)}
+  .d2-pwtry button:hover{border-color:var(--proc);color:var(--ink)}
+  .d2-pwnote{font-size:.82rem;color:var(--muted)}
 
   /* tap-to-reveal cards */
   .d2-reveal{display:flex;gap:clamp(10px,2vw,20px);flex-wrap:wrap;justify-content:center}
@@ -2267,7 +2296,7 @@
     ["Activity 2 · 12 min","Find the rule","This is a function machine. Show 2 to 4, then 5 to 7, and let pupils argue about the rule before revealing + 2. The concept matters more than the arithmetic."],
     ["Activity 3 · 3 min","You are the boss","When pupils use their own device they give the input, so they are in control. If a device is not protected, someone else can provide the input."],
     ["Activity 3 · 3 min","What is a cyber-attack?","Jot ideas on whiteboards with a partner first, then reveal. Keep it calm and matter-of-fact."],
-    ["Activity 3 · 8 min","Which password is strong?","Tap each one. Strong = three random words, even better with a capital, a number and a symbol."],
+    ["Activity 3 · 8 min","How strong is your password?","Pupils type made-up passwords into the live checker and watch the bar/verdict change. Try the three preset examples first, then let them invent their own. Reassure them: nothing typed here is saved or sent anywhere, and they should never type a real password."],
     ["Plenary · 3 min","A real digital device","Bring it back to something real. Take answers before revealing each card."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread tells you who needs a recap before Lesson 2."],
     ["Next time · 1 min","Next lesson","Recap the three jobs. Next lesson: the parts of a device, and design your own."]
@@ -2411,19 +2440,44 @@
       '<div class="d2-rc pp" data-step="1" style="max-width:30ch" id="d2cyber"><b>Tap to find out</b><span class="ans">When someone tries to take your information without asking.</span></div>',
       init:function(el){ var c = el.querySelector('#d2cyber'); c.addEventListener('click', function(){ c.classList.add('open'); c.querySelector('b').textContent = 'A cyber-attack is…'; }); } }; },
     function(){
-      var PW = [["password","lvl1","Guessed instantly"],["fredsmith65","lvl2","A few hours"],["Dogc&tmeAn25","lvl3","34,000 years"]];
+      var TRY = ["password","fredsmith65","Dogc&tmeAn25"];
+      var WEAK = ["password","123456","qwerty","letmein","password1","abc123","111111","iloveyou"];
       return { steps:0, html:
-        '<h1 class="pp">Which password is strong?</h1>' +
-        '<div class="d2-pw pp">' + PW.map(function(p){ return
-          '<div class="d2-pwcard" data-lvl="'+p[1]+'"><code>'+p[0]+'</code><span class="bar"><i></i></span><span class="verdict" data-v="'+p[2]+'"></span></div>'; }).join('') + '</div>' +
+        '<h1 class="pp">How strong is your password?</h1>' +
+        '<div class="d2-pwlive pp">' +
+          '<input class="d2-pwbox" id="d2pwin" type="text" autocomplete="off" spellcheck="false" placeholder="Make up a password…" maxlength="40">' +
+          '<div class="d2-pwcard" id="d2pwcard"><span class="bar"><i></i></span><span class="verdict" data-v="">Type to check</span></div>' +
+          '<div class="d2-pwtry">' + TRY.map(function(t){ return '<button data-fill="'+t+'">'+t+'</button>'; }).join('') + '</div>' +
+          '<p class="d2-pwnote">Never type a real password &mdash; make one up! Nothing here is saved or sent anywhere.</p>' +
+        '</div>' +
         '<p class="lead pp">Strong = three random words, plus a capital, a number and a symbol.</p>',
         init:function(el){
-          [].forEach.call(el.querySelectorAll('.d2-pwcard'), function(card){
-            card.addEventListener('click', function(){
-              card.classList.add(card.getAttribute('data-lvl'));
-              card.querySelector('.verdict').textContent = card.querySelector('.verdict').getAttribute('data-v');
-              if(card.getAttribute('data-lvl') === 'lvl3') burst();
-            });
+          var input = el.querySelector('#d2pwin'), card = el.querySelector('#d2pwcard'), verdict = card.querySelector('.verdict');
+          var lastLvl = null;
+          function score(pw){
+            if(!pw) return {lvl:null, label:'Type to check'};
+            var lower = pw.toLowerCase();
+            if(WEAK.indexOf(lower) > -1) return {lvl:'lvl1', label:'Guessed instantly'};
+            var pts = 0;
+            if(pw.length >= 12) pts += 2; else if(pw.length >= 8) pts += 1;
+            if(/[A-Z]/.test(pw)) pts += 1;
+            if(/[0-9]/.test(pw)) pts += 1;
+            if(/[^A-Za-z0-9]/.test(pw)) pts += 1;
+            if(pts <= 1) return {lvl:'lvl1', label:'Guessed in minutes'};
+            if(pts <= 3) return {lvl:'lvl2', label:'A few hours'};
+            return {lvl:'lvl3', label:'Thousands of years'};
+          }
+          function update(){
+            var r = score(input.value.trim());
+            card.classList.remove('lvl1','lvl2','lvl3');
+            if(r.lvl) card.classList.add(r.lvl);
+            verdict.textContent = r.label;
+            if(r.lvl === 'lvl3' && lastLvl !== 'lvl3') burst();
+            lastLvl = r.lvl;
+          }
+          input.addEventListener('input', update);
+          [].forEach.call(el.querySelectorAll('.d2-pwtry button'), function(b){
+            b.addEventListener('click', function(){ input.value = b.getAttribute('data-fill'); input.focus(); update(); });
           });
         } };
     },
@@ -2507,7 +2561,7 @@
     ["Introduction · 3 min","Technology is made by people","Made by people, on purpose, to help us. A guide dog helps people but was not made by people, so it is not technology. Technology does not have to be electronic."],
     ["Introduction · 2 min","It helps us to…","Say each one as 'it helps us to…'. A pencil helps us to write. Scissors help us to cut."],
     ["Activity 1 · 12 min","Is it technology?","Let pupils sort in pairs first, with the A1 cards if you printed them. Prompts: does it help us, and was it made by people? Press Sort to check together."],
-    ["Activity 2 · 8 min","Technology hunt","Pupils find technology around the room. On the board they tap what they spot. Ask which ones have a computer inside."],
+    ["Activity 2 · 8 min","Photo hunt","In pairs, pupils use an iPad to photograph something they think is technology, then tap the photo to mark it Technology or Not technology. Talk through disagreements as a class before moving on. Needs camera permission on first use."],
     ["Activity 3 · 8 min","How does it help us?","Tap each card. Then hand out the A3 worksheet to match pictures to jobs."],
     ["Plenary · 3 min","What is the same?","A laptop, a phone and a clock all have a computer inside. That links to next lesson."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread shows who needs another look next lesson."],
@@ -2554,30 +2608,36 @@
         init: sortInit };
     },
     function(){
-      var G = [["🖥️","computer",1],["🌸","flower",0],["🕐","clock",1],["🍃","leaf",0],["💡","light",1],["🍎","apple",0],["🖊️","pen",1],["✂️","scissors",1]];
       return { steps:0, html:
-        '<h1 class="pp">Tap the technology in the room</h1>' +
-        '<div class="pp" style="display:flex;gap:clamp(10px,2.5vw,20px);flex-wrap:wrap;justify-content:center;max-width:40ch">' +
-          G.map(function(o){ return '<button class="d2-hunt" data-ok="'+o[2]+'" aria-label="'+o[1]+'" style="font-size:clamp(2rem,5.5vw,3rem);background:var(--ground-2);border:0;border-radius:18px;padding:clamp(10px,2.5vw,18px);cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .15s var(--ease)">'+o[0]+'</button>'; }).join('') +
+        '<h1 class="pp">Photo hunt: find technology in our room</h1>' +
+        '<p class="lead pp">In pairs, take a photo of something you think is technology. Then tap your photo: <b>&#10003; Technology</b> or <b>&#10005; Not technology</b>.</p>' +
+        '<div class="d2-photobar pp">' +
+          '<button class="d2-photobtn" id="d2photobtn">'+ph('camera',20)+' Take a photo</button>' +
+          '<input type="file" accept="image/*" capture="environment" id="d2photoin" style="display:none">' +
         '</div>' +
-        '<p class="lead" id="d2huntmsg">Find them all</p>',
+        '<div class="d2-photopool pp" id="d2photopool"></div>' +
+        '<p class="lead" id="d2photomsg">0 photos sorted</p>',
         init:function(el){
-          var found = {}, need = 0;
-          [].forEach.call(el.querySelectorAll('.d2-hunt'), function(b){ if(b.getAttribute('data-ok') === '1') need++; });
-          var msg = el.querySelector('#d2huntmsg');
-          [].forEach.call(el.querySelectorAll('.d2-hunt'), function(b){
-            b.addEventListener('click', function(){
-              if(b.getAttribute('data-ok') === '1'){
-                var key = b.getAttribute('aria-label'); if(found[key]) return; found[key] = 1;
-                b.style.boxShadow = '0 0 0 4px var(--out)'; b.style.transform = 'scale(1.08)';
-                var n = 0; for(var k in found) n++;
-                msg.style.color = 'var(--out)';
-                if(n === need){ msg.textContent = 'You found them all!'; burst(); }
-                else msg.textContent = 'Found ' + n + ' of ' + need;
-              } else {
-                b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}], {duration:240});
-              }
+          var btn = el.querySelector('#d2photobtn'), input = el.querySelector('#d2photoin'),
+              pool = el.querySelector('#d2photopool'), msg = el.querySelector('#d2photomsg'), sorted = 0;
+          btn.addEventListener('click', function(){ input.click(); });
+          input.addEventListener('change', function(){
+            if(!input.files || !input.files[0]) return;
+            var url = URL.createObjectURL(input.files[0]);
+            var chip = document.createElement('div');
+            chip.className = 'd2-photochip';
+            chip.innerHTML = '<img src="'+url+'" alt="a pupil photo">' +
+              '<span class="mark yes">'+ICON.check+'</span><span class="mark no">&#10005;</span>';
+            var state = 0; // 0 unsorted, 1 tech, 2 not-tech
+            chip.addEventListener('click', function(){
+              state = (state + 1) % 3;
+              chip.classList.toggle('tech', state === 1);
+              chip.classList.toggle('nottech', state === 2);
+              var n = pool.querySelectorAll('.tech,.nottech').length;
+              if(n !== sorted){ sorted = n; msg.textContent = sorted + ' photo' + (sorted === 1 ? '' : 's') + ' sorted'; if(sorted && sorted % 4 === 0) burst(); }
             });
+            pool.appendChild(chip);
+            input.value = '';
           });
         } };
     },
