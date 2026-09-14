@@ -3158,7 +3158,7 @@
     ["Activity 2 · 8 min","Pass the message","Pupils write a short message to someone on a different table, then pass messages hand to hand toward the right person."],
     ["Activity 2 · 4 min","How did it go?","Discuss: messages went the right way eventually, but it was slow, and some people had more to pass than others."],
     ["Activity 3 · 8 min","Adding a network switch","One pupil becomes the switch: they collect messages and send each one to the right person, without reading it. Try passing a message through the switch and compare."],
-    ["Plenary · 4 min","Think, pair, share","What is a connection? How can we share information effectively? What does a network switch do?"],
+    ["Plenary · 4 min","Match the word to its meaning","A checked sort, not reveal cards: pupils match Connection/Network/Network switch to the right definition."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how computers are connected, and the school network."]
   ];
@@ -3206,13 +3206,18 @@
       '<h1 class="pp">Adding a network switch</h1>' +
       '<p class="lead pp">One person becomes the switch. Everyone sends their messages to the switch, and the switch sends each one straight to the right person.</p>' +
       '<p class="lead pp" style="font-weight:700">The switch reads only who it\'s going to, not the message itself.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Think, pair, share</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('Connection','a link between two or more people or things','in-c') +
-        rc('Network','a group of connections working together','pr-c') +
-        rc('Network switch','passes each message straight to the right computer','ou-c') +
-      '</div>', init: revealInit }; },
+    function(){
+      var TERMS = [["Connection","conn"],["Network","net"],["Network switch","sw"]];
+      return { steps:0, html:
+        '<h1 class="pp">Match the word to its meaning</h1>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + TERMS.map(function(t){ return '<button class="d2-chip" data-cat="'+t[1]+'">'+t[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins three pp">' +
+          '<div class="d2-bin d" data-key="conn"><h4>A link between two or more people or things</h4><div class="items"></div></div>' +
+          '<div class="d2-bin s3" data-key="net"><h4>A group of connections working together</h4><div class="items"></div></div>' +
+          '<div class="d2-bin n" data-key="sw"><h4>Passes each message straight to the right computer</h4><div class="items"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Match them</button>',
+        init: sortInitN }; },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Well connected</h1>' +
@@ -3455,7 +3460,7 @@
     ["Activity 2 · 6 min","What changes with a server?","Any computer on the network can now reach that file, even if computer 1 is switched off."],
     ["Activity 2 · 10 min","Build your own network","In groups: one switch, one server, one message carrier, the rest desktop computers. Send a file all the way to the server and back."],
     ["Activity 3 · 5 min","Wireless access points","Laptops and tablets have no wire to the switch. They connect to a wireless access point instead, which is wired into the network."],
-    ["Activity 3 · 6 min","A file's longer journey","From a wireless device, to the access point, to the switch, to the server, and all the way back."],
+    ["Activity 3 · 6 min","Put the file's longer journey in order","A checked sequence, not narration: pupils reorder four scrambled steps for a laptop's file reaching the server over wireless."],
     ["Plenary · 5 min","Match the vocabulary","Connection, network, network switch, wireless access point, server. Match each to its definition."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: touring the school's own network."]
@@ -3505,9 +3510,15 @@
       '<h1 class="pp">Wireless access points</h1>' +
       '<p class="lead pp">Laptops and tablets have no wire to the switch.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">They connect to a wireless access point instead, which is wired into the network.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">A file&rsquo;s longer journey</h1>' +
-      '<p class="lead pp" style="max-width:34ch">From the wireless device, to the access point, to the switch, to the server, and all the way back.</p>' }; },
+    function(){
+      var STEPS = ["A laptop sends the file over wireless", "The wireless access point picks up the signal", "The switch sends it to the right place", "The server stores it, ready for anyone on the network"];
+      return { steps:0, html:
+        '<h1 class="pp">Put the file&rsquo;s longer journey in order</h1>' +
+        '<p class="lead pp">Drag, or use the arrows, to put these four steps in the right order.</p>' +
+        '<div class="seq d2-seqgrp pp" data-steps=\'' + JSON.stringify(STEPS) + '\' style="max-width:560px"></div>' +
+        '<button class="d2-gbtn pp" id="d2seqcheck">Check the order</button>' +
+        '<p class="lead" id="d2seqres" style="min-height:1.4em;font-weight:700"></p>',
+        init: seqInit }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Match the vocabulary</h1>' +
       '<div class="d2-reveal pp">' +
@@ -3775,7 +3786,8 @@
     ["Activity 1 · 5 min","Why have a network at all?","Discuss: what does the school network let people do? Why is it useful for more than one person to reach the same information?"],
     ["Activity 2 · 3 min","Who looks after it?","The school's IT technician installs, orders and maintains the network's hardware and software, and supports staff and pupils."],
     ["Activity 2 · 15 min","School network tour","Find the network's real parts around the school: devices, a printer, wireless access points, cables, sockets, the switch, the server. For each, ask what its job is, and whether it's vital or optional."],
-    ["Activity 3 · 10 min","Map your network","Mark on the network map where you found each device, and whether its connection is wired or wireless."],
+    ["Activity 3 · 3 min","What did you find on the tour?","A checked self-review, not reveal cards: pupils tick off which real network parts they actually found on the tour."],
+    ["Activity 3 · 7 min","Map your network","Mark on the network map where you found each device, and whether its connection is wired or wireless."],
     ["Plenary · 4 min","Networks, and the internet","Computers connected together make a network. Networks connected together make the internet, reached through a router."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
@@ -3819,6 +3831,31 @@
       '<h1 class="pp">School network tour</h1>' +
       '<p class="lead pp" style="max-width:34ch">Find real network parts around the school: a printer, a wireless access point, cables, sockets, the switch, the server.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">For each one: what is its job, and is it vital or optional?</p>' }; },
+    function(){
+      var FOUND = ["A printer", "A wireless access point", "A network cable", "A network socket", "The switch", "The server"];
+      return { steps:0, html:
+        '<h1 class="pp">What did you find on the tour?</h1>' +
+        '<p class="lead pp">Tap each one you actually found round the school.</p>' +
+        '<div class="pp" style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:38ch;width:100%" id="d2rubric6">' +
+        FOUND.map(function(t,i){ return '<button class="d2-rtick" data-i="'+i+'" style="display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--hair);background:var(--ground-2);border-radius:14px;padding:12px 16px;font-family:var(--font);font-size:1rem;font-weight:600;cursor:pointer;color:var(--ink)">' +
+          '<span class="tickmark" style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--hair);display:grid;place-items:center;color:transparent">'+ICON.check+'</span>' + t + '</button>'; }).join('') +
+        '</div>' +
+        '<p class="lead" id="d2rubric6msg" style="min-height:1.4em"></p>',
+        init:function(el){
+          var done = 0, total = FOUND.length, msg = el.querySelector('#d2rubric6msg');
+          [].forEach.call(el.querySelectorAll('.d2-rtick'), function(b){
+            b.addEventListener('click', function(){
+              if(b.classList.contains('on')) return;
+              b.classList.add('on');
+              b.style.borderColor = 'var(--out)'; b.style.background = 'color-mix(in srgb,var(--out) 12%,var(--paper))';
+              b.querySelector('.tickmark').style.color = 'var(--out)'; b.querySelector('.tickmark').style.borderColor = 'var(--out)';
+              done++;
+              msg.style.color = 'var(--out)';
+              if(done === total){ msg.textContent = 'You found the whole network!'; burst(); }
+              else msg.textContent = done + ' of ' + total + ' found';
+            });
+          });
+        } }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Map your network</h1>' +
       '<p class="lead pp" style="max-width:32ch">Mark where you found each device, and whether its connection is wired or wireless.</p>' }; },
