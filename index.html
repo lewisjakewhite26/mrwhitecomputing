@@ -1672,6 +1672,7 @@
 
   /* ---------- deck ---------- */
   var deckReady = false, slides, navBtns, blob, subprog, prevBtn, nextBtn, notes, overview, si = 0, step = 0;
+  var dragBusy = false; // true while a chip/tile is picked up, so prev/next can't skip a slide mid-drag
 
   function initDeck(){
     if(deckReady) return; deckReady = true;
@@ -1783,12 +1784,14 @@
     if(!silent) setHash('#/lesson/1/' + si);
   }
   function forward(){
+    if(dragBusy) return;
     var s = slides[si];
     if(s.classList.contains('scrim')){ releaseScrim(); return; }
     if(step < maxStep(si)){ step++; paintReveals(); paintNav(); return; }
     if(si < slides.length - 1) go(si + 1, 0);
   }
   function back(){
+    if(dragBusy) return;
     var s = slides[si];
     if(s.classList.contains('scrim')){ releaseScrim(); return; }
     if(step > 0){ step--; paintReveals(); paintNav(); return; }
@@ -1941,6 +1944,7 @@
       el.classList.add('dragging');
       el.classList.remove('right','wrong');
       active = true;
+      dragBusy = true;
       el.setPointerCapture(e.pointerId);
     });
     el.addEventListener('pointermove', function(e){
@@ -1952,6 +1956,7 @@
     function end(e){
       if(!active) return;
       active = false;
+      dragBusy = false;
       el.classList.remove('dragging');
       var drop = hit(e.clientX, e.clientY);
       cols().forEach(function(c){ c.classList.remove('over'); });
@@ -2447,6 +2452,7 @@
       chip.classList.add('dragging');
       chip.classList.remove('right','wrong');
       active = true;
+      dragBusy = true;
       try{ chip.setPointerCapture(e.pointerId); }catch(err){}
     });
     chip.addEventListener('pointermove', function(e){
@@ -2458,6 +2464,7 @@
     function end(e){
       if(!active) return;
       active = false;
+      dragBusy = false;
       chip.classList.remove('dragging');
       var drop = hit(e.clientX, e.clientY);
       bins().forEach(function(b){ b.classList.remove('over'); });
@@ -5373,6 +5380,7 @@
 
   /* ---------- engine ---------- */
   var A = null, activeKey = null, built = [], cur = 0, step = 0, pendingStep = 0, wired = false;
+  var dragBusy = false; // true while a chip/piece is picked up, so prev/next can't skip a slide mid-drag
 
   function activate(key){
     if(activeKey === key) return;
@@ -5628,10 +5636,12 @@
   }
 
   function fwd(){
+    if(dragBusy) return;
     if(step < stepsOf(cur)){ step++; applySteps(); return; }
     if(cur < built.length - 1) nav(cur + 1);
   }
   function back(){
+    if(dragBusy) return;
     if(step > 0){ step--; applySteps(); return; }
     if(cur > 0) nav(cur - 1, stepsOf(cur - 1));
   }
