@@ -10,6 +10,13 @@ real project URL and anon key are live in `index.html`'s `HB_LIVE` module
 (`SUPABASE_URL`/`SUPABASE_ANON_KEY`). See `ipad-board-plan.md` for the
 original design and `_supabase/schema.sql` for the tables/functions.
 
+Also now reachable from the deck toolbar itself, not just the pre-authored
+task page: an "ask a question" button on every lesson using the shared
+factory engine starts a room from any slide, any time, no planning ahead
+needed. `HB_LIVE.askQuestion()` does the work; the toolbar popover is just
+a text box and a Start button, then a QR code and room code come straight
+back. See the toolbar timer entry below, built the same session.
+
 **What's actually left:**
 - Test on a real iPad against a real board, not just two browser tabs —
   `ipad-board-plan.md` step 7 has the test script.
@@ -22,17 +29,24 @@ original design and `_supabase/schema.sql` for the tables/functions.
 - `enrichment-research.md` found the live answer wall doesn't suit KS1 as
   built. Use a single-tap emoji/traffic-light response instead (reusing
   the same backend), or Plickers, for that age group.
+- The toolbar's "ask a question" button only exists on the shared factory
+  engine (17 of 18 lessons). Y5/6 Lesson 1's old bespoke deck doesn't have
+  it, same engine split noted below.
 
 ## Also outstanding
 
 - **Pedagogy pass.** Every lesson now has at least one checked, hands-on
   activity — that gap is closed. What's still open, from
   `pedagogy-audit.md`: no lesson has a mid-lesson check (only end-of-lesson
-  quiz + confidence slider), only one slide anywhere states an activity
-  duration on-screen (Y5/6 L5, "15 minutes"), and the spot-the-mistake
-  component (`spotY12`/`spotY34`/`spotY56`) is only used in 3 of 18 lessons
-  so far (Y1/2 L1, Y3/4 L1, Y5/6 L6) — it's built and ready to reuse in the
-  other 15, that's a content task now, not an engineering one.
+  quiz + confidence slider), and the spot-the-mistake component
+  (`spotY12`/`spotY34`/`spotY56`) is only used in 3 of 18 lessons so far
+  (Y1/2 L1, Y3/4 L1, Y5/6 L6) — it's built and ready to reuse in the other
+  15, that's a content task now, not an engineering one. The visible-
+  time-signal gap is effectively closed by the toolbar timer below (any
+  activity slide can now get a countdown on demand, teacher's choice, not
+  baked into specific slides) — but nobody's actually run a "speed round"
+  mid-lesson check with it yet, that's still a content/delivery idea, not
+  a built slide.
 - **QR code needs a real host.** It builds its URL from `location.origin`, so it
   only works once `index.html` is served from a real address. Opening the file
   directly breaks the iPad hand-off — this also blocks testing the live task above.
@@ -79,3 +93,16 @@ original design and `_supabase/schema.sql` for the tables/functions.
   real accounts needed. Quick Click demoted to an early-finisher extra.
   Both verified working end-to-end in a real browser (actual mouse drag
   simulation, not just a click) before landing.
+- ~~No pacing timer or ad-hoc way to ask pupils something~~ — done. Two new
+  toolbar buttons on every lesson using the shared factory engine (17 of
+  18, see the two-engines note above): a timer (five mechanics to pick
+  from — drain ring, rocket-launch fuel gauge, flip clock, a ten-circle
+  sensory wall with no numbers, a big pulsing speed-round numeral — a
+  duration picker or typed mm:ss, a small widget that keeps counting down
+  across slide changes, and a real synthesised chime on zero), and "ask a
+  question" (types straight into `HB_LIVE.askQuestion()`, hands back a QR
+  code and room code in the toolbar itself, no need to pre-plan a task
+  page). Both verified against real interaction: the timer against an
+  actual countdown reaching zero and surviving a slide change, ask-a-
+  question against the real Supabase backend, a real room really got
+  created.
