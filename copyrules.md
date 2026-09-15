@@ -63,12 +63,10 @@ Sometimes just stop.
 
 ## Punctuation rules
 
-**Em dashes:** zero, full stop, anywhere on this website (`index.html`,
-`quick-click.html`, and any other file that ships to the live site) - a
-stricter rule than the general anti-slop guideline below, which allows one
-per 500 words. Use commas, semicolons, colons, parentheses, or a new
-sentence instead. This applies to code comments in those files too, not
-just pupil-facing copy: the whole codebase should read as free of the tell.
+**Em dashes:** zero, full stop, everywhere: pupil-facing copy, docs, code
+comments, chat replies, the lot. No per-500-words allowance anywhere in this
+project. Use commas, semicolons, colons, parentheses, or a new sentence
+instead.
 
 **Exclamation marks:** at most one per 1,000 words. Enthusiasm comes from word
 choice.
@@ -152,7 +150,7 @@ opens with "And" or "But", doesn't over-explain, trusts the reader.
 3. Three or more short declaratives in a row? Merge or connect them.
 4. Grouped in threes? Break it.
 5. Hedging instead of committing? Pick a side.
-6. More than one em dash? Cut the extras.
+6. Any em dash at all? Cut it.
 7. Passive construction? Make it active.
 8. Every paragraph ending on a transition? Cut some.
 9. Fabricated any specifics? Remove them or flag as hypothetical.

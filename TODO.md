@@ -1,102 +1,81 @@
 # To do
 
-## ⭐ PRIORITY — Live "answer the question" task (Route B, cloud room)
+## Live "answer the question" task — built and wired up
 
-Next thing to build, full stop. A UI-only prototype is approved — see
-[Answer Wall](https://claude.ai/code/artifact/2ff8197b-b479-46aa-b451-927577d79137),
-pupil iPad view and teacher board view side by side, wired together live
-in the browser with no backend. Verdict: liked it, wants a fuller drawing
-toolbar closer to onlineboard.eu (colour swatches, brush sizes, an
-eraser, undo) — added to the prototype's second version and to the pupil
-view spec below.
+Built: pupil view (`#/live/<room>`), board view (`#/board/<room>`), room
+codes with a teacher-only token, the drawing canvas with the full
+onlineboard.eu-style toolbar (colour swatches, brush sizes, eraser, undo),
+QR "start a live task" hand-off, and the Supabase backend — schema applied,
+real project URL and anon key are live in `index.html`'s `HB_LIVE` module
+(`SUPABASE_URL`/`SUPABASE_ANON_KEY`). See `ipad-board-plan.md` for the
+original design and `_supabase/schema.sql` for the tables/functions.
 
-Backend wiring is planned and mostly built (`ipad-board-plan.md`, "Wiring it
-up, step by step"): room codes generated client-side, a teacher-only
-token closing the anyone-can-clear-the-board gap, the four-action API,
-the QR-side "start a live task" entry point, and `HB_LIVE` all done in
-`index.html`. Backend moved from the original PartyKit plan to Supabase
-after PartyKit's shared hosting hit a capacity limit on deploy day — see
-`_supabase/schema.sql` for the actual tables/functions. **What's left:**
-create a Supabase project, run that schema file once in its SQL editor,
-and paste the project's URL + anon key into `SUPABASE_URL`/
-`SUPABASE_ANON_KEY` at the top of the `HB_LIVE` module — then test as
-described in `ipad-board-plan.md` step 7.
-
-See `ipad-board-plan.md` for the actual build plan: submit-once (not
-live-stroke) drawing/text answers, plain HTTPS polling instead of
-WebSockets, vanilla JS reusing the existing QR and router patterns, and a
-staged feature order (gallery + spotlight first, word-cloud mode second,
-live-stroke sync and a shared canvas later if wanted at all). Estimated
-at a weekend for the first stage, matching the ~200-line estimate below.
-
-Pupils scan the QR on the slide, a question opens on their iPad, they type or
-draw an answer and send it. Answers tile onto the teacher's board view in real
-time.
-
-**Backend:** Supabase, free tier — two tables plus a handful of Postgres
-functions (see `_supabase/schema.sql`). A fresh random room code per lesson.
-
-**Pupil view** `#/live/<room>`:
-- question text at the top
-- a textarea and a drawing canvas, pupil picks either
-- one Send button
-- drawing compresses to a JPEG data URL (~30KB) before sending
-- no name field
-
-**Board view** `#/board/<room>`:
-- answers appear as tiles as they land
-- tap a tile to enlarge it
-- a Clear all button
-
-**QR:** reuse the box already on the deck. Add a "live task" mode that encodes
-the room URL instead of `#/task/1`.
-
-**Data protection:** answers stay anonymous, room wiped at lesson end. The
-school will ask about this before it goes near real pupils.
-
-**Trade-off:** this is the first thing in the app that needs the internet and a
-third-party service. The rest of the file runs fully offline. Keep the live task
-self-contained enough that the deck still works with it switched off.
-
-Rough size: ~200 lines in `index.html` plus a small Supabase schema.
+**What's actually left:**
+- Test on a real iPad against a real board, not just two browser tabs —
+  `ipad-board-plan.md` step 7 has the test script.
+- Blocked by the same QR/hosting issue below: `location.origin` needs
+  `index.html` served from a real address before the iPad hand-off works
+  at all, live task included.
+- Data protection: answers stay anonymous and the room wipes at lesson
+  end, but the school hasn't signed off on this yet. Ask before it goes
+  near real pupils.
+- `enrichment-research.md` found the live answer wall doesn't suit KS1 as
+  built. Use a single-tap emoji/traffic-light response instead (reusing
+  the same backend), or Plickers, for that age group.
 
 ## Also outstanding
 
-- **Make the 13 lessons built this session more engaging, not just longer.**
-  Full pedagogy audit in `pedagogy-audit.md`: 14 of the 18 lessons have zero
-  checked/embedded activity (no drag-sort, no sequencing), leaning entirely
-  on tap-to-reveal cards, and the deck-only walkthrough is roughly a third
-  of the claimed lesson length in every case. The other four lessons
-  (already built before this session) use a real Check-button sort or
-  sequence activity — that mechanic already exists in the code
-  (`sortInit`, `renderSeq`) and just needs reusing. The audit names five
-  specific slides to convert first.
-- **Fix the shit timeline on Lesson 4 of Year 5/6.** The "brief history of the
-  web" slide (`#/y56/lesson/4`, second content slide, `Y56_SLIDES4` in
-  `index.html`, class prefix `d2-tl-`). Three attempts this session, all
-  rejected by the user as not matching the reference
-  (dropship.io/about's timeline) and looking bad in the browser. Don't
-  guess again from a fetched HTML dump — get an actual screenshot or live
-  look at both the reference and the current render before touching this,
-  or ask the user to describe exactly what's wrong with a screenshot in
-  hand.
+- **Pedagogy pass.** Every lesson now has at least one checked, hands-on
+  activity — that gap is closed. What's still open, from
+  `pedagogy-audit.md`: no lesson has a mid-lesson check (only end-of-lesson
+  quiz + confidence slider), only one slide anywhere states an activity
+  duration on-screen (Y5/6 L5, "15 minutes"), and the spot-the-mistake
+  component (`spotY12`/`spotY34`/`spotY56`) is only used in 3 of 18 lessons
+  so far (Y1/2 L1, Y3/4 L1, Y5/6 L6) — it's built and ready to reuse in the
+  other 15, that's a content task now, not an engineering one.
 - **QR code needs a real host.** It builds its URL from `location.origin`, so it
   only works once `index.html` is served from a real address. Opening the file
-  directly breaks the iPad hand-off.
+  directly breaks the iPad hand-off — this also blocks testing the live task above.
+- **Two engines for Year 5/6.** Lesson 1 still runs on the original bespoke deck
+  (`#/lesson/1`, the `initDeck` code); Lesson 2 onward runs on the shared kid-deck
+  factory (`HB_DECK`, `#/y56/lesson/2`). Deliberately left as-is: restyled the
+  factory's toolbar CSS (`.d2-home`/`.d2-toolgroup`/`.d2-rbtn`/`.d2-toolpop`) to
+  match Lesson 1's exactly — same 40px square buttons, bottom-right, glass
+  background, same hover, same popover behaviour — so all 18 lessons now look
+  identical even though two different engines still sit underneath. Verified
+  in-browser, pixel-matched against Lesson 1. Only port Lesson 1 onto the
+  factory if the underlying code duplication itself becomes a problem.
+- **Year 1/2 "click and drag" demo slide** is still an auto-playing animation
+  in Lesson 3 (leads into a real hands-on task straight after: PaintZ, pupils
+  actually click-and-drag with a mouse/trackpad, so the objective is still
+  covered even though that demo itself is unchanged).
+
+## Done, kept for reference
+
 - ~~Lessons 3 to 6 for all three units~~ — done. All 18 lessons (KS1, LKS2,
-  UKS2, Lessons 1-6 each) are now built and live, matching the real NCCE
+  UKS2, Lessons 1-6 each) are built and live, matching the real NCCE
   source packs unzipped into `..\KS1\L*_src\`, `..\LKS2\L*_src\`,
   `..\UKS2\L*_src\` (siblings of `hub\`, git-ignored by the source repo since
   they sit outside it). Extracted text dumps are kept in
   `hub\_tools\dumps\*.txt` for reference; `hub\_tools\extract-office-text.js`
   and `dump-lesson.sh` can regenerate them from any future NCCE pack update.
-  Lesson 2 for each unit was left as originally built (not re-checked against
-  the real pack) since it was already live before this pass.
-- **Two engines for Year 5/6.** Lesson 1 runs on the original bespoke deck
-  (`#/lesson/1`, the `initDeck` code). Lesson 2 onward runs on the shared kid-deck
-  factory (`HB_DECK`, `#/y56/lesson/2`). They look slightly different. Either port
-  Lesson 1 onto the factory, or leave it, but know the split is there.
-- **Year 5/6 deck chrome** (Lesson 1 only) still uses hand-drawn inline SVG rather
-  than Phosphor. Fine as is.
-- **Year 1/2 "click and drag" slide** is an auto-playing animation, not a real
-  drag. A pointer-drag version would be better for the mouse-skills objective.
+- ~~Fix the shit timeline on Lesson 4 of Year 5/6~~ — done. Dropped the
+  arc-shaped chart (three failed attempts) for a horizontal draggable
+  scrubber with prev/next arrows and an auto-advance play-through. No
+  further complaints logged since.
+- ~~Year 1/2 Lesson 2's drag skill was never actually practised~~ — done.
+  The lesson's own objective is "use a mouse to click and drag," but the
+  deck only had a passive animation plus Quick Click (which only trains
+  clicking, not dragging). Checked the real NCCE source pack
+  (`_tools/dumps/KS1_L2.txt`): the original plan sends pupils to a
+  code.org drag-and-drop jigsaw at `ncce.io/drag`. Built our own version
+  instead of linking out to a third-party site — a new "Build the
+  picture" slide where pupils drag the screen/keyboard/mouse/base unit
+  onto outlined slots to complete a computer picture, reusing the
+  existing `sortInitN` matching-sort engine so it's real pointer drag,
+  checked, with a completion celebration. Also added a fake power-on/
+  log-in mockup slide (`initLoginDemo`) right before it, covering the
+  lesson's other unpracticed objective ("turn it on and log in") with no
+  real accounts needed. Quick Click demoted to an early-finisher extra.
+  Both verified working end-to-end in a real browser (actual mouse drag
+  simulation, not just a click) before landing.
