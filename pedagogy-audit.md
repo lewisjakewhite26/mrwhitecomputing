@@ -20,9 +20,12 @@ activity built into the deck itself, reusing and extending `sortInit` and
 cursor/backspace typo-fixer for Y1/2 L5, a live password-strength checker
 for Y3/4 L1, a live search-scoring counter for Y5/6 L5, among others).
 
-Overall score moved from 42.2/100 to 75.7/100 across all 18 lessons. Full
-per-lesson before/after detail is in `pedagogy-scorecard.md`; don't
-duplicate those numbers here, they'll drift out of sync.
+Overall score moved from 42.2/100 to 77.3/100 across all 18 lessons, the
+higher figure reflecting a later follow-up pass on Y1/2 L2 and Y3/4 L2
+specifically (a real image jigsaw replacing icon-matching, a login mockup,
+and a "Spot the devices" click-in-story activity). Full per-lesson
+before/after detail is in `pedagogy-scorecard.md`; don't duplicate those
+numbers here, they'll drift out of sync.
 
 ## Original method (unchanged, still how the scorecard is judged)
 
