@@ -8,6 +8,12 @@ differently from the plan in `enrichment-research.md`, mostly smaller and
 more homegrown than the full external resource, and the scores below
 reflect what's actually live in `index.html`, not the ambition.
 
+**Follow-up update:** Y1/2 Lesson 2 and Y3/4 Lesson 2 were revisited and
+rescored after this document was first written, following user testing
+that found the original Y1/2 L2 drag activity too abstract and a real bug
+where a missed drop made pieces vanish. The other sixteen lessons are
+unchanged since the original pass, scores as originally recorded.
+
 ## How the score works
 
 Same bands as before, still a judgement call:
@@ -26,13 +32,13 @@ Same bands as before, still a judgement call:
 | # | Lesson | Before | What actually got built | After |
 |---|---|---|---|---|
 | 1 | Technology in our classroom | **76** | Pupils photograph technology round the room on the iPad's own Camera app, then the class sorts what they found together. Real device use, though the sort stays a class discussion rather than a checked slide | **80** |
-| 2 | Using computer technology | **34** | The 8 reveal cards became a physical peripheral-devices sort (keyboard/mouse/mic vs screen/printer/speaker), checked as a group. The click-and-drag demo was replaced by a turn on Quick Click, a reaction-test game built for this school's mouse-free classrooms | **67** |
+| 2 | Using computer technology | **34** | Rebuilt twice since the first pass. The peripheral-devices sort stayed, but "Screen" was dropped from it (ambiguous on the touchscreen these lessons run on) and its icons enlarged for Y1/2 hands. The click-and-drag demo now leads into a real image-slice jigsaw, checked, that actually practises dragging, not just a bigger Quick Click. Added a fake power-on/login mockup, a second checked sort ("Inside or outside?", unrelated to computers, ten icons) replacing a Quick Click-only slide, and an optional 3x3 harder jigsaw. Found and fixed a real bug along the way: a missed drop collapsed a piece to 4px wide | **88** |
 | 3 | Developing mouse skills | **28** | The flagged animation-only slide now leads into a real "have a go" on PaintZ, with a checked self-report card, plus Quick Click for early finishers instead of the animation alone | **87** |
 | 4 | Using a computer keyboard | **38** | The "What's been used?" reveal cards became a self-check: pupils look at their own saved picture and tick which features they actually used | **63** |
 | 5 | Developing keyboard skills | **24** | A brand-new build: a cursor/backspace typo-fixer. Pupils move a text cursor with arrow buttons and backspace out one extra letter until CATT reads CAT, checked automatically. Nothing like this existed anywhere in the deck engine before | **78** |
 | 6 | Using a computer responsibly | **32** | The two rule-related reveal-card slides became one checked sort: 8 real rules into four reasons (safe, happy, learn, kind). CEOP's "Jessie and Friends" video was added, a UK child-safety body's own animation on this lesson's exact vocabulary | **81** |
 
-**Unit average: 38.7 before, 76.0 after.**
+**Unit average: 38.7 before, 79.5 after.**
 
 ---
 
@@ -41,13 +47,13 @@ Same bands as before, still a judgement call:
 | # | Lesson | Before | What actually got built | After |
 |---|---|---|---|---|
 | 1 | How does a digital device work? | **74** | A live password-strength checker: type a candidate password, get instant feedback, built into the deck's own UI | **85** |
-| 2 | What parts make up a digital device? | **70** | The "invent your own device" task now has a 3-tick peer-checked rubric: has an input, has an output, does the process make sense | **74** |
+| 2 | What parts make up a digital device? | **70** | The "invent your own device" task has a 3-tick peer-checked rubric: has an input, has an output, does the process make sense. Second pass: "Spot the devices" turned from a static tap-to-reveal answer card into a real click-in-the-story activity, tap each device in the passage, locks green if right, shakes if it's a decoy like "alarm" or "car" | **81** |
 | 3 | How do digital devices help us? | **36** | The "What's different?" reveal cards became a real 2-bin sort of 8 digital-vs-paper traits, not the paired-comparison sheet originally planned, but a genuine checked activity in its place | **66** |
 | 4 | How am I connected? | **40** | The "Think, pair, share" recap became a checked matching sort (Connection/Network/Network switch to definitions). The physical Orange Game or cup-and-string demo from the research wasn't added on top | **70** |
 | 5 | How are computers connected? | **38** | The narrated "file's longer journey" slide became a checked sequence activity: reorder four scrambled steps for a file travelling from a wireless laptop to the server | **70** |
 | 6 | What does our school network look like? | **30** | A self-check ticklist after the school network tour: pupils tick which real network parts they actually found, rather than the tour going unchecked in the deck | **75** |
 
-**Unit average: 48.0 before, 73.3 after.**
+**Unit average: 48.0 before, 74.5 after.**
 
 ---
 
@@ -70,7 +76,7 @@ Same bands as before, still a judgement call:
 
 | | Before | After |
 |---|---|---|
-| **All 18 lessons, average** | **42.2 / 100** | **75.7 / 100** |
+| **All 18 lessons, average** | **42.2 / 100** | **77.3 / 100** |
 
 Every lesson in the curriculum now has at least one checked, hands-on
 activity in the deck itself. Fourteen of eighteen had none before this

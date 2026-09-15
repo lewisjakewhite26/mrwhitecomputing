@@ -979,9 +979,9 @@
   /* compact: for content-dense checked-activity slides (a pool plus a
      picture or bins plus a Check button) that don't fit the normal
      generous slide padding/gap without scrolling */
-  .d2-slide.compact{gap:clamp(8px,1.6vh,16px);padding:clamp(20px,4vh,36px) clamp(20px,5vw,64px)}
-  .d2-slide.compact h1{font-size:clamp(1.5rem,3.4vw,2.3rem)}
-  .d2-slide.compact .lead{font-size:clamp(.95rem,1.8vw,1.15rem);margin-bottom:0}
+  .d2-slide.compact{gap:clamp(6px,1.1vh,12px);padding:clamp(12px,2.6vh,24px) clamp(16px,4vw,56px)}
+  .d2-slide.compact h1{font-size:clamp(1.3rem,3vw,2rem)}
+  .d2-slide.compact .lead{font-size:clamp(.85rem,1.6vw,1.05rem);margin-bottom:0}
   .d2-slide h1{
     font-weight:800;font-size:clamp(2rem,4.8vw,3.5rem);line-height:1.06;letter-spacing:-0.03em;
     margin:0;max-width:20ch;text-wrap:balance;
@@ -1094,6 +1094,8 @@
 
   /* sort activity */
   .d2-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:44ch}
+  .d2-pool.tight{max-width:72ch;gap:6px}
+  .d2-pool.tight .d2-chip{padding:6px 12px;font-size:clamp(.72rem,1.3vw,.85rem)}
   .d2-chip{
     border:2px solid transparent;border-radius:999px;padding:10px 16px;font-weight:600;font-size:clamp(.9rem,1.6vw,1.05rem);
     font-family:var(--font);background:var(--ground-2);color:var(--ink);box-shadow:var(--shadow-sm);cursor:grab;
@@ -1140,7 +1142,7 @@
   .d2-bin.jig .items{position:absolute;inset:0}
   .d2-bin.jig .items .d2-chip.jig{width:100%;height:100%;border-radius:0;border:0}
   .d2-chip.jig{
-    padding:0;border-radius:8px;
+    width:var(--piece);height:var(--piece);padding:0;border-radius:8px;
     border:2px solid var(--paper);box-shadow:var(--shadow-sm);background-color:var(--ground-2);
   }
 
@@ -1202,6 +1204,8 @@
   @keyframes d2spin{to{transform:rotate(360deg)}}
   .d2-box2 .rule{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;color:var(--proc);font-weight:800;font-size:1.1rem}
   .d2-guess{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .d2-btnrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;row-gap:6px}
+  .d2-btnrow .lead{flex-basis:100%;text-align:center;margin:2px 0 0}
   .d2-gbtn{
     border:0;border-radius:999px;padding:11px 20px;font-weight:700;font-size:1.05rem;font-family:var(--font);
     background:var(--ink);color:#fff;cursor:pointer;transition:transform .16s var(--ease)}
@@ -2410,7 +2414,12 @@
     for(var r = 0; r < rows; r++){
       for(var c = 0; c < cols; c++){ pieces.push({key:'p' + r + '_' + c, c:c, r:r}); }
     }
-    function styleFor(p){ return jigPieceStyle(svg, piecePx, p.c, p.r, cols, rows) + 'width:' + piecePx + 'px;height:' + piecePx + 'px;'; }
+    // --piece (a custom property, not width/height directly) survives
+    // d2Draggable's end() clearing chip.style.width after every drag, so a
+    // piece that misses its target and falls back to the pool keeps its
+    // real size instead of collapsing to a sliver (width:auto on an
+    // otherwise-empty button)
+    function styleFor(p){ return jigPieceStyle(svg, piecePx, p.c, p.r, cols, rows) + '--piece:' + piecePx + 'px;'; }
     return { steps:0, cls:'compact', html:
       '<h1 class="pp">' + title + '</h1>' +
       '<p class="lead pp">' + sub + '</p>' +
@@ -2418,7 +2427,7 @@
       '<div class="d2-jigpic pp" style="grid-template-columns:repeat(' + cols + ',' + piecePx + 'px);grid-template-rows:repeat(' + rows + ',' + piecePx + 'px)">' +
         pieces.map(function(p){ return '<div class="d2-bin jig" data-key="' + p.key + '"><div class="ghost" style="' + styleFor(p) + '"></div><div class="items"></div></div>'; }).join('') +
       '</div>' +
-      '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+      '<div class="d2-btnrow pp"><button class="d2-gbtn" id="d2sortgo">Sort them</button></div>',
       init: sortInitN };
   }
   var ICON = {
@@ -3336,11 +3345,48 @@
             });
           });
         } }; },
-    function(){ return { steps:1, html:
-      '<h1 class="pp">Spot the devices</h1>' +
-      '<p class="lead pp" style="max-width:44ch;font-size:clamp(1rem,1.9vw,1.25rem)">&ldquo;I turned on the TV to watch a streaming service. I played on my games console, then finished my homework on my laptop. I set the alarm on my smart speaker. In the morning the satnav in the car found the quickest route.&rdquo;</p>' +
-      '<div class="d2-rc pp" data-step="1" style="max-width:24ch" id="d2count"><b>How many digital devices?</b><span class="ans">At least six: TV, games console, laptop, smart speaker, car satnav, and the streaming service&rsquo;s computers.</span></div>',
-      init:function(el){ var c=el.querySelector('#d2count'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    function(){
+      // click-to-select in the story itself, not a tap-to-reveal answer:
+      // TV/streaming service/games console/laptop/smart speaker/satnav are
+      // real devices (lock green on tap); "alarm" and "car" are decoys, the
+      // alarm is a feature of the speaker and the car isn't itself digital
+      var TXT = [
+        ['I turned on the ', null], ['TV', 1], [' to watch a ', null], ['streaming service', 1],
+        ['. I played on my ', null], ['games console', 1], [', then finished my homework on my ', null],
+        ['laptop', 1], ['. I set the ', null], ['alarm', 0], [' on my ', null], ['smart speaker', 1],
+        ['. In the morning the ', null], ['satnav', 1], [' in the ', null], ['car', 0],
+        [' found the quickest route.', null]
+      ];
+      var total = TXT.filter(function(t){ return t[1] === 1; }).length;
+      var html = TXT.map(function(t){
+        return t[1] === null ? t[0] : '<button class="d2-spotword" data-ok="' + t[1] + '">' + t[0] + '</button>';
+      }).join('');
+      return { steps:0, html:
+        '<h1 class="pp">Spot the devices</h1>' +
+        '<p class="lead pp d2-spotline sz-y34" style="max-width:46ch;justify-content:flex-start;text-align:left">&ldquo;' + html + '&rdquo;</p>' +
+        '<p class="lead pp" id="d2devcount" style="font-weight:700">Tap every digital device in the story. 0 of ' + total + ' found.</p>',
+        init:function(el){
+          var found = 0;
+          var counter = el.querySelector('#d2devcount');
+          [].forEach.call(el.querySelectorAll('.d2-spotword'), function(w){
+            w.addEventListener('click', function(){
+              if(w.classList.contains('found')) return;
+              if(w.getAttribute('data-ok') === '1'){
+                w.classList.add('found');
+                found++;
+                if(found === total){
+                  counter.textContent = 'Found all ' + total + '! Well done.';
+                  counter.style.color = 'var(--out)';
+                  burst();
+                } else {
+                  counter.textContent = 'Tap every digital device in the story. ' + found + ' of ' + total + ' found.';
+                }
+              } else {
+                w.classList.remove('miss'); void w.offsetWidth; w.classList.add('miss');
+              }
+            });
+          });
+        } }; },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Nice work</h1>' +
@@ -4598,11 +4644,14 @@
       '<p class="lead pp">People made it. It helps us.</p>' +
       '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">And it can do lots of different jobs.</p>' }; },
     function(){
-      var PARTS = [["Keyboard","keyboard",1],["Mouse","mouse-simple",1],["Microphone","microphone",1],["Screen","monitor",0],["Printer","printer",0],["Speaker","speaker-high",0]];
+      // Screen left out on purpose: on the touchscreen these lessons run
+      // on, the screen is both "I use it" and "it tells me", not one or
+      // the other, so it can't be a fair answer in a two-bin sort
+      var PARTS = [["Keyboard","keyboard",1],["Mouse","mouse-simple",1],["Microphone","microphone",1],["Printer","printer",0],["Speaker","speaker-high",0]];
       return { steps:0, cls:'compact', html:
         '<h1 class="pp">Sort the computer&rsquo;s parts</h1>' +
         '<p class="lead pp">The base unit does the thinking in the middle. Sort the rest: do you use it, or does it tell you something?</p>' +
-        '<div class="d2-pool pp" id="d2sortpool">' + PARTS.map(function(p){ return '<button class="d2-chip" data-ok="'+p[2]+'">'+ph(p[1],18)+' '+p[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + PARTS.map(function(p){ return '<button class="d2-chip" data-ok="'+p[2]+'">'+ph(p[1],30)+' '+p[0]+'</button>'; }).join('') + '</div>' +
         '<div class="d2-bins pp">' +
           '<div class="d2-bin d"><h4>I use it</h4><div class="items" id="d2binD"></div></div>' +
           '<div class="d2-bin n"><h4>It tells me</h4><div class="items" id="d2binN"></div></div>' +
@@ -4668,7 +4717,7 @@
         '<rect x="155" y="140" width="28" height="42" rx="14" fill="#0E9C6A"/>' +
         '<line x1="169" y1="140" x2="169" y2="156" stroke="#fff" stroke-width="3"/>' +
       '</svg>';
-      return jigsawSlideSpec('Build the picture', 'Drag each piece into its space.', JIG_SVG, 2, 2, 72);
+      return jigsawSlideSpec('Build the picture', 'Drag each piece into its space.', JIG_SVG, 2, 2, 118);
     },
     function(){
       // harder version of the same mechanic: same "desk by a window"
@@ -4707,7 +4756,7 @@
         '<rect x="122" y="118" width="22" height="32" rx="11" fill="#D8443C"/>' +
         '<line x1="133" y1="118" x2="133" y2="130" stroke="#fff" stroke-width="2.6"/>' +
       '</svg>';
-      return jigsawSlideSpec('Extra: bigger picture', 'A harder version, nine pieces this time.', JIG_SVG3, 3, 3, 52);
+      return jigsawSlideSpec('Extra: bigger picture', 'A harder version, nine pieces this time.', JIG_SVG3, 3, 3, 80);
     },
     function(){
       var OUT = [["Tree","tree"],["Flower","flower"],["Butterfly","butterfly"],["Acorn","acorn"],["Dog","dog"]];
@@ -4718,7 +4767,7 @@
       return { steps:0, cls:'compact', html:
         '<h1 class="pp">Extra: Inside or outside?</h1>' +
         '<p class="lead pp">Drag each thing to where you&rsquo;d find it.</p>' +
-        '<div class="d2-pool pp" id="d2sortpool">' + ALL.map(function(p){ return '<button class="d2-chip" data-ok="'+p[2]+'">'+ph(p[1],18)+' '+p[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + ALL.map(function(p){ return '<button class="d2-chip" data-ok="'+p[2]+'">'+ph(p[1],30)+' '+p[0]+'</button>'; }).join('') + '</div>' +
         '<div class="d2-bins pp" style="max-width:600px">' +
           '<div class="d2-bin d" style="min-height:clamp(70px,10vh,100px)"><h4>Outside</h4><div class="items" id="d2binD"></div></div>' +
           '<div class="d2-bin n" style="min-height:clamp(70px,10vh,100px)"><h4>Inside</h4><div class="items" id="d2binN"></div></div>' +
@@ -5207,14 +5256,14 @@
         ["Sensing the room is getting cold", "c"], ["Deciding what temperature feels comfortable", "h"], ["Turning the heating on automatically", "c"],
         ["Choosing to stop at a red light", "h"], ["Timing how long the light stays red", "c"], ["Pressing the button to cross", "s"]
       ];
-      return { steps:0, html:
-        '<h1 class="pp">Who does the job: self-checkout, warehouse robot, smart thermostat, traffic lights?</h1>' +
-        '<p class="lead pp">Sort these real jobs from four systems. Some need a person and a computer together.</p>' +
-        '<div class="d2-pool pp" id="d2sortpool">' + TASKS.map(function(t){ return '<button class="d2-chip" data-cat="'+t[1]+'">'+t[0]+'</button>'; }).join('') + '</div>' +
-        '<div class="d2-bins three pp">' +
-          '<div class="d2-bin d"><h4>Person</h4><div class="items" id="d2binH"></div></div>' +
-          '<div class="d2-bin s3"><h4>Both together</h4><div class="items" id="d2binS"></div></div>' +
-          '<div class="d2-bin n"><h4>Computer</h4><div class="items" id="d2binC"></div></div>' +
+      return { steps:0, cls:'compact', html:
+        '<h1 class="pp">Who does the job?</h1>' +
+        '<p class="lead pp">Self-checkout, warehouse robot, smart thermostat, traffic lights. Sort these real jobs from the four systems. Some need a person and a computer together.</p>' +
+        '<div class="d2-pool pp tight" id="d2sortpool">' + TASKS.map(function(t){ return '<button class="d2-chip" data-cat="'+t[1]+'">'+t[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins three pp" style="max-width:760px">' +
+          '<div class="d2-bin d" style="min-height:clamp(70px,10vh,100px)"><h4>Person</h4><div class="items" id="d2binH"></div></div>' +
+          '<div class="d2-bin s3" style="min-height:clamp(70px,10vh,100px)"><h4>Both together</h4><div class="items" id="d2binS"></div></div>' +
+          '<div class="d2-bin n" style="min-height:clamp(70px,10vh,100px)"><h4>Computer</h4><div class="items" id="d2binC"></div></div>' +
         '</div>' +
         '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
         init: sortInit3 }; },
