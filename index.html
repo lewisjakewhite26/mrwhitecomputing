@@ -1017,6 +1017,92 @@
   .d2-toolpop{position:absolute;right:16px;bottom:66px;background:var(--paper);border:1px solid var(--hair);
     border-radius:12px;box-shadow:var(--shadow-md);padding:6px;display:none;z-index:30;min-width:210px}
   .d2-toolpop.on{display:flex;flex-direction:column}
+  .d2-toolpop.wide{min-width:280px;gap:10px;padding:12px}
+
+  /* timer picker popover */
+  .d2-tmr-mechs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .d2-tmr-mechbtn{
+    border:1.5px solid var(--hair);background:var(--ground-2);color:var(--muted);border-radius:10px;
+    padding:7px 4px;font-family:var(--font);font-size:.74rem;font-weight:700;cursor:pointer;
+    transition:border-color .15s,color .15s,background .15s;
+  }
+  .d2-tmr-mechbtn.sel{border-color:var(--proc);color:var(--proc);background:color-mix(in srgb,var(--proc) 10%,var(--paper))}
+  .d2-tmr-durs{display:flex;gap:6px}
+  .d2-tmr-durs button{
+    flex:1;border:1.5px solid var(--hair);background:var(--ground-2);color:var(--muted);border-radius:10px;
+    padding:6px 4px;font-family:var(--font);font-size:.78rem;font-weight:700;cursor:pointer;
+    transition:border-color .15s,color .15s,background .15s;
+  }
+  .d2-tmr-durs button.sel{border-color:var(--proc);color:var(--proc);background:color-mix(in srgb,var(--proc) 10%,var(--paper))}
+  .d2-tmr-custom{
+    width:100%;border:1.5px solid var(--hair);border-radius:10px;padding:7px 10px;font-family:var(--font);
+    font-size:.85rem;color:var(--ink);background:var(--paper);box-sizing:border-box;text-align:center;
+  }
+  .d2-tmr-custom:focus{outline:none;border-color:var(--proc)}
+  .d2-toolpop .d2-gbtn{width:100%;padding:9px;font-size:.9rem}
+
+  /* the always-on-top running timer widget, lives outside the popover so it
+     survives slide navigation same as the whiteboard does */
+  .d2-tmr-widget{
+    position:absolute;top:16px;right:76px;z-index:14;background:var(--paper);border:1px solid var(--hair);
+    border-radius:18px;box-shadow:var(--shadow-md);padding:12px 16px 14px;display:flex;flex-direction:column;
+    align-items:center;gap:2px;min-width:120px;
+  }
+  .d2-tmr-widget[hidden]{display:none}
+  .d2-tmr-closebtn{
+    position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:1px solid var(--hair);
+    background:var(--ink);color:#fff;font-size:.8rem;line-height:1;cursor:pointer;display:grid;place-items:center;
+  }
+  .d2-tmr-stage{display:flex;align-items:center;justify-content:center}
+
+  /* ---- ring ---- */
+  .d2-tmr-ring{position:relative;width:84px;height:84px}
+  .d2-tmr-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .d2-tmr-ring .d2-tmr-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .d2-tmr-ring .d2-tmr-num{font-size:1.15rem;font-weight:800;font-variant-numeric:tabular-nums}
+
+  /* ---- fuel rocket ---- */
+  .d2-tmr-fuelwrap{display:flex;align-items:flex-end;gap:10px}
+  .d2-tmr-tube{width:18px;height:76px;border-radius:9px;border:2.5px solid var(--hair);background:var(--paper);position:relative;overflow:hidden}
+  .d2-tmr-fill{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,var(--out),var(--in));border-radius:0 0 7px 7px;transition:height 1s linear,background .4s}
+  .d2-tmr-rocket{width:26px;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+  .d2-tmr-rocket.launch{transform:translateY(-90px) rotate(-8deg)}
+
+  /* ---- flip clock ---- */
+  .d2-tmr-fliprow{display:flex;align-items:center;gap:3px}
+  .d2-tmr-digit{width:24px;height:34px;perspective:200px}
+  .d2-tmr-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+  .d2-tmr-inner.flipped{transform:rotateX(-180deg)}
+  .d2-tmr-face{
+    position:absolute;inset:0;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;
+    font-size:1.05rem;font-weight:800;font-variant-numeric:tabular-nums;background:var(--ink);color:var(--paper);border-radius:4px;
+  }
+  .d2-tmr-face.back{transform:rotateX(180deg)}
+  .d2-tmr-fliprow .d2-tmr-sep{font-size:.95rem;font-weight:800;color:var(--soft)}
+
+  /* ---- circle wall ---- */
+  .d2-tmr-wall{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .d2-tmr-dot{width:12px;height:12px;border-radius:50%;background:var(--proc);transition:opacity .7s ease,transform .7s ease}
+  .d2-tmr-dot.off{opacity:.14;transform:scale(.68)}
+
+  /* ---- speed pulse ---- */
+  .d2-tmr-pulse{font-size:1.9rem;font-weight:800;font-variant-numeric:tabular-nums;transition:color .3s}
+  .d2-tmr-urgent{animation:d2tmrpulse .6s ease-in-out infinite}
+  @keyframes d2tmrpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+  html.rm .d2-tmr-rocket,html.rm .d2-tmr-fill,html.rm .d2-tmr-inner,html.rm .d2-tmr-dot,html.rm .d2-tmr-urgent{transition:none!important;animation:none!important}
+
+  /* ask-a-question popover */
+  .d2-ask-input{
+    width:100%;border:1.5px solid var(--hair);border-radius:10px;padding:9px 11px;font-family:var(--font);
+    font-size:.88rem;color:var(--ink);background:var(--paper);box-sizing:border-box;resize:vertical;min-height:52px;
+  }
+  .d2-ask-input:focus{outline:none;border-color:var(--proc)}
+  .d2-ask-result{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:4px;border-top:1px solid var(--hair);margin-top:2px}
+  .d2-ask-result[hidden]{display:none}
+  .d2-ask-qr{width:120px;height:120px;background:#fff;border-radius:10px;padding:6px;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+  .d2-ask-qr img,.d2-ask-qr canvas,.d2-ask-qr table{width:100%!important;height:100%!important}
+  .d2-ask-code{font-weight:800;font-size:1.1rem;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+  .d2-ask-hint{font-size:.72rem;color:var(--soft);text-align:center}
   .d2-chev{
     position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;display:grid;place-items:center;
     border:0;border-radius:999px;background:var(--ground-2);color:var(--ink);box-shadow:var(--shadow-md);
@@ -1339,6 +1425,8 @@
     <button class="d2-home" id="d2-exit" aria-label="Back to lessons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Lessons</button>
     <div class="d2-toolgroup">
       <button class="d2-rbtn" id="d2-wb-btn" aria-label="Whiteboard" data-tip="Pen &amp; whiteboard (W)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+      <button class="d2-rbtn" id="d2-tmr-btn" aria-label="Timer" data-tip="Timer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg></button>
+      <button class="d2-rbtn" id="d2-ask-btn" aria-label="Ask a question" data-tip="Ask a question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 8.5a1.5 1.5 0 1 1 1.5 1.5c-.7 0-1.5.5-1.5 1.5v.2"/><circle cx="12" cy="14" r=".1" fill="currentColor"/></svg></button>
       <button class="d2-rbtn" id="d2-ov-btn" aria-label="Overview" data-tip="All slides (O)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
       <button class="d2-rbtn" id="d2-set-btn" aria-label="Settings" data-tip="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <button class="d2-rbtn" id="d2-notes-btn" aria-label="Teacher notes" data-tip="Teacher notes (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4z"/></svg></button>
@@ -1346,6 +1434,37 @@
     </div>
     <div class="set-pop d2-toolpop" id="d2-setPop">
       <label class="set-row"><span>Reduce motion</span><input type="checkbox" id="d2-setRM"></label>
+    </div>
+    <div class="set-pop d2-toolpop wide" id="d2-tmrPop">
+      <div class="d2-tmr-mechs">
+        <button class="d2-tmr-mechbtn sel" data-mech="ring" type="button">Ring</button>
+        <button class="d2-tmr-mechbtn" data-mech="flip" type="button">Flip clock</button>
+        <button class="d2-tmr-mechbtn" data-mech="wall" type="button">Circles</button>
+        <button class="d2-tmr-mechbtn" data-mech="rocket" type="button">Rocket</button>
+        <button class="d2-tmr-mechbtn" data-mech="pulse" type="button">Speed</button>
+      </div>
+      <div class="d2-tmr-durs">
+        <button data-s="30" type="button">30s</button>
+        <button data-s="60" class="sel" type="button">1m</button>
+        <button data-s="180" type="button">3m</button>
+        <button data-s="300" type="button">5m</button>
+      </div>
+      <input type="text" class="d2-tmr-custom" id="d2-tmr-custom" placeholder="or type mm:ss" inputmode="numeric">
+      <button class="d2-gbtn" id="d2-tmr-startbtn" type="button">Start timer</button>
+    </div>
+    <div class="d2-tmr-widget" id="d2-tmr-widget" hidden>
+      <button class="d2-tmr-closebtn" id="d2-tmr-closebtn" type="button" aria-label="Close timer">&times;</button>
+      <div class="d2-tmr-stage" id="d2-tmr-stage"></div>
+    </div>
+    <div class="set-pop d2-toolpop wide" id="d2-askPop">
+      <textarea class="d2-ask-input" id="d2-ask-input" rows="2" placeholder="Type a question for pupils to answer&hellip;"></textarea>
+      <button class="d2-gbtn" id="d2-ask-startbtn" type="button">Start</button>
+      <div class="d2-ask-result" id="d2-ask-result" hidden>
+        <div class="d2-ask-qr" id="d2-ask-qr"></div>
+        <div class="d2-ask-code" id="d2-ask-code"></div>
+        <p class="d2-ask-hint">Pupils scan to jump straight in, or open the live link and type the code below.</p>
+        <button class="d2-gbtn ghost" id="d2-ask-boardbtn" type="button">Open board</button>
+      </div>
     </div>
     <button class="d2-chev prev" id="d2-prev" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="d2-chev next" id="d2-next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -5466,6 +5585,226 @@
     try{ localStorage.setItem(wb2Key(), JSON.stringify(wb2Data)); }
     catch(e){ try{ var only = {}; only[cur] = wb2Data[cur]; localStorage.setItem(wb2Key(), JSON.stringify(only)); }catch(e2){} }
   }
+  // shared: the toolbar timer. One popover picks a mechanic (5 faces on the
+  // same countdown, see the design gallery this was pitched from) and a
+  // duration, either a preset or typed mm:ss; the running widget lives
+  // outside #d2-slides so it survives slide navigation the same way the
+  // whiteboard does, and keeps counting down in the background.
+  function setupTimerFeature(){
+    var pop = document.getElementById('d2-tmrPop');
+    var widget = document.getElementById('d2-tmr-widget');
+    var stage = document.getElementById('d2-tmr-stage');
+    var closeBtn = document.getElementById('d2-tmr-closebtn');
+    var startBtn = document.getElementById('d2-tmr-startbtn');
+    var customInput = document.getElementById('d2-tmr-custom');
+    var mechBtns = [].slice.call(pop.querySelectorAll('.d2-tmr-mechbtn'));
+    var durBtns = [].slice.call(pop.querySelectorAll('.d2-tmr-durs button'));
+    var selMech = 'ring';
+    var iv = null, audioCtx = null, render = null, onDone = null;
+
+    mechBtns.forEach(function(b){
+      b.addEventListener('click', function(){
+        mechBtns.forEach(function(x){ x.classList.remove('sel'); });
+        b.classList.add('sel');
+        selMech = b.getAttribute('data-mech');
+      });
+    });
+    durBtns.forEach(function(b){
+      b.addEventListener('click', function(){
+        durBtns.forEach(function(x){ x.classList.remove('sel'); });
+        b.classList.add('sel');
+        customInput.value = '';
+      });
+    });
+    customInput.addEventListener('input', function(){
+      if(customInput.value) durBtns.forEach(function(x){ x.classList.remove('sel'); });
+    });
+
+    function parseCustom(){
+      var m = (customInput.value || '').trim().match(/^(\d{1,2}):([0-5]\d)$/);
+      if(!m) return null;
+      var secs = parseInt(m[1],10)*60 + parseInt(m[2],10);
+      return secs > 0 ? secs : null;
+    }
+    function getDuration(){
+      var custom = parseCustom();
+      if(custom) return Math.min(3600, custom);
+      var sel = pop.querySelector('.d2-tmr-durs button.sel');
+      return sel ? parseInt(sel.getAttribute('data-s'),10) : 60;
+    }
+    function fmt(s){ var m = Math.floor(s/60), r = s%60; return m + ':' + (r<10?'0':'') + r; }
+
+    // a short three-note chime, synthesised so there's no audio asset to
+    // ship. The AudioContext is created/resumed inside start(), a real
+    // click, so the completion chime (fired later from setInterval, not a
+    // gesture) is still allowed to play under Safari/iPad's autoplay rules
+    function playChime(){
+      try{
+        if(!audioCtx) return;
+        var ctx = audioCtx;
+        [523.25, 659.25, 783.99].forEach(function(freq, i){
+          var t0 = ctx.currentTime + i*0.12;
+          var osc = ctx.createOscillator(), gain = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, t0);
+          gain.gain.linearRampToValueAtTime(0.22, t0+0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, t0+0.9);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(t0); osc.stop(t0+0.95);
+        });
+      }catch(e){}
+    }
+
+    function buildRing(){
+      stage.innerHTML = '<div class="d2-tmr-ring"><svg viewBox="0 0 90 90">' +
+        '<circle cx="45" cy="45" r="38" fill="none" stroke="var(--hair)" stroke-width="8"/>' +
+        '<circle class="bar" cx="45" cy="45" r="38" fill="none" stroke="var(--out)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.8" stroke-dashoffset="0"/>' +
+        '</svg><div class="d2-tmr-center"><span class="d2-tmr-num"></span></div></div>';
+      var bar = stage.querySelector('.bar'), num = stage.querySelector('.d2-tmr-num'), CIRC = 238.8;
+      render = function(remaining, total){
+        var frac = Math.max(0,remaining)/total;
+        bar.style.strokeDashoffset = CIRC*(1-frac);
+        var color = frac>0.5 ? 'var(--out)' : frac>0.2 ? '#E0A429' : 'var(--red)';
+        bar.style.stroke = color; num.style.color = color;
+        num.textContent = fmt(Math.max(0,remaining));
+      };
+      onDone = null;
+    }
+    function buildFuel(){
+      stage.innerHTML = '<div class="d2-tmr-fuelwrap">' +
+        '<div class="d2-tmr-tube"><div class="d2-tmr-fill" style="height:100%"></div></div>' +
+        '<svg class="d2-tmr-rocket" viewBox="0 0 40 90" fill="none">' +
+          '<path d="M20 2c8 10 12 26 12 40 0 12-4 22-12 30-8-8-12-18-12-30 0-14 4-30 12-40Z" fill="var(--proc)"/>' +
+          '<circle cx="20" cy="34" r="6" fill="var(--paper)"/>' +
+          '<path d="M8 58c-6 2-8 10-8 18 6-2 12-8 14-14l-6-4Z" fill="var(--in)"/>' +
+          '<path d="M32 58c6 2 8 10 8 18-6-2-12-8-14-14l6-4Z" fill="var(--in)"/>' +
+          '<path d="M14 72h12l-3 14c-1 3-5 3-6 0l-3-14Z" fill="#E0A429"/>' +
+        '</svg></div>';
+      var fill = stage.querySelector('.d2-tmr-fill'), rocket = stage.querySelector('.d2-tmr-rocket');
+      render = function(remaining, total){
+        var frac = Math.max(0,remaining)/total;
+        fill.style.height = (frac*100)+'%';
+        fill.style.background = frac>0.25 ? 'linear-gradient(180deg,var(--out),var(--in))' : 'linear-gradient(180deg,var(--red),#E0A429)';
+        if(remaining>0) rocket.classList.remove('launch');
+      };
+      onDone = function(){ rocket.classList.add('launch'); };
+    }
+    function buildFlip(){
+      stage.innerHTML = '<div class="d2-tmr-fliprow"></div>';
+      var row = stage.querySelector('.d2-tmr-fliprow');
+      function makeDigit(){
+        var wrap = document.createElement('div');
+        wrap.className = 'd2-tmr-digit';
+        wrap.innerHTML = '<div class="d2-tmr-inner"><div class="d2-tmr-face front">0</div><div class="d2-tmr-face back">0</div></div>';
+        row.appendChild(wrap);
+        var inner = wrap.querySelector('.d2-tmr-inner'), front = wrap.querySelector('.front'), back = wrap.querySelector('.back');
+        var shown = '0';
+        inner.addEventListener('transitionend', function(){
+          if(inner.classList.contains('flipped')){
+            front.textContent = back.textContent;
+            inner.style.transition = 'none';
+            inner.classList.remove('flipped');
+            void inner.offsetWidth;
+            inner.style.transition = '';
+          }
+        });
+        return function(d){ if(d===shown) return; shown=d; back.textContent=d; inner.classList.add('flipped'); };
+      }
+      var m1 = makeDigit(), m2 = makeDigit();
+      var sep = document.createElement('div'); sep.className = 'd2-tmr-sep'; sep.textContent = ':';
+      row.appendChild(sep);
+      var s1 = makeDigit(), s2 = makeDigit();
+      render = function(remaining, total){
+        var r = Math.max(0,remaining), mm = Math.floor(r/60), ss = r%60;
+        var mmS = (mm<10?'0':'')+mm, ssS = (ss<10?'0':'')+ss;
+        m1(mmS[0]); m2(mmS[1]); s1(ssS[0]); s2(ssS[1]);
+      };
+      onDone = null;
+    }
+    function buildWall(){
+      stage.innerHTML = '<div class="d2-tmr-wall"></div>';
+      var grid = stage.querySelector('.d2-tmr-wall'), dots = [];
+      for(var i=0;i<10;i++){ var d = document.createElement('div'); d.className = 'd2-tmr-dot'; grid.appendChild(d); dots.push(d); }
+      render = function(remaining, total){
+        var onCount = Math.round((Math.max(0,remaining)/total)*10);
+        dots.forEach(function(d,i){ d.classList.toggle('off', i>=onCount); });
+      };
+      onDone = null;
+    }
+    function buildPulse(){
+      stage.innerHTML = '<div class="d2-tmr-pulse"></div>';
+      var num = stage.querySelector('.d2-tmr-pulse');
+      render = function(remaining, total){
+        var r = Math.max(0,remaining);
+        num.textContent = fmt(r);
+        if(r<=10 && r>0){ num.style.color = 'var(--red)'; num.classList.add('d2-tmr-urgent'); }
+        else{ num.style.color = 'var(--ink)'; num.classList.remove('d2-tmr-urgent'); }
+        if(r<=0){ num.classList.remove('d2-tmr-urgent'); num.style.color = 'var(--out)'; }
+      };
+      onDone = null;
+    }
+    var builders = { ring:buildRing, rocket:buildFuel, flip:buildFlip, wall:buildWall, pulse:buildPulse };
+
+    function start(){
+      var total = getDuration(), remaining = total;
+      clearInterval(iv);
+      (builders[selMech] || buildRing)();
+      render(remaining, total);
+      widget.hidden = false;
+      pop.classList.remove('on');
+      try{
+        if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+      }catch(e){}
+      iv = setInterval(function(){
+        remaining--;
+        render(remaining, total);
+        if(remaining <= 0){
+          clearInterval(iv);
+          if(onDone) onDone();
+          playChime();
+        }
+      }, 1000);
+    }
+    function close(){ clearInterval(iv); widget.hidden = true; }
+
+    startBtn.addEventListener('click', start);
+    closeBtn.addEventListener('click', close);
+    document.getElementById('d2-tmr-btn').addEventListener('click', function(e){ e.stopPropagation(); pop.classList.toggle('on'); });
+    document.addEventListener('click', function(e){ if(!pop.contains(e.target) && e.target.closest('#d2-tmr-btn') === null) pop.classList.remove('on'); });
+  }
+
+  // shared: toolbar "ask a question" - starts a live-answer-wall room from
+  // any slide in any lesson, not just the pre-authored task page, reusing
+  // HB_LIVE's own room/question plumbing (see askQuestion() in that module)
+  function setupAskFeature(){
+    var pop = document.getElementById('d2-askPop');
+    var input = document.getElementById('d2-ask-input');
+    var startBtn = document.getElementById('d2-ask-startbtn');
+    var result = document.getElementById('d2-ask-result');
+    var qrBox = document.getElementById('d2-ask-qr');
+    var codeEl = document.getElementById('d2-ask-code');
+    var boardBtn = document.getElementById('d2-ask-boardbtn');
+    var boardUrl = null;
+
+    startBtn.addEventListener('click', function(){
+      if(!window.HB_LIVE || !window.HB_LIVE.askQuestion) return;
+      startBtn.disabled = true; startBtn.textContent = 'Starting';
+      window.HB_LIVE.askQuestion(input.value.trim(), function(err, info){
+        startBtn.disabled = false; startBtn.textContent = 'Start';
+        if(err || !info){ alert('Could not start the question. Check the connection and try again.'); return; }
+        boardUrl = info.boardUrl;
+        qrBox.innerHTML = '';
+        try{ new QRCode(qrBox, {text:info.joinUrl, width:108, height:108, colorDark:'#1C2431', colorLight:'#ffffff'}); }catch(e){}
+        codeEl.textContent = info.code;
+        result.hidden = false;
+      });
+    });
+    boardBtn.addEventListener('click', function(){ if(boardUrl) window.open(boardUrl, '_blank'); });
+    document.getElementById('d2-ask-btn').addEventListener('click', function(e){ e.stopPropagation(); pop.classList.toggle('on'); });
+    document.addEventListener('click', function(e){ if(!pop.contains(e.target) && e.target.closest('#d2-ask-btn') === null) pop.classList.remove('on'); });
+  }
+
   function setupWhiteboard2(){
     wb2Canvas = document.getElementById('d2-wbCanvas'); wb2Ctx = wb2Canvas.getContext('2d');
     wb2Bar = document.getElementById('d2-wbBar');
@@ -5634,6 +5973,8 @@
     document.getElementById('d2-set-btn').addEventListener('click', function(e){ e.stopPropagation(); setPop2.classList.toggle('on'); });
     document.addEventListener('click', function(e){ if(!setPop2.contains(e.target) && e.target.closest('#d2-set-btn') === null) setPop2.classList.remove('on'); });
     setupWhiteboard2();
+    setupTimerFeature();
+    setupAskFeature();
     document.addEventListener('keydown', function(e){
       if(!document.getElementById('view-deck2').classList.contains('on')) return;
       // same guard as the Year 5/6 deck's own shortcut handler: never
@@ -5876,6 +6217,19 @@
     setQuestion(code, token, currentQuestionText(), function(){});
     var boardUrl = location.origin + location.pathname + '#/board/' + code + '/' + token;
     window.open(boardUrl, '_blank');
+  }
+
+  // ad-hoc version of startFromQR, for the deck toolbar's "Ask a question"
+  // button: any typed question, from any slide, not tied to the lesson's
+  // pre-authored task page
+  function askQuestion(question, cb){
+    var code = genCode(), token = genToken();
+    setQuestion(code, token, question || 'What do you think?', function(err){
+      if(err){ cb(err); return; }
+      var joinUrl = location.origin + location.pathname + '#/live/' + code;
+      var boardUrl = location.origin + location.pathname + '#/board/' + code + '/' + token;
+      cb(null, {code:code, token:token, joinUrl:joinUrl, boardUrl:boardUrl});
+    });
   }
 
   /* ---------- pupil view ---------- */
@@ -6485,7 +6839,8 @@
     renderPupilView: renderPupilView,
     renderBoardView: renderBoardView,
     cleanup: cleanup,
-    startFromQR: startFromQR
+    startFromQR: startFromQR,
+    askQuestion: askQuestion
   };
   // the page may have loaded straight onto a #/live or #/board URL; the first router
   // pass ran before this module existed, so re-drive it now that HB_LIVE is ready.
