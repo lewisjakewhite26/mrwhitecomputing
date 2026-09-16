@@ -609,6 +609,13 @@
           <p class="lead reveal" data-step="1">Use the activity sheet. Pick the pedals and chain, the brakes, or a wheel. Draw the parts and write how they work together.</p>
         </section>
 
+        <!-- 5b Build: video explainer -->
+        <section class="slide" data-phase="2" data-steps="0" data-title="Watch: input, process, output">
+          <h1 class="big">Watch: what are input, process and output?</h1>
+          <p class="lead">A quick explainer before we look at digital systems.</p>
+          <a class="btn" href="https://www.bbc.co.uk/bitesize/articles/z6q7b7h#z4rr6rd" target="_blank" rel="noopener">Open the BBC Bitesize video</a>
+        </section>
+
         <!-- 6 Build: washing machine I/P/O -->
         <section class="slide" data-phase="2" data-steps="3" data-title="A digital system">
           <h1 class="big">How a washing machine works</h1>
@@ -652,12 +659,13 @@
           </div>
         </section>
 
-        <!-- 9 Practise: design your teddy + QR -->
+        <!-- 9 Practise: design your own system + QR -->
         <section class="slide" data-phase="3" data-steps="1" data-title="Design your own">
           <div class="two">
             <div class="col-a">
-              <h1 class="big">Design your own talking teddy</h1>
-              <p class="lead">Draw it, then write its inputs, its process and its outputs. What else could you make it do?</p>
+              <h1 class="big">Design a system</h1>
+              <p class="lead">Pick one: a smart bin, a smart nightlight, or your own idea.</p>
+              <p class="lead reveal" data-step="1" style="font-weight:700">Label its input (what starts it — not a body part), its process, and its output.</p>
             </div>
             <div class="qr-wrap">
               <div class="qr-box" id="qrbox"></div>
@@ -676,6 +684,17 @@
             <button class="btn ghost" data-resetseq="seq1">Shuffle</button>
             <span class="result" id="seq1res"></span>
           </div>
+        </section>
+
+        <!-- 10b Practise: spot the mistakes -->
+        <section class="slide" data-phase="3" data-steps="0" data-title="Spot the mistakes">
+          <h1 class="big">Spot the mistakes</h1>
+          <p class="lead">Tap each wrong word you find.</p>
+          <div class="d2-spot-progress" id="spot1prog">0 of 3 found</div>
+          <div class="d2-spot" id="spot1">
+            <div class="d2-spotline sz-y56" id="spot1line"></div>
+          </div>
+          <p class="lead" id="spot1msg" style="min-height:1.4em;font-weight:700"></p>
         </section>
 
         <!-- 11 Review: plenary -->
@@ -787,11 +806,11 @@
   <h1>Systems</h1>
   <div class="task-card">
     <h2>Your task</h2>
-    <p>Design your own talking teddy. Draw what it looks like and what is inside it. Then write:</p>
+    <p>Design a system of your own: a smart bin, a smart nightlight, a smart pencil case, or your own idea. Draw it, then write:</p>
     <ul>
-      <li>its <strong>inputs</strong>: what you do to it</li>
-      <li>its <strong>process</strong>: the work the chip does</li>
-      <li>its <strong>outputs</strong>: what it does back</li>
+      <li>its <strong>input</strong>: what happens to start it working (not just a body part — say what the system detects or receives)</li>
+      <li>its <strong>process</strong>: what the system works out or decides</li>
+      <li>its <strong>output</strong>: what it does as a result</li>
     </ul>
     <p>Last, think of one more thing it could do.</p>
   </div>
@@ -1521,7 +1540,8 @@
     {n:3,live:true,title:"Searching the web",obj:"Write instructions for a web search, refine a search that returns the wrong thing, and compare results across search engines.",vocab:["search engine","refine","search box","address bar"],dur:"60 min",openHref:"#/y56/lesson/3",sheetBase:"#/y56/sheet/3/",resources:[["instructions","How do you search?"],["compare","Comparing search engines"],["hw","Search safely at home"]]},
     {n:4,live:true,title:"Selecting search results",obj:"Explain why we need tools to find things online, describe what a web crawler does, and relate a search term to a search engine's index.",vocab:["index","crawler","search engine"],dur:"60 min",openHref:"#/y56/lesson/4",sheetBase:"#/y56/sheet/4/",resources:[["index","Indexing the classroom"],["narrow","Narrowing a search"],["hw","The history of the web"]]},
     {n:5,live:true,title:"How search results are ranked",obj:"Order a list by rank, explain that a search engine follows an algorithm, and give examples of what it scores.",vocab:["rank","algorithm","inbound link","SEO"],dur:"60 min",openHref:"#/y56/lesson/5",sheetBase:"#/y56/sheet/5/",resources:[["webpage","Create your own webpage"],["score","Score your page"],["hw","SEO at home"]]},
-    {n:6,live:true,title:"How are searches influenced",obj:"Describe ways search results can be influenced, recognise limitations of search engines, and explain how they make money.",vocab:["influence","ambiguous","sponsored result"],dur:"60 min",openHref:"#/y56/lesson/6",sheetBase:"#/y56/sheet/6/",resources:[["perspectives","Searching the web"],["ambiguous","Ambiguous searches"],["hw","What can't you find on the web?"]]}
+    {n:6,live:true,title:"How are searches influenced",obj:"Describe ways search results can be influenced, recognise limitations of search engines, and explain how they make money.",vocab:["influence","ambiguous","sponsored result"],dur:"60 min",openHref:"#/y56/lesson/6",sheetBase:"#/y56/sheet/6/",resources:[["perspectives","Searching the web"],["ambiguous","Ambiguous searches"],["hw","What can't you find on the web?"]]},
+    {n:7,live:true,title:"Staying safe online",obj:"Read branching chat scenarios on Roblox, WhatsApp and Snapchat, spot red flags and peer pressure, and know when and how to get help.",vocab:["red flag","block and report","trusted adult"],dur:"15-45 min",external:"esafety-lesson.html"}
   ];
   var GLOSSARY = [
     ["system","a number of parts that work together to do a task"],
@@ -1540,11 +1560,13 @@
     ["Activity 1 · 4 min","Name the parts","Ask pupils to name as many parts as they can before you label any. Then bring pupils up to tap a point each. Parts: seat, wheel, tyre, spoke, chain, pedal, handlebars, brake lever, brake cable, brake caliper, front fork, frame."],
     ["Activity 1 · 3 min","The steering system","Turning the handlebars turns the front fork, which turns the front wheel. Parts working together for one purpose. Introduce the word 'system' for this."],
     ["Activity 1 · 3 min","Find another system","Hand out activity sheet A1. Pupils pick a set of parts and describe how they work together.\n\nDrive: pedals turn the front sprocket, a chain links it to the back sprocket, the back wheel turns.\nBrake: the lever pulls a cable, the cable pulls the caliper, the pads press the wheel.\nWheel: spokes join the centre to the rim, the tyre fits the rim, the centre lets it spin.\n\nGather pupils and ask: is the whole bicycle a system?"],
+    ["Activity 2 · 2 min","Watch: input, process, output","Short BBC Bitesize video before moving from bike systems to digital ones. Bridges the analogue examples to the input/process/output vocab used from here on."],
     ["Activity 2 · 6 min","A digital system","A washing machine is a digital system. Build the diagram one box at a time. Use the tap-to-focus to isolate 'process' and stress the computer does this on its own, following a program. Watch for pupils naming outputs as inputs."],
     ["Activity 2 · 3 min","A talking teddy","Ask pupils for toys they know that talk, move or light up. Squeeze the paw (input), the chip runs a program (process), the speaker plays a sound (output)."],
     ["Activity 2 · 3 min","Sort the parts","Bring pupils up to drag each part into a column. Then press Check. Good check of input vs process vs output before they design their own."],
     ["Activity 2 · 6 min","Design your own","Activity sheet A2, or send the task to iPads with the QR code. Pupils draw the teddy and its inner parts, then label input, process and output. Extension: what else could it do?"],
     ["Activity 3 · 15 min","Smart locker","Activity sheet A3. A smart locker lets people collect online orders from a locker. Pupils order the steps, then Check. Talk through the connections: the locker is linked to the company's system, so the company knows when a parcel is collected and which lockers are free."],
+    ["Activity 3 · 4 min","Spot the mistakes","Three hidden errors in a passage about systems, harder than a straight fact-check: 'separately' (should be together), 'must include a computer' (the bike wasn't digital), 'never communicate' (the parts do). One sentence is fully correct as a decoy."],
     ["Plenary · 4 min","What is a system?","Pupils explain a system to a partner, then reveal the definition. Return to the ideas you recorded at the start of the lesson."],
     ["Plenary · 2 min","Confidence","Bring pupils up to tap where they'd place themselves. The spread tells you who needs a recap next lesson before the network content builds on this."],
     ["Next time · 2 min","This lesson, next lesson","Recap what today covered and what Lesson 2 will add."]
@@ -1707,7 +1729,7 @@
     y56:{
       label:'Year 5 and 6',
       unit:'Systems and Searching',
-      intro:'Six lessons. It begins with what a system is: parts that work together. That idea runs right through to how a search engine finds, ranks and shapes the results a person sees. Builds on Year 3 Connecting Computers and Year 4 The Internet.',
+      intro:'Six core lessons, plus an e-safety lesson. It begins with what a system is: parts that work together. That idea runs right through to how a search engine finds, ranks and shapes the results a person sees. Builds on Year 3 Connecting Computers and Year 4 The Internet.',
       lessons:LESSONS,
       glossary:GLOSSARY
     }
@@ -1736,7 +1758,8 @@
     3:'<circle cx="11" cy="11" r="7"/><path d="M20.5 20.5L16 16"/>',
     4:'<path d="M4 6h16M4 12h9M4 18h6"/><path d="M14 17l2.2 2.2L21 14.5"/>',
     5:'<path d="M4 20V11M10 20V4M16 20v-7M22 20H2"/>',
-    6:'<path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>'
+    6:'<path d="M3 10v4a1 1 0 0 0 1 1h3l5 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+    7:'<path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10.2"/>'
   };
   var builtGroup = null;
   function buildHub(key){
@@ -1773,7 +1796,10 @@
           '<div class="foot">' + (L.live
             ? '<button class="open">Open lesson <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button><span>' + L.dur + '</span>'
             : '<span class="soon-tag">Coming soon</span><span>' + L.dur + '</span>') + '</div>';
-        if(L.live) el.addEventListener('click', function(){ location.hash = L.openHref || openHref; });
+        if(L.live) el.addEventListener('click', function(){
+          if(L.external){ window.open(L.external, '_blank'); return; }
+          location.hash = L.openHref || openHref;
+        });
         [].forEach.call(el.querySelectorAll('.wsheets a'), function(a){
           a.addEventListener('click', function(e){ e.stopPropagation(); location.hash = (L.sheetBase || sheetBase) + a.getAttribute('data-sheet'); });
         });
@@ -1827,7 +1853,7 @@
     document.querySelectorAll('[data-scrim]').forEach(function(l){ l.addEventListener('click', releaseScrim); });
 
     // each widget isolated: one failing must not stop the deck working
-    [buildHotspots, setupCalibration, buildSort, buildSeq, buildGauge, buildOverview, buildQR, setupNotes, setupWhiteboard].forEach(function(fn){
+    [buildHotspots, setupCalibration, buildSort, buildSeq, buildGauge, buildSpot1, buildOverview, buildQR, setupNotes, setupWhiteboard].forEach(function(fn){
       try{ fn(); }catch(err){ if(window.console) console.error(fn.name || 'widget', err); }
     });
 
@@ -2140,6 +2166,32 @@
     });
   }
 
+  /* spot the mistakes */
+  var SPOT1_WORDS = ["A","system","is","a","set","of","parts","that","work","separately","to","complete","a","task.",
+    "Every","system","must","include","a","computer","to","count","as","a","system.",
+    "A","digital","system","takes","an","input,","follows","a","process,","and","produces","an","output.",
+    "The","parts","inside","a","system","never","communicate","with","each","other,","they","only","work","alone."];
+  var SPOT1_MISTAKES = [9, 19, 43];
+  function buildSpot1(){
+    var line = document.getElementById('spot1line');
+    line.innerHTML = SPOT1_WORDS.map(function(w,i){ return '<button class="d2-spotword" data-i="'+i+'">'+w+'</button>'; }).join('');
+    var total = SPOT1_MISTAKES.length, foundSet = {}, foundCount = 0;
+    var prog = document.getElementById('spot1prog'), msg = document.getElementById('spot1msg');
+    [].forEach.call(line.querySelectorAll('.d2-spotword'), function(b){
+      b.addEventListener('click', function(){
+        var i = parseInt(b.getAttribute('data-i'),10);
+        if(foundSet[i]) return;
+        if(SPOT1_MISTAKES.indexOf(i) > -1){
+          foundSet[i] = true; foundCount++; b.classList.add('found');
+          prog.textContent = foundCount + ' of ' + total + ' found';
+          if(foundCount === total){ prog.style.color = 'var(--out)'; msg.style.color = 'var(--out)'; msg.textContent = 'You found them all!'; }
+        } else {
+          b.classList.add('miss'); setTimeout(function(){ b.classList.remove('miss'); }, 350);
+        }
+      });
+    });
+  }
+
   /* gauge */
   function buildGauge(){
     var hit = document.getElementById('gaugeHit'), thumb = document.getElementById('thumb'), pips = document.getElementById('pips');
@@ -2444,12 +2496,12 @@
       '<div class="draw" data-hint="Draw and label your system"></div>'
       + '<h2>The parts I chose</h2><div class="lines s3"></div>'
       + '<h2>How they work together</h2><div class="lines s5"></div>'); },
-    a2: function(){ return sheetShell('Design a talking teddy',
-      'Design your own talking teddy. Draw it and show the parts inside it. Then fill in the boxes. For example: you squeeze the paw (input), a chip runs its program (process), the speaker says &ldquo;hello&rdquo; (output).',
-      '<div class="draw" data-hint="Draw your teddy and its parts"></div>'
-      + '<h2 class="in">Inputs: what you do to it</h2><div class="lines s3"></div>'
-      + '<h2 class="pr2">Process: the work the chip does</h2><div class="lines s3"></div>'
-      + '<h2 class="ou">Outputs: what it does back</h2><div class="lines s3"></div>'
+    a2: function(){ return sheetShell('Design a system of your own',
+      'Pick one: a smart bin, a smart nightlight, a smart pencil case, or your own idea. Draw it, then fill in the boxes. Remember: the input is what happens to start it working, not just a body part.',
+      '<div class="draw" data-hint="Draw your system and its parts"></div>'
+      + '<h2 class="in">Input: what starts it working</h2><div class="lines s3"></div>'
+      + '<h2 class="pr2">Process: what it works out or decides</h2><div class="lines s3"></div>'
+      + '<h2 class="ou">Output: what it does as a result</h2><div class="lines s3"></div>'
       + '<h2>One more thing it could do</h2><div class="lines s2"></div>'); },
     a3: function(){
       var steps = '<div class="stepbox"><span class="sn">1</span><span class="sl">The customer places the order online</span></div>';
