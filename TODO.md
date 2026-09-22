@@ -35,6 +35,15 @@ back. See the toolbar timer entry below, built the same session.
 
 ## Also outstanding
 
+- **Year 1/2 unit rework.** Lessons 3 and 4 are rebuilt around the
+  no-devices constraint and are now internally coherent, but the unit
+  itself is thin: it teaches operating instructions rather than computing,
+  and nothing in it has a purpose. See `y12-roadmap.md` for the diagnosis,
+  the proposed reframe around instructing and debugging, and the open
+  decisions (saving and loading, reordering, the drawing tool). Lesson 5 is
+  untouched and its dependency on Lesson 4's saved file is currently
+  broken.
+
 - **Pedagogy pass.** Every lesson now has at least one checked, hands-on
   activity — that gap is closed. What's still open, from
   `pedagogy-audit.md`: no lesson has a mid-lesson check (only end-of-lesson

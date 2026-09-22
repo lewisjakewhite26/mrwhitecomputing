@@ -1,0 +1,76 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R] /Count 5 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 2569 >>
+stream
+BT /F1 10 Tf 50 760 Td (Year 1/2 Computing Lessons: Input-Device Constraints) Tj 0 -14 Td () Tj 0 -14 Td (Purpose) Tj 0 -14 Td () Tj 0 -14 Td (This document is a handoff for another AI agent. It records the classroom problem, the) Tj 0 -14 Td (constraints that matter, the changes previously attempted in the lesson app, and what still) Tj 0 -14 Td (needs to be decided.) Tj 0 -14 Td () Tj 0 -14 Td (Classroom Context) Tj 0 -14 Td () Tj 0 -14 Td (??? The affected lessons are the Year 1/2 computing lessons in index.html.) Tj 0 -14 Td (??? For this half term, pupils will not have individual iPads, mice, or keyboards.) Tj 0 -14 Td (??? The teacher will be teaching from the interactive whiteboard \(IWB\).) Tj 0 -14 Td (??? The teacher may have access to the IWB pointer/mouse, but having children use one teacher) Tj 0 -14 Td (mouse one at a time is not a sensible whole-class activity.) Tj 0 -14 Td (??? An IWB touch interaction may be available, but this is not the same as every pupil having a) Tj 0 -14 Td (physical mouse or keyboard.) Tj 0 -14 Td (??? The practical question is how to teach the curriculum honestly and usefully under those) Tj 0 -14 Td (conditions.) Tj 0 -14 Td () Tj 0 -14 Td (Original Problem) Tj 0 -14 Td () Tj 0 -14 Td (The Year 1/2 lessons currently assume access to individual computer equipment in places where) Tj 0 -14 Td (the class cannot realistically use it:) Tj 0 -14 Td () Tj 0 -14 Td (Lesson 2: Using computer technology) Tj 0 -14 Td () Tj 0 -14 Td (The lesson includes:) Tj 0 -14 Td () Tj 0 -14 Td (??? Naming computer parts.) Tj 0 -14 Td (??? Turning on and logging in.) Tj 0 -14 Td (??? Learning click-and-drag through a built-in computer-picture jigsaw.) Tj 0 -14 Td (??? Optional additional drag sorting.) Tj 0 -14 Td () Tj 0 -14 Td (The picture jigsaw is technically built into the app, but it still assumes that pupils can each) Tj 0 -14 Td (interact with it. One child at the IWB can demonstrate it, but that does not give the rest of) Tj 0 -14 Td (the class physical mouse practice.) Tj 0 -14 Td () Tj 0 -14 Td (Lesson 3: Developing mouse skills) Tj 0 -14 Td () Tj 0 -14 Td (The lesson objective includes:) Tj 0 -14 Td () Tj 0 -14 Td (??? Double-clicking to open a program.) Tj 0 -14 Td (??? Clicking and dragging.) Tj 0 -14 Td (??? Making a picture with a mouse or trackpad.) Tj 0 -14 Td () Tj 0 -14 Td (The lesson currently sends pupils to PaintZ for practical work and offers Quick Click for extra) Tj 0 -14 Td (clicking practice. Both activities depend on access to an individual pointer device, or at) Tj 0 -14 Td ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 2363 >>
+stream
+BT /F1 10 Tf 50 760 Td (least on children taking turns one at a time.) Tj 0 -14 Td () Tj 0 -14 Td (Lesson 4: Using a computer keyboard) Tj 0 -14 Td () Tj 0 -14 Td (The lesson objective includes:) Tj 0 -14 Td () Tj 0 -14 Td (??? Typing a name.) Tj 0 -14 Td (??? Saving work.) Tj 0 -14 Td () Tj 0 -14 Td (This assumes an actual keyboard and an individual computer workflow.) Tj 0 -14 Td () Tj 0 -14 Td (Lesson 5: Developing keyboard skills) Tj 0 -14 Td () Tj 0 -14 Td (The lesson objective includes:) Tj 0 -14 Td () Tj 0 -14 Td (??? Opening saved work.) Tj 0 -14 Td (??? Moving a cursor with arrow keys.) Tj 0 -14 Td (??? Using Backspace and Space.) Tj 0 -14 Td (??? Writing and correcting a sentence.) Tj 0 -14 Td () Tj 0 -14 Td (This also assumes individual saved files and physical keyboards.) Tj 0 -14 Td () Tj 0 -14 Td (Important Pedagogical Constraint) Tj 0 -14 Td () Tj 0 -14 Td (The app should not claim that pupils have mastered physical mouse or keyboard skills when they) Tj 0 -14 Td (have only watched the teacher or tapped the IWB.) Tj 0 -14 Td () Tj 0 -14 Td (There are three different outcomes that must not be conflated:) Tj 0 -14 Td () Tj 0 -14 Td (1. Conceptual understanding: pupils can explain what a mouse, click, drag, keyboard, key press,) Tj 0 -14 Td (Backspace, or Space does.) Tj 0 -14 Td (2. Shared demonstration/rehearsal: the class directs or watches an IWB interaction and) Tj 0 -14 Td (discusses the next action.) Tj 0 -14 Td (3. Physical fluency: an individual pupil can operate a real mouse or keyboard independently.) Tj 0 -14 Td () Tj 0 -14 Td (This half term, the app can realistically support outcomes 1 and 2. Outcome 3 should be) Tj 0 -14 Td (deferred, assessed separately, or achieved when equipment becomes available.) Tj 0 -14 Td () Tj 0 -14 Td (Original On-Screen Keyboard Idea) Tj 0 -14 Td () Tj 0 -14 Td (A possible direction was an on-screen keyboard inside the app. It could support a teacher-led) Tj 0 -14 Td (activity where:) Tj 0 -14 Td () Tj 0 -14 Td (??? The class says which key should be pressed next.) Tj 0 -14 Td (??? The teacher or one helper taps the IWB key.) Tj 0 -14 Td (??? The class notices letters appearing on screen.) Tj 0 -14 Td (??? The class practises Space and Backspace conceptually.) Tj 0 -14 Td (??? The activity is framed as shared modelling, not individual keyboard mastery.) Tj 0 -14 Td ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 2310 >>
+stream
+BT /F1 10 Tf 50 760 Td () Tj 0 -14 Td (The key question for the next agent is whether this is genuinely useful for the teaching) Tj 0 -14 Td (objective or merely a replacement interaction that looks busy while leaving the equipment) Tj 0 -14 Td (problem unsolved.) Tj 0 -14 Td () Tj 0 -14 Td (Changes Previously Attempted) Tj 0 -14 Td () Tj 0 -14 Td (The previous agent made and then reverted these changes:) Tj 0 -14 Td () Tj 0 -14 Td (Attempt 1: Shared virtual keyboard) Tj 0 -14 Td () Tj 0 -14 Td (A reusable virtual keyboard was added to the shared Year 1/2 lesson engine. It included:) Tj 0 -14 Td () Tj 0 -14 Td (??? Large touch-friendly letter keys.) Tj 0 -14 Td (??? Space.) Tj 0 -14 Td (??? Backspace.) Tj 0 -14 Td (??? Clear.) Tj 0 -14 Td (??? Check/Done.) Tj 0 -14 Td (??? A visible text output and cursor.) Tj 0 -14 Td () Tj 0 -14 Td (It was wired into:) Tj 0 -14 Td () Tj 0 -14 Td (??? Lesson 4: typing a name.) Tj 0 -14 Td (??? Lesson 5: building the sentence MY NAME IS.) Tj 0 -14 Td () Tj 0 -14 Td (The first wording assumed pupils could take turns tapping keys. It was then revised to say that) Tj 0 -14 Td (the teacher or a helper would operate the IWB while the class called out letters.) Tj 0 -14 Td () Tj 0 -14 Td (Attempt 2: IWB mouse activity) Tj 0 -14 Td () Tj 0 -14 Td (A built-in activity was added for Lesson 3 with:) Tj 0 -14 Td () Tj 0 -14 Td (??? A clickable dot.) Tj 0 -14 Td (??? A draggable purple piece.) Tj 0 -14 Td (??? A target area.) Tj 0 -14 Td (??? A class message explaining click versus drag.) Tj 0 -14 Td () Tj 0 -14 Td (The external PaintZ activity was removed and the teacher notes were changed to describe) Tj 0 -14 Td (whole-class IWB rehearsal.) Tj 0 -14 Td () Tj 0 -14 Td (Why those attempts were rejected) Tj 0 -14 Td () Tj 0 -14 Td (The user rejected the changes because they were building things that were not helpful. The) Tj 0 -14 Td (likely issue was not syntax or implementation quality; it was that the proposed widgets still) Tj 0 -14 Td (tried to turn an individual practical-skills problem into an on-screen game without first) Tj 0 -14 Td (agreeing what the lesson should honestly teach under IWB-only conditions.) Tj 0 -14 Td () Tj 0 -14 Td (All changes from those attempts were reverted. The current index.html should be treated as) Tj 0 -14 Td ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 3126 >>
+stream
+BT /F1 10 Tf 50 760 Td (restored to its previous state.) Tj 0 -14 Td () Tj 0 -14 Td (Existing Useful Assets) Tj 0 -14 Td () Tj 0 -14 Td (The project already contains several relevant pieces that another agent should inspect before) Tj 0 -14 Td (building anything new:) Tj 0 -14 Td () Tj 0 -14 Td (??? quick-click.html: a standalone click reaction game.) Tj 0 -14 Td (??? Lesson 2's built-in computer-picture jigsaw.) Tj 0 -14 Td (??? Lesson 3's double-click explanation and animated click/drag demonstration.) Tj 0 -14 Td (??? Lesson 5's built-in cursor and Backspace typo-fixer.) Tj 0 -14 Td (??? Existing lesson notes and teacher-facing task cards in index.html.) Tj 0 -14 Td (??? enrichment-research.md, which already questions whether interaction formats suit Year 1/2) Tj 0 -14 Td (and warns against assuming that typing, dragging, and free drawing are good KS1 interactions.) Tj 0 -14 Td (??? TODO.md, which records the history and limitations of the Year 1/2 mouse and keyboard work.) Tj 0 -14 Td () Tj 0 -14 Td (Questions for the Next Agent) Tj 0 -14 Td () Tj 0 -14 Td (Before editing, decide:) Tj 0 -14 Td () Tj 0 -14 Td (1. Is the goal to preserve the original curriculum objectives, or to write a temporary IWB-only) Tj 0 -14 Td (version for this half term?) Tj 0 -14 Td (2. Should Lessons 3???5 explicitly distinguish ???we are learning what this does??? from ???we) Tj 0 -14 Td (are practising the physical skill later????) Tj 0 -14 Td (3. Is an on-screen keyboard useful as a teacher modelling tool, or should keyboard work be) Tj 0 -14 Td (handled through oral spelling, printed key cards, or a paper activity instead?) Tj 0 -14 Td (4. Should Lesson 2 and Lesson 3 use one-child-at-the-IWB demonstrations, or should the) Tj 0 -14 Td (activities be redesigned around whole-class prediction and discussion?) Tj 0 -14 Td (5. Which activities can be honestly checked by the app without implying individual device) Tj 0 -14 Td (competence?) Tj 0 -14 Td (6. Should the temporary IWB-only approach be kept separate from the normal equipment-rich) Tj 0 -14 Td (lesson version, perhaps as a delivery mode or teacher note?) Tj 0 -14 Td () Tj 0 -14 Td (Recommended Starting Point) Tj 0 -14 Td () Tj 0 -14 Td (Do not begin by adding another widget.) Tj 0 -14 Td () Tj 0 -14 Td (First write a short IWB-only teaching plan for Lessons 2???5 with three columns:) Tj 0 -14 Td () Tj 0 -14 Td (Lesson     What pupils can genuinely learn now     What must wait for real equipment) Tj 0 -14 Td (2     Names and purposes of computer parts; sequence of turning on/logging in; explain click) Tj 0 -14 Td (and drag     Individual mouse control) Tj 0 -14 Td (3     Explain click, double-click, and drag; direct a shared demonstration     Individual) Tj 0 -14 Td (mouse/trackpad fluency and drawing) Tj 0 -14 Td (4     Explain what a keyboard is for; observe or direct shared typing; discuss saving and file) Tj 0 -14 Td (names     Individual typing and saving) Tj 0 -14 Td (5     Explain cursor, Space, Backspace, and arrow keys; direct a shared correction task) Tj 0 -14 Td (Independent editing with a physical keyboard) Tj 0 -14 Td ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 13 0 R >>
+endobj
+13 0 obj
+<< /Length 341 >>
+stream
+BT /F1 10 Tf 50 760 Td () Tj 0 -14 Td (Then decide whether the app needs only better teacher notes and IWB demonstrations, or whether) Tj 0 -14 Td (one small shared activity is worth building. Any new activity should be judged against the) Tj 0 -14 Td (classroom constraint, not just whether it is interactive.) Tj 0 -14 Td () Tj 0 -14 Td ET
+endstream
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000141 00000 n 
+0000000211 00000 n 
+0000000337 00000 n 
+0000002958 00000 n 
+0000003084 00000 n 
+0000005499 00000 n 
+0000005625 00000 n 
+0000007987 00000 n 
+0000008115 00000 n 
+0000011294 00000 n 
+0000011422 00000 n 
+trailer
+<< /Size 14 /Root 1 0 R >>
+startxref
+11815
+%%EOF

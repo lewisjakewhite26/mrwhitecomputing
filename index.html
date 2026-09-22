@@ -985,6 +985,7 @@
     box-shadow:var(--shadow-lg);overflow:hidden;
   }
   .d2-stage{position:absolute;inset:0}
+  .d2-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
   .d2-slide{
     position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:clamp(14px,3.2vh,34px);text-align:center;
@@ -1367,6 +1368,79 @@
   .d2-dragdemo .blk{position:absolute;left:0;top:50%;width:56px;height:56px;border-radius:12px;background:linear-gradient(155deg,#8A63F0,#6C4CE0);box-shadow:var(--shadow-md);animation:d2drag 2.8s var(--ease) infinite}
   @keyframes d2drag{0%,10%{left:0;transform:translateY(-50%) scale(1)}18%{transform:translateY(-50%) scale(1.08)}46%,56%{left:calc(100% - 60px);transform:translateY(-50%) scale(1.08)}64%,100%{left:calc(100% - 60px);transform:translateY(-50%) scale(1)}}
   html.rm .d2-dragdemo .blk{animation:none;left:calc(100% - 60px)}
+
+  /* virtual mouse: a drawn mouse drives a big pointer on a drawn monitor.
+     Nothing on the screen is tappable, so the only way to hit a dot is to
+     aim the pointer first, which is the part a real mouse teaches. */
+  .d2-vm{display:flex;gap:clamp(16px,4vw,40px);align-items:flex-end;justify-content:center;flex-wrap:wrap;width:100%;margin-top:0}
+  .d2-vm-pad{display:flex;flex-direction:column;align-items:center;gap:9px;position:relative;padding-top:20px}
+  .d2-vm-cap{font-size:.92rem;font-weight:700;color:var(--muted)}
+  .d2-vm-cord{position:absolute;top:0;left:50%;transform:translateX(-50%);width:5px;height:22px;border-radius:3px;background:var(--ink);opacity:.7}
+  .d2-vm-mouse{position:relative;width:clamp(80px,8.5vw,104px);aspect-ratio:146/222;overflow:hidden;
+    border:3px solid var(--ink);border-radius:46% 46% 38% 38%/56% 56% 44% 44%;
+    background:linear-gradient(162deg,#FFF,#E4E7F1);box-shadow:var(--shadow-md);touch-action:none;cursor:grab}
+  .d2-vm-mouse.grabbing{cursor:grabbing}
+  .d2-vm-mb{position:absolute;top:0;height:40%;width:50%;transition:background .12s var(--ease)}
+  .d2-vm-mb.l{left:0;border-right:2px solid var(--ink)}
+  .d2-vm-mb.r{right:0}
+  .d2-vm-mb.l.on{background:color-mix(in srgb,var(--in) 38%,transparent)}
+  .d2-vm-mb.r.on{background:color-mix(in srgb,var(--proc) 38%,transparent)}
+  .d2-vm-whl{position:absolute;left:50%;top:7%;transform:translateX(-50%);width:12%;height:16%;border-radius:999px;background:var(--ink);opacity:.8}
+  .d2-vm-mlab{position:absolute;bottom:8%;left:0;right:0;text-align:center;font-size:.72rem;font-weight:700;color:var(--soft)}
+  .d2-vm-mouse span{pointer-events:none}
+  .d2-vm-mouse span.d2-vm-mb{pointer-events:auto}
+
+  .d2-vm-mon{display:flex;flex-direction:column;align-items:center}
+  .d2-vm-bez{width:min(72vw,90vh,1400px);aspect-ratio:4/3;background:var(--ink);border-radius:14px;padding:10px;box-shadow:var(--shadow-md)}
+  .d2-vm-screen{position:relative;width:100%;height:100%;border-radius:5px;overflow:hidden;background:linear-gradient(168deg,#F8FAFF,#E8EEFB)}
+  .d2-vm-neck{width:clamp(56px,7vw,96px);height:clamp(18px,2.4vh,30px);background:var(--ink)}
+  .d2-vm-foot{width:clamp(124px,16vw,220px);height:clamp(9px,1.2vh,15px);border-radius:0 0 7px 7px;background:var(--ink)}
+  .d2-vm-dot{position:absolute;aspect-ratio:1;border-radius:50%;border:3px solid var(--ink);
+    background:color-mix(in srgb,var(--proc) 26%,#fff);transition:transform .16s var(--ease),background .18s,border-color .18s}
+  .d2-vm-dot.hot{background:color-mix(in srgb,var(--in) 40%,#fff);transform:scale(1.07)}
+  .d2-vm-dot.done{background:var(--out);border-color:var(--out)}
+  html.rm .d2-vm-dot{transition:none}
+  .d2-vm-cur{position:absolute;width:clamp(40px,4.8vh,66px);height:clamp(40px,4.8vh,66px);z-index:4;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(24,28,45,.45))}
+  .d2-vm-menu{position:absolute;z-index:5;min-width:104px;padding:5px;border-radius:8px;background:#fff;
+    border:2px solid var(--ink);box-shadow:var(--shadow-md);font-size:.8rem;font-weight:600;color:var(--muted)}
+  .d2-vm-menu span{display:block;padding:4px 8px}
+  .d2-vm-menu span+span{border-top:1px solid var(--hair)}
+  .d2-vm-out{min-height:1.6em;margin-top:6px;margin-bottom:auto;text-align:center;font-weight:700;font-size:clamp(1rem,2.1vw,1.2rem)}
+  .d2-vm-again{margin-top:10px;padding:10px 20px;border-radius:12px;border:2px solid var(--hair);
+    background:var(--paper);font:inherit;font-weight:700;color:var(--ink);cursor:pointer}
+  .d2-vm-win{position:absolute;inset:0;z-index:6;display:grid;place-items:center;pointer-events:none;
+    background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--out) 26%,transparent),transparent 72%)}
+  .d2-vm-win b{font-size:clamp(2rem,7vw,5rem);font-weight:800;color:var(--out);line-height:1;letter-spacing:-.01em;
+    text-shadow:0 3px 0 #fff, 0 0 30px rgba(255,255,255,.95);animation:d2vmpop .55s var(--ease) both}
+  @keyframes d2vmpop{0%{transform:scale(.3) rotate(-7deg);opacity:0}62%{transform:scale(1.18) rotate(2deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+  .d2-vm-dot.cheer{animation:d2vmcheer .62s var(--ease) 3}
+  @keyframes d2vmcheer{0%,100%{transform:scale(1)}50%{transform:scale(1.24)}}
+  html.rm .d2-vm-win b,html.rm .d2-vm-dot.cheer{animation:none}
+
+  /* virtual keyboard: big QWERTY for the board. One child types while the rest
+     of the class hunts for the next letter, which is the part that transfers. */
+  .d2-kb{display:flex;flex-direction:column;align-items:center;gap:clamp(9px,1.7vh,18px);width:100%}
+  .d2-kb-screen{width:min(84vw,900px);min-height:clamp(58px,9vh,104px);display:flex;align-items:center;justify-content:center;
+    padding:8px 20px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:var(--shadow-sm)}
+  .d2-kb-text,.d2-kb-caret{font-size:clamp(1.6rem,5.6vh,3.4rem)}
+  .d2-kb-text{font-weight:800;letter-spacing:.05em;color:var(--ink);white-space:pre}
+  .d2-kb-caret{display:inline-block;width:.1em;height:1em;background:var(--proc);animation:d2kbblink 1.06s steps(1) infinite}
+  @keyframes d2kbblink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+  html.rm .d2-kb-caret{animation:none}
+  .d2-kb-rows{display:flex;flex-direction:column;gap:clamp(5px,1vh,11px);width:min(93vw,1100px)}
+  .d2-kb-row{display:flex;gap:clamp(4px,.85vw,10px);justify-content:center}
+  .d2-kb-key{flex:1 1 0;min-width:0;height:clamp(44px,8.2vh,92px);display:grid;place-items:center;
+    border:3px solid var(--ink);border-radius:12px;background:linear-gradient(170deg,#fff,#EDEFF7);
+    font-weight:800;font-size:clamp(.95rem,3.2vh,1.9rem);color:var(--ink);cursor:pointer;
+    user-select:none;touch-action:none;box-shadow:0 3px 0 rgba(28,36,49,.22)}
+  .d2-kb-key.on{transform:translateY(3px);box-shadow:none;background:color-mix(in srgb,var(--in) 34%,#fff)}
+  .d2-kb-key.wide{flex:2.5 1 0;font-size:clamp(.72rem,1.8vh,1rem);letter-spacing:.03em}
+  .d2-kb-key.space{flex:7 1 0;font-size:clamp(.72rem,1.8vh,1rem);letter-spacing:.03em}
+  .d2-kb-bar{display:flex;gap:12px}
+  .d2-kb-btn{padding:10px 22px;border-radius:12px;border:2px solid var(--hair);background:var(--paper);
+    font:inherit;font-weight:700;color:var(--ink);cursor:pointer}
+  .d2-kb-btn.go{border-color:var(--out);color:var(--out)}
+  .d2-kb-out{min-height:1.5em;font-weight:700;font-size:clamp(.95rem,2vw,1.15rem);text-align:center}
   .d2-pwcard{
     display:flex;flex-direction:column;gap:10px;padding:14px 18px;border-radius:16px;background:var(--ground-2);
     border:1px solid var(--hair);cursor:pointer;transition:transform .16s var(--ease), background .2s;
@@ -1655,8 +1729,8 @@
       openHref:"#/y12/lesson/1", sheetBase:"#/y12/sheet/1/",
       resources:[["help","How technology helps us"],["sort","Is it technology?"],["home","Technology at home"]]},
     {n:2,live:true,title:"Using computer technology",obj:"Name the main parts of a computer, turn it on and log in, and use a mouse to click and drag.",vocab:["computer","screen","keyboard","mouse","base unit"],dur:"40 min",openHref:"#/y12/lesson/2",sheetBase:"#/y12/sheet/2/",resources:[["parts","Label the computer"],["same","Desktop and laptop"],["home","A computer at home"]]},
-    {n:3,live:true,title:"Developing mouse skills",obj:"Recap the parts of a computer, learn to double-click to open a program, and click and drag with a mouse or trackpad to make a picture.",vocab:["mouse","trackpad","double-click","click and drag"],dur:"40 min",openHref:"#/y12/lesson/3",sheetBase:"#/y12/sheet/3/",resources:[["steps","Double-click steps"],["picture","My picture"],["home","A mouse at home"]]},
-    {n:4,live:true,title:"Using a computer keyboard",obj:"Say what a keyboard is for, type your name into a computer, and save your work to a file.",vocab:["keyboard","typing","save"],dur:"40 min",openHref:"#/y12/lesson/4",sheetBase:"#/y12/sheet/4/",resources:[["name","Typing my name"],["save","Why save sensibly?"],["home","A keyboard at home"]]},
+    {n:3,live:true,title:"Developing mouse skills",obj:"Say what a mouse is for, show a click, a double-click and a drag, and steer a pointer onto a target and click it.",vocab:["mouse","trackpad","pointer","double-click","click and drag"],dur:"40 min",openHref:"#/y12/lesson/3",sheetBase:"#/y12/sheet/3/",resources:[["steps","Double-click steps"],["match","Which one do you use?"],["home","A mouse at home"]]},
+    {n:4,live:true,title:"Using a computer keyboard",obj:"Say what a keyboard is for, find the letters of your name on a QWERTY keyboard, and use the space bar and Backspace.",vocab:["keyboard","QWERTY","space bar","backspace","save"],dur:"40 min",openHref:"#/y12/lesson/4",sheetBase:"#/y12/sheet/4/",resources:[["name","Typing my name"],["save","Why save sensibly?"],["home","A keyboard at home"]]},
     {n:5,live:true,title:"Developing keyboard skills",obj:"Open your saved work, use the arrow keys to move the cursor, and edit text by deleting letters.",vocab:["keyboard","cursor","backspace","space bar"],dur:"40 min",openHref:"#/y12/lesson/5",sheetBase:"#/y12/sheet/5/",resources:[["sentence","Finish the sentence"],["keys","Find the keys"],["home","A sentence at home"]]},
     {n:6,live:true,title:"Using a computer responsibly",obj:"Say why we have rules, give examples for using computers safely, and know who to tell if something online worries you.",vocab:["rules","responsible","safe","trusted adult"],dur:"40 min",openHref:"#/y12/lesson/6",sheetBase:"#/y12/sheet/6/",resources:[["poster","Rule poster"],["grid","Rules grid"],["home","A rule at home"]]}
   ];
@@ -1666,7 +1740,13 @@
     ["screen","the part of a computer that shows what it is doing"],
     ["keyboard","the part you press to type letters and numbers"],
     ["mouse","the part you move to point, click and drag things"],
-    ["base unit","the box that stores your work and does the thinking"]
+    ["trackpad","a mouse built flat into a laptop, doing the same job"],
+    ["pointer","the arrow on the screen that the mouse moves"],
+    ["double-click","two clicks, close together, used to open something"],
+    ["base unit","the box that stores your work and does the thinking"],
+    ["QWERTY","the jumbled order the letters sit in on every keyboard"],
+    ["space bar","the long key that makes a gap between words"],
+    ["backspace","the key that takes away the letter you just typed"]
   ];
   var ICONS_Y12 = {
     1:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
@@ -2223,7 +2303,7 @@
     if(typeof confetti !== 'function') return;
     if(document.documentElement.classList.contains('rm')) return;
     var o = {x:0.5, y:0.6};
-    if(el){ var r = el.getBoundingClientRect(); o = {x:(r.left + r.width/2)/window.innerWidth, y:(r.top + r.height/2)/window.innerHeight}; }
+    if(el && typeof fxOrigin === "function") o = fxOrigin(el);
     confetti({particleCount:90, spread:72, startVelocity:40, ticks:160, origin:o, colors:['#2F6BE0','#6C4CE0','#0E9C6A','#F5B544'], disableForReducedMotion:true});
   }
   function popResult(node){ node.classList.remove('pop'); void node.offsetWidth; node.classList.add('pop'); }
@@ -2546,8 +2626,107 @@
   var prevBtn = document.getElementById('d2-prev');
   var nextBtn = document.getElementById('d2-next');
   var notesEl = document.getElementById('d2-notes');
-  var confetti = window.confetti;
+  // canvas-confetti puts its canvas on document.body, which sits outside
+  // #d2-frame - the element the fullscreen button actually fullscreens - so
+  // every celebration rendered behind the fullscreen layer and vanished.
+  // Binding it to a canvas inside the frame works in both modes.
+  var confetti = (function(){
+    var base = window.confetti, bound = null;
+    if(!base || !base.create) return base;
+    return function(opts){
+      if(!bound){
+        var host = document.getElementById('d2-frame');
+        if(!host) return base(opts);
+        var cv = document.createElement('canvas');
+        cv.className = 'd2-fx';
+        host.appendChild(cv);
+        bound = base.create(cv, {resize:true, useWorker:true});
+      }
+      return bound(opts);
+    };
+  })();
+  // confetti origins are fractions of the confetti canvas, which is now the
+  // frame rather than the viewport, so anything anchored to an element has
+  // to be measured against the frame too.
+  function fxOrigin(el){
+    var host = document.getElementById('d2-frame');
+    if(!el || !host) return {x:.5, y:.6};
+    var r = el.getBoundingClientRect(), f = host.getBoundingClientRect();
+    if(!f.width || !f.height) return {x:.5, y:.6};
+    return {x:(r.left + r.width/2 - f.left)/f.width, y:(r.top + r.height/2 - f.top)/f.height};
+  }
 
+  // shared celebration for the Year 1/2 IWB activities. One copy, because the
+  // mouse and the keyboard both want the same big finish.
+  var FXCOL = ['#2F6BE0','#6C4CE0','#0E9C6A','#F5B544','#D8443C'];
+  var fxCtx = null;
+  function fxArm(){
+    try{
+      if(!fxCtx) fxCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(fxCtx.state === 'suspended') fxCtx.resume();
+    }catch(e){}
+  }
+  function fxCanParty(){
+    try{ return !(RM || document.documentElement.classList.contains('rm')) && typeof confetti === 'function'; }
+    catch(e){ return false; }
+  }
+  function fxFire(o){
+    var p = {colors:FXCOL, ticks:280, disableForReducedMotion:true};
+    for(var k in o) p[k] = o[k];
+    confetti(p);
+  }
+  function fxPop(el){
+    if(!fxCanParty()) return;
+    fxFire({particleCount:70, spread:85, startVelocity:36, scalar:1.05, ticks:160, origin:fxOrigin(el)});
+  }
+  function fxCannon(){
+    if(!fxCanParty()) return;
+    fxFire({particleCount:170, angle:62,  spread:72, startVelocity:66, scalar:1.25, origin:{x:0, y:.95}});
+    fxFire({particleCount:170, angle:118, spread:72, startVelocity:66, scalar:1.25, origin:{x:1, y:.95}});
+    fxFire({particleCount:220, spread:360, startVelocity:46, scalar:1.1, origin:{x:.5, y:.5}});
+    setTimeout(function(){
+      fxFire({particleCount:80, spread:110, startVelocity:54, scalar:1.7, shapes:['star'], origin:{x:.5, y:.6}});
+    }, 230);
+    setTimeout(function(){
+      fxFire({particleCount:130, angle:62,  spread:88, startVelocity:58, scalar:1.2, origin:{x:.12, y:.95}});
+      fxFire({particleCount:130, angle:118, spread:88, startVelocity:58, scalar:1.2, origin:{x:.88, y:.95}});
+    }, 520);
+    var end = Date.now() + 2400;
+    (function rain(){
+      fxFire({particleCount:22, angle:270, spread:130, startVelocity:18, scalar:1.15, gravity:1.15, ticks:320,
+        origin:{x:Math.random(), y:-0.08}});
+      if(Date.now() < end) setTimeout(rain, 170);
+    })();
+  }
+  function fxNote(f, t0, dur, type, vol){
+    var osc = fxCtx.createOscillator(), g = fxCtx.createGain();
+    osc.type = type; osc.frequency.value = f;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + .02);
+    g.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+    osc.connect(g); g.connect(fxCtx.destination);
+    osc.start(t0); osc.stop(t0 + dur + .05);
+  }
+  function fxFanfare(){
+    try{
+      if(!fxCtx) return;
+      var t = fxCtx.currentTime;
+      [523.25, 659.25, 783.99, 1046.50].forEach(function(f, i){
+        fxNote(f, t + i*0.10, 1.0, 'sine', .26);
+        fxNote(f*2, t + i*0.10, 0.7, 'triangle', .07);
+      });
+      [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach(function(f){
+        fxNote(f, t + 0.48, 1.8, 'sine', .17);
+      });
+    }catch(e){}
+  }
+  // a short dry blip, so a key press on the IWB sounds like a key press
+  function fxClick(){
+    try{
+      if(!fxCtx) return;
+      fxNote(880, fxCtx.currentTime, 0.06, 'square', .05);
+    }catch(e){}
+  }
   function burst(){
     if(RM || document.documentElement.classList.contains('rm') || !confetti) return;
     confetti({particleCount:70, spread:64, startVelocity:34, scalar:.9, origin:{y:.7}, disableForReducedMotion:true});
@@ -4992,16 +5171,15 @@
   var Y12META3 = { eyebrow:'Technology around us &middot; Lesson 3', exitHash:'#/g/y12' };
   var Y12_NOTES3 = [
     ["Introduction · 3 min","Developing mouse skills","Recap the parts of a computer from Lesson 2. Ask pupils to name what the screen, keyboard, mouse and base unit each do."],
-    ["Introduction · 2 min","Today you will…","Read the three together."],
-    ["Introduction · 5 min","Name that part","Show each part in turn. Take an answer before revealing the name."],
-    ["Activity 1 · 4 min","Not every mouse looks the same","Some have wires, some don't, some are built into the case as a trackpad. They all do the same job: point, select, move."],
-    ["Activity 1 · 4 min","Opening a program","Explain that a program opens with a double-click, two clicks close together."],
-    ["Activity 1 · 3 min","Practise without a mouse","Ask pupils to clap twice, quickly, or tap their leg twice. That's the speed a double-click needs. Then show it for real on a mouse."],
-    ["Activity 2 · 4 min","A click makes a dot, a drag makes a line","Model it, but don't stop there - pupils need to do this themselves, not just watch."],
-    ["Activity 2 · 12 min","Have a go in PaintZ","Pupils open PaintZ (free, no login, works with mouse or touch) and make at least one dot and one line before tapping the checked card. This is the real practice the animation alone couldn't give them."],
-    ["Activity 2 · 4 min","Extra click practice","Early finishers take a 1:1 turn on Quick Click at your PC for repeated click practice with a score, while others keep painting."],
-    ["Activity 2 · 5 min","Explorer task","Early finishers try the fill tool, drawing shapes, and the eraser."],
-    ["Plenary · 4 min","What's changed?","Show three pictures. For each, ask what tool was used: thicker line, a new colour, then the fill tool."],
+    ["Introduction · 2 min","Today you will…","Read the three together. Without a mouse each, today builds the idea and the words for it; the physical skill waits until the equipment is in the room."],
+    ["Introduction · 4 min","Name that part","Show each part in turn. Take an answer before revealing the name."],
+    ["Activity 1 · 3 min","Not every mouse looks the same","Some have wires, some don't, some are built into the case as a trackpad. They all do the same job: point, select, move."],
+    ["Activity 1 · 3 min","Opening a program","Programs sit on the screen as icons. An icon opens with a double-click, two clicks close together."],
+    ["Activity 1 · 3 min","Practise a double-click","Ask pupils to clap twice, quickly, or tap their leg twice. That's the speed a double-click needs."],
+    ["Activity 2 · 3 min","A click makes a dot, a drag makes a line","Model both on the board: hold the button, move, then let go."],
+    ["Activity 2 · 10 min","Virtual mouse demo on the IWB","A drawn mouse drives a big pointer on a drawn monitor. Nothing on the screen can be tapped directly, so the only way to hit a dot is to aim the pointer first, then press the left button. One or two children work the mouse while the rest of the class calls out which way to go. Ask afterwards what made the pointer move, and what the left button did that the right button didn't."],
+    ["Activity 2 · 5 min","A go on a real mouse","Quick Click at your PC, one child at a time, while the others watch the score. This is the only real mouse in the room today, so keep each turn short and get as many through as you can."],
+    ["Plenary · 3 min","Which one do you use?","Three jobs, three actions. Take an answer before revealing each card. The matching worksheet uses the same three pairs."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: using a computer keyboard."]
   ];
@@ -5010,7 +5188,7 @@
       '<h1 class="pp">Developing <em>mouse</em> skills</h1>' +
       '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('mouse-simple',56)+ph('cpu',56)+ph('pencil-simple',56) + '</div>' }; },
     function(){
-      var items = ["Use a mouse to open a program","Click and drag to make marks on a screen","Use a mouse to create a picture"];
+      var items = ["Say what a mouse is for","Show a click, a double-click and a drag","Steer a pointer onto a target and click it"];
       return { steps:items.length, html:
         '<h1 class="pp">Today you will…</h1>' +
         '<div style="display:flex;flex-direction:column;gap:14px;text-align:left;max-width:26ch">' +
@@ -5032,74 +5210,189 @@
       '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">However they look, they all do the same job.</p>' }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Opening a program</h1>' +
-      '<p class="lead pp">Before you can draw, you need to open a paint program.</p>' +
+      '<p class="lead pp">Programs sit on the screen as little pictures called icons.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">To do that, you double-click: two clicks, close together.</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Practise a double-click</h1>' +
       '<p class="lead pp">No mouse needed yet. Clap twice, fast, like this.</p>' +
-      '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' +
-      '<p class="lead pp">Now try it for real, on the mouse.</p>' }; },
+      '<p class="lead pp">You will try it on a real mouse later.</p>' }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">A click makes a dot. A drag makes a line.</h1>' +
       '<p class="lead pp">Hold the button down, move the mouse, then let go. That draws a line.</p>' +
       '<div class="pp d2-dragdemo"><span class="blk"></span><span class="slot"></span></div>' +
-      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">Now you try it for real. Watching isn&rsquo;t the same as doing it.</p>' }; },
+      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">Next you will steer the pointer yourself.</p>' }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Have a go!</h1>' +
-      '<p class="lead pp">Open PaintZ and practise: tap once for a dot, click and drag for a line.</p>' +
-      '<div class="d2-photobar pp">' +
-        '<a class="d2-photobtn" href="https://paintz.lovable.app/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('pencil-simple',20)+' Open PaintZ</a>' +
+      '<div class="d2-vm pp">' +
+        '<div class="d2-vm-mon">' +
+          '<div class="d2-vm-bez"><div class="d2-vm-screen" id="d2vmScreen">' +
+            '<span class="d2-vm-dot" data-label="big" style="width:21%;left:8%;top:12%"></span>' +
+            '<span class="d2-vm-dot" data-label="middle" style="width:13%;left:70%;top:30%"></span>' +
+            '<span class="d2-vm-dot" data-label="small" style="width:7.5%;left:42%;top:66%"></span>' +
+            '<svg class="d2-vm-cur" id="d2vmCur" viewBox="0 0 24 24" aria-hidden="true">' +
+              '<path d="M5 2 L5 20 L10 15.5 L13 22 L16.2 20.5 L13.2 14.2 L19.5 14 Z" fill="#fff" stroke="#1C2431" stroke-width="1.7" stroke-linejoin="round"/>' +
+            '</svg>' +
+          '</div></div>' +
+          '<span class="d2-vm-neck"></span><span class="d2-vm-foot"></span>' +
+          '<span class="d2-vm-cap" style="margin-top:9px">Monitor</span>' +
+        '</div>' +
+        '<div class="d2-vm-pad">' +
+          '<span class="d2-vm-cord"></span>' +
+          '<div class="d2-vm-mouse" id="d2vmMouse">' +
+            '<span class="d2-vm-mb l"></span><span class="d2-vm-mb r"></span>' +
+            '<span class="d2-vm-whl"></span><span class="d2-vm-mlab">drag me</span>' +
+          '</div>' +
+          '<span class="d2-vm-cap">Mouse</span>' +
+        '</div>' +
       '</div>' +
-      '<div class="d2-rc pp" style="max-width:32ch;margin-top:8px" id="d2paintdone"><b>Tap when you&rsquo;ve made a dot AND a line</b><span class="ans">That\'s the whole idea: click for a dot, drag for a line.</span></div>',
-      init:function(el){ var c = el.querySelector('#d2paintdone'); c.addEventListener('click', function(){ if(c.classList.contains('open')) return; c.classList.add('open'); c.querySelector('b').textContent = 'You had a go!'; burst(); }); } }; },
+      '<div class="d2-vm-out pp" id="d2vmOut"></div>' +
+      '<button class="d2-vm-again pp" id="d2vmAgain" hidden>Start again</button>',
+      init:function(el){
+        var mouse = el.querySelector('#d2vmMouse'), scr = el.querySelector('#d2vmScreen');
+        var cur = el.querySelector('#d2vmCur'), out = el.querySelector('#d2vmOut'), again = el.querySelector('#d2vmAgain');
+        var dots = [].slice.call(el.querySelectorAll('.d2-vm-dot'));
+        var fx = .5, fy = .5, GAIN = 2.4;
+        var drag = false, btn = null, moved = 0, lx = 0, ly = 0, sx = 0, sy = 0, menu = null;
+
+        function size(){ return { w: scr.clientWidth || 1, h: scr.clientHeight || 1 }; }
+        function say(t, c){ out.textContent = t; out.style.color = c || 'var(--muted)'; }
+        function hot(){
+          var s = size(), x = fx*s.w, y = fy*s.h, found = null;
+          dots.forEach(function(d){
+            var r = d.offsetWidth/2;
+            if(Math.hypot(x - (d.offsetLeft + r), y - (d.offsetTop + d.offsetHeight/2)) <= r) found = d;
+          });
+          return found;
+        }
+        function draw(){
+          var s = size();
+          var cw = cur.getBoundingClientRect().width || 42;
+          cur.style.left = (fx*s.w - cw*0.208) + 'px';
+          cur.style.top  = (fy*s.h - cw*0.083) + 'px';
+          var over = hot();
+          dots.forEach(function(d){ d.classList.toggle('hot', d === over && !d.classList.contains('done')); });
+        }
+        function closeMenu(){ if(menu){ menu.remove(); menu = null; } }
+        function pop(d){ fxPop(d); }
+        function win(){
+          var w = document.createElement('div');
+          w.className = 'd2-vm-win';
+          w.innerHTML = '<b>All three!</b>';
+          scr.appendChild(w);
+          dots.forEach(function(d){ d.classList.add('cheer'); });
+          fxCannon(); fxFanfare();
+        }
+        function leftClick(){
+          closeMenu();
+          var d = hot();
+          if(!d){ say('The pointer missed. Move it onto a dot, then press again.'); return; }
+          if(d.classList.contains('done')){ say('That dot is done. Aim for another one.'); return; }
+          d.classList.add('done'); d.classList.remove('hot');
+          pop(d);
+          var left = dots.length - dots.filter(function(x){ return x.classList.contains('done'); }).length;
+          if(left === 0){ say('All three clicked. That took careful aiming.', 'var(--out)'); win(); again.hidden = false; }
+          else { say('You clicked the ' + d.getAttribute('data-label') + ' dot, so ' + left + ' to go.', 'var(--out)'); }
+        }
+        function rightClick(){
+          closeMenu();
+          var s = size();
+          menu = document.createElement('div');
+          menu.className = 'd2-vm-menu';
+          menu.innerHTML = '<span>Copy</span><span>Paste</span><span>Delete</span>';
+          menu.style.left = Math.min(fx*s.w + 6, s.w - 116) + 'px';
+          menu.style.top  = Math.min(fy*s.h + 6, s.h - 92) + 'px';
+          scr.appendChild(menu);
+          say('The right button opens a menu. The left button picks things.', 'var(--in)');
+        }
+
+        mouse.addEventListener('pointerdown', function(e){
+          e.preventDefault();
+          fxArm();
+          drag = true; moved = 0; lx = sx = e.clientX; ly = sy = e.clientY;
+          btn = e.target.closest ? e.target.closest('.d2-vm-mb') : null;
+          if(btn) btn.classList.add('on');
+          mouse.classList.add('grabbing');
+          try{ mouse.setPointerCapture(e.pointerId); }catch(err){}
+        });
+        mouse.addEventListener('pointermove', function(e){
+          if(!drag) return;
+          var dx = e.clientX - lx, dy = e.clientY - ly, s = size();
+          lx = e.clientX; ly = e.clientY;
+          moved = Math.hypot(e.clientX - sx, e.clientY - sy);
+          fx = Math.max(0, Math.min(1, fx + dx*GAIN/s.w));
+          fy = Math.max(0, Math.min(1, fy + dy*GAIN/s.h));
+          draw();
+        });
+        function up(){
+          if(!drag) return;
+          drag = false;
+          mouse.classList.remove('grabbing');
+          if(btn){
+            btn.classList.remove('on');
+            if(moved < 12){ if(btn.classList.contains("l")) leftClick(); else rightClick(); }
+          }
+          btn = null;
+        }
+        mouse.addEventListener('pointerup', up);
+        mouse.addEventListener('pointercancel', up);
+        mouse.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+
+        again.addEventListener('click', function(){
+          dots.forEach(function(d){ d.classList.remove('done','hot','cheer'); });
+          var w = scr.querySelector('.d2-vm-win'); if(w) w.remove();
+          fx = .5; fy = .5; closeMenu(); again.hidden = true;
+          say('');
+          draw();
+        });
+
+        try{ new ResizeObserver(draw).observe(scr); }catch(e){}
+        say('');
+        draw(); requestAnimationFrame(draw);
+      } }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Extra click practice</h1>' +
-      '<p class="lead pp">Early finishers: take a turn on Quick Click while others keep painting.</p>' +
+      '<h1 class="pp">A go on a real mouse</h1>' +
+      '<p class="lead pp">One at a time, at the teacher&rsquo;s computer. Click the shapes as fast as you can.</p>' +
       '<div class="d2-photobar pp">' +
         '<a class="d2-photobtn" href="quick-click.html" target="_blank" rel="noopener" style="text-decoration:none">'+ph('cursor-click',20)+' Play Quick Click</a>' +
       '</div>' }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Explorer task</h1>' +
+      '<h1 class="pp">Which one do you use?</h1>' +
       '<div class="d2-reveal pp">' +
-        rc('Fill tool','changes the whole background to a new colour','in-c') +
-        rc('Shape tool','draws a circle, square or line for you','pr-c') +
-        rc('Eraser','rubs out a mistake so you can try again','ou-c') +
-      '</div>', init: revealInit }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">What&rsquo;s changed?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('A thicker line','the brush size was made bigger','in-c') +
-        rc('A different colour line','the brush colour was changed','pr-c') +
-        rc('One flat colour behind everything','the fill tool was used','ou-c') +
+        rc('To open a program','a double-click','in-c') +
+        rc('To make a line','click and drag','pr-c') +
+        rc('To choose one thing','one click','ou-c') +
       '</div>', init: revealInit }; },
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Great work</h1>' +
-      '<p class="lead pp">You double-clicked to open a program, then clicked and dragged to make a picture.</p>' +
+      '<p class="lead pp">You named what a mouse does, and you steered a pointer onto a target and clicked it.</p>' +
       '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: using a computer keyboard.</p>' }; }
   ];
   var Y12_QUIZ3 = [
     {q:"To open a program, you…", o:["single-click","double-click","hold down for ten seconds"], a:1},
     {q:"On a laptop, the mouse is often called a…", o:["trackpad","base unit","keyboard"], a:0},
     {q:"Click and drag means…", o:["click twice quickly","hold the button, move, then let go","press two buttons at once"], a:1},
-    {q:"To make one flat colour fill a whole area, you use the…", o:["eraser","fill tool","keyboard"], a:1}
+    {q:"Before you can click something, you must first…", o:["move the pointer onto it","turn the screen off","press both buttons at once"], a:0}
   ];
   var Y12_SHEETS3 = {
     steps: function(){
       return shell(Y12META3,'Double-click steps',
         'Number the steps in order, 1 to 3.',
         '<div style="display:flex;flex-direction:column;gap:14px;margin-top:12px">' +
-          ['Start painting a picture','Double-click to open the program','Choose a brush colour'].map(function(t){
+          ["The program opens","Find the program icon on the screen","Double-click the icon"].map(function(t){
             return '<div style="display:flex;gap:14px;align-items:center"><div style="width:36px;height:36px;border:1.6px solid #c3c8d4;border-radius:8px;flex:none"></div><div style="flex:1;border-bottom:1.5px solid #c3c8d4;padding-bottom:6px">'+t+'</div></div>';
           }).join('') +
         '</div>');
     },
-    picture: function(){
-      return shell(Y12META3,'My picture',
-        'Draw the picture you made with the mouse. Tick the tools you used.',
-        '<div class="draw" data-hint="Draw your picture" style="height:220px"></div>' +
-        '<div style="display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-weight:600">' +
-          ['Brush','Fill','Eraser','A new colour'].map(function(t){ return '<label style="display:flex;gap:8px;align-items:center"><span style="width:22px;height:22px;border:1.6px solid #c3c8d4;border-radius:6px;display:inline-block"></span>'+t+'</label>'; }).join('') +
+    match: function(){
+      return shell(Y12META3,'Which one do you use?',
+        'Draw a line from each job to the action that does it.',
+        '<div style="display:flex;gap:clamp(24px,8vw,70px);margin-top:18px">' +
+          ['To open a program','To make a line','To choose one thing'].map(function(t){
+            return '<div style="border:1.6px solid #c3c8d4;border-radius:10px;padding:14px 16px;font-weight:600">'+t+'</div>';
+          }).reduce(function(a,b){ return a+b; },'<div style="flex:1;display:flex;flex-direction:column;gap:30px">') + '</div>' +
+          ['click and drag','one click','a double-click'].map(function(t){
+            return '<div style="border:1.6px solid #c3c8d4;border-radius:10px;padding:14px 16px;font-weight:600">'+t+'</div>';
+          }).reduce(function(a,b){ return a+b; },'<div style="flex:1;display:flex;flex-direction:column;gap:30px">') + '</div>' +
         '</div>');
     },
     home: function(){
@@ -5114,15 +5407,15 @@
   var Y12META4 = { eyebrow:'Technology around us &middot; Lesson 4', exitHash:'#/g/y12' };
   var Y12_NOTES4 = [
     ["Introduction · 2 min","Using a computer keyboard","Recap: a mouse points, clicks and drags. Today's job for the keyboard is writing."],
-    ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 2 min","Today you will…","Read the three together. As with the mouse, this is about finding the keys and knowing what they do; typing at speed waits for a keyboard each."],
     ["Introduction · 3 min","What's a keyboard for?","Think, pair, share. Keyboards write letters, words and numbers onto a screen."],
     ["Introduction · 2 min","Not every keyboard looks the same","Wired, wireless, built into a laptop. They all do the same job."],
-    ["Activity 1 · 3 min","Open the text tool","In the paint program, click the text tool, then click and drag to draw a text box."],
-    ["Activity 1 · 15 min","Type your name","Type your name into the text box. Click away from the box to finish; it can't be edited after that. Draw a simple self-portrait above it with the remaining time."],
-    ["Activity 1 · 5 min","Explorer task","Change the size, colour or font of your text before you click away from the box."],
+    ["Activity 1 · 4 min","Where are the letters?","The big surprise for most of them: the letters aren't in alphabetical order. Say the top row together, and point out that every keyboard in the building uses this same jumble."],
+    ["Activity 1 · 15 min","Type your name on the board","A big QWERTY keyboard on the IWB. One child types while the rest of the class hunts for the next letter and calls it out, which is where the learning is. Backspace fixes a wrong key, the space bar makes a gap. Tap Done to finish, then Start again for the next child. Get through as many names as the time allows."],
+    ["Activity 1 · 3 min","Two big keys","Space and Backspace, one card each. Take an answer before revealing."],
     ["Activity 2 · 5 min","Saving my work","Think, pair, share: how could you keep this to add to another day? Show the save icon, and explain it appears in lots of programs."],
-    ["Activity 2 · 5 min","Name it sensibly","Type your own name as the file name, then click save. A sensible name helps you find it again, and tells you what it is without opening it."],
-    ["Plenary · 4 min","Look at your own picture","A checked self-review, not reveal cards: pupils look at their own saved work and tick which of the three features they actually used."],
+    ["Activity 2 · 4 min","Name it sensibly","A sensible file name helps you find it again, and tells you what it is without opening it. Their own name is the obvious choice."],
+    ["Plenary · 3 min","How did you get on?","A checked self-review: pupils tick the three things they actually did today."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: using the keyboard to edit text."]
   ];
@@ -5131,7 +5424,7 @@
       '<h1 class="pp">Using a computer <em>keyboard</em></h1>' +
       '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('keyboard',56)+ph('monitor',56)+ph('pencil-simple',56) + '</div>' }; },
     function(){
-      var items = ["Say what a keyboard is for","Type your name on a computer","Save your work to a file"];
+      var items = ["Say what a keyboard is for","Find the letters of your name","Use the space bar and Backspace"];
       return { steps:items.length, html:
         '<h1 class="pp">Today you will…</h1>' +
         '<div style="display:flex;flex-direction:column;gap:14px;text-align:left;max-width:24ch">' +
@@ -5147,19 +5440,57 @@
       '<h1 class="pp">Not every keyboard looks the same</h1>' +
       '<p class="lead pp">Wired, wireless, or built into a laptop.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">However they look, they all do the same job.</p>' }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Where are the letters?</h1>' +
+      '<p class="lead pp">They are not in A B C order. They are jumbled up, and that pattern has a name: QWERTY.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">Say the top row with me. Q, W, E, R, T, Y.</p>' }; },
+    function(){
+      var ROWS = [['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M']];
+      function keys(list){ return list.map(function(k){ return '<span class="d2-kb-key" data-k="'+k+'">'+k+'</span>'; }).join(''); }
+      return { steps:0, html:
+        '<div class="d2-kb pp">' +
+          '<div class="d2-kb-screen"><span class="d2-kb-text" id="d2kbText"></span><span class="d2-kb-caret"></span></div>' +
+          '<div class="d2-kb-rows">' +
+            '<div class="d2-kb-row">' + keys(ROWS[0]) + '<span class="d2-kb-key wide" data-k="BACK">Backspace</span></div>' +
+            '<div class="d2-kb-row" style="padding:0 4%">' + keys(ROWS[1]) + '</div>' +
+            '<div class="d2-kb-row" style="padding:0 10%">' + keys(ROWS[2]) + '</div>' +
+            '<div class="d2-kb-row"><span class="d2-kb-key space" data-k="SPACE">space</span></div>' +
+          '</div>' +
+          '<div class="d2-kb-bar">' +
+            '<button class="d2-kb-btn" id="d2kbClear">Start again</button>' +
+            '<button class="d2-kb-btn go" id="d2kbDone">Done</button>' +
+          '</div>' +
+          '<div class="d2-kb-out" id="d2kbOut"></div>' +
+        '</div>',
+        init:function(el){
+          var disp = el.querySelector('#d2kbText'), out = el.querySelector('#d2kbOut');
+          var txt = '', MAX = 14;
+          function say(t, c){ out.textContent = t || ''; out.style.color = c || 'var(--muted)'; }
+          function press(k, node){
+            fxArm(); fxClick();
+            node.classList.add('on');
+            setTimeout(function(){ node.classList.remove('on'); }, 130);
+            if(k === 'BACK') txt = txt.slice(0, -1);
+            else if(txt.length < MAX) txt += (k === 'SPACE' ? ' ' : k);
+            disp.textContent = txt;
+            say('');
+          }
+          [].forEach.call(el.querySelectorAll('.d2-kb-key'), function(node){
+            node.addEventListener('pointerdown', function(e){ e.preventDefault(); press(node.getAttribute('data-k'), node); });
+          });
+          el.querySelector('#d2kbClear').addEventListener('click', function(){ txt = ''; disp.textContent = ''; say(''); });
+          el.querySelector('#d2kbDone').addEventListener('click', function(){
+            if(txt.replace(/ /g, '').length < 2){ say('Find at least two letters first.'); return; }
+            say('You typed ' + txt.trim(), 'var(--out)');
+            fxArm(); fxCannon(); fxFanfare();
+          });
+        } };
+    },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Open the text tool</h1>' +
-      '<p class="lead pp">In your paint program, click the text tool. Then click and drag to draw a text box on the picture.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Type your name</h1>' +
-      '<p class="lead pp">Type your name into the box. Click away from it to finish.</p>' +
-      '<p class="lead pp" style="font-weight:700">Once you click away, you can&rsquo;t edit it, so check it first.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Explorer task</h1>' +
+      '<h1 class="pp">Two big keys</h1>' +
       '<div class="d2-reveal pp">' +
-        rc('Change the size','make your name bigger or smaller','in-c') +
-        rc('Change the colour','pick a colour before you click away','pr-c') +
-        rc('Change the font','try a different style of letters','ou-c') +
+        rc('The space bar','makes a gap between two words','in-c') +
+        rc('Backspace','takes away the letter you just typed','pr-c') +
       '</div>', init: revealInit }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Saving my work</h1>' +
@@ -5167,12 +5498,12 @@
       init:function(el){ var c=el.querySelector('#d2save'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Name it sensibly</h1>' +
-      '<p class="lead pp">Type your own name as the file name, then click save.</p>' +
+      '<p class="lead pp">When you save, the computer asks what to call it. Your own name is a good answer.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">A sensible name helps you find it again, and tells you what it is without opening it.</p>' }; },
     function(){
-      var TICKS = ["I used more than one colour","I added text with the keyboard","I used another tool, like fill, shapes, or the eraser"];
+      var TICKS = ["I found the letters of my name","I used the space bar","I used Backspace to fix a letter"];
       return { steps:0, html:
-        '<h1 class="pp">Look at your own picture</h1>' +
+        '<h1 class="pp">How did you get on?</h1>' +
         '<p class="lead pp">Tap each one you really did.</p>' +
         '<div class="pp" style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:38ch;width:100%" id="d2rubric4">' +
         TICKS.map(function(t,i){ return '<button class="d2-rtick" data-i="'+i+'" style="display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--hair);background:var(--ground-2);border-radius:14px;padding:12px 16px;font-family:var(--font);font-size:1rem;font-weight:600;cursor:pointer;color:var(--ink)">' +
@@ -5189,7 +5520,7 @@
               b.querySelector('.tickmark').style.color = 'var(--out)'; b.querySelector('.tickmark').style.borderColor = 'var(--out)';
               done++;
               msg.style.color = 'var(--out)';
-              if(done === total){ msg.textContent = 'You used lots of tools!'; burst(); }
+              if(done === total){ msg.textContent = 'All three, well done.'; burst(); }
               else msg.textContent = done + ' of ' + total + ' ticked';
             });
           });
@@ -5197,19 +5528,19 @@
     confidenceSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Well typed</h1>' +
-      '<p class="lead pp">You typed your name and saved your work.</p>' +
+      '<p class="lead pp">You found the letters of your name, and you used the space bar and Backspace.</p>' +
       '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: using the keyboard to edit text.</p>' }; }
   ];
   var Y12_QUIZ4 = [
     {q:"Writing words using a keyboard is called…", o:["clicking","typing","saving"], a:1},
-    {q:"Once you click away from a text box, you…", o:["can still edit it","can't edit it any more","delete it"], a:1},
+    {q:"To take away the letter you just typed, press…", o:["the space bar","Backspace","a letter key"], a:1},
     {q:"The save icon…", o:["appears in only one program","appears in lots of different programs","only saves pictures, not text"], a:1},
     {q:"A sensible file name helps you…", o:["make the file bigger","find it again and know what it is","delete it faster"], a:1}
   ];
   var Y12_SHEETS4 = {
     name: function(){
       return shell(Y12META4,'Typing my name',
-        'Draw yourself, and write your name underneath, just like you did on the computer.',
+        'Draw yourself, and write your name underneath, letter by letter.',
         '<div class="draw" data-hint="Draw yourself" style="height:200px"></div>' +
         '<h2>My name</h2><div class="lines s2"></div>');
     },
@@ -5561,9 +5892,10 @@
     'y12/3':{ notes:Y12_NOTES3, slides:Y12_SLIDES3, quiz:Y12_QUIZ3, sheets:Y12_SHEETS3,
       exitHash:Y12META3.exitHash, lessonHash:'#/y12/lesson/3',
       taskTk:'Technology around us · Lesson 3', taskH1:'Developing mouse skills',
-      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Use a mouse or trackpad to draw a picture in a paint program. Then:</p>' +
-        '<ul><li>say what you changed, the <strong>colour</strong> or the <strong>thickness</strong></li>' +
-        '<li>show a grown-up your double-click</li></ul></div>' },
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Find a mouse, trackpad or game controller at home. Show a grown-up:</p>' +
+        '<ul><li>a <strong>single click</strong></li>' +
+        '<li>a <strong>double-click</strong></li>' +
+        '<li>a <strong>click and drag</strong></li></ul></div>' },
     'y56/2':{ notes:Y56_NOTES2, slides:Y56_SLIDES2, quiz:Y56_QUIZ2, sheets:Y56_SHEETS2,
       exitHash:Y56META2.exitHash, lessonHash:'#/y56/lesson/2',
       taskTk:'Systems and Searching · Lesson 2', taskH1:'Computer systems and us',
