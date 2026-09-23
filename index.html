@@ -1123,15 +1123,39 @@
   .d2-ask-qr img,.d2-ask-qr canvas,.d2-ask-qr table{width:100%!important;height:100%!important}
   .d2-ask-code{font-weight:800;font-size:1.1rem;letter-spacing:.08em;font-variant-numeric:tabular-nums}
   .d2-ask-hint{font-size:.72rem;color:var(--soft);text-align:center}
+  /* teacher arrows: small, paired, at the top centre. They used to sit
+     halfway down each side, which is exactly where a pupil's hand lands
+     when they reach across a board, so lessons jumped a slide mid-activity */
   .d2-chev{
-    position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;display:grid;place-items:center;
-    border:0;border-radius:999px;background:var(--ground-2);color:var(--ink);box-shadow:var(--shadow-md);
-    cursor:pointer;z-index:8;transition:transform .16s var(--ease), opacity .2s;
+    position:absolute;top:14px;width:40px;height:40px;display:grid;place-items:center;
+    border:0;border-radius:999px;background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    color:var(--ink);box-shadow:var(--shadow-md);
+    cursor:pointer;z-index:14;transition:transform .16s var(--ease), opacity .2s, background .16s;
   }
-  .d2-chev:hover{transform:translateY(-50%) scale(1.09)}
-  .d2-chev.prev{left:16px}.d2-chev.next{right:16px}
+  .d2-chev:hover{transform:scale(1.09);background:var(--paper)}
+  /* top right: the top centre belongs to the whiteboard bar and the top
+     left to the Lessons button */
+  .d2-chev.prev{right:62px}.d2-chev.next{right:14px}
   .d2-chev[disabled]{opacity:.22;pointer-events:none}
-  .d2-chev svg{width:26px;height:26px}
+  .d2-chev svg{width:21px;height:21px}
+
+  /* pupil arrows: big, along the bottom, for a child demonstrating at the
+     board. Hidden until the teacher presses K */
+  .d2-kidnav{
+    position:absolute;left:0;right:0;bottom:40px;display:none;z-index:9;
+    gap:clamp(16px,5vw,64px);justify-content:center;pointer-events:none;
+    /* keeps the buttons clear of the tool group in the bottom right */
+    padding:0 clamp(80px,12vw,140px)}
+  .d2-kidnav.on{display:flex}
+  .d2-kidnav button{
+    pointer-events:auto;display:inline-flex;align-items:center;gap:clamp(8px,1.4vw,14px);
+    border:0;border-radius:999px;cursor:pointer;font-family:var(--font);font-weight:800;
+    font-size:clamp(1.05rem,2.3vw,1.55rem);padding:clamp(13px,2.2vw,19px) clamp(22px,3.8vw,36px);
+    background:var(--proc);color:#fff;box-shadow:var(--shadow-lg);
+    transition:transform .16s var(--ease), opacity .2s}
+  .d2-kidnav button:hover{transform:translateY(-2px)}
+  .d2-kidnav button[disabled]{opacity:.28;pointer-events:none}
+  .d2-kidnav svg{width:clamp(24px,2.8vw,32px);height:clamp(24px,2.8vw,32px)}
   .d2-dots{position:absolute;left:0;right:0;bottom:16px;display:flex;gap:8px;justify-content:center;z-index:8}
   .d2-dot{width:9px;height:9px;border-radius:999px;border:0;padding:0;background:var(--hair);cursor:pointer;transition:transform .16s var(--ease), background .16s}
   .d2-dot.on{background:var(--proc);transform:scale(1.35)}
@@ -1505,7 +1529,9 @@
   /* the scale reuses the .gauge component from Year 5/6 Lesson 1; these are
      the two variants it needs: a green-to-red track, and five labels
      instead of three */
-  .gauge-track.ok{background:linear-gradient(90deg,#0E9C6A,#5A9E2F 25%,#C9901C 50%,#DE6B35 75%,#D8443C);
+  /* red on the left, green on the right, matching the Year 5/6 confidence
+     gauge, which also runs least to most from left to right */
+  .gauge-track.ok{background:linear-gradient(90deg,#D8443C,#DE6B35 25%,#C9901C 50%,#5A9E2F 75%,#0E9C6A);
     box-shadow:inset 0 0 0 1px var(--hair)}
   .gauge-labels.five{grid-template-columns:repeat(5,1fr);font-size:clamp(.82rem,1.35vw,1.1rem);font-weight:600}
   .gauge-labels.five span{text-align:center}
@@ -1587,6 +1613,11 @@
 
     <div class="d2-stage"><div class="d2-slides" id="d2-slides"></div></div>
     <div class="d2-dots" id="d2-dots"></div>
+
+    <div class="d2-kidnav" id="d2-kidnav">
+      <button type="button" id="d2-kid-prev" aria-label="Go back a slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span>Back</span></button>
+      <button type="button" id="d2-kid-next" aria-label="Go on a slide"><span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
 
     <div class="wb" id="d2-wb"><canvas id="d2-wbCanvas"></canvas></div>
     <div class="wb-bar" id="d2-wbBar">
@@ -3004,7 +3035,7 @@ window.HB_GAUGE = (function(){
   // family choice, not a fact.
   function scaleInit(el, cards){
     var BANDS = 5;
-    var NAMES = ['Always fine','Usually fine','It depends','Not OK','Never OK'];
+    var NAMES = ['Never OK','Not OK','It depends','Usually fine','Always fine'];
     var cardEl = el.querySelector('.d2-scard'),
         band = el.querySelector('.gauge-band'),
         verdict = el.querySelector('.d2-sverdict'),
@@ -4802,15 +4833,15 @@ window.HB_GAUGE = (function(){
       // say why something is or is not OK, rather than guessing from how odd
       // it sounds.
       var CARDS = [
-        {t:'Carrying the iPad with two hands', min:1, max:2},
-        {t:'Giving the laptop a bath', min:5, max:5, silly:true, ask:'What should they do instead?'},
-        {t:'Waiting for your turn on the computer', min:1, max:2},
-        {t:'Opening an app you were not asked to open', min:4, max:5, ask:'What should they do instead?'},
-        {t:'Saying thank you to the computer', min:1, max:2, silly:true},
+        {t:'Carrying the iPad with two hands', min:4, max:5},
+        {t:'Giving the laptop a bath', min:1, max:1, silly:true, ask:'What should they do instead?'},
+        {t:'Waiting for your turn on the computer', min:4, max:5},
+        {t:'Opening an app you were not asked to open', min:1, max:2, ask:'What should they do instead?'},
+        {t:'Saying thank you to the computer', min:4, max:5, silly:true},
         {t:'Eating crisps next to the iPad', vote:true},
-        {t:'Wearing the keyboard as a hat', min:4, max:5, silly:true, ask:'What should they do instead?'},
+        {t:'Wearing the keyboard as a hat', min:1, max:2, silly:true, ask:'What should they do instead?'},
         {t:'Playing a game when you have finished your work', vote:true},
-        {t:'Telling your teacher when something on the screen scares you', min:1, max:1}
+        {t:'Telling your teacher when something on the screen scares you', min:5, max:5}
       ];
       return { steps:0, html:
         '<h1 class="pp">How OK is it?</h1>' +
@@ -4824,8 +4855,8 @@ window.HB_GAUGE = (function(){
               '<span class="gauge-thumb"></span>' +
             '</button>' +
             '<div class="gauge-labels five">' +
-              '<span>Always fine</span><span>Usually fine</span><span>It depends</span>' +
-              '<span>Not OK</span><span>Never OK</span>' +
+              '<span>Never OK</span><span>Not OK</span><span>It depends</span>' +
+              '<span>Usually fine</span><span>Always fine</span>' +
             '</div>' +
           '</div>' +
           '<p class="d2-sask"></p>' +
@@ -6567,14 +6598,29 @@ window.HB_GAUGE = (function(){
       else if(e.key === 'f' || e.key === 'F'){ document.getElementById('d2-fs-btn').click(); }
       else if(e.key === 'w' || e.key === 'W'){ toggleWB2(); }
       else if(e.key === 'o' || e.key === 'O'){ document.getElementById('d2-overview').classList.toggle('open'); }
+      else if(e.key === 'k' || e.key === 'K'){ if(window.__hbKidNav) window.__hbKidNav(); }
       else if(e.key === 'Escape'){ notesEl.classList.remove('on'); document.getElementById('d2-overview').classList.remove('open'); if(wb2Active) toggleWB2(); }
     });
-    var x0 = null;
-    mount.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
-    mount.addEventListener('touchend', function(e){
-      if(x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
-      if(dx < -46) fwd(); else if(dx > 46) back();
-    }, {passive:true});
+    // swipe-to-change navigation was removed deliberately. On a touch board
+    // any drag inside a slide, a sort chip, the gauge, the whiteboard, read
+    // as a swipe once it passed 46px, so lessons jumped a slide while pupils
+    // were working. Slides now only change from the arrows or the keyboard.
+
+    // big arrows along the bottom, for a pupil demonstrating at the board.
+    // Off by default and toggled with K, because they take up room and are
+    // one more thing to catch by accident when nobody is using them.
+    var kidnav = document.getElementById('d2-kidnav');
+    var kidOn = false;
+    try{ kidOn = localStorage.getItem('hb_kidnav') === '1'; }catch(e){}
+    function setKidNav(on){
+      kidOn = on;
+      kidnav.classList.toggle('on', on);
+      try{ localStorage.setItem('hb_kidnav', on ? '1' : '0'); }catch(e){}
+    }
+    setKidNav(kidOn);
+    document.getElementById('d2-kid-prev').addEventListener('click', back);
+    document.getElementById('d2-kid-next').addEventListener('click', fwd);
+    window.__hbKidNav = function(){ setKidNav(!kidOn); };
   }
 
   function stepsOf(i){ return parseInt(built[i].getAttribute('data-steps'), 10) || 0; }
@@ -6588,6 +6634,11 @@ window.HB_GAUGE = (function(){
     try{ s.dispatchEvent(new CustomEvent('d2step', {detail: step})); }catch(e){}
     prevBtn.disabled = (cur === 0 && step === 0);
     nextBtn.disabled = (cur === built.length - 1 && step >= stepsOf(cur));
+    // the pupil arrows mirror the teacher ones so a child at the board
+    // cannot run off either end of the lesson
+    var kp = document.getElementById('d2-kid-prev'), kn = document.getElementById('d2-kid-next');
+    if(kp) kp.disabled = prevBtn.disabled;
+    if(kn) kn.disabled = nextBtn.disabled;
   }
 
   function show(i, st){
