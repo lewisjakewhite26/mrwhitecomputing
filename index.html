@@ -1587,6 +1587,54 @@
   .d2-tally{display:flex;gap:clamp(14px,4vw,40px);color:var(--soft);font-weight:700}
   .d2-tally span{width:clamp(84px,13vw,120px);text-align:center}
 
+  /* machine builder (year 3/4) */
+  .mb{width:min(1020px,97%);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vw,16px)}
+  .mb-machine{
+    position:relative;width:100%;display:flex;align-items:stretch;gap:clamp(6px,1.4vw,14px);
+    padding:clamp(10px,2vw,18px);border-radius:18px;background:var(--ground-2);border:2px solid var(--paper-edge)}
+  .mb-slot{
+    flex:1;min-width:0;border-radius:14px;border:2.5px dashed var(--hair);background:var(--paper);
+    min-height:clamp(86px,13vw,124px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:6px;padding:8px;text-align:center;transition:border-color .18s var(--ease),background .18s var(--ease)}
+  .mb-slot .k{font-size:clamp(.62rem,1.1vw,.78rem);font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft)}
+  .mb-slot .lbl{font-weight:700;font-size:clamp(.78rem,1.4vw,1rem);line-height:1.2}
+  .mb-slot.full[data-k="in"]{border-style:solid;border-color:var(--in);color:var(--in)}
+  .mb-slot.full[data-k="pr"]{border-style:solid;border-color:var(--proc);color:var(--proc)}
+  .mb-slot.full[data-k="ou"]{border-style:solid;border-color:var(--out);color:var(--out)}
+  .mb-slot.want{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,var(--paper));animation:mbwant 1.1s ease-in-out infinite}
+  @keyframes mbwant{0%,100%{opacity:1}50%{opacity:.55}}
+  .mb-slot.fire{animation:mbfire .8s var(--ease)}
+  @keyframes mbfire{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
+  .mb-slot.spin svg{animation:mbspin .9s linear}
+  @keyframes mbspin{to{transform:rotate(360deg)}}
+  .mb-arr{align-self:center;color:var(--soft);font-size:clamp(1.1rem,2.4vw,1.8rem);flex:none}
+  .mb-token{
+    position:absolute;top:50%;left:0;width:clamp(16px,2.4vw,24px);height:clamp(16px,2.4vw,24px);border-radius:6px;
+    background:var(--in);box-shadow:var(--shadow-md);opacity:0;transform:translate(-50%,-50%);
+    transition:left .42s var(--ease),opacity .2s,background .3s;pointer-events:none;z-index:3}
+  .mb-token.on{opacity:1}
+  .mb-read{
+    width:100%;min-height:2.6em;margin:0;padding:clamp(9px,1.8vw,14px) clamp(12px,2.4vw,18px);border-radius:12px;
+    background:var(--paper);border:1.5px solid var(--hair);font-weight:700;line-height:1.35;text-align:center;
+    font-size:clamp(.88rem,1.9vw,1.25rem)}
+  .mb-read .gap{color:var(--soft);font-weight:600;font-style:italic}
+  .mb-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;min-height:2.2em}
+  .mb-pals{display:flex;gap:clamp(6px,1.4vw,14px);width:100%;flex-wrap:wrap}
+  .mb-pal{flex:1;min-width:210px;border-radius:14px;padding:9px;background:var(--ground-2);border:1.5px solid var(--paper-edge)}
+  .mb-pal h4{margin:0 0 7px;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;text-align:center}
+  .mb-pal[data-k="in"] h4{color:var(--in)} .mb-pal[data-k="pr"] h4{color:var(--proc)} .mb-pal[data-k="ou"] h4{color:var(--out)}
+  .mb-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .mb-chip{
+    display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--hair);background:var(--paper);
+    border-radius:999px;padding:7px 12px;font-family:var(--font);font-weight:700;cursor:pointer;color:var(--ink);
+    font-size:clamp(.72rem,1.25vw,.92rem);transition:transform .14s var(--ease),border-color .14s,background .14s}
+  .mb-chip:hover{transform:translateY(-2px)}
+  .mb-chip.sel[data-k="in"]{border-color:var(--in);background:color-mix(in srgb,var(--in) 12%,var(--paper))}
+  .mb-chip.sel[data-k="pr"]{border-color:var(--proc);background:color-mix(in srgb,var(--proc) 12%,var(--paper))}
+  .mb-chip.sel[data-k="ou"]{border-color:var(--out);background:color-mix(in srgb,var(--out) 12%,var(--paper))}
+  .mb-chip.right{border-color:var(--out);background:color-mix(in srgb,var(--out) 16%,var(--paper))}
+  .mb-chip.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 14%,var(--paper))}
+
   /* "how OK is it?" scale (year 1/2) */
   .d2-scale{width:min(960px,96%);display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vw,18px)}
   .d2-scard{
@@ -3095,6 +3143,214 @@ window.HB_GAUGE = (function(){
     });
   }
 
+  // shared: the parts a machine can be built from. Each carries the phrase
+  // it contributes to the plain-English sentence under the machine, so the
+  // readout is assembled from the same data the slots are, and the two can
+  // never disagree.
+  var MB_PARTS = {
+    in: [
+      ['button','button','cursor-click','the button is pressed'],
+      ['key','keyboard','keyboard','a key is pressed'],
+      ['mouse','mouse','mouse-simple','the mouse is clicked'],
+      ['mic','microphone','microphone','the microphone hears a sound'],
+      ['cam','camera','camera','the camera sees something'],
+      ['light','light sensor','lightbulb','the light sensor notices it go dark'],
+      ['touch','touchscreen','device-mobile-camera','the screen is touched'],
+      ['motion','motion sensor','hand-pointing','the motion sensor spots someone move']
+    ],
+    pr: [
+      ['wait','wait 3 seconds','cpu','waits 3 seconds'],
+      ['count','count to 10','cpu','counts to 10'],
+      ['check','check how big it is','cpu','checks how big it is'],
+      ['remember','remember it','cpu','remembers it'],
+      ['compare','compare it','cpu','compares it with a number']
+    ],
+    ou: [
+      ['lamp','light','lamp','turns the light on'],
+      ['speaker','speaker','speaker-high','plays a sound'],
+      ['screen','screen','monitor','shows a message on the screen'],
+      ['printer','printer','printer','prints it out'],
+      ['motor','motor','arrows-clockwise','spins the motor'],
+      ['alarm','alarm','alarm','sets off the alarm']
+    ]
+  };
+  function mbFind(kind, id){
+    var row = null;
+    MB_PARTS[kind].forEach(function(p){ if(p[0] === id) row = p; });
+    return row;
+  }
+  function mbMachineHTML(){
+    var slot = function(k, label){
+      return '<div class="mb-slot" data-k="' + k + '"><span class="k">' + label + '</span><span class="lbl">empty</span></div>';
+    };
+    return '<div class="mb-machine">' +
+      slot('in','Input') + '<span class="mb-arr">&rarr;</span>' +
+      slot('pr','Process') + '<span class="mb-arr">&rarr;</span>' +
+      slot('ou','Output') +
+      '<span class="mb-token"></span>' +
+    '</div>';
+  }
+  function mbFill(el, kind, id){
+    var slot = el.querySelector('.mb-slot[data-k="' + kind + '"]');
+    var row = id ? mbFind(kind, id) : null;
+    slot.classList.toggle('full', !!row);
+    slot.querySelector('.lbl').innerHTML = row
+      ? ph(row[2], 30) + '<br>' + row[1]
+      : 'empty';
+  }
+
+  // shared: the machine builder. Pick an input, a process and an output,
+  // then run it and watch the token travel through. The sentence under the
+  // machine is the assessment: pupils can see whether what they built says
+  // something sensible, which the paper design task never showed them.
+  function machineInit(el){
+    var chosen = { in:null, pr:null, ou:null };
+    var read = el.querySelector('.mb-read');
+    var token = el.querySelector('.mb-token');
+    var machine = el.querySelector('.mb-machine');
+    var runBtn = el.querySelector('.mb-runbtn');
+    var running = false;
+
+    function sentence(){
+      var i = chosen.in && mbFind('in', chosen.in);
+      var p = chosen.pr && mbFind('pr', chosen.pr);
+      var o = chosen.ou && mbFind('ou', chosen.ou);
+      var gap = function(t){ return '<span class="gap">' + t + '</span>'; };
+      read.innerHTML = 'When ' + (i ? i[3] : gap('[pick an input]')) +
+        ', the machine ' + (p ? p[3] : gap('[pick a process]')) +
+        ', then it ' + (o ? o[3] : gap('[pick an output]')) + '.';
+      runBtn.disabled = !(i && p && o);
+    }
+
+    el.querySelectorAll('.mb-chip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        if(running) return;
+        var k = chip.getAttribute('data-k'), id = chip.getAttribute('data-id');
+        chosen[k] = (chosen[k] === id) ? null : id;
+        el.querySelectorAll('.mb-chip[data-k="' + k + '"]').forEach(function(c){
+          c.classList.toggle('sel', c.getAttribute('data-id') === chosen[k]);
+        });
+        mbFill(el, k, chosen[k]);
+        sentence();
+      });
+    });
+
+    function at(kind){
+      var slot = el.querySelector('.mb-slot[data-k="' + kind + '"]');
+      var mr = machine.getBoundingClientRect(), sr = slot.getBoundingClientRect();
+      return (sr.left - mr.left + sr.width / 2) + 'px';
+    }
+    runBtn.addEventListener('click', function(){
+      if(running || runBtn.disabled) return;
+      running = true; runBtn.disabled = true;
+      var pr = el.querySelector('.mb-slot[data-k="pr"]');
+      var ou = el.querySelector('.mb-slot[data-k="ou"]');
+      token.style.transition = 'none';
+      token.style.left = at('in'); token.style.background = 'var(--in)';
+      token.classList.add('on');
+      setTimeout(function(){
+        token.style.transition = '';
+        token.style.left = at('pr'); token.style.background = 'var(--proc)';
+      }, 60);
+      setTimeout(function(){ pr.classList.add('spin'); }, 480);
+      setTimeout(function(){
+        pr.classList.remove('spin');
+        token.style.left = at('ou'); token.style.background = 'var(--out)';
+      }, 1380);
+      setTimeout(function(){ ou.classList.add('fire'); token.classList.remove('on'); }, 1800);
+      setTimeout(function(){
+        ou.classList.remove('fire');
+        running = false; runBtn.disabled = false;
+        burst();
+      }, 2700);
+    });
+
+    el.querySelector('.mb-clear').addEventListener('click', function(){
+      if(running) return;
+      ['in','pr','ou'].forEach(function(k){ chosen[k] = null; mbFill(el, k, null); });
+      el.querySelectorAll('.mb-chip').forEach(function(c){ c.classList.remove('sel'); });
+      sentence();
+    });
+
+    sentence();
+  }
+
+  // shared: broken machine mode. One part is missing and three parts are
+  // offered, one right and two from the wrong job. This is the checked
+  // moment the old paper design task never had: building a machine that
+  // always runs cannot tell anyone whether a pupil understands the model.
+  function brokenInit(el, rounds){
+    var i = 0, done = false;
+    var read = el.querySelector('.mb-read');
+    var prog = el.querySelector('.mb-prog');
+    var verdict = el.querySelector('.mb-verdict');
+    var next = el.querySelector('.mb-next');
+    var tray = el.querySelector('.mb-tray');
+    var score = 0;
+
+    function paint(){
+      var r = rounds[i];
+      ['in','pr','ou'].forEach(function(k){
+        mbFill(el, k, r.have[k] || null);
+        el.querySelector('.mb-slot[data-k="' + k + '"]').classList.toggle('want', k === r.missing);
+      });
+      var parts = ['in','pr','ou'].map(function(k){
+        var id = r.have[k];
+        return id ? mbFind(k, id)[3] : null;
+      });
+      read.innerHTML = 'When ' + (parts[0] || '<span class="gap">[something is missing]</span>') +
+        ', the machine ' + (parts[1] || '<span class="gap">[something is missing]</span>') +
+        ', then it ' + (parts[2] || '<span class="gap">[something is missing]</span>') + '.';
+      tray.innerHTML = r.options.map(function(o){
+        var row = mbFind(o[0], o[1]);
+        return '<button type="button" class="mb-chip" data-k="' + o[0] + '" data-id="' + o[1] + '">' +
+          ph(row[2], 20) + row[1] + '</button>';
+      }).join('');
+      tray.querySelectorAll('.mb-chip').forEach(function(c){
+        c.addEventListener('click', function(){ answer(c); });
+      });
+      prog.textContent = 'Machine ' + (i + 1) + ' of ' + rounds.length;
+      verdict.textContent = '';
+      next.disabled = true;
+      done = false;
+    }
+
+    function answer(chip){
+      if(done) return;
+      done = true;
+      var r = rounds[i];
+      var right = chip.getAttribute('data-k') === r.missing && chip.getAttribute('data-id') === r.answer;
+      chip.classList.add(right ? 'right' : 'wrong');
+      if(right){
+        score++;
+        mbFill(el, r.missing, r.answer);
+        el.querySelector('.mb-slot[data-k="' + r.missing + '"]').classList.remove('want');
+        verdict.textContent = 'Fixed. That is the ' + ({in:'input',pr:'process',ou:'output'})[r.missing] + '.';
+        verdict.style.color = 'var(--out)';
+        burst();
+      } else {
+        tray.querySelectorAll('.mb-chip').forEach(function(c){
+          if(c.getAttribute('data-k') === r.missing && c.getAttribute('data-id') === r.answer) c.classList.add('right');
+        });
+        verdict.textContent = 'The machine is missing its ' + ({in:'input',pr:'process',ou:'output'})[r.missing] + '.';
+        verdict.style.color = 'var(--red)';
+      }
+      next.disabled = false;
+    }
+
+    next.addEventListener('click', function(){
+      if(i === rounds.length - 1){
+        next.disabled = true;
+        verdict.textContent = score + ' of ' + rounds.length + ' fixed first time';
+        verdict.style.color = score === rounds.length ? 'var(--out)' : 'var(--muted)';
+        return;
+      }
+      i++; paint();
+    });
+
+    paint();
+  }
+
   // shared: the class charter maker. Typing, reordering and choosing a
   // layout all update one live preview, which is the thing that prints.
   // Deliberately no free dragging: the rules drop into the design in the
@@ -3928,8 +4184,8 @@ window.HB_GAUGE = (function(){
     ["Activity 1 · 3 min","Some do both, some do neither","A touchscreen is both: you tap it (input) and it shows things (output). A cable is neither. A multifunction printer that also scans is both."],
     ["Activity 2 · 4 min","One input, many outputs","Pressing one key can change the screen and make a speaker beep and make a printer print. Many inputs can also feed one output: a mouse and a keyboard both making one document."],
     ["Activity 2 · 6 min","Match it up","Model a full sentence: pressing the keys on the keyboard of a laptop can change what is on the screen, or make the speaker play sounds. Then hand out the A2 sheet to draw the arrows."],
-    ["Activity 3 · 12 min","Invent your own device","Pupils design a device on the A3 sheet. It needs inputs, a process and outputs. The disco lights example is on this slide. Push for multiple inputs or outputs as an extension."],
-    ["Activity 3 · 3 min","Peer-check the design","Pupils swap sheets in pairs and tap the three ticks together, only when they both agree it's true. This is the checked moment the design task was missing."],
+    ["Activity 3 · 12 min","Invent your own device","Model the disco lights machine first: microphone, check how big it is, light. Build it on the board, read the sentence underneath out loud, then press Run so they watch the token travel through. Then pupils build their own in pairs. The sentence under the machine is the thing to point at when a machine makes no sense: a camera that waits 3 seconds and then spins a motor is allowed, and asking what that would actually be for is a better conversation than marking it wrong. The A3 sheet is still there if you want a paper record."],
+    ["Activity 3 · 3 min","The broken machine","Five machines, each missing one part. Two of the three pieces offered come from the wrong job, so a pupil who is guessing cannot land it. This is the checked moment: a machine that always runs whatever you build cannot tell you who understands input, process and output. Ask which part is missing before anyone taps."],
     ["Plenary · 4 min","Spot the devices","Read the passage. Ask pupils to count the digital devices and interactions. Our world is full of them."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread tells you who needs a recap."],
     ["Next time · 1 min","Next lesson","Recap inputs and outputs. Next lesson: the many ways digital devices help us."]
@@ -3993,38 +4249,55 @@ window.HB_GAUGE = (function(){
         '<div class="pp" data-step="3" style="display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--out)">'+ph('monitor',40)+'<small>screen</small></div>' +
       '</div>' +
       '<p class="lead pp" data-step="3">Pressing the keys can change what you see on the screen.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Invent your own device</h1>' +
-      '<p class="lead pp">What does it do? What are its inputs and outputs?</p>' +
-      '<div class="d2-reveal pp">' +
-        rc('Example: disco lights','Microphone hears the music (input). The device measures how loud it is (process). The lights glow brighter (output).','pr-c') +
-      '</div>' +
-      '<p class="lead pp">Design yours on the sheet.</p>', init: revealInit }; },
     function(){
-      var TICKS = ["It has an input, something you do to it","It has an output, something it does back","The process makes sense: the output is a sensible result of the input"];
+      var pal = function(k, title){
+        return '<div class="mb-pal" data-k="' + k + '"><h4>' + title + '</h4><div class="mb-chips">' +
+          MB_PARTS[k].map(function(p){
+            return '<button type="button" class="mb-chip" data-k="' + k + '" data-id="' + p[0] + '">' + ph(p[2], 18) + p[1] + '</button>';
+          }).join('') + '</div></div>';
+      };
       return { steps:0, html:
-        '<h1 class="pp">Check your design with a partner</h1>' +
-        '<p class="lead pp">Swap sheets. Tap a tick only when you both agree it&rsquo;s true.</p>' +
-        '<div class="pp" style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:38ch;width:100%" id="d2rubric">' +
-        TICKS.map(function(t,i){ return '<button class="d2-rtick" data-i="'+i+'" style="display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--hair);background:var(--ground-2);border-radius:14px;padding:12px 16px;font-family:var(--font);font-size:1rem;font-weight:600;cursor:pointer;color:var(--ink)">' +
-          '<span class="tickmark" style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--hair);display:grid;place-items:center;color:transparent">'+ICON.check+'</span>' + t + '</button>'; }).join('') +
-        '</div>' +
-        '<p class="lead" id="d2rubricmsg" style="min-height:1.4em"></p>',
-        init:function(el){
-          var done = 0, total = TICKS.length, msg = el.querySelector('#d2rubricmsg');
-          [].forEach.call(el.querySelectorAll('.d2-rtick'), function(b){
-            b.addEventListener('click', function(){
-              if(b.classList.contains('on')) return;
-              b.classList.add('on');
-              b.style.borderColor = 'var(--out)'; b.style.background = 'color-mix(in srgb,var(--out) 12%,var(--paper))';
-              b.querySelector('.tickmark').style.color = 'var(--out)'; b.querySelector('.tickmark').style.borderColor = 'var(--out)';
-              done++;
-              msg.style.color = 'var(--out)';
-              if(done === total){ msg.textContent = 'All three checked - great design!'; burst(); }
-              else msg.textContent = done + ' of ' + total + ' checked';
-            });
-          });
-        } }; },
+        '<h1 class="pp">Invent your own device</h1>' +
+        '<div class="mb pp">' +
+          mbMachineHTML() +
+          '<p class="mb-read"></p>' +
+          '<div class="mb-bar">' +
+            '<button type="button" class="d2-gbtn mb-runbtn" disabled>Run it</button>' +
+            '<button type="button" class="d2-gbtn ghost mb-clear">Start again</button>' +
+          '</div>' +
+          '<div class="mb-pals">' + pal('in','Inputs') + pal('pr','Process') + pal('ou','Outputs') + '</div>' +
+        '</div>',
+        init: machineInit }; },
+    function(){
+      // each round is missing one part, and the two wrong options come from
+      // the other two jobs, so guessing by "which word sounds techy" does
+      // not work: pupils have to know which job is missing
+      var ROUNDS = [
+        { have:{pr:'check', ou:'lamp'}, missing:'in', answer:'light',
+          options:[['in','light'],['ou','printer'],['pr','count']] },
+        { have:{in:'button', ou:'speaker'}, missing:'pr', answer:'wait',
+          options:[['ou','motor'],['pr','wait'],['in','cam']] },
+        { have:{in:'motion', pr:'count'}, missing:'ou', answer:'alarm',
+          options:[['in','mic'],['ou','alarm'],['pr','remember']] },
+        { have:{pr:'compare', ou:'screen'}, missing:'in', answer:'key',
+          options:[['pr','remember'],['in','key'],['ou','lamp']] },
+        { have:{in:'touch', pr:'remember'}, missing:'ou', answer:'printer',
+          options:[['ou','printer'],['in','mouse'],['pr','wait']] }
+      ];
+      return { steps:0, html:
+        '<h1 class="pp">The broken machine</h1>' +
+        '<p class="lead pp" style="font-size:clamp(1rem,2vw,1.3rem)">Every machine below is missing one part. Which one, and which piece fixes it?</p>' +
+        '<div class="mb pp">' +
+          mbMachineHTML() +
+          '<p class="mb-read"></p>' +
+          '<div class="mb-chips mb-tray" style="min-height:2.6em"></div>' +
+          '<div class="mb-bar">' +
+            '<span class="mb-prog" style="color:var(--soft);font-weight:700"></span>' +
+            '<span class="mb-verdict" style="font-weight:800"></span>' +
+            '<button type="button" class="d2-gbtn mb-next" disabled>Next machine</button>' +
+          '</div>' +
+        '</div>',
+        init: function(el){ brokenInit(el, ROUNDS); } }; },
     function(){
       // click-to-select in the story itself, not a tap-to-reveal answer:
       // TV/streaming service/games console/laptop/smart speaker/satnav are
