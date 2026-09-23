@@ -1495,6 +1495,29 @@
   .d2-tally{display:flex;gap:clamp(14px,4vw,40px);color:var(--soft);font-weight:700}
   .d2-tally span{width:clamp(84px,13vw,120px);text-align:center}
 
+  /* "how OK is it?" scale (year 1/2) */
+  .d2-scale{width:min(960px,96%);display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vw,18px)}
+  .d2-scard{
+    width:100%;min-height:clamp(92px,14vw,148px);display:grid;place-items:center;text-align:center;
+    padding:clamp(14px,3vw,26px);border-radius:20px;background:var(--paper);border:2px solid var(--paper-edge);
+    box-shadow:var(--shadow-md);font-weight:800;line-height:1.24;font-size:clamp(1.1rem,3vw,1.95rem)}
+  .d2-scard .silly{display:block;margin-top:10px;font-size:.6em;font-weight:700;color:var(--soft)}
+  /* the scale reuses the .gauge component from Year 5/6 Lesson 1; these are
+     the two variants it needs: a green-to-red track, and five labels
+     instead of three */
+  .gauge-track.ok{background:linear-gradient(90deg,#0E9C6A,#5A9E2F 25%,#C9901C 50%,#DE6B35 75%,#D8443C);
+    box-shadow:inset 0 0 0 1px var(--hair)}
+  .gauge-labels.five{grid-template-columns:repeat(5,1fr);font-size:clamp(.82rem,1.35vw,1.1rem);font-weight:600}
+  .gauge-labels.five span{text-align:center}
+  .gauge-band{
+    position:absolute;top:50%;height:34px;border-radius:11px;border:3.5px solid var(--ink);
+    transform:translateY(-50%);opacity:0;pointer-events:none;transition:opacity .28s var(--ease)}
+  .gauge-band.on{opacity:1}
+  .d2-sfoot{display:flex;align-items:center;gap:clamp(10px,2.4vw,22px);flex-wrap:wrap;justify-content:center;min-height:2.2em}
+  .d2-sprog{color:var(--soft);font-weight:700}
+  .d2-sverdict{font-weight:800;font-size:clamp(1rem,2.2vw,1.35rem)}
+  .d2-sask{font-weight:700;color:var(--proc);font-size:clamp(.95rem,2vw,1.25rem);text-align:center;min-height:1.4em}
+
   /* pupil task (year 3/4) */
   #view-task2{max-width:820px;margin:0 auto;padding:clamp(22px,5vw,44px) clamp(16px,5vw,28px) 70px}
   #view-task2 .tk{color:var(--proc);font-weight:700;margin:0 0 4px;font-size:.95rem}
@@ -1600,6 +1623,73 @@
   <div id="d2-task-body"></div>
 </section>
 
+
+<script>
+/* ============ SHARED GAUGE ============
+   A tap-anywhere line that collects the class's answers as scattered pips.
+   Used by the Year 5/6 Lesson 1 confidence gauge and the Year 1/2 "how OK
+   is it?" scale. Those live in two different decks with their own closures,
+   so this hangs off window rather than sitting inside either one.
+
+   It deliberately does not average the taps. On a question where the class
+   genuinely splits, the mean lands in the middle, which is the one answer
+   nobody gave. Where a summary is wanted, callers ask for the mode via
+   band(), which does not lie about a split. */
+window.HB_GAUGE = (function(){
+  function mount(root, opts){
+    opts = opts || {};
+    var hit = root.querySelector('.gauge-hit'),
+        thumb = root.querySelector('.gauge-thumb'),
+        pips = root.querySelector('.gauge-pips');
+    var colour = opts.colour || 'var(--out)';
+    var pipClass = opts.pipClass || '';
+    var taps = [];
+
+    hit.addEventListener('pointerdown', function(e){
+      var r = hit.getBoundingClientRect();
+      var x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      thumb.style.left = (x * 100) + '%';
+      thumb.style.background = colour;
+      thumb.classList.add('on');
+      var pip = document.createElement('span');
+      pip.className = 'gauge-pip' + (pipClass ? ' ' + pipClass : '');
+      if(opts.pipColour) pip.style.background = opts.pipColour(x);
+      // jitter so repeated taps on the same spot stay countable by eye
+      pip.style.left = (x * 100 + (Math.random() - 0.5) * 1.6) + '%';
+      pip.style.bottom = (Math.random() * 64) + 'px';
+      pips.appendChild(pip);
+      taps.push(x);
+      if(opts.onTap) opts.onTap(x, taps);
+    });
+
+    return {
+      clear: function(){ pips.innerHTML = ''; thumb.classList.remove('on'); taps = []; },
+      taps: function(){ return taps.slice(); },
+      count: function(){ return taps.length; },
+      setColour: function(c){ colour = c; thumb.style.background = c; thumb.classList.remove('on'); },
+      setPipClass: function(c){ pipClass = c; },
+      // the band a position falls in, 1-based, for a line split into n bands
+      bandOf: function(x, n){ return Math.min(n, Math.floor(x * n) + 1); },
+      // every band sharing the most taps, low to high, or [] if nobody has
+      // tapped. More than one means the class is genuinely split, and the
+      // caller should say so rather than pick a winner: naming one side of
+      // an even split is the same lie as averaging it.
+      topBands: function(n){
+        if(!taps.length) return [];
+        var c = {}, bestN = 0;
+        taps.forEach(function(x){
+          var b = Math.min(n, Math.floor(x * n) + 1);
+          c[b] = (c[b] || 0) + 1;
+          if(c[b] > bestN) bestN = c[b];
+        });
+        return Object.keys(c).filter(function(b){ return c[b] === bestN; })
+          .map(Number).sort(function(a, b){ return a - b; });
+      }
+    };
+  }
+  return { mount: mount };
+})();
+</script>
 
 <script>
 (function(){
@@ -2273,30 +2363,24 @@
   }
 
   /* gauge */
+  // the tap-and-collect behaviour now lives in window.HB_GAUGE, shared with
+  // the Year 1/2 "how OK is it?" scale. This just wires up the three
+  // criterion buttons that recolour the pips.
   function buildGauge(){
-    var hit = document.getElementById('gaugeHit'), thumb = document.getElementById('thumb'), pips = document.getElementById('pips');
     var pick = document.getElementById('critPick');
     var critCols = ['var(--in)','var(--proc)','var(--out)'];
-    var critSel = 0;
+    // scoped via the button's own id: the Year 1/2 scale also renders a
+    // .gauge, and both decks can be in the document at once
+    var g = HB_GAUGE.mount(document.getElementById('gaugeHit').closest('.gauge'), { colour: critCols[0], pipClass: 'c0' });
     pick.querySelectorAll('button').forEach(function(b){
       b.addEventListener('click', function(){
-        critSel = parseInt(b.getAttribute('data-c'), 10);
+        var sel = parseInt(b.getAttribute('data-c'), 10);
         pick.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x === b); });
-        thumb.style.background = critCols[critSel];
-        thumb.classList.remove('on');
+        g.setColour(critCols[sel]);
+        g.setPipClass('c' + sel);
       });
     });
-    hit.addEventListener('pointerdown', function(e){
-      var r = hit.getBoundingClientRect();
-      var x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-      thumb.style.left = (x * 100) + '%'; thumb.classList.add('on');
-      thumb.style.background = critCols[critSel];
-      var pip = document.createElement('span'); pip.className = 'gauge-pip c' + critSel;
-      pip.style.left = (x * 100 + (Math.random() - 0.5) * 1.6) + '%';
-      pip.style.bottom = (Math.random() * 64) + 'px';
-      pips.appendChild(pip);
-    });
-    document.getElementById('gaugeClear').addEventListener('click', function(){ pips.innerHTML = ''; thumb.classList.remove('on'); });
+    document.getElementById('gaugeClear').addEventListener('click', g.clear);
   }
 
   function celebrate(el){
@@ -2910,6 +2994,93 @@
       if(!homeBin) return null;
       return chip.getAttribute('data-cat') === homeBin.getAttribute('data-key');
     });
+  }
+
+  // shared: "how OK is it?" scale. One situation card at a time, five zones
+  // running green to red, pupils tap where it belongs. Cards with a min/max
+  // are checked against that band. Cards marked vote have no right answer on
+  // purpose: the class taps, the counts show the spread, and the disagreement
+  // is the discussion. That split is the point - some rules are a school or
+  // family choice, not a fact.
+  function scaleInit(el, cards){
+    var BANDS = 5;
+    var NAMES = ['Always fine','Usually fine','It depends','Not OK','Never OK'];
+    var cardEl = el.querySelector('.d2-scard'),
+        band = el.querySelector('.gauge-band'),
+        verdict = el.querySelector('.d2-sverdict'),
+        ask = el.querySelector('.d2-sask'),
+        prog = el.querySelector('.d2-sprog'),
+        show = el.querySelector('.d2-sshow'),
+        next = el.querySelector('.d2-snext');
+    var i = 0, shown = false;
+
+    // the whole class taps before anything is revealed, so the pips are the
+    // class's honest guess rather than a race to copy the first right answer
+    var g = HB_GAUGE.mount(el.querySelector('.gauge'), {
+      colour: 'var(--ink)',
+      onTap: function(x, taps){
+        if(shown) return;
+        verdict.textContent = taps.length + (taps.length === 1 ? ' tap' : ' taps');
+        verdict.style.color = 'var(--soft)';
+      }
+    });
+
+    function paint(){
+      var c = cards[i];
+      cardEl.innerHTML = c.t + (c.silly ? '<span class="silly">a silly one</span>' : '');
+      g.clear();
+      band.classList.remove('on');
+      verdict.textContent = '';
+      ask.textContent = c.vote
+        ? 'This one has no right answer. Tap where you think it goes.'
+        : 'Everyone tap, then we will see.';
+      ask.style.color = 'var(--soft)';
+      prog.textContent = 'Card ' + (i + 1) + ' of ' + cards.length;
+      show.disabled = false;
+      show.textContent = c.vote ? 'Where did we land?' : 'Show the answer';
+      next.textContent = (i === cards.length - 1) ? 'Finish' : 'Next card';
+      next.disabled = false;
+      shown = false;
+    }
+
+    function reveal(){
+      var c = cards[i];
+      if(shown || !g.count()) return;
+      shown = true;
+      show.disabled = true;
+      var top = g.topBands(BANDS);
+      var split = top.length > 1;
+      var where = split
+        ? 'We are split: ' + top.map(function(b){ return NAMES[b - 1].toLowerCase(); }).join(' and ')
+        : 'Most of us said ' + NAMES[top[0] - 1].toLowerCase();
+      if(c.vote){
+        verdict.textContent = where;
+        verdict.style.color = 'var(--soft)';
+        ask.textContent = 'No right answer here. Who thinks something different, and why?';
+        ask.style.color = 'var(--proc)';
+        return;
+      }
+      band.style.left = ((c.min - 1) / BANDS * 100) + '%';
+      band.style.width = ((c.max - c.min + 1) / BANDS * 100) + '%';
+      band.classList.add('on');
+      var hit = !split && top[0] >= c.min && top[0] <= c.max;
+      verdict.textContent = hit ? 'Most of us got it' : where;
+      verdict.style.color = hit ? 'var(--out)' : 'var(--red)';
+      if(hit) burst();
+      if(c.ask){ ask.textContent = c.ask; ask.style.color = 'var(--proc)'; }
+      else { ask.textContent = ''; }
+    }
+
+    show.addEventListener('click', reveal);
+    next.addEventListener('click', function(){
+      if(i === cards.length - 1){
+        next.disabled = true; show.disabled = true;
+        verdict.textContent = 'All done'; verdict.style.color = 'var(--out)';
+        return;
+      }
+      i++; paint();
+    });
+    paint();
   }
 
   // shared: fake power-on / log-in demo. No real auth - press the power
@@ -4598,9 +4769,9 @@
   var Y12_NOTES6 = [
     ["Introduction · 3 min","Using a computer responsibly","Think, pair, share: what rules are already in place at school? Note them down for Activity 1."],
     ["Introduction · 2 min","Today you will…","Read the three together."],
-    ["Activity 1 · 10 min","Why do we have rules? Sort them.","A checked sort, not reveal cards: pupils sort 8 real rules into the four reasons (safe, happy, learn, kind), checked as a group. A few genuinely fit more than one bin - that's worth talking about, not a bug."],
+    ["Activity 1 · 10 min","How OK is it?","Nine cards, one at a time, on the same line Year 5/6 use for their confidence gauge. Send several pupils up to tap where they think it goes; every tap leaves a dot, so the class sees the spread before anyone knows the answer. Then press Show the answer. The crisps card and the finished-your-work card have no right answer on purpose, so the disagreement is the discussion. When a card lands in the red, ask what they should do instead: that answer is the rule, and it goes on the charter later."],
     ["Activity 2 · 5 min","Rules for using computers safely","Think about rules that would help you use computers safely in school. Talk with a partner, then share."],
-    ["Activity 2 · 5 min","Jessie and Friends","Watch CEOP's short animation about what to do if something online upsets you. It's aimed at this exact age group and covers the same ground as 'tell a trusted adult'."],
+    ["Activity 2 · 5 min","Jessie and Friends","Play Episode 1, Watching Videos, and stop there. CEOP puts all three episodes on one page with no separate link per episode, so scroll to the first one. Episodes 2 and 3 cover sharing pictures and online gaming, which are not this lesson."],
     ["Activity 2 · 15 min","Make a poster","In groups, take one rule each and make a poster for it, for using technology safely at home and at school."],
     ["Plenary · 2 min","What is technology?","Technology is something made to help us."],
     ["Plenary · 2 min","The parts of a computer","Screen, base unit, keyboard, mouse or trackpad. You used them to draw pictures and write words."],
@@ -4624,33 +4795,57 @@
       '<p class="lead pp">What rules are already in place at your school?</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Tell your partner one rule, and why you think it exists.</p>' }; },
     function(){
-      var RULES = [
-        ["Hold your device carefully", "safe"], ["Don&rsquo;t share your passwords", "safe"],
-        ["Take turns", "happy"], ["Say thank you when someone helps you", "happy"],
-        ["Use only the apps you&rsquo;ve been asked to", "learn"], ["Put your hand up if you get stuck", "learn"],
-        ["Stop using it when someone is talking to you", "kind"], ["Let a friend have a turn if they&rsquo;re waiting", "kind"]
+      // Cards run easy-green, silly-red, green, red, silly-green, vote,
+      // silly-red, vote, then the safeguarding one last so it is the thing
+      // they walk away with. The three silly cards are not filler: a daft
+      // idea that does no harm (thanking the computer) is what makes pupils
+      // say why something is or is not OK, rather than guessing from how odd
+      // it sounds.
+      var CARDS = [
+        {t:'Carrying the iPad with two hands', min:1, max:2},
+        {t:'Giving the laptop a bath', min:5, max:5, silly:true, ask:'What should they do instead?'},
+        {t:'Waiting for your turn on the computer', min:1, max:2},
+        {t:'Opening an app you were not asked to open', min:4, max:5, ask:'What should they do instead?'},
+        {t:'Saying thank you to the computer', min:1, max:2, silly:true},
+        {t:'Eating crisps next to the iPad', vote:true},
+        {t:'Wearing the keyboard as a hat', min:4, max:5, silly:true, ask:'What should they do instead?'},
+        {t:'Playing a game when you have finished your work', vote:true},
+        {t:'Telling your teacher when something on the screen scares you', min:1, max:1}
       ];
       return { steps:0, html:
-        '<h1 class="pp">Why do we have rules? Sort them.</h1>' +
-        '<p class="lead pp">Match each rule to the reason it&rsquo;s there for. Some could fit more than one, talk about it!</p>' +
-        '<div class="d2-pool pp" id="d2sortpool">' + RULES.map(function(r){ return '<button class="d2-chip" data-cat="'+r[1]+'">'+r[0]+'</button>'; }).join('') + '</div>' +
-        '<div class="d2-bins three pp">' +
-          '<div class="d2-bin d" data-key="safe"><h4>To stay safe</h4><div class="items"></div></div>' +
-          '<div class="d2-bin s3" data-key="happy"><h4>To be happy</h4><div class="items"></div></div>' +
-          '<div class="d2-bin n" data-key="learn"><h4>So we can learn</h4><div class="items"></div></div>' +
-          '<div class="d2-bin d" data-key="kind"><h4>To be kind</h4><div class="items"></div></div>' +
-        '</div>' +
-        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
-        init: sortInitN }; },
+        '<h1 class="pp">How OK is it?</h1>' +
+        '<div class="d2-scale pp">' +
+          '<div class="d2-scard"></div>' +
+          '<div class="gauge">' +
+            '<div class="gauge-pips"></div>' +
+            '<button class="gauge-hit" type="button" aria-label="Tap where you think it goes">' +
+              '<span class="gauge-track ok"></span>' +
+              '<span class="gauge-band"></span>' +
+              '<span class="gauge-thumb"></span>' +
+            '</button>' +
+            '<div class="gauge-labels five">' +
+              '<span>Always fine</span><span>Usually fine</span><span>It depends</span>' +
+              '<span>Not OK</span><span>Never OK</span>' +
+            '</div>' +
+          '</div>' +
+          '<p class="d2-sask"></p>' +
+          '<div class="d2-sfoot">' +
+            '<span class="d2-sprog"></span>' +
+            '<span class="d2-sverdict"></span>' +
+            '<button type="button" class="d2-gbtn d2-sshow">Show the answer</button>' +
+            '<button type="button" class="d2-gbtn ghost d2-snext">Next card</button>' +
+          '</div>' +
+        '</div>',
+        init: function(el){ scaleInit(el, CARDS); } }; },
     function(){ return { steps:1, html:
       '<h1 class="pp">Rules for using computers safely</h1>' +
       '<p class="lead pp">What rules would help you use a computer safely in school?</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Talk with your partner, then share with the class.</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Jessie and Friends</h1>' +
-      '<p class="lead pp">A short video about what to do if something online upsets you.</p>' +
+      '<p class="lead pp">A short video about what to do if something on screen upsets you.</p>' +
       '<div class="d2-photobar pp">' +
-        '<a class="d2-photobtn" href="https://www.ceopeducation.co.uk/parents/jessie-and-friends-videos/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('shield-check',20)+' Watch Jessie and Friends</a>' +
+        '<a class="d2-photobtn" href="https://www.ceopeducation.co.uk/parents/jessie-and-friends-videos/" target="_blank" rel="noopener" style="text-decoration:none">'+ph('shield-check',20)+' Episode 1: Watching Videos</a>' +
       '</div>' +
       '<p class="lead" style="font-size:.95rem;color:var(--muted)">Made by CEOP, the UK&rsquo;s child safety organisation.</p>' }; },
     function(){ return { steps:0, html:
@@ -4672,9 +4867,9 @@
   ];
   var Y12_QUIZ6 = [
     {q:"One reason we have rules is to…", o:["get in trouble","stay safe","make computers slower"], a:1},
-    {q:"'Don't share your password' is a rule mostly about…", o:["staying safe","being fast","learning to type"], a:0},
-    {q:"If something online worries you, you should…", o:["keep it a secret","tell a trusted adult","ignore it and carry on"], a:1},
-    {q:"Taking turns on a shared computer is an example of a rule that helps us…", o:["be kind to each other","delete files","go faster"], a:0}
+    {q:"Carrying a tablet with two hands is a rule about…", o:["looking after it","making it faster","learning to type"], a:0},
+    {q:"If something on a screen worries you, you should…", o:["keep it a secret","tell a trusted adult","ignore it and carry on"], a:1},
+    {q:"Some rules are different at home and at school. That means…", o:["families can choose some of their own rules","one of them must be wrong","rules do not matter"], a:0}
   ];
   var Y12_SHEETS6 = {
     poster: function(){
