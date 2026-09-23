@@ -1635,6 +1635,33 @@
   .mb-chip.right{border-color:var(--out);background:color-mix(in srgb,var(--out) 16%,var(--paper))}
   .mb-chip.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 14%,var(--paper))}
 
+  .mb-slot .k2{display:block;font-weight:600;letter-spacing:0;text-transform:none;font-size:.85em;opacity:.8}
+  .mb-slot .lbl .one{display:flex;align-items:center;gap:5px;justify-content:center}
+  .mb-slot .lbl .one + .one{margin-top:4px}
+  .mb-name{
+    width:min(460px,100%);border:1.5px solid var(--hair);border-radius:999px;padding:9px 18px;text-align:center;
+    font-family:var(--font);font-weight:700;font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--ink);background:var(--paper)}
+  .mb-name:focus{outline:none;border-color:var(--proc)}
+
+  /* scenario project (year 3/4) */
+  .sc{width:min(1020px,97%);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vw,16px)}
+  .sc-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:clamp(8px,1.6vw,14px);width:100%}
+  .sc-card{
+    text-align:left;border:2px solid var(--paper-edge);background:var(--paper);border-radius:16px;
+    padding:clamp(11px,2vw,16px);cursor:pointer;font-family:var(--font);color:var(--ink);
+    display:flex;flex-direction:column;gap:7px;transition:transform .15s var(--ease),border-color .15s}
+  .sc-card:hover{transform:translateY(-3px);border-color:var(--proc)}
+  .sc-card h3{margin:0;display:flex;align-items:center;gap:8px;font-size:clamp(.95rem,1.8vw,1.2rem);color:var(--proc)}
+  .sc-card p{margin:0;font-size:clamp(.76rem,1.35vw,.92rem);line-height:1.4;color:var(--muted)}
+  .sc-card .bad{color:var(--red);font-weight:600}
+  .sc-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;justify-content:center;width:100%}
+  .sc-title{margin:0;font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--proc)}
+  .sc-brief{display:flex;gap:clamp(8px,1.6vw,14px);width:100%;flex-wrap:wrap}
+  .sc-brief > div{flex:1;min-width:210px;background:var(--ground-2);border-radius:12px;padding:10px 13px;
+    font-size:clamp(.74rem,1.3vw,.9rem);line-height:1.4}
+  .sc-brief h4{margin:0 0 4px;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--soft)}
+  .sc-asks{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+
   /* "how OK is it?" scale (year 1/2) */
   .d2-scale{width:min(960px,96%);display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vw,18px)}
   .d2-scard{
@@ -3179,23 +3206,30 @@ window.HB_GAUGE = (function(){
     MB_PARTS[kind].forEach(function(p){ if(p[0] === id) row = p; });
     return row;
   }
-  function mbMachineHTML(){
+  function mbMachineHTML(opts){
+    opts = opts || {};
+    var multi = !!opts.multi;
     var slot = function(k, label){
-      return '<div class="mb-slot" data-k="' + k + '"><span class="k">' + label + '</span><span class="lbl">empty</span></div>';
+      var hint = (multi && k !== 'pr') ? '<span class="k2">pick up to 3</span>' : '';
+      return '<div class="mb-slot" data-k="' + k + '"><span class="k">' + label + hint + '</span><span class="lbl">empty</span></div>';
     };
-    return '<div class="mb-machine">' +
-      slot('in','Input') + '<span class="mb-arr">&rarr;</span>' +
+    return (opts.name ? '<input class="mb-name" type="text" maxlength="40" placeholder="Name your machine">' : '') +
+      '<div class="mb-machine">' +
+      slot('in', multi ? 'Inputs' : 'Input') + '<span class="mb-arr">&rarr;</span>' +
       slot('pr','Process') + '<span class="mb-arr">&rarr;</span>' +
-      slot('ou','Output') +
+      slot('ou', multi ? 'Outputs' : 'Output') +
       '<span class="mb-token"></span>' +
     '</div>';
   }
-  function mbFill(el, kind, id){
+  // ids may be a single id, null, or an array, so the same slot renderer
+  // serves the one-part Lesson 2 machine and the several-part project one
+  function mbFill(el, kind, ids){
     var slot = el.querySelector('.mb-slot[data-k="' + kind + '"]');
-    var row = id ? mbFind(kind, id) : null;
-    slot.classList.toggle('full', !!row);
-    slot.querySelector('.lbl').innerHTML = row
-      ? ph(row[2], 30) + '<br>' + row[1]
+    var list = (ids == null) ? [] : (Array.isArray(ids) ? ids : [ids]);
+    var rows = list.map(function(id){ return mbFind(kind, id); }).filter(Boolean);
+    slot.classList.toggle('full', rows.length > 0);
+    slot.querySelector('.lbl').innerHTML = rows.length
+      ? rows.map(function(r){ return '<span class="one">' + ph(r[2], 26) + r[1] + '</span>'; }).join('')
       : 'empty';
   }
 
@@ -3203,32 +3237,45 @@ window.HB_GAUGE = (function(){
   // then run it and watch the token travel through. The sentence under the
   // machine is the assessment: pupils can see whether what they built says
   // something sensible, which the paper design task never showed them.
-  function machineInit(el){
-    var chosen = { in:null, pr:null, ou:null };
+  function machineInit(el, opts){
+    opts = opts || {};
+    // one part per slot by default. The project machine allows up to three
+    // inputs and three outputs, which is the "push for multiple inputs or
+    // outputs" extension the old paper task only suggested.
+    var cap = { in: opts.multi ? 3 : 1, pr: 1, ou: opts.multi ? 3 : 1 };
+    var chosen = { in:[], pr:[], ou:[] };
     var read = el.querySelector('.mb-read');
     var token = el.querySelector('.mb-token');
     var machine = el.querySelector('.mb-machine');
     var runBtn = el.querySelector('.mb-runbtn');
     var running = false;
 
+    function phrases(k){
+      return chosen[k].map(function(id){ return mbFind(k, id)[3]; }).join(' and ');
+    }
     function sentence(){
-      var i = chosen.in && mbFind('in', chosen.in);
-      var p = chosen.pr && mbFind('pr', chosen.pr);
-      var o = chosen.ou && mbFind('ou', chosen.ou);
       var gap = function(t){ return '<span class="gap">' + t + '</span>'; };
-      read.innerHTML = 'When ' + (i ? i[3] : gap('[pick an input]')) +
-        ', the machine ' + (p ? p[3] : gap('[pick a process]')) +
-        ', then it ' + (o ? o[3] : gap('[pick an output]')) + '.';
-      runBtn.disabled = !(i && p && o);
+      var full = chosen.in.length && chosen.pr.length && chosen.ou.length;
+      read.innerHTML = 'When ' + (chosen.in.length ? phrases('in') : gap('[pick an input]')) +
+        ', the machine ' + (chosen.pr.length ? phrases('pr') : gap('[pick a process]')) +
+        ', then it ' + (chosen.ou.length ? phrases('ou') : gap('[pick an output]')) + '.';
+      runBtn.disabled = !full;
     }
 
     el.querySelectorAll('.mb-chip').forEach(function(chip){
       chip.addEventListener('click', function(){
         if(running) return;
         var k = chip.getAttribute('data-k'), id = chip.getAttribute('data-id');
-        chosen[k] = (chosen[k] === id) ? null : id;
+        var at = chosen[k].indexOf(id);
+        if(at > -1){ chosen[k].splice(at, 1); }
+        else {
+          chosen[k].push(id);
+          // oldest one drops out once the slot is full, so tapping always
+          // does something rather than silently refusing
+          if(chosen[k].length > cap[k]) chosen[k].shift();
+        }
         el.querySelectorAll('.mb-chip[data-k="' + k + '"]').forEach(function(c){
-          c.classList.toggle('sel', c.getAttribute('data-id') === chosen[k]);
+          c.classList.toggle('sel', chosen[k].indexOf(c.getAttribute('data-id')) > -1);
         });
         mbFill(el, k, chosen[k]);
         sentence();
@@ -3267,12 +3314,108 @@ window.HB_GAUGE = (function(){
 
     el.querySelector('.mb-clear').addEventListener('click', function(){
       if(running) return;
-      ['in','pr','ou'].forEach(function(k){ chosen[k] = null; mbFill(el, k, null); });
+      ['in','pr','ou'].forEach(function(k){ chosen[k] = []; mbFill(el, k, []); });
       el.querySelectorAll('.mb-chip').forEach(function(c){ c.classList.remove('sel'); });
       sentence();
     });
 
     sentence();
+    return { reset: function(){ el.querySelector('.mb-clear').click(); } };
+  }
+
+  // shared: the scenario project. Four real jobs around a school that are
+  // done offline today, each with something that goes wrong. A pair picks
+  // one and builds the invention on the same machine builder from Lesson 2,
+  // so the tool is already familiar and the problem is the new part.
+  //
+  // Deliberately self-contained: it is one slide, so it works wherever the
+  // Lesson 3 to 6 progression ends up putting it.
+  var MB_SCENARIOS = [
+    { id:'bands', t:'Dinner bands', icon:'package',
+      now:'Coloured bands are handed out at registration, then counted by hand for the kitchen.',
+      wrong:'Bands get lost or swapped, so the count is wrong and the kitchen makes too much or too little.',
+      ask:['How does a child say what they want?','How does the kitchen find out the totals?','Who else needs to know?'] },
+    { id:'lights', t:'Lights left on', icon:'lightbulb',
+      now:'Eco monitors walk round at playtime and lunch to switch the lights off.',
+      wrong:'Rooms stay lit and warm when nobody is in them. Monitors forget, or the room is locked.',
+      ask:['How does your machine know a room is empty?','What does it do about it?','Who sees how much has been saved?'] },
+    { id:'library', t:'The library', icon:'book-open',
+      now:'Paper cards and a written list of who has which book.',
+      wrong:'Books go missing and nobody knows what is overdue.',
+      ask:['How does it know which book, and which child?','Who gets reminded, and how?','What happens when a book comes back?'] },
+    { id:'garden', t:'The school garden', icon:'flower',
+      now:'A watering rota on the classroom wall.',
+      wrong:'Plants dry out at weekends and in the holidays, when nobody is in school.',
+      ask:['How does your machine know the soil is dry?','What waters the plants?','Who gets told, and when?'] }
+  ];
+  // one line drops this into any lesson's slide array, which is the point:
+  // where it belongs depends on a Lesson 3 to 6 order that is still moving
+  function scenarioSlide(){
+    var pal = function(k, title){
+      return '<div class="mb-pal" data-k="' + k + '"><h4>' + title + '</h4><div class="mb-chips">' +
+        MB_PARTS[k].map(function(p){
+          return '<button type="button" class="mb-chip" data-k="' + k + '" data-id="' + p[0] + '">' + ph(p[2], 18) + p[1] + '</button>';
+        }).join('') + '</div></div>';
+    };
+    return { steps:0, html:
+      '<h1 class="pp">Invent something our school needs</h1>' +
+      '<div class="sc pp">' +
+        '<div class="sc-pick">' + MB_SCENARIOS.map(function(s){
+          return '<button type="button" class="sc-card" data-id="' + s.id + '">' +
+            '<h3>' + ph(s.icon, 22) + s.t + '</h3>' +
+            '<p>' + s.now + '</p>' +
+            '<p class="bad">' + s.wrong + '</p>' +
+          '</button>';
+        }).join('') + '</div>' +
+        '<div class="sc-work" hidden>' +
+          '<div class="sc-head">' +
+            '<h2 class="sc-title"></h2>' +
+            '<button type="button" class="d2-gbtn ghost sc-back">Pick a different one</button>' +
+          '</div>' +
+          '<div class="sc-brief">' +
+            '<div><h4>How it works now</h4><span class="sc-now"></span></div>' +
+            '<div><h4>What goes wrong</h4><span class="sc-wrong"></span></div>' +
+            '<div><h4>Decide these</h4><ul class="sc-asks"></ul></div>' +
+          '</div>' +
+          mbMachineHTML({ multi:true, name:true }) +
+          '<p class="mb-read"></p>' +
+          '<div class="mb-bar">' +
+            '<button type="button" class="d2-gbtn mb-runbtn" disabled>Run it</button>' +
+            '<button type="button" class="d2-gbtn ghost mb-clear">Start again</button>' +
+          '</div>' +
+          '<div class="mb-pals">' + pal('in','Inputs') + pal('pr','Process') + pal('ou','Outputs') + '</div>' +
+        '</div>' +
+      '</div>',
+      init: scenarioInit };
+  }
+
+  function scenarioInit(el){
+    var pick = el.querySelector('.sc-pick');
+    var work = el.querySelector('.sc-work');
+    var title = el.querySelector('.sc-title');
+    var now = el.querySelector('.sc-now');
+    var wrong = el.querySelector('.sc-wrong');
+    var asks = el.querySelector('.sc-asks');
+    var name = el.querySelector('.mb-name');
+    var machine = machineInit(el, { multi:true });
+
+    el.querySelectorAll('.sc-card').forEach(function(card){
+      card.addEventListener('click', function(){
+        var s = null;
+        MB_SCENARIOS.forEach(function(x){ if(x.id === card.getAttribute('data-id')) s = x; });
+        if(!s) return;
+        title.textContent = s.t;
+        now.textContent = s.now;
+        wrong.textContent = s.wrong;
+        asks.innerHTML = s.ask.map(function(q){ return '<li>' + q + '</li>'; }).join('');
+        if(name){ name.value = ''; name.placeholder = 'Name your ' + s.t.toLowerCase() + ' machine'; }
+        machine.reset();
+        pick.hidden = true; work.hidden = false;
+      });
+    });
+    el.querySelector('.sc-back').addEventListener('click', function(){
+      work.hidden = true; pick.hidden = false;
+    });
   }
 
   // shared: broken machine mode. One part is missing and three parts are
@@ -4394,6 +4537,7 @@ window.HB_GAUGE = (function(){
     ["Activity 2 · 15 min","Paint it two ways","Pupils create the same picture twice: once with paint on paper, once in a digital paint program using brush, fill, and undo."],
     ["Activity 2 · 4 min","Sort the good points","A checked sort, not reveal cards: pupils sort 8 real advantages into Digital / Paper and paint. Discuss any they disagree on - some are genuinely arguable."],
     ["Activity 3 · 6 min","Think back","Pupils reflect on both pieces of work. Which did they prefer, and why?"],
+    ["Activity 4 · 12 min","Invent something our school needs","This lesson now runs long. Cut 'Paint it two ways' to one picture, or run this slide next lesson instead: it is self-contained and works anywhere in the unit. Each pair picks one of the four jobs, all of which are done on paper in this school today. Read what goes wrong, then build the invention on the same machine from Lesson 2, this time with up to three inputs and three outputs. Name the machine so pairs can find their own again. Take the 'decide these' questions one at a time; the answers matter more than the machine."],
     ["Plenary · 4 min","Sometimes non-digital wins","Discuss: is a digital tool always the better choice? Paper starts instantly and never runs out of battery."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how you are connected to people and devices."]
@@ -4447,6 +4591,7 @@ window.HB_GAUGE = (function(){
       '<h1 class="pp">Think back</h1>' +
       '<div class="d2-rc pp" data-step="1" style="max-width:34ch" id="d2think"><b>Which did you prefer, and why?</b><span class="ans">There is no wrong answer. Some people prefer paper because it feels direct; some prefer digital because mistakes are easy to fix.</span></div>',
       init:function(el){ var c=el.querySelector('#d2think'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    scenarioSlide,
     function(){ return { steps:1, html:
       '<h1 class="pp">Sometimes non-digital wins</h1>' +
       '<p class="lead pp">A digital tool is not always the better choice.</p>' +
