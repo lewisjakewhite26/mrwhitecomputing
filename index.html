@@ -3389,9 +3389,9 @@ window.HB_GAUGE = (function(){
   // second pair later is a data change, not a rebuild.
   var ART_PAIRS = [
     { id:'remake', tab:'Painted or made on a computer',
-      lt:'Hokusai painted this', rt:'Made on a computer',
+      lt:'Hokusai printed this', rt:'Made on a computer',
       left: ART_WAVE, right: ART_WAVE, rightClass:'art-flat',
-      cap:'The Great Wave off Kanagawa, Hokusai, about 1831. The right-hand side is the same picture with a computer’s flat fills, to show what a paint program does to it. Ask which one took longer, and which one you could change your mind about.' },
+      cap:'The Great Wave off Kanagawa, Hokusai, about 1831. It is a woodblock print: the design was cut into blocks of wood by hand, one for each colour, then pressed onto paper. The right-hand side is the same picture with a computer’s flat fills. Ask which one took longer, and which one you could change your mind about.' },
     { id:'restore', tab:'Damaged or digitally restored',
       lt:'As it survives today', rt:'Digitally restored',
       left:null, right:null,
@@ -3433,7 +3433,7 @@ window.HB_GAUGE = (function(){
   function artSlide(){
     var pairs = ART_PAIRS.filter(function(p){ return p.left && p.right; });
     return { steps:0, html:
-      '<h1 class="pp">Painted, or made on a computer?</h1>' +
+      '<h1 class="pp">Made by hand, or made on a computer?</h1>' +
       '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="artFlat">' +
         '<feGaussianBlur stdDeviation="1.4"/>' +
         '<feComponentTransfer>' +
@@ -4645,7 +4645,7 @@ window.HB_GAUGE = (function(){
     ["Introduction · 2 min","A digital version of this?","Ask what the digital version of writing on paper is, and the digital version of painting with a brush."],
     ["Activity 1 · 8 min","One device, many tasks","A digital camera, laptop, games console and smartphone can each do more than one job. Ask which of the listed tasks each device could do."],
     ["Activity 1 · 4 min","Devices rarely do one thing","A smartphone alone takes photos, sends messages, plays games and makes calls. Hand out the A1 sheet for pupils to tick which device can do which task."],
-    ["Activity 2 · 8 min","Painted, or made on a computer?","Drag the handle across Hokusai's Great Wave. The right-hand side is the same picture put through a computer's flat fills, so pupils can see what a paint program does to it: clean edges, solid blocks of colour, none of the paper showing through. Ask which took longer to make, which one you can change your mind about, and which one you would rather hang up. Keep the answers coming; the next slide sorts them."],
+    ["Activity 2 · 8 min","Printed by hand, or made on a computer?","Drag the handle across Hokusai's Great Wave. Say first that it is a woodblock print, not a painting: each colour was cut into a separate block of wood by hand and pressed onto paper, which is worth knowing because it is already a way of making the same picture many times, just a slow one. The right-hand side is that same picture put through a computer's flat fills: clean edges, solid blocks of colour, none of the paper showing through. Ask which took longer, which one you can change your mind about, and which one you would rather hang up. Keep the answers coming; the next slide sorts them."],
     ["Activity 2 · 4 min","Sort the good points","A checked sort, not reveal cards: pupils sort 8 real advantages into Digital / Paper and paint. Discuss any they disagree on - some are genuinely arguable."],
     ["Activity 3 · 6 min","Think back","Pupils reflect on both pieces of work. Which did they prefer, and why?"],
     ["Activity 4 · 12 min","Invent something our school needs","The old paint-it-twice activity is gone, which buys this the time it needs. If you still run short, this slide is self-contained and works anywhere in the unit. Each pair picks one of the four jobs, all of which are done on paper in this school today. Read what goes wrong, then build the invention on the same machine from Lesson 2, this time with up to three inputs and three outputs. Name the machine so pairs can find their own again. Take the 'decide these' questions one at a time; the answers matter more than the machine."],
