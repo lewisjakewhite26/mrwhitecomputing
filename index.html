@@ -1643,6 +1643,54 @@
     font-family:var(--font);font-weight:700;font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--ink);background:var(--paper)}
   .mb-name:focus{outline:none;border-color:var(--proc)}
 
+  /* scenario project slides (year 3/4, lessons 4 to 6) */
+  .pj{width:min(980px,97%);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vw,15px)}
+  .pj-head{display:flex;align-items:center;gap:12px}
+  .pj-name{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:var(--proc);
+    font-size:clamp(1rem,2.1vw,1.35rem)}
+  .pj-change{border:1px solid var(--hair);background:var(--paper);border-radius:999px;padding:5px 13px;
+    font-family:var(--font);font-size:.78rem;font-weight:700;color:var(--soft);cursor:pointer}
+  .pj-pick{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .pj-chip,.pj-target{
+    display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--hair);background:var(--paper);
+    border-radius:999px;padding:8px 15px;font-family:var(--font);font-weight:700;cursor:pointer;color:var(--ink);
+    font-size:clamp(.75rem,1.35vw,.95rem);transition:transform .14s var(--ease),border-color .14s,background .14s}
+  .pj-chip:hover,.pj-target:hover{transform:translateY(-2px)}
+  .pj-target.on{border-color:var(--in);background:color-mix(in srgb,var(--in) 12%,var(--paper))}
+  .pj-body{width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(7px,1.4vw,13px)}
+  .pj-lead{margin:0;text-align:center;color:var(--muted);font-size:clamp(.82rem,1.6vw,1.05rem)}
+  .pj-targets{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+  .pj-chosen{width:100%;display:flex;flex-direction:column;gap:6px}
+  .pj-row{display:flex;align-items:center;gap:9px;background:var(--ground-2);border-radius:11px;padding:7px 12px;
+    font-size:clamp(.76rem,1.35vw,.95rem);flex-wrap:wrap}
+  .pj-row .nm{flex:1;min-width:130px;font-weight:700}
+  .pj-how{border:1.5px solid var(--hair);background:var(--paper);border-radius:999px;padding:5px 12px;
+    font-family:var(--font);font-weight:700;font-size:.78rem;cursor:pointer;color:var(--muted)}
+  .pj-how:hover{border-color:var(--in);color:var(--in)}
+  .pj-mark{font-weight:800;font-size:.8rem;min-width:84px;color:var(--out)}
+  .pj-score{margin:0;font-weight:800;min-height:1.4em;font-size:clamp(.85rem,1.7vw,1.1rem)}
+  .pj-net{display:flex;align-items:center;gap:clamp(5px,1.2vw,12px);flex-wrap:wrap;justify-content:center;width:100%}
+  .pj-part{
+    flex:1;min-width:120px;border:2.5px solid var(--hair);background:var(--paper);border-radius:13px;
+    padding:clamp(11px,2vw,17px) 9px;text-align:center;cursor:pointer;font-size:clamp(.76rem,1.4vw,1rem);
+    transition:transform .14s var(--ease),border-color .14s,background .14s}
+  .pj-part:hover{transform:translateY(-2px);border-color:var(--proc)}
+  .pj-part[data-id="machine"]{cursor:default;border-style:dashed;color:var(--soft)}
+  .pj-part.right{border-color:var(--out);background:color-mix(in srgb,var(--out) 13%,var(--paper))}
+  .pj-part.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 11%,var(--paper))}
+  .pj-q{margin:0;font-weight:800;text-align:center;font-size:clamp(.95rem,2vw,1.3rem);min-height:2.4em}
+  .pj-open{margin:0;text-align:center;color:var(--proc);font-weight:700;font-size:clamp(.88rem,1.8vw,1.15rem)}
+  .pj-ticks{display:flex;flex-direction:column;gap:8px;width:min(460px,100%)}
+  .pj-tick{display:flex;align-items:center;gap:11px;border:2px solid var(--hair);background:var(--ground-2);
+    border-radius:13px;padding:11px 15px;font-family:var(--font);font-weight:700;cursor:pointer;color:var(--ink);
+    text-align:left;font-size:clamp(.82rem,1.5vw,1rem)}
+  .pj-tick .bx{flex:none;width:25px;height:25px;border-radius:7px;border:2px solid var(--hair);
+    display:grid;place-items:center;color:transparent}
+  .pj-tick.on{border-color:var(--out);background:color-mix(in srgb,var(--out) 11%,var(--paper))}
+  .pj-tick.on .bx{color:var(--out);border-color:var(--out)}
+  .pj-clock{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+  .pj-time{font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1.6rem,4vw,2.6rem)}
+
   /* before and after art slider (year 3/4) */
   .art{width:min(900px,96%);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vw,14px)}
   .art-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -3459,6 +3507,200 @@ window.HB_GAUGE = (function(){
       init: artInit };
   }
 
+  /* ---------- the scenario project, one slide per lesson ---------- */
+
+  // Lesson 4, "recognise different kinds of connection". Pupils choose what
+  // their invention has to reach, which is open and theirs, then say how
+  // each one connects, which is checked. Several targets are honestly
+  // either, so those accept both answers rather than inventing a rule.
+  var PJ_TARGETS = [
+    ['wifi','the school wifi','globe','wireless'],
+    ['switch','the network socket on the wall','cpu','wired'],
+    ['printer','a printer','printer','either'],
+    ['kitchen','a screen in the kitchen','monitor','either'],
+    ['tablet','a teacher’s tablet','device-mobile-camera','wireless'],
+    ['office','the office computer','laptop','either'],
+    ['phones','parents’ phones','device-mobile-camera','wireless'],
+    ['server','a server in the cupboard','cpu','wired']
+  ];
+  function pjConnectSlide(){
+    return { steps:0, html:
+      '<h1 class="pp">What does your invention connect to?</h1>' +
+      '<div class="pj pp">' + projHeadHTML() +
+        '<div class="pj-body">' +
+          '<p class="pj-lead">Tap everything your invention needs to reach. Then say how each one connects.</p>' +
+          '<div class="pj-targets">' + PJ_TARGETS.map(function(t){
+            return '<button type="button" class="pj-target" data-id="' + t[0] + '">' + ph(t[2], 18) + t[1] + '</button>';
+          }).join('') + '</div>' +
+          '<div class="pj-chosen"></div>' +
+          '<p class="pj-score"></p>' +
+        '</div>' +
+      '</div>',
+      init: function(el){
+        var chosen = {}, body = el.querySelector('.pj-body');
+        projHeadInit(el, function(s){ body.hidden = !s; });
+        var list = el.querySelector('.pj-chosen'), score = el.querySelector('.pj-score');
+        function tally(){
+          var n = 0, right = 0;
+          Object.keys(chosen).forEach(function(k){ if(chosen[k]){ n++; if(chosen[k] === 'ok') right++; } });
+          score.textContent = n ? right + ' of ' + n + ' named correctly' : '';
+          score.style.color = (n && right === n) ? 'var(--out)' : 'var(--muted)';
+        }
+        function render(){
+          list.innerHTML = PJ_TARGETS.filter(function(t){ return chosen[t[0]] !== undefined; }).map(function(t){
+            var st = chosen[t[0]];
+            return '<div class="pj-row" data-id="' + t[0] + '">' + ph(t[2], 18) +
+              '<span class="nm">' + t[1] + '</span>' +
+              '<button type="button" class="pj-how" data-how="wired">with a wire</button>' +
+              '<button type="button" class="pj-how" data-how="wireless">without a wire</button>' +
+              '<span class="pj-mark">' + (st === 'ok' ? 'yes' : st === 'no' ? 'not that one' : '') + '</span>' +
+            '</div>';
+          }).join('');
+          list.querySelectorAll('.pj-how').forEach(function(b){
+            b.addEventListener('click', function(){
+              var id = b.closest('.pj-row').getAttribute('data-id'), row = null;
+              PJ_TARGETS.forEach(function(t){ if(t[0] === id) row = t; });
+              var ok = (row[3] === 'either') || (row[3] === b.getAttribute('data-how'));
+              chosen[id] = ok ? 'ok' : 'no';
+              render(); tally();
+              if(ok) burst();
+            });
+          });
+          tally();
+        }
+        el.querySelectorAll('.pj-target').forEach(function(t){
+          t.addEventListener('click', function(){
+            var id = t.getAttribute('data-id');
+            if(chosen[id] === undefined){ chosen[id] = null; t.classList.add('on'); }
+            else { delete chosen[id]; t.classList.remove('on'); }
+            render();
+          });
+        });
+      } };
+  }
+
+  // Lesson 5, "explain how a computer network can be used to share
+  // information". The checked part is about the network parts, which have
+  // real answers, not about their invention, which does not. The open
+  // question at the end is where their design comes back in.
+  var PJ_PARTS = [
+    ['wap','wireless access point'], ['switch','network switch'], ['server','server']
+  ];
+  var PJ_QS = [
+    ['Which part lets your machine join the network with no cable?','wap'],
+    ['Which part joins the wired parts together and passes the message on?','switch'],
+    ['Which part keeps the information so it is still there tomorrow?','server']
+  ];
+  function pjNetworkSlide(){
+    return { steps:0, html:
+      '<h1 class="pp">How does your network share it?</h1>' +
+      '<div class="pj pp">' + projHeadHTML() +
+        '<div class="pj-body">' +
+          '<div class="pj-net">' +
+            '<div class="pj-part" data-id="machine"><b>your machine</b></div><span class="mb-arr">&rarr;</span>' +
+            PJ_PARTS.map(function(p){
+              return '<div class="pj-part" data-id="' + p[0] + '"><b>' + p[1] + '</b></div>';
+            }).join('<span class="mb-arr">&rarr;</span>') +
+          '</div>' +
+          '<p class="pj-q"></p>' +
+          '<p class="pj-score"></p>' +
+          '<p class="pj-open" hidden>Now the hard one, and there is no button for it: what does <em>your</em> server need to keep?</p>' +
+        '</div>' +
+      '</div>',
+      init: function(el){
+        var body = el.querySelector('.pj-body');
+        projHeadInit(el, function(s){ body.hidden = !s; });
+        var q = el.querySelector('.pj-q'), score = el.querySelector('.pj-score');
+        var open = el.querySelector('.pj-open');
+        var i = 0, right = 0, locked = false;
+        function ask(){
+          if(i >= PJ_QS.length){
+            q.textContent = 'Done.';
+            score.textContent = right + ' of ' + PJ_QS.length + ' right';
+            score.style.color = right === PJ_QS.length ? 'var(--out)' : 'var(--muted)';
+            open.hidden = false;
+            return;
+          }
+          q.textContent = PJ_QS[i][0];
+          score.textContent = '';
+          el.querySelectorAll('.pj-part').forEach(function(p){ p.classList.remove('right','wrong'); });
+          locked = false;
+        }
+        el.querySelectorAll('.pj-part').forEach(function(p){
+          p.addEventListener('click', function(){
+            if(locked || i >= PJ_QS.length) return;
+            locked = true;
+            var ok = p.getAttribute('data-id') === PJ_QS[i][1];
+            p.classList.add(ok ? 'right' : 'wrong');
+            if(ok){ right++; burst(); }
+            else {
+              el.querySelector('.pj-part[data-id="' + PJ_QS[i][1] + '"]').classList.add('right');
+            }
+            score.textContent = ok ? 'Yes' : 'That one is highlighted';
+            score.style.color = ok ? 'var(--out)' : 'var(--red)';
+            i++;
+            setTimeout(ask, 1500);
+          });
+        });
+        ask();
+      } };
+  }
+
+  // Lesson 6, the pitch. The ticks are the mark scheme, read out before
+  // anyone starts, so pupils know what a good pitch has in it rather than
+  // being judged on confidence.
+  var PJ_PITCH = [
+    'the problem it fixes',
+    'what goes in',
+    'what comes out',
+    'one part of the network it needs'
+  ];
+  function pjPitchSlide(){
+    return { steps:0, html:
+      '<h1 class="pp">Pitch it in one minute</h1>' +
+      '<div class="pj pp">' + projHeadHTML() +
+        '<div class="pj-body">' +
+          '<p class="pj-lead">Four things a good pitch has. Tap each one as you hear it.</p>' +
+          '<div class="pj-ticks">' + PJ_PITCH.map(function(t, n){
+            return '<button type="button" class="pj-tick" data-i="' + n + '"><span class="bx">' + ICON.check + '</span>' + t + '</button>';
+          }).join('') + '</div>' +
+          '<div class="pj-clock">' +
+            '<span class="pj-time">1:00</span>' +
+            '<button type="button" class="d2-gbtn pj-start">Start</button>' +
+            '<button type="button" class="d2-gbtn ghost pj-reset">Reset</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>',
+      init: function(el){
+        var body = el.querySelector('.pj-body');
+        projHeadInit(el, function(s){ body.hidden = !s; });
+        var time = el.querySelector('.pj-time'), start = el.querySelector('.pj-start');
+        var left = 60, timer = null;
+        function show(){
+          var m = Math.floor(left / 60), s = left % 60;
+          time.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+          time.style.color = left <= 10 ? 'var(--red)' : 'var(--ink)';
+        }
+        function stop(){ clearInterval(timer); timer = null; start.textContent = 'Start'; }
+        start.addEventListener('click', function(){
+          if(timer){ stop(); return; }
+          start.textContent = 'Pause';
+          timer = setInterval(function(){
+            left--; show();
+            if(left <= 0){ stop(); burst(); }
+          }, 1000);
+        });
+        el.querySelector('.pj-reset').addEventListener('click', function(){
+          stop(); left = 60; show();
+          el.querySelectorAll('.pj-tick').forEach(function(t){ t.classList.remove('on'); });
+        });
+        el.querySelectorAll('.pj-tick').forEach(function(t){
+          t.addEventListener('click', function(){ t.classList.toggle('on'); });
+        });
+        show();
+      } };
+  }
+
   // one line drops this into any lesson's slide array, which is the point:
   // where it belongs depends on a Lesson 3 to 6 order that is still moving
   function scenarioSlide(){
@@ -3500,6 +3742,51 @@ window.HB_GAUGE = (function(){
       init: scenarioInit };
   }
 
+  // the class's chosen scenario, remembered between slides and between
+  // lessons, so the project is one thread rather than four separate asks.
+  // Falls back to nothing if storage is blocked; every project slide can
+  // still be used by picking again.
+  function mbScenarioSet(id){ try{ localStorage.setItem('hb_scenario', id); }catch(e){} }
+  function mbScenarioGet(){
+    var id = null;
+    try{ id = localStorage.getItem('hb_scenario'); }catch(e){}
+    var found = null;
+    MB_SCENARIOS.forEach(function(s){ if(s.id === id) found = s; });
+    return found;
+  }
+  // every project slide opens the same way: name the scenario, or pick one
+  function projHeadHTML(){
+    return '<div class="pj-head">' +
+      '<span class="pj-name"></span>' +
+      '<button type="button" class="pj-change">Change</button>' +
+    '</div>' +
+    '<div class="pj-pick">' + MB_SCENARIOS.map(function(s){
+      return '<button type="button" class="pj-chip" data-id="' + s.id + '">' + ph(s.icon, 18) + s.t + '</button>';
+    }).join('') + '</div>';
+  }
+  function projHeadInit(el, onPick){
+    var head = el.querySelector('.pj-head'), pick = el.querySelector('.pj-pick');
+    var name = el.querySelector('.pj-name');
+    function show(s){
+      if(s){
+        name.innerHTML = ph(s.icon, 20) + s.t;
+        head.hidden = false; pick.hidden = true;
+      } else {
+        head.hidden = true; pick.hidden = false;
+      }
+      if(onPick) onPick(s);
+    }
+    el.querySelectorAll('.pj-chip').forEach(function(c){
+      c.addEventListener('click', function(){
+        var id = c.getAttribute('data-id');
+        mbScenarioSet(id);
+        show(mbScenarioGet());
+      });
+    });
+    el.querySelector('.pj-change').addEventListener('click', function(){ show(null); });
+    show(mbScenarioGet());
+  }
+
   function scenarioInit(el){
     var pick = el.querySelector('.sc-pick');
     var work = el.querySelector('.sc-work');
@@ -3515,6 +3802,7 @@ window.HB_GAUGE = (function(){
         var s = null;
         MB_SCENARIOS.forEach(function(x){ if(x.id === card.getAttribute('data-id')) s = x; });
         if(!s) return;
+        mbScenarioSet(s.id);
         title.textContent = s.t;
         now.textContent = s.now;
         wrong.textContent = s.wrong;
@@ -4881,6 +5169,7 @@ window.HB_GAUGE = (function(){
     ["Activity 2 · 8 min","Pass the message","Pupils write a short message to someone on a different table, then pass messages hand to hand toward the right person."],
     ["Activity 2 · 4 min","How did it go?","Discuss: messages went the right way eventually, but it was slow, and some people had more to pass than others."],
     ["Activity 3 · 8 min","Adding a network switch","One pupil becomes the switch: they collect messages and send each one to the right person, without reading it. Try passing a message through the switch and compare."],
+    ["Project · 10 min","What does your invention connect to?","The scenario each pair picked is remembered from the last lesson, so it should already be showing. Tap what the invention has to reach, which is their decision, then say how each one connects, which is checked. A printer, a kitchen screen and the office computer are all genuinely either, so both answers are accepted: say that out loud, because 'it depends what you plug in' is the honest answer and it is the one this lesson is about."],
     ["Plenary · 4 min","Match the word to its meaning","A checked sort, not reveal cards: pupils match Connection/Network/Network switch to the right definition."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how computers are connected, and the school network."]
@@ -4929,6 +5218,7 @@ window.HB_GAUGE = (function(){
       '<h1 class="pp">Adding a network switch</h1>' +
       '<p class="lead pp">One person becomes the switch. Everyone sends their messages to the switch, and the switch sends each one straight to the right person.</p>' +
       '<p class="lead pp" style="font-weight:700">The switch reads only who it\'s going to, not the message itself.</p>' }; },
+    pjConnectSlide,
     function(){
       var TERMS = [["Connection","conn"],["Network","net"],["Network switch","sw"]];
       return { steps:0, html:
@@ -5217,6 +5507,7 @@ window.HB_GAUGE = (function(){
     ["Activity 2 · 10 min","Build your own network","In groups: one switch, one server, one message carrier, the rest desktop computers. Send a file all the way to the server and back."],
     ["Activity 3 · 5 min","Wireless access points","Laptops and tablets have no wire to the switch. They connect to a wireless access point instead, which is wired into the network."],
     ["Activity 3 · 6 min","Put the file's longer journey in order","A checked sequence, not narration: pupils reorder four scrambled steps for a laptop's file reaching the server over wireless."],
+    ["Project · 10 min","How does your network share it?","Three questions about the network parts, tapped on the diagram. These are checked because they have real answers; their invention does not, so it is not what is being marked here. The last line has no button on purpose: what does their server need to keep? That is the one worth writing down, and it is different for every scenario."],
     ["Plenary · 5 min","Match the vocabulary","Connection, network, network switch, wireless access point, server. Match each to its definition."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: touring the school's own network."]
@@ -5275,6 +5566,7 @@ window.HB_GAUGE = (function(){
         '<button class="d2-gbtn pp" id="d2seqcheck">Check the order</button>' +
         '<p class="lead" id="d2seqres" style="min-height:1.4em;font-weight:700"></p>',
         init: seqInit }; },
+    pjNetworkSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Match the vocabulary</h1>' +
       '<div class="d2-reveal pp">' +
@@ -5452,8 +5744,9 @@ window.HB_GAUGE = (function(){
   /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 6 =================== */
   var Y12META6 = { eyebrow:'Technology around us &middot; Lesson 6', exitHash:'#/g/y12' };
   var Y12_NOTES6 = [
-    ["Introduction · 3 min","Using a computer responsibly","Think, pair, share: what rules are already in place at school? Note them down for Activity 1."],
+    ["Introduction · 1 min","Using a computer responsibly","Last lesson of the unit. Ask what 'responsibly' means before you go on: looking after something, and thinking about other people."],
     ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 3 min","Think, pair, share","What rules are already in place at school? Note them down; you come back to them in Activity 1."],
     ["Activity 1 · 10 min","How OK is it?","Nine cards, one at a time, on the same line Year 5/6 use for their confidence gauge. Send several pupils up to tap where they think it goes; every tap leaves a dot, so the class sees the spread before anyone knows the answer. Then press Show the answer. The crisps card and the finished-your-work card have no right answer on purpose, so the disagreement is the discussion. When a card lands in the red, ask what they should do instead: that answer is the rule, and it goes on the charter later."],
     ["Activity 2 · 5 min","Rules for using computers safely","Think about rules that would help you use computers safely in school. Talk with a partner, then share."],
     ["Activity 2 · 5 min","Jessie and Friends","Play Episode 1, Watching Videos, and stop there. CEOP puts all three episodes on one page with no separate link per episode, so scroll to the first one. Episodes 2 and 3 cover sharing pictures and online gaming, which are not this lesson."],
@@ -5639,12 +5932,14 @@ window.HB_GAUGE = (function(){
   var Y34_NOTES6 = [
     ["Introduction · 3 min","What does our school network look like?","Recap: switch, server and wireless access point from Lessons 4 and 5. Ask what each one does."],
     ["Introduction · 2 min","Today you will…","Read the three together."],
+    ["Introduction · 2 min","Recap: three components","Switch, server and wireless access point. Take answers for what each one does before revealing, then say that today is about finding the real ones in this building."],
     ["Introduction · 3 min","Cables and sockets","A network cable wires a device to the network. A network socket is where that cable plugs in."],
     ["Activity 1 · 5 min","Why have a network at all?","Discuss: what does the school network let people do? Why is it useful for more than one person to reach the same information?"],
     ["Activity 2 · 3 min","Who looks after it?","The school's IT technician installs, orders and maintains the network's hardware and software, and supports staff and pupils."],
     ["Activity 2 · 15 min","School network tour","Find the network's real parts around the school: devices, a printer, wireless access points, cables, sockets, the switch, the server. For each, ask what its job is, and whether it's vital or optional."],
     ["Activity 3 · 3 min","What did you find on the tour?","A checked self-review, not reveal cards: pupils tick off which real network parts they actually found on the tour."],
     ["Activity 3 · 7 min","Map your network","Mark on the network map where you found each device, and whether its connection is wired or wireless."],
+    ["Project · 12 min","Pitch it in one minute","Read the four ticks out before anyone starts, so pupils know what a good pitch contains rather than being judged on confidence. Tap each one as you hear it. One minute each, and if the class is large run a gallery walk of the network drawings instead and pitch only three or four."],
     ["Plenary · 4 min","Networks, and the internet","Computers connected together make a network. Networks connected together make the internet, reached through a router."],
     ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
     ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
@@ -5716,6 +6011,7 @@ window.HB_GAUGE = (function(){
     function(){ return { steps:0, html:
       '<h1 class="pp">Map your network</h1>' +
       '<p class="lead pp" style="max-width:32ch">Mark where you found each device, and whether its connection is wired or wireless.</p>' }; },
+    pjPitchSlide,
     function(){ return { steps:0, html:
       '<h1 class="pp">Networks, and the internet</h1>' +
       '<div class="d2-reveal pp">' +
