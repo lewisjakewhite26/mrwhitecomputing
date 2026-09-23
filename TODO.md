@@ -35,6 +35,26 @@ back. See the toolbar timer entry below, built the same session.
 
 ## Also outstanding
 
+- **NEXT: Year 3/4 scenario picker.** Agreed 23/09/2026, not yet built.
+  Four cards, each an offline system a digital invention could improve:
+  dinner bands counted by hand at registration, lights left on at
+  playtime, the paper-card library, the watering rota in the school
+  garden. A pair picks one, then builds the invention on the machine
+  builder from Lesson 2, so the tool already exists. Needs two additions
+  to the builder: several inputs or outputs, and a way to name the
+  machine.
+
+  This carries four of the six Year 3/4 end points for the unit, which
+  the machine builder alone does not: Y3 "recognise how digital devices
+  can change the way we work", and all three Y4 network ones. See
+  `end-points.md`.
+
+  **Placement is undecided.** Lewis has not settled where it goes, and
+  the Lesson 3 to 6 progression is being rebuilt, so build it as a
+  self-contained slide that works wherever it lands. The per-lesson
+  project slides and the network drawing stay deferred until the order
+  settles.
+
 - **Year 1/2 unit rework.** Lessons 3 and 4 are rebuilt around the
   no-devices constraint and are now internally coherent, but the unit
   itself is thin: it teaches operating instructions rather than computing,
