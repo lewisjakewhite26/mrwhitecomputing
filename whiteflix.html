@@ -928,6 +928,14 @@ var WF = (function(){
   function standby(){
     clearLater(); screen('standby'); setHash('');
   }
+  // whiteflix.html#photocopier plays the start-up and then goes straight into
+  // the cartoon instead of asking who is watching. It still waits on the power
+  // button, because browsers only allow sound after a tap.
+  var direct = null;
+  function afterBoot(){
+    if(direct){ S.prof = PROFILES[2]; play(direct); }
+    else profiles();
+  }
   function turnOn(){
     fullscreen(); ac(); boot();
   }
@@ -954,7 +962,7 @@ var WF = (function(){
       decodeAll(function(f){ bar.style.width = Math.round(f * 100) + '%'; }).then(function(){
         if(gen !== bootGen || !$('#boot').classList.contains('on')) return;
         var wait = Math.max(0, 2300 - (Date.now() - start));
-        later(function(){ bar.style.width = '100%'; later(profiles, 450); }, wait);
+        later(function(){ bar.style.width = '100%'; later(afterBoot, 450); }, wait);
       });
     }, quick ? 400 : 2350);
   }
@@ -1851,7 +1859,9 @@ var WF = (function(){
   function leavePlayer(){
     clearInterval(PL.tick); clearTimeout(PL.hide); clearLater(); PL.playing = false;
     cancelAnimationFrame(PL.raf); CART.hush();
-    if(PL.from === 'hq') screen('hq'); else screen('app');
+    if(PL.from === 'hq') screen('hq');
+    else if(!$('#page').innerHTML){ direct = null; enterApp(true); }
+    else screen('app');
   }
 
   /* =================== Whiteflix HQ =================== */
@@ -1961,7 +1971,7 @@ var WF = (function(){
   /* =================== events =================== */
   function wire(){
     $('#standby').addEventListener('click', turnOn);
-    $('.skipintro').addEventListener('click', function(e){ e.stopPropagation(); clearLater(); bootGen++; decodeAll(function(){}).then(profiles); });
+    $('.skipintro').addEventListener('click', function(e){ e.stopPropagation(); clearLater(); bootGen++; decodeAll(function(){}).then(afterBoot); });
     $('#profiles').addEventListener('click', function(e){ var b = e.target.closest('.pf'); if(b && !$('#profiles').classList.contains('leaving')) choose(b); });
 
     // one delegated handler for every card, button and link in the app,
@@ -2074,6 +2084,7 @@ var WF = (function(){
     else if(h === 'hq') hq('controls');
     else if(h === 'compare') hq('compare');
     else if(['new','list','sport','nature'].indexOf(h) > -1){ S.page = h; enterApp(false); }
+    else if(h === 'photocopier'){ direct = 'photo'; standby(); $('#standby p').textContent = 'Press to watch'; }
     else standby();
   }
 
