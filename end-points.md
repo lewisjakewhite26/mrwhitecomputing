@@ -227,6 +227,14 @@ Year 4:
 
 Autumn: Maafa. Spring: Frozen Kingdoms. Summer: Britain at War.
 
+The school's newer Year 5/6 long-term plan (December 2025, on the school
+website as `updated-5-6-curriculum.pdf`) gives the Cycle B Autumn topic as
+Revolution, the Victorians, not Maafa. The computing document above is
+older, so trust the long-term plan for topics. Its Cycle B companion
+projects: Earth and Space, Forces and Mechanisms, Electrical Circuits,
+Evolution and Inheritance, and Light for science; Scott, Shackleton and
+polar climates in Spring; the First and Second World Wars in Summer.
+
 ### Autumn 1: Systems and searching
 
 Digital literacy, connecting systems and networks. Google Slides.

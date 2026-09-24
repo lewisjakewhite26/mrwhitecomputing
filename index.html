@@ -142,6 +142,24 @@
     .spine{grid-template-columns:1fr}
     .lesson{min-height:0}
   }
+  /* end points: a short list on each lesson card, and the unit table */
+  .lesson .eps-l{margin:10px 0 0;padding:10px 0 0;border-top:1px solid var(--hair);font-size:.82rem;line-height:1.45;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+  .lesson .eps-l b{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--proc)}
+  .lesson .eps-l span{display:block}
+  .lesson .eps-l i{font-style:normal;font-weight:700;color:var(--ink);margin-right:5px}
+  .lesson .eps-l em{font-style:normal;color:#9A6A10}
+  .eps-wrap{margin:clamp(36px,6vw,60px) 0 0}
+  .eps-wrap h3{font-weight:600;font-size:clamp(1.3rem,2.2vw,1.7rem);letter-spacing:-0.02em;margin:0 0 6px}
+  .eps-wrap .sub{color:var(--muted);margin:0 0 16px}
+  .eps-scroll{overflow-x:auto}
+  .eps-table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;overflow:hidden;font-size:.95rem}
+  .eps-table th,.eps-table td{padding:10px 12px;border-bottom:1px solid var(--paper-edge);text-align:center}
+  .eps-table th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--ground-2)}
+  .eps-table td.ep{text-align:left;color:var(--ink);line-height:1.35}
+  .eps-table td.yr{font-weight:700;color:var(--proc);white-space:nowrap;text-align:left}
+  .eps-table .dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--out)}
+  .eps-table .gap{color:var(--red);font-weight:700}
+  .eps-table tr:last-child td{border-bottom:0}
   .glossary{margin:clamp(36px,6vw,60px) 0 0}
   .glossary h3{font-weight:600;font-size:clamp(1.3rem,2.2vw,1.7rem);letter-spacing:-0.02em;margin:0 0 6px}
   .glossary .sub{color:var(--soft);margin:0 0 20px;font-size:1rem}
@@ -602,6 +620,12 @@
   </div>
 
   <div class="spine" id="spine"></div>
+
+  <div class="eps-wrap" id="eps-wrap" hidden>
+    <h3>End points in this unit</h3>
+    <p class="sub">From the school&rsquo;s Cycle B computing end points. A dot means the lesson teaches towards it.</p>
+    <div class="eps-scroll"><table class="eps-table" id="eps-table"></table></div>
+  </div>
 
   <div class="glossary" id="glossary-wrap">
     <h3>Words for this unit</h3>
@@ -2239,6 +2263,41 @@ window.HB_GAUGE = (function(){
     5:'<rect x="2" y="4" width="9" height="7" rx="1.5"/><rect x="13" y="13" width="9" height="7" rx="1.5"/><path d="M6.5 11v3.5H17"/>',
     6:'<rect x="3" y="13" width="6" height="7" rx="1"/><rect x="15" y="13" width="6" height="7" rx="1"/><rect x="9" y="3" width="6" height="7" rx="1"/><path d="M12 10v3M6 13v-1h12v1"/>'
   };
+  // Which lesson teaches towards which end point, from end-points.md (the
+  // school's Cycle B document), checked against each lesson's objectives so
+  // every dot is a claim the lesson can back up. Notes say where a dot needs
+  // a caveat rather than letting it pass as a clean tick.
+  var ENDPOINTS = {
+    y12:{
+      list:[['a','Y1 and Y2','To identify technology'],['b','Y1 and Y2','To identify a computer and its main parts'],
+        ['c','Y1 and Y2','To use a mouse in different ways'],['d','Y1 and Y2','To use a keyboard to type on a computer'],
+        ['e','Y1 and Y2','To use the keyboard to edit text'],['f','Y1 and Y2','To create rules for using technology responsibly']],
+      map:{1:['a'],2:['b','c'],3:['c'],4:['d'],5:['e'],6:['f']},
+      notes:{
+        3:'Taught on the board this term: pupils explain and direct one child at the board. Using a mouse on their own waits for devices.',
+        4:'Taught on the board this term: the class finds the keys and directs the typist. Typing on their own waits for devices.',
+        5:'Taught on the board this term, one child at a time on the on-screen keyboard.',
+        6:'Also the Year 2 cumulative skill: when technology makes things better or worse (the how-OK scale).'
+      }
+    },
+    y34:{
+      list:[['y3a','Y3','To explain how digital devices function'],['y3b','Y3','To identify input and output devices'],
+        ['y3c','Y3','To recognise how digital devices can change the way we work'],
+        ['y4a','Y4','To explain how a computer network can be used to share information'],
+        ['y4b','Y4','To explore how digital devices can be connected'],['y4c','Y4','To recognise the physical components of a network']],
+      map:{1:['y3a','y3b'],2:['y3b','y3a'],3:['y3c'],4:['y4b','y4a'],5:['y4c','y4a'],6:['y4c','y4b','y4a']},
+      notes:{}
+    },
+    y56:{
+      list:[['y5a','Y5','To explain that computers can be connected together to form systems'],
+        ['y5b','Y5','To recognise the role of computer systems in our lives'],['y5c','Y5','To experiment with search engines'],
+        ['y56','Y5 and Y6','To describe how search engines select results'],['y6a','Y6','To explain how search results are ranked'],
+        ['y6b','Y6','To recognise why the order of results is important, and to whom']],
+      map:{1:['y5a'],2:['y5b','y5a'],3:['y5c'],4:['y56'],5:['y6a'],6:['y6b','y6a'],7:[]},
+      notes:{7:'Not one of this unit’s end points. It covers the Autumn 1 online safety strand: online relationships.'}
+    }
+  };
+
   var GROUPS = {
     y12:{
       label:'Year 1 and 2',
@@ -2248,7 +2307,8 @@ window.HB_GAUGE = (function(){
       glossary:GLOSSARY_Y12,
       icons:ICONS_Y12,
       openHref:'#/y12/lesson/1',
-      sheetBase:'#/y12/sheet/1/'
+      sheetBase:'#/y12/sheet/1/',
+      endpoints:ENDPOINTS.y12
     },
     y34:{
       label:'Year 3 and 4',
@@ -2258,14 +2318,16 @@ window.HB_GAUGE = (function(){
       glossary:GLOSSARY_Y34,
       icons:ICONS_Y34,
       openHref:'#/y34/lesson/1',
-      sheetBase:'#/y34/sheet/1/'
+      sheetBase:'#/y34/sheet/1/',
+      endpoints:ENDPOINTS.y34
     },
     y56:{
       label:'Year 5 and 6',
       unit:'Systems and Searching',
       intro:'Six core lessons, plus an e-safety lesson. It begins with what a system is: parts that work together. That idea runs right through to how a search engine finds, ranks and shapes the results a person sees. Builds on Year 3 Connecting Computers and Year 4 The Internet.',
       lessons:LESSONS,
-      glossary:GLOSSARY
+      glossary:GLOSSARY,
+      endpoints:ENDPOINTS.y56
     }
   };
   var groupsEl = document.getElementById('groups');
@@ -2285,6 +2347,7 @@ window.HB_GAUGE = (function(){
   /* ---------- hub ---------- */
   var spine = document.getElementById('spine');
   var glossaryWrap = document.getElementById('glossary-wrap');
+  var epsWrap = document.getElementById('eps-wrap'), epsTable = document.getElementById('eps-table');
   var gl = document.getElementById('glossary');
   var ICONS = {
     1:'<circle cx="7" cy="7" r="3.2"/><circle cx="17" cy="17" r="3.2"/><path d="M9.4 9.4l5.2 5.2"/><path d="M14 7h3M15.5 5.5v3"/>',
@@ -2296,6 +2359,30 @@ window.HB_GAUGE = (function(){
     7:'<path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10.2"/>'
   };
   var builtGroup = null;
+  // the end points a lesson card lists, with any caveat underneath
+  function epsFor(E, n){
+    if(!E) return '';
+    var codes = E.map[n] || [], note = E.notes[n];
+    if(!codes.length && !note) return '';
+    return '<div class="eps-l"><b>End points</b>' + codes.map(function(c){
+      var r = E.list.filter(function(x){ return x[0] === c; })[0];
+      return r ? '<span><i>' + r[1] + '</i>' + r[2].replace(/^To (.)/, function(m, ch){ return ch.toUpperCase(); }) + '</span>' : '';
+    }).join('') + (note ? '<em>' + note + '</em>' : '') + '</div>';
+  }
+  // every end point in the unit against every lesson, so a gap shows
+  function drawEndpoints(g){
+    var E = g.endpoints, lessons = g.lessons || [];
+    epsWrap.hidden = !E;
+    if(!E) return;
+    var nums = lessons.map(function(L){ return L.n; });
+    epsTable.innerHTML = '<tr><th style="text-align:left">Year</th><th style="text-align:left">End point</th>' +
+      nums.map(function(n){ return '<th>L' + n + '</th>'; }).join('') + '</tr>' +
+      E.list.map(function(r){
+        var hit = nums.filter(function(n){ return (E.map[n] || []).indexOf(r[0]) > -1; });
+        return '<tr><td class="yr">' + r[1] + '</td><td class="ep">' + r[2] + (hit.length ? '' : ' <span class="gap">Not covered yet</span>') + '</td>' +
+          nums.map(function(n){ return '<td>' + (hit.indexOf(n) > -1 ? '<span class="dot" aria-label="Lesson ' + n + '"></span>' : '') + '</td>'; }).join('') + '</tr>';
+      }).join('');
+  }
   function buildHub(key){
     var g = GROUPS[key] || GROUPS.y56;
     document.getElementById('hub-kick').textContent = g.label + ' · Computing';
@@ -2325,7 +2412,7 @@ window.HB_GAUGE = (function(){
         el.innerHTML =
           '<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (icons[L.n] || '') + '</svg></div>' +
           '<div class="no">Lesson ' + L.n + '</div>' +
-          '<div class="mid"><h2>' + L.title + '</h2><p>' + L.obj + '</p></div>' +
+          '<div class="mid"><h2>' + L.title + '</h2><p>' + L.obj + '</p>' + epsFor(g.endpoints, L.n) + '</div>' +
           (L.resources ? '<div class="wsheets">' + L.resources.map(function(r){ return '<a data-sheet="'+r[0]+'">'+r[1]+'</a>'; }).join(' · ') + '</div>' : '') +
           '<div class="foot">' + (L.live
             ? '<button class="open">Open lesson <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button><span>' + L.dur + '</span>'
@@ -2340,6 +2427,7 @@ window.HB_GAUGE = (function(){
         spine.appendChild(el);
       });
     }
+    drawEndpoints(g);
     var glossary = g.glossary || [];
     glossaryWrap.hidden = !glossary.length;
     gl.innerHTML = '';
@@ -6435,7 +6523,7 @@ window.HB_GAUGE = (function(){
     ["Activity 1 · 3 min","Three points of view","A search involves the searcher, the search engine company, and the webpage creator. Each one can influence what you see."],
     ["Activity 1 · 10 min","Sort what influences each one","A checked sort, not three separate slides of reveal cards: pupils sort 11 real factors between the searcher, the search engine company, and the webpage creator."],
     ["Activity 2 · 12 min","Put each search in the right order","A checked sequence, not reveal cards: pupils reorder three scrambled steps per scenario (Priya, Marcus, Sophie), the same mechanic as Lesson 3."],
-    ["Activity 3 · 9 min","Whiteflix HQ","It opens on a staff pass check, then HQ. Hand the board over. Three sliders decide the order of the top ten, and it reorders as they drag. Set the challenge: get a programme rated 1.4 to number one. When someone manages it, ask the question that matters, which is who benefits from that order and who loses. Nobody has lied and no result is fake; somebody just changed what counts. Then press Back to Mr Whiteflix: the Top 10 row on the homepage has changed for everyone."],
+    ["Activity 3 · 9 min","Whiteflix HQ","It opens on a staff pass check, then HQ. Hand the board over. Three sliders decide the order of the top ten, and it reorders as they drag. Set the challenge: get a programme rated 1.4 to number one. Turning paid up is not enough, because other sponsored shows are in the list: it only works once the other two sliders go right down to nothing, so money is the only thing that counts. That is the point to draw out. When someone manages it, ask the question that matters, which is who benefits from that order and who loses. Nobody has lied and no result is fake; somebody just changed what counts. Then press Back to Mr Whiteflix: the Top 10 row on the homepage has changed for everyone."],
     ["Activity 3 · 6 min","Two pupils, one search","Opens on the Two accounts tab in HQ. Type two pupils' real names in. Same search, two accounts, two different orders, and no explanation on the screen. Wait. Someone will say it is not fair. Ask them what the search engine would have to know about them to do this, and whether they would turn it off if they could."],
     ["Activity 3 · 8 min","What can't you find on the web?","Discuss in groups of four: private information, feelings and smells, your own thoughts, and face-to-face contact don't live on the web."],
     ["Plenary · 4 min","How do search engines make money?","Search 'guitar'. The top results are often sponsored, paid for by companies who want to rank higher for that term."],
