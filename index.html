@@ -733,7 +733,7 @@
             <div class="col-a">
               <h1 class="big">Design a system</h1>
               <p class="lead">Pick one: a smart bin, a smart nightlight, or your own idea.</p>
-              <p class="lead reveal" data-step="1" style="font-weight:700">Label its input (what starts it — not a body part), its process, and its output.</p>
+              <p class="lead reveal" data-step="1" style="font-weight:700">Label its input (what starts it, not a body part), its process, and its output.</p>
             </div>
             <div class="qr-wrap">
               <div class="qr-box" id="qrbox"></div>
@@ -876,7 +876,7 @@
     <h2>Your task</h2>
     <p>Design a system of your own: a smart bin, a smart nightlight, a smart pencil case, or your own idea. Draw it, then write:</p>
     <ul>
-      <li>its <strong>input</strong>: what happens to start it working (not just a body part — say what the system detects or receives)</li>
+      <li>its <strong>input</strong>: what happens to start it working (not just a body part: say what the system detects or receives)</li>
       <li>its <strong>process</strong>: what the system works out or decides</li>
       <li>its <strong>output</strong>: what it does as a result</li>
     </ul>
@@ -1084,7 +1084,7 @@
   html.rm .d2-slide .pp{transform:none}
   html.rm .d2-slide .pp.in{transition-duration:.001s}
 
-  /* chrome — matches Lesson 1's .exit / .tools styling so every lesson looks the same */
+  /* chrome: matches Lesson 1's .exit / .tools styling so every lesson looks the same */
   .d2-home{
     position:absolute;left:14px;top:14px;display:inline-flex;align-items:center;gap:6px;
     padding:9px 15px 9px 11px;border:0;border-radius:999px;font-family:var(--font);font-weight:600;font-size:.9rem;
@@ -1533,6 +1533,19 @@
     font:inherit;font-weight:700;color:var(--ink);cursor:pointer}
   .d2-kb-btn.go{border-color:var(--out);color:var(--out)}
   .d2-kb-out{min-height:1.5em;font-weight:700;font-size:clamp(.95rem,2vw,1.15rem);text-align:center}
+  /* Lesson 5 fix-it editor: the same keyboard, plus a cursor you can move */
+  .d2-kb-key.held{background:color-mix(in srgb,var(--proc) 30%,#fff);border-color:var(--proc)}
+  .d2-fix{gap:clamp(7px,1.3vh,14px)}
+  .d2-fix-top{display:flex;align-items:center;gap:clamp(10px,1.6vw,20px)}
+  .d2-fix-pic{flex:none;width:clamp(58px,10vh,96px);height:clamp(58px,10vh,96px);border-radius:16px;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--proc) 12%,var(--paper));color:var(--proc)}
+  .d2-fix-pic svg{width:70%;height:70%}
+  .d2-fix-screen{width:min(72vw,820px);cursor:text;touch-action:none;user-select:none}
+  .d2-fix-ch{font-size:clamp(1.6rem,5.6vh,3.4rem);font-weight:800;letter-spacing:.04em;color:var(--ink);white-space:pre}
+  .d2-fix-dots{display:flex;gap:8px;align-items:center;margin-right:6px}
+  .d2-fix-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--hair);background:var(--paper);padding:0;cursor:pointer}
+  .d2-fix-dot.done{background:var(--out);border-color:var(--out)}
+  .d2-fix-dot.now{box-shadow:0 0 0 3px color-mix(in srgb,var(--proc) 45%,transparent)}
   .d2-pwcard{
     display:flex;flex-direction:column;gap:10px;padding:14px 18px;border-radius:16px;background:var(--ground-2);
     border:1px solid var(--hair);cursor:pointer;transition:transform .16s var(--ease), background .2s;
@@ -1575,6 +1588,109 @@
   .d2-rc .ans{color:var(--muted);opacity:0;transform:translateY(6px);transition:opacity .3s, transform .3s;font-size:.98rem}
   .d2-rc.open .ans{opacity:1;transform:none}
   .d2-rc.in-c b{color:var(--in)} .d2-rc.pr-c b{color:var(--proc)} .d2-rc.ou-c b{color:var(--out)}
+
+  /* end-of-lesson objectives check (Year 3/4 and Year 5/6): one engine,
+     seven costumes. Marks are single elements so nothing is averaged. */
+  .d2-slide.ck-slide{padding:clamp(18px,3.2vh,36px) clamp(20px,3vw,48px);justify-content:stretch}
+  .ck{width:min(1240px,100%);flex:1;min-height:0;display:flex;flex-direction:column;gap:clamp(8px,1.4vh,16px);text-align:left}
+  .ck-top,.ck-foot{display:flex;align-items:center;gap:clamp(8px,1vw,14px);flex:none}
+  .ck-sp{flex:1}
+  .ck-name{font-weight:800;font-size:clamp(.8rem,1.4vw,1rem);letter-spacing:.14em;text-transform:uppercase;color:var(--proc)}
+  .ck-of{font-weight:700;font-size:clamp(1rem,1.8vw,1.3rem);color:var(--ink);min-width:9ch;text-align:center}
+  .ck-nav{width:clamp(40px,5vh,54px);height:clamp(40px,5vh,54px);border-radius:14px;border:2px solid var(--hair);background:var(--paper);
+    display:grid;place-items:center;color:var(--ink);cursor:pointer}
+  .ck-nav:disabled{opacity:.3;cursor:default}
+  .ck-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:14px;border:2px solid var(--hair);background:var(--paper);
+    font:inherit;font-weight:700;font-size:clamp(.85rem,1.4vw,1rem);color:var(--ink);cursor:pointer;white-space:nowrap}
+  .ck-btn:disabled{opacity:.35;cursor:default}
+  .ck-count{color:var(--muted);font-weight:600;font-size:clamp(.85rem,1.4vw,1rem);order:3;margin-left:6px}
+  .ck-foot .ck-sp{order:4}
+  .ck-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:clamp(6px,1.1vh,12px)}
+  .ck-main.ck-in{animation:ckIn .4s var(--ease) both}
+  @keyframes ckIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .ck-obj{font-weight:800;font-size:clamp(1.4rem,3.4vw,2.5rem);line-height:1.15;color:var(--ink);letter-spacing:-.01em}
+  .ck-obj.small{font-size:clamp(1.05rem,2vw,1.45rem)}
+  .ck-prompt{color:var(--muted);font-weight:600;font-size:clamp(.95rem,1.8vw,1.25rem)}
+  .ck-stage{flex:1;min-height:clamp(200px,34vh,420px)}
+
+  /* tokens */
+  .ck-pile{display:flex;flex-wrap:wrap-reverse;align-content:flex-start;justify-content:center;gap:clamp(4px,.6vh,7px)}
+  .ck-tok{width:clamp(16px,2.5vh,26px);height:clamp(16px,2.5vh,26px);border-radius:50%;background:var(--c);flex:none}
+  .ck-tok.pin{background:radial-gradient(circle,#fff 0 28%,var(--c) 30%);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 30%,transparent)}
+  .ck-tok.tag{border-radius:6px 6px 10px 10px}
+  .ck-tok.bolt{width:clamp(10px,1.5vh,15px);border-radius:6px;height:clamp(22px,3.4vh,34px);background:linear-gradient(180deg,var(--c) 0 70%,color-mix(in srgb,var(--c) 60%,#000) 70%)}
+  .ck-tok.fresh{animation:ckPop .45s var(--bounce,cubic-bezier(.34,1.56,.64,1)) both}
+  @keyframes ckPop{from{transform:scale(0)}to{transform:none}}
+
+  /* columns: chips, backpack, circuit, vault */
+  .ck-cols{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:clamp(8px,1.2vw,16px)}
+  .ck-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:0;padding:clamp(10px,1.6vh,16px) 10px;border-radius:20px;cursor:pointer;
+    border:3px solid color-mix(in srgb,var(--c) 45%,transparent);background:color-mix(in srgb,var(--c) 7%,var(--paper));font:inherit;color:var(--ink);text-align:center;
+    transition:transform .12s var(--ease)}
+  .ck-col:active{transform:scale(.98)}
+  .ck-col b{font-size:clamp(1rem,1.9vw,1.4rem);color:var(--c)}
+  .ck-col small{font-size:clamp(.78rem,1.3vw,.95rem);color:var(--muted);font-weight:600;line-height:1.25}
+  .ck-col .ck-pile{flex:1;width:100%;min-height:0;overflow:hidden;padding:8px 4px}
+  .ck-col .ck-n{font-weight:800;font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1;color:var(--c)}
+  .ck-ic{color:var(--c);display:grid;place-items:center}
+  .ck-ic svg{width:clamp(34px,5.4vh,52px);height:clamp(34px,5.4vh,52px)}
+  .ck-ic.glow{filter:drop-shadow(0 0 10px #FFD23F) drop-shadow(0 0 4px #FFD23F)}
+  .ck-chipic{display:flex;flex-direction:column-reverse;align-items:center;height:clamp(34px,5.4vh,52px);justify-content:flex-start}
+  .ck-chipic i{display:block;width:clamp(34px,4.6vh,48px);height:10px;border-radius:50%;background:var(--c);border:2px dashed rgba(255,255,255,.75);margin-top:-3px;box-shadow:0 2px 0 rgba(0,0,0,.18)}
+  .ck-pile.stack{flex-direction:column-reverse;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:0}
+  .ck-pile.stack .ck-tok{width:min(78%,120px);height:22px;border-radius:50%;border:3px dashed rgba(255,255,255,.75);box-shadow:0 3px 0 color-mix(in srgb,var(--c) 55%,#000)}
+
+  /* ladder */
+  .ck-ladder{display:flex;flex-direction:column;gap:clamp(6px,1vh,10px);position:relative}
+  .ck-rung{flex:1;display:flex;align-items:center;gap:clamp(10px,1.4vw,18px);padding:6px clamp(10px,1.4vw,18px);border-radius:16px;cursor:pointer;min-height:0;
+    border:3px solid color-mix(in srgb,var(--c) 40%,transparent);background:color-mix(in srgb,var(--c) 7%,var(--paper));font:inherit;color:var(--ink);text-align:left}
+  .ck-rl{width:clamp(150px,22vw,280px);flex:none;display:flex;flex-direction:column}
+  .ck-rl b{font-size:clamp(1rem,1.9vw,1.35rem);color:var(--c)}
+  .ck-rl small{font-size:clamp(.75rem,1.2vw,.9rem);color:var(--muted);font-weight:600}
+  .ck-bar{flex:1;align-self:stretch;display:flex;align-items:center;border-left:6px solid #9a7b55;border-right:6px solid #9a7b55;padding:0 10px;
+    background:linear-gradient(transparent calc(50% - 5px),#c4a27a calc(50% - 5px),#c4a27a calc(50% + 5px),transparent calc(50% + 5px))}
+  .ck-bar .ck-pile{flex-wrap:wrap;justify-content:flex-start;position:relative}
+  .ck-rung .ck-n{width:2.2ch;text-align:right;font-weight:800;font-size:clamp(1.4rem,2.8vw,2.2rem);color:var(--c)}
+
+  /* fog line */
+  .ck-fog{display:flex;flex-direction:column;gap:10px}
+  .ck-fogarea{position:relative;flex:1;min-height:0;border-radius:20px;overflow:hidden;cursor:crosshair;border:3px solid var(--hair);touch-action:none}
+  .ck-land{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .ck-land.blur{filter:blur(9px) saturate(.4);-webkit-mask-image:linear-gradient(90deg,#000 12%,transparent 88%);mask-image:linear-gradient(90deg,#000 12%,transparent 88%)}
+  .ck-track{position:absolute;left:3%;right:3%;bottom:18%;height:8px;border-radius:8px;background:linear-gradient(90deg,var(--red),var(--proc),var(--out));opacity:.85}
+  .ck-pins{position:absolute;inset:0;pointer-events:none}
+  .ck-pin{position:absolute;bottom:calc(18% + 12px + var(--lane) * clamp(20px,3vh,30px));width:clamp(18px,2.8vh,28px);height:clamp(18px,2.8vh,28px);margin-left:calc(clamp(18px,2.8vh,28px) / -2);
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--c);border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .ck-pin.fresh{animation:ckDrop .45s var(--bounce,cubic-bezier(.34,1.56,.64,1)) both}
+  @keyframes ckDrop{from{transform:rotate(-45deg) translate(-30px,-30px) scale(.4);opacity:0}to{transform:rotate(-45deg)}}
+  .ck-zones{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;font-size:clamp(.95rem,1.7vw,1.2rem);color:var(--muted);font-weight:700}
+  .ck-zones b{color:var(--c)}
+
+  /* orbit */
+  .ck-orbit{display:flex;align-items:center;justify-content:center;gap:clamp(16px,3vw,48px);min-height:0}
+  .ck-orbitarea{height:clamp(240px,52vh,560px);aspect-ratio:1;display:grid;place-items:center}
+  .ck-orbitarea svg{width:100%;height:100%;cursor:crosshair;touch-action:none;overflow:visible}
+  .ck-spin{transform-box:view-box;transform-origin:0 0;animation-name:ckSpin;animation-timing-function:linear;animation-iteration-count:infinite}
+  @keyframes ckSpin{to{transform:rotate(360deg)}}
+  html.rm .ck-spin{animation:none}
+  .ck-sat.fresh{animation:ckPop .45s var(--bounce,cubic-bezier(.34,1.56,.64,1)) both;transform-box:fill-box;transform-origin:center}
+  .ck-orbitkey{display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px)}
+  .ck-orbitkey span{display:flex;align-items:center;gap:12px;font-size:clamp(1rem,1.9vw,1.35rem)}
+  .ck-orbitkey i{width:18px;height:18px;border-radius:50%;background:var(--c)}
+  .ck-orbitkey b{color:var(--c);min-width:7ch}
+  .ck-orbitkey em{font-style:normal;font-weight:800;font-size:1.4em;color:var(--ink)}
+
+  /* all objectives */
+  .ck-grid{display:grid;grid-template-columns:minmax(0,2.2fr) repeat(var(--n),minmax(0,1fr));gap:clamp(6px,.9vh,10px) clamp(6px,.8vw,10px);align-content:start;overflow:auto}
+  .ck-gh{text-align:center;font-weight:800;color:var(--c);font-size:clamp(.85rem,1.5vw,1.1rem)}
+  .ck-gt{font-weight:700;font-size:clamp(.95rem,1.7vw,1.25rem);line-height:1.25;color:var(--ink);align-self:center}
+  .ck-cell{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;min-height:clamp(54px,8vh,80px);cursor:pointer;
+    border:3px solid color-mix(in srgb,var(--c) 40%,transparent);background:color-mix(in srgb,var(--c) 7%,var(--paper));font:inherit}
+  .ck-cell .ck-pile{flex:1;justify-content:flex-start;flex-wrap:wrap}
+  .ck-cell .ck-tok{width:14px;height:14px}
+  .ck-cell em{font-style:normal;font-weight:700;color:var(--c);font-size:.85rem}
+  .ck-cell .ck-n{font-weight:800;font-size:clamp(1.2rem,2.2vw,1.7rem);color:var(--c)}
+  html.rm .ck-tok.fresh,html.rm .ck-pin.fresh,html.rm .ck-sat.fresh,html.rm .ck-main.ck-in{animation:none}
 
   /* confidence */
   .d2-conf{display:flex;gap:clamp(14px,4vw,40px)}
@@ -2069,7 +2185,7 @@ window.HB_GAUGE = (function(){
     {n:2,live:true,title:"Using computer technology",obj:"Name the main parts of a computer, turn it on and log in, and use a mouse to click and drag.",vocab:["computer","screen","keyboard","mouse","base unit"],dur:"40 min",openHref:"#/y12/lesson/2",sheetBase:"#/y12/sheet/2/",resources:[["parts","Label the computer"],["same","Desktop and laptop"],["home","A computer at home"]]},
     {n:3,live:true,title:"Developing mouse skills",obj:"Say what a mouse is for, show a click, a double-click and a drag, and steer a pointer onto a target and click it.",vocab:["mouse","trackpad","pointer","double-click","click and drag"],dur:"40 min",openHref:"#/y12/lesson/3",sheetBase:"#/y12/sheet/3/",resources:[["steps","Double-click steps"],["match","Which one do you use?"],["home","A mouse at home"]]},
     {n:4,live:true,title:"Using a computer keyboard",obj:"Say what a keyboard is for, find the letters of your name on a QWERTY keyboard, and use the space bar and Backspace.",vocab:["keyboard","QWERTY","space bar","backspace","save"],dur:"40 min",openHref:"#/y12/lesson/4",sheetBase:"#/y12/sheet/4/",resources:[["name","Typing my name"],["save","Why save sensibly?"],["home","A keyboard at home"]]},
-    {n:5,live:true,title:"Developing keyboard skills",obj:"Open your saved work, use the arrow keys to move the cursor, and edit text by deleting letters.",vocab:["keyboard","cursor","backspace","space bar"],dur:"40 min",openHref:"#/y12/lesson/5",sheetBase:"#/y12/sheet/5/",resources:[["sentence","Finish the sentence"],["keys","Find the keys"],["home","A sentence at home"]]},
+    {n:5,live:true,title:"Fixing mistakes",obj:"Put the cursor in the right place, take letters out and put letters in, and use a capital letter and a full stop.",vocab:["cursor","backspace","arrow keys","shift"],dur:"40 min",openHref:"#/y12/lesson/5",sheetBase:"#/y12/sheet/5/",resources:[["sentence","Fix the sentences"],["keys","Find the keys"],["home","A sentence at home"]]},
     {n:6,live:true,title:"Using a computer responsibly",obj:"Say why we have rules, give examples for using computers safely, and know who to tell if something online worries you.",vocab:["rules","responsible","safe","trusted adult"],dur:"40 min",openHref:"#/y12/lesson/6",sheetBase:"#/y12/sheet/6/",resources:[["charter","Class charter maker"],["grid","Rules grid"],["home","A rule at home"]]}
   ];
   var GLOSSARY_Y12 = [
@@ -4230,7 +4346,249 @@ window.HB_GAUGE = (function(){
         });
       } }; }
 
-  // shared: confidence slide
+  // shared: the end-of-lesson objectives check, for Year 3/4 and Year 5/6.
+  // It reads the objectives off the lesson's own "Today you will…" slide, so
+  // the check always matches what the lesson promised and nobody types them
+  // twice. Every tap stays on the board as its own mark and nothing is
+  // averaged, because a split class should look split. One tap from the
+  // teacher after a discussion reads as well as thirty pupils coming up.
+  // Seven costumes on one engine; each lesson picks the one that fits it.
+  Object.assign(PH, {"backpack":"<path d=\"M168,40.58V32A24,24,0,0,0,144,8H112A24,24,0,0,0,88,32v8.58A56.09,56.09,0,0,0,40,96V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V96A56.09,56.09,0,0,0,168,40.58ZM112,24h32a8,8,0,0,1,8,8v8H104V32A8,8,0,0,1,112,24Zm56,136H88v-8a8,8,0,0,1,8-8h64a8,8,0,0,1,8,8ZM88,176h48v8a8,8,0,0,0,16,0v-8h16v40H88Zm112,40H184V152a24,24,0,0,0-24-24H96a24,24,0,0,0-24,24v64H56V96A40,40,0,0,1,96,56h64a40,40,0,0,1,40,40V216ZM152,88a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h32A8,8,0,0,1,152,88Z\"/>","lightbulb-filament":"<path d=\"M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.5C39.74,56.83,78.26,17.15,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.64,71.64,0,0,0,27.64,56.3h0A32,32,0,0,1,96,186v6h24V147.31L90.34,117.66a8,8,0,0,1,11.32-11.32L128,132.69l26.34-26.35a8,8,0,0,1,11.32,11.32L136,147.31V192h24v-6a32.12,32.12,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Z\"/>","lock-simple":"<path d=\"M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z\"/>","lock-key":"<path d=\"M128,112a28,28,0,0,0-8,54.83V184a8,8,0,0,0,16,0V166.83A28,28,0,0,0,128,112Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,128,152Zm80-72H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z\"/>","lock-simple-open":"<path d=\"M208,80H96V56a32,32,0,0,1,32-32c15.37,0,29.2,11,32.16,25.59a8,8,0,0,0,15.68-3.18C171.32,24.15,151.2,8,128,8A48.05,48.05,0,0,0,80,56V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80Zm0,128H48V96H208V208Z\"/>","planet":"<path d=\"M245.11,60.68c-7.65-13.19-27.84-16.16-58.5-8.66A95.93,95.93,0,0,0,32,128a98,98,0,0,0,.78,12.31C5.09,169,5.49,186,10.9,195.32,16,204.16,26.64,208,40.64,208a124.11,124.11,0,0,0,28.79-4A95.93,95.93,0,0,0,224,128a97.08,97.08,0,0,0-.77-12.25c12.5-13,20.82-25.35,23.65-35.92C248.83,72.51,248.24,66.07,245.11,60.68ZM128,48a80.11,80.11,0,0,1,78,62.2c-17.06,16.06-40.15,32.53-62.07,45.13C116.38,171.14,92.48,181,73.42,186.4A79.94,79.94,0,0,1,128,48ZM24.74,187.29c-1.46-2.51-.65-7.24,2.22-13a79.05,79.05,0,0,1,10.29-15.05,96,96,0,0,0,18,31.32C38,193.46,27.24,191.61,24.74,187.29ZM128,208a79.45,79.45,0,0,1-38.56-9.94,370,370,0,0,0,62.43-28.86c21.58-12.39,40.68-25.82,56.07-39.08A80.07,80.07,0,0,1,128,208ZM231.42,75.69c-1.7,6.31-6.19,13.53-12.63,21.13a95.69,95.69,0,0,0-18-31.35c14.21-2.35,27.37-2.17,30.5,3.24C232.19,70.28,232.24,72.63,231.42,75.69Z\"/>","arrow-counter-clockwise":"<path d=\"M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z\"/>","squares-four":"<path d=\"M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z\"/>","caret-left":"<path d=\"M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z\"/>","caret-right":"<path d=\"M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z\"/>","eraser":"<path d=\"M225,80.4,183.6,39a24,24,0,0,0-33.94,0L31,157.66a24,24,0,0,0,0,33.94l30.06,30.06A8,8,0,0,0,66.74,224H216a8,8,0,0,0,0-16h-84.7L225,114.34A24,24,0,0,0,225,80.4ZM108.68,208H70.05L42.33,180.28a8,8,0,0,1,0-11.31L96,115.31,148.69,168Zm105-105L160,156.69,107.31,104,161,50.34a8,8,0,0,1,11.32,0l41.38,41.38a8,8,0,0,1,0,11.31Z\"/>"});
+  var CHECK = {
+    chips:{ kind:'cols', title:'Place your bet', prompt:'How many chips would you bet that you can do this?',
+      lv:[['Still guessing','1 chip'],['Getting there','2 chips'],['Pretty sure','3 chips'],['I’d bet on it','4 chips']], tok:'chip' },
+    backpack:{ kind:'cols', title:'Pack your kit', prompt:'Is this packed in your kit yet?',
+      lv:[['Still unpacking','I need it explained again'],['Almost packed','I get it, with a reminder'],['Fully packed','I could use it on my own']],
+      ic:['backpack','backpack','backpack'], tok:'tag' },
+    circuit:{ kind:'cols', title:'Light it up', prompt:'How bright is your bulb?',
+      lv:[['Not connected','It hasn’t clicked yet'],['Flickering','Some of it makes sense'],['Lit up','I could explain it to someone']],
+      ic:['lightbulb','lightbulb-filament','lightbulb-filament'], tok:'pin' },
+    vault:{ kind:'cols', title:'Crack the vault', prompt:'How close are you to cracking it?',
+      lv:[['Locked','I can’t get in yet'],['Turning','Nearly there, a few clicks left'],['Cracked it','I could show someone how']],
+      ic:['lock-simple','lock-key','lock-simple-open'], tok:'bolt' },
+    ladder:{ kind:'rows', title:'Climb the ladder', prompt:'Which rung are you on?',
+      lv:[['Heard of it','I know the words, not much more'],['With help','I can do it with some help'],['On my own','I can do it by myself'],['Could teach it','I could teach it to someone else']] },
+    fog:{ kind:'line', title:'Clear the fog', prompt:'How clear is it? Tap the line where you are.',
+      lv:[['Foggy','Still hazy'],['Clearing','Starting to see it'],['Crystal clear','I can see all of it']] },
+    orbit:{ kind:'rings', title:'Get into orbit', prompt:'How close to the centre are you? Tap where you are.',
+      lv:[['Drifting','Out on the edge'],['In orbit','Getting pulled in'],['Locked on','Right at the centre']] },
+    // the same orbit in words Year 1/2 can read on their own
+    orbit12:{ kind:'rings', title:'Get into orbit', prompt:'How close to the middle are you? Tap where you are.',
+      lv:[['Far away','Not yet'],['Getting closer','Nearly'],['Got it','Right in the middle']] }
+  };
+  var CHECK_COLS = { 3:['var(--red)','var(--proc)','var(--out)'], 4:['var(--red)','#C97F0B','var(--in)','var(--out)'] };
+
+  function checkSlide(costume){
+    return function(){
+      var C = CHECK[costume], N = C.lv.length, COL = CHECK_COLS[N];
+      return { steps:0, cls:'ck-slide', html:
+        '<div class="ck pp" data-kind="' + C.kind + '" data-costume="' + costume + '">' +
+          '<div class="ck-top">' +
+            '<span class="ck-name">' + C.title + '</span>' +
+            '<span class="ck-sp"></span>' +
+            '<button class="ck-nav" data-go="-1" aria-label="Previous objective">' + ph('caret-left', 26) + '</button>' +
+            '<span class="ck-of"></span>' +
+            '<button class="ck-nav" data-go="1" aria-label="Next objective">' + ph('caret-right', 26) + '</button>' +
+            '<span class="ck-sp"></span>' +
+            '<button class="ck-btn ck-view">' + ph('squares-four', 20) + '<span>View all</span></button>' +
+          '</div>' +
+          '<div class="ck-main"></div>' +
+          '<div class="ck-foot">' +
+            '<span class="ck-count"></span>' +
+            '<button class="ck-btn ck-undo">' + ph('arrow-counter-clockwise', 20) + 'Undo</button>' +
+            '<button class="ck-btn ck-clear">' + ph('eraser', 20) + '<span>Clear</span></button><span class="ck-sp"></span>' +
+          '</div>' +
+        '</div>',
+        init:function(el){
+          var root = el.querySelector('.ck'), main = root.querySelector('.ck-main');
+          var objs = [], marks = [], undo = [], at = 0, all = false, clearT = null;
+
+          // "Spot a digital device" becomes "I can spot a digital device"
+          function readObjectives(){
+            var today = null;
+            [].forEach.call(el.parentNode.querySelectorAll('.d2-slide'), function(s){
+              var h = s.querySelector('h1');
+              if(!today && h && /^Today you will/.test(h.textContent.trim())) today = s;
+            });
+            var list = today ? [].map.call(today.querySelectorAll('[data-step]'), function(d){ return d.textContent.trim(); }).filter(Boolean) : [];
+            if(!list.length) list = ['Today’s learning'];
+            objs = list.map(function(t){ return 'I can ' + t.charAt(0).toLowerCase() + t.slice(1); });
+            marks = objs.map(function(){ return []; });
+          }
+
+          function lvOfLine(x){ return Math.min(N - 1, Math.floor(x * N)); }
+          function lvOfRing(r){ return r < .36 ? 2 : r < .68 ? 1 : 0; }
+          function counts(o){ var c = []; for(var i = 0; i < N; i++) c.push(0); marks[o].forEach(function(m){ c[m.lv]++; }); return c; }
+          // a stand-in position for positional costumes when a level was
+          // chosen from the View all grid rather than tapped on the picture
+          function placeFor(lv){
+            if(C.kind === 'line') return { lv:lv, x:(lv + .2 + Math.random() * .6) / N };
+            if(C.kind === 'rings'){
+              var band = [[.72,.94],[.42,.64],[.08,.3]][lv], r = band[0] + Math.random() * (band[1] - band[0]), a = Math.random() * Math.PI * 2;
+              return { lv:lv, x:Math.cos(a) * r, y:Math.sin(a) * r };
+            }
+            return { lv:lv };
+          }
+          function add(o, m){ marks[o].push(m); undo.push(o); fxArm(); fxClick(); draw(m); }
+
+          function tokens(n, lv){
+            var h = '';
+            for(var i = 0; i < n; i++) h += '<span class="ck-tok ' + (C.tok || 'dot') + '" style="--c:' + COL[lv] + '"></span>';
+            return h;
+          }
+          function chipIcon(k, lv){
+            var h = '<span class="ck-chipic">';
+            for(var i = 0; i < k; i++) h += '<i style="--c:' + COL[lv] + '"></i>';
+            return h + '</span>';
+          }
+
+          function drawSingle(fresh){
+            var o = at, c = counts(o), h = '';
+            h += '<div class="ck-obj">' + objs[o] + '</div><div class="ck-prompt">' + C.prompt + '</div>';
+            if(C.kind === 'cols'){
+              h += '<div class="ck-stage ck-cols" style="--n:' + N + '">' + C.lv.map(function(L, i){
+                var icon = costume === 'chips' ? chipIcon(i + 1, i) : '<span class="ck-ic' + (costume === 'circuit' && i === 2 ? ' glow' : '') + '">' + ph(C.ic[i], 40) + '</span>';
+                return '<button class="ck-col" data-lv="' + i + '" style="--c:' + COL[i] + '">' + icon +
+                  '<b>' + L[0] + '</b><small>' + L[1] + '</small>' +
+                  '<span class="ck-pile' + (costume === 'chips' ? ' stack' : '') + '">' + tokens(c[i], i) + '</span>' +
+                  '<span class="ck-n">' + c[i] + '</span></button>';
+              }).join('') + '</div>';
+            } else if(C.kind === 'rows'){
+              h += '<div class="ck-stage ck-ladder">';
+              for(var i = N - 1; i >= 0; i--){
+                h += '<button class="ck-rung" data-lv="' + i + '" style="--c:' + COL[i] + '"><span class="ck-rl"><b>' + C.lv[i][0] + '</b><small>' + C.lv[i][1] + '</small></span>' +
+                  '<span class="ck-bar"><span class="ck-pile">' + tokens(c[i], i) + '</span></span><span class="ck-n">' + c[i] + '</span></button>';
+              }
+              h += '</div>';
+            } else if(C.kind === 'line'){
+              h += '<div class="ck-stage ck-fog"><div class="ck-fogarea">' + fogPicture() + fogPicture(true) +
+                '<div class="ck-pins">' + fogPins(o) + '</div><span class="ck-track"></span></div>' +
+                '<div class="ck-zones">' + C.lv.map(function(L, i){ return '<span style="--c:' + COL[i] + '"><b>' + L[0] + '</b> ' + c[i] + '</span>'; }).join('') + '</div></div>';
+            } else {
+              h += '<div class="ck-stage ck-orbit"><div class="ck-orbitarea">' + orbitPicture(o) + '</div>' +
+                '<div class="ck-orbitkey">' + [2,1,0].map(function(i){ return '<span style="--c:' + COL[i] + '"><i></i><b>' + C.lv[i][0] + '</b><em>' + c[i] + '</em></span>'; }).join('') + '</div></div>';
+            }
+            main.innerHTML = h;
+            if(costume === 'chips') squeezeChips();
+            if(fresh) main.classList.remove('ck-in'), void main.offsetWidth, main.classList.add('ck-in');
+          }
+          function squeezeChips(){
+            [].forEach.call(main.querySelectorAll('.ck-pile.stack'), function(p){
+              var n = p.children.length, room = p.clientHeight - 24;
+              var gap = n > 1 ? Math.min(-4, Math.floor(room / n) - 20) : 0;
+              [].forEach.call(p.children, function(t, i){ t.style.marginTop = i ? gap + 'px' : '0'; });
+            });
+          }
+          function fogPicture(blur){
+            return '<svg class="ck-land' + (blur ? ' blur' : '') + '" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+              '<rect width="1000" height="300" fill="#dcebff"/><circle cx="860" cy="70" r="40" fill="#FFD23F"/>' +
+              '<path d="M0 210 Q180 120 360 190 T720 170 T1000 150 V300 H0 Z" fill="#8fcf9f"/>' +
+              '<path d="M0 250 Q220 190 460 240 T1000 220 V300 H0 Z" fill="#4fae72"/>' +
+              '<g transform="translate(700 150)"><rect x="-6" y="0" width="12" height="70" fill="#7d5b36"/><circle cx="0" cy="-10" r="40" fill="#2f8a52"/></g>' +
+              '<g transform="translate(250 175)"><rect x="-45" y="0" width="90" height="60" fill="#fff" stroke="#1C2431" stroke-width="4"/><path d="M-55 2 L0 -40 L55 2 Z" fill="#D8443C" stroke="#1C2431" stroke-width="4"/><rect x="-12" y="26" width="24" height="34" fill="#2F6BE0"/></g>' +
+              (blur ? '<rect width="1000" height="300" fill="#eef1f6" opacity=".55"/>' : '') + '</svg>';
+          }
+          function fogPins(o){
+            // stack pins that land close together so none hides another
+            var lanes = [];
+            return marks[o].map(function(m){
+              var lane = 0;
+              while(lanes[lane] && lanes[lane].some(function(x){ return Math.abs(x - m.x) < .035; })) lane++;
+              (lanes[lane] = lanes[lane] || []).push(m.x);
+              return '<span class="ck-pin" style="left:' + (m.x * 100).toFixed(2) + '%;--lane:' + lane + ';--c:' + COL[m.lv] + '"></span>';
+            }).join('');
+          }
+          function orbitPicture(o){
+            var s = '<svg viewBox="-100 -100 200 200" aria-hidden="true">' +
+              '<circle r="96" fill="color-mix(in srgb,' + COL[0] + ' 9%,#fff)" stroke="' + COL[0] + '" stroke-opacity=".35" stroke-width="1" stroke-dasharray="3 3"/>' +
+              '<circle r="66" fill="color-mix(in srgb,' + COL[1] + ' 11%,#fff)" stroke="' + COL[1] + '" stroke-opacity=".4" stroke-width="1" stroke-dasharray="3 3"/>' +
+              '<circle r="35" fill="color-mix(in srgb,' + COL[2] + ' 16%,#fff)" stroke="' + COL[2] + '" stroke-opacity=".5" stroke-width="1"/>' +
+              '<g transform="translate(-11 -11) scale(.086)" fill="' + COL[2] + '">' + PH['planet'] + '</g>';
+            // Each mark really orbits, at its own distance, so its ring never
+            // changes. Inner rings go round faster. The delay comes off one
+            // shared clock, so a redraw after a new tap doesn't send every
+            // satellite back to where it started.
+            var now = (window.performance ? performance.now() : Date.now()) / 1000;
+            marks[o].forEach(function(m, i){
+              var d = [46, 30, 18][m.lv] * (0.85 + ((i * 37) % 30) / 100), dir = i % 3 === 2 ? ' reverse' : '';
+              s += '<g class="ck-spin" style="animation-duration:' + d.toFixed(1) + 's;animation-delay:-' + (now % d).toFixed(2) + 's;animation-direction:' + (dir ? 'reverse' : 'normal') + '">' +
+                '<circle class="ck-sat" cx="' + (m.x * 96).toFixed(1) + '" cy="' + (m.y * 96).toFixed(1) + '" r="5.2" fill="' + COL[m.lv] + '" stroke="#fff" stroke-width="1.6"/></g>';
+            });
+            return s + '</svg>';
+          }
+
+          function drawAll(){
+            var h = '<div class="ck-obj small">' + C.title + ': all of today’s objectives</div>' +
+              '<div class="ck-stage ck-grid" style="--n:' + N + '"><span></span>' +
+              C.lv.map(function(L, i){ return '<span class="ck-gh" style="--c:' + COL[i] + '">' + L[0] + '</span>'; }).join('');
+            objs.forEach(function(t, o){
+              var c = counts(o);
+              h += '<span class="ck-gt">' + t + '</span>' + c.map(function(n, i){
+                return '<button class="ck-cell" data-o="' + o + '" data-lv="' + i + '" style="--c:' + COL[i] + '"><span class="ck-pile">' + tokens(Math.min(n, 14), i).replace(/ck-tok \w+/g, 'ck-tok dot') + (n > 14 ? '<em>+' + (n - 14) + '</em>' : '') + '</span><span class="ck-n">' + n + '</span></button>';
+              }).join('');
+            });
+            main.innerHTML = h + '</div>';
+          }
+
+          function draw(newMark){
+            root.classList.toggle('all', all);
+            root.querySelector('.ck-of').innerHTML = all ? 'All objectives' : 'Objective <b>' + (at + 1) + '</b> of <b>' + objs.length + '</b>';
+            root.querySelector('.ck-view span').textContent = all ? 'One at a time' : 'View all';
+            [].forEach.call(root.querySelectorAll('.ck-nav'), function(b){ b.disabled = all || objs.length < 2; });
+            var total = marks.reduce(function(a, m){ return a + m.length; }, 0);
+            root.querySelector('.ck-count').textContent = total ? total + (total === 1 ? ' tap' : ' taps') + ' so far' : 'Tap to add your mark';
+            root.querySelector('.ck-undo').disabled = !undo.length;
+            if(all) drawAll(); else drawSingle(!newMark);
+            if(newMark){
+              var lastOf = function(sel){ var l = main.querySelectorAll(sel); return l[l.length - 1]; };
+              var cell = all ? '.ck-cell[data-o="' + undo[undo.length - 1] + '"]' : '';
+              var t = all ? lastOf(cell + '[data-lv="' + newMark.lv + '"] .ck-tok') :
+                C.kind === 'line' ? lastOf('.ck-pin') : C.kind === 'rings' ? lastOf('.ck-sat') :
+                lastOf('[data-lv="' + newMark.lv + '"] .ck-tok');
+              if(t) t.classList.add('fresh');
+            }
+          }
+
+          root.addEventListener('pointerdown', function(e){
+            var t = e.target, b;
+            if((b = t.closest('.ck-cell'))){ e.preventDefault(); add(+b.getAttribute('data-o'), placeFor(+b.getAttribute('data-lv'))); return; }
+            if((b = t.closest('.ck-col, .ck-rung'))){ e.preventDefault(); add(at, { lv:+b.getAttribute('data-lv') }); return; }
+            if((b = t.closest('.ck-fogarea'))){
+              e.preventDefault();
+              var r = b.getBoundingClientRect(), x = Math.max(.015, Math.min(.985, (e.clientX - r.left) / r.width));
+              add(at, { lv:lvOfLine(x), x:x }); return;
+            }
+            if((b = t.closest('.ck-orbitarea svg'))){
+              e.preventDefault();
+              var q = b.getBoundingClientRect(), dx = ((e.clientX - q.left) / q.width * 2 - 1) * 100 / 96, dy = ((e.clientY - q.top) / q.height * 2 - 1) * 100 / 96;
+              var rr = Math.sqrt(dx * dx + dy * dy);
+              if(rr > 1.04) return;
+              if(rr > .96){ dx *= .96 / rr; dy *= .96 / rr; rr = .96; }
+              add(at, { lv:lvOfRing(rr), x:dx, y:dy });
+            }
+          });
+          root.addEventListener('click', function(e){
+            var t = e.target, b;
+            if((b = t.closest('.ck-nav'))){ at = (at + (+b.getAttribute('data-go')) + objs.length) % objs.length; draw(); return; }
+            if(t.closest('.ck-view')){ all = !all; draw(); return; }
+            if(t.closest('.ck-undo')){ var o = undo.pop(); if(o != null){ marks[o].pop(); if(!all) at = o; } draw(); return; }
+            if((b = t.closest('.ck-clear'))){
+              // two taps, so a stray tap can't wipe the class's answers
+              if(!clearT){
+                b.querySelector('span').textContent = 'Tap again to clear';
+                clearT = setTimeout(function(){ clearT = null; b.querySelector('span').textContent = 'Clear'; }, 2500);
+                return;
+              }
+              clearTimeout(clearT); clearT = null; b.querySelector('span').textContent = 'Clear';
+              marks = objs.map(function(){ return []; }); undo = []; draw();
+            }
+          });
+          readObjectives(); draw();
+        } };
+    };
+  }
+
+  // shared: confidence slide (Year 1/2 keeps the faces)
   function confidenceSlide(){
     var faces = [
       ['1','Not yet','<circle cx="12" cy="12" r="9"/><path d="M8 15c1.2-1.4 6.8-1.4 8 0M9 10h.01M15 10h.01"/>'],
@@ -4269,7 +4627,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 8 min","How strong is your password?","Pupils type made-up passwords into the live checker and watch the bar/verdict change. Try the three preset examples first, then let them invent their own. Reassure them: nothing typed here is saved or sent anywhere, and they should never type a real password."],
     ["Plenary · 3 min","A real digital device","Bring it back to something real. Take answers before revealing each card."],
     ["Plenary · 4 min","Spot the mistake","New: three sentences, some right, some wrong. Pupils tap the wrong word, or tap 'No mistake here' if it's correct. Demo of the new spot-the-mistake slide type for this year group."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread tells you who needs a recap before Lesson 2."],
+    ["Plenary · 3 min","Crack the vault","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Three columns, from Locked to Cracked it."],
     ["Next time · 1 min","Next lesson","Recap the three jobs. Next lesson: the parts of a device, and design your own."]
   ];
   var Y34_SLIDES = [
@@ -4540,7 +4898,7 @@ window.HB_GAUGE = (function(){
       { words:["The","screen","showing","your","work","is","a","process"], mistakeIndex:7 },
       { words:["A","weak","password","uses","three","random","words"], mistakeIndex:1 }
     ]); },
-    confidenceSlide,
+    checkSlide('vault'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Nice work</h1>' +
       '<p class="lead pp">You found inputs, processes and outputs, and what makes a password strong.</p>' +
@@ -4743,7 +5101,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 12 min","Invent your own device","Model the disco lights machine first: microphone, check how big it is, light. Build it on the board, read the sentence underneath out loud, then press Run so they watch the token travel through. Then pupils build their own in pairs. The sentence under the machine is the thing to point at when a machine makes no sense: a camera that waits 3 seconds and then spins a motor is allowed, and asking what that would actually be for is a better conversation than marking it wrong. The A3 sheet is still there if you want a paper record."],
     ["Activity 3 · 3 min","The broken machine","Five machines, each missing one part. Two of the three pieces offered come from the wrong job, so a pupil who is guessing cannot land it. This is the checked moment: a machine that always runs whatever you build cannot tell you who understands input, process and output. Ask which part is missing before anyone taps."],
     ["Plenary · 4 min","Spot the devices","Read the passage. Ask pupils to count the digital devices and interactions. Our world is full of them."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face. The spread tells you who needs a recap."],
+    ["Plenary · 3 min","Climb the ladder","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Four rungs, from Heard of it to Could teach it. The top rung is a real test, so ask whoever taps it to teach it there and then."],
     ["Next time · 1 min","Next lesson","Recap inputs and outputs. Next lesson: the many ways digital devices help us."]
   ];
   var Y34_SLIDES2 = [
@@ -4896,7 +5254,7 @@ window.HB_GAUGE = (function(){
             });
           });
         } }; },
-    confidenceSlide,
+    checkSlide('ladder'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Nice work</h1>' +
       '<p class="lead pp">You sorted input and output devices, and designed your own.</p>' +
@@ -4952,7 +5310,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 6 min","Think back","Pupils reflect on both pieces of work. Which did they prefer, and why?"],
     ["Activity 4 · 12 min","Invent something our school needs","The old paint-it-twice activity is gone, which buys this the time it needs. If you still run short, this slide is self-contained and works anywhere in the unit. Each pair picks one of the four jobs, all of which are done on paper in this school today. Read what goes wrong, then build the invention on the same machine from Lesson 2, this time with up to three inputs and three outputs. Name the machine so pairs can find their own again. Take the 'decide these' questions one at a time; the answers matter more than the machine."],
     ["Plenary · 4 min","Sometimes non-digital wins","Discuss: is a digital tool always the better choice? Paper starts instantly and never runs out of battery."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Pack your kit","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Three columns, from Still unpacking to Fully packed."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how you are connected to people and devices."]
   ];
   var Y34_SLIDES3 = [
@@ -5006,7 +5364,7 @@ window.HB_GAUGE = (function(){
       '<h1 class="pp">Sometimes non-digital wins</h1>' +
       '<p class="lead pp">A digital tool is not always the better choice.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Paper starts instantly, needs no charging, and works when the wifi is down.</p>' }; },
-    confidenceSlide,
+    checkSlide('backpack'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Nice work</h1>' +
       '<p class="lead pp">You compared digital tools with non-digital ones, and worked out when each is the better fit.</p>' +
@@ -5060,7 +5418,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 10 min","Comparing search engines","As a class, agree one search term. Pupils try it in all five search engines and record the top result, the number of adverts, and anything they notice."],
     ["Plenary · 6 min","Search box or address bar?","Typing into a search engine's own box searches with that engine. Typing into the browser's address bar uses whichever search engine the browser is set to by default."],
     ["Plenary · 4 min","Is this website trustworthy?","Check for spelling errors, low-quality images, and a web address that looks right. If unsure, check the same fact on two other sites."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Clear the fog","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Pupils tap the line itself: the further right, the clearer it is, and the picture behind clears as you go."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how a search engine selects its results."]
   ];
   var Y56_SLIDES3 = [
@@ -5131,7 +5489,7 @@ window.HB_GAUGE = (function(){
       '<h1 class="pp">Is this website trustworthy?</h1>' +
       '<p class="lead pp">Check for spelling errors, low-quality images, and a web address that looks right.</p>' +
       '<p class="lead pp" data-step="1" style="font-weight:700">Still not sure? Check the same fact on two other sites.</p>' }; },
-    confidenceSlide,
+    checkSlide('fog'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Good searching</h1>' +
       '<p class="lead pp">You wrote search instructions, refined a search, and compared search engines.</p>' +
@@ -5185,7 +5543,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 8 min","Adding a network switch","One pupil becomes the switch: they collect messages and send each one to the right person, without reading it. Try passing a message through the switch and compare."],
     ["Project · 10 min","What does your invention connect to?","The scenario each pair picked is remembered from the last lesson, so it should already be showing. Tap what the invention has to reach, which is their decision, then say how each one connects, which is checked. A printer, a kitchen screen and the office computer are all genuinely either, so both answers are accepted: say that out loud, because 'it depends what you plug in' is the honest answer and it is the one this lesson is about."],
     ["Plenary · 4 min","Match the word to its meaning","A checked sort, not reveal cards: pupils match Connection/Network/Network switch to the right definition."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Light it up","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Three bulbs, from Not connected to Lit up."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how computers are connected, and the school network."]
   ];
   var Y34_SLIDES4 = [
@@ -5245,7 +5603,7 @@ window.HB_GAUGE = (function(){
         '</div>' +
         '<button class="d2-gbtn pp" id="d2sortgo">Match them</button>',
         init: sortInitN }; },
-    confidenceSlide,
+    checkSlide('circuit'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Well connected</h1>' +
       '<p class="lead pp">You mapped your own network, and found out what a switch does.</p>' +
@@ -5293,7 +5651,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 6 min","So many results","Most search engines show how many results a search returned. Ask why some terms return far more than others."],
     ["Activity 3 · 8 min","Narrowing a search","Dogs, then black dogs, then black Labrador dog: the results shrink each time. Pupils try their own broad term, narrowing it twice, in speech marks."],
     ["Plenary · 4 min","Complete the sentence","A [search engine] uses [web crawlers] to create an [index] of [webpages]. Take answers before revealing."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Climb the ladder","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Four rungs, from Heard of it to Could teach it. The top rung is a real test, so ask whoever taps it to teach it there and then."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how search results are ranked."]
   ];
   var Y56_SLIDES4 = [
@@ -5473,7 +5831,7 @@ window.HB_GAUGE = (function(){
       '<p class="lead pp" style="max-width:32ch">A ______ uses ______ to create an ______ of ______.</p>' +
       '<div class="d2-rc pp" data-step="1" style="max-width:34ch" id="d2sent"><b>Tap for the answer</b><span class="ans">A search engine uses web crawlers to create an index of webpages.</span></div>',
       init:function(el){ var c=el.querySelector('#d2sent'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
-    confidenceSlide,
+    checkSlide('ladder'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Well indexed</h1>' +
       '<p class="lead pp">You found out how crawlers build an index, and narrowed a search of your own.</p>' +
@@ -5523,7 +5881,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 6 min","Put the file's longer journey in order","A checked sequence, not narration: pupils reorder four scrambled steps for a laptop's file reaching the server over wireless."],
     ["Project · 10 min","How does your network share it?","Three questions about the network parts, tapped on the diagram. These are checked because they have real answers; their invention does not, so it is not what is being marked here. The last line has no button on purpose: what does their server need to keep? That is the one worth writing down, and it is different for every scenario."],
     ["Plenary · 5 min","Match the vocabulary","Connection, network, network switch, wireless access point, server. Match each to its definition."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Get into orbit","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Pupils tap anywhere on the rings: the closer to the centre, the surer they are."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: touring the school's own network."]
   ];
   var Y34_SLIDES5 = [
@@ -5588,7 +5946,7 @@ window.HB_GAUGE = (function(){
         rc('Server','a networked computer that stores files','pr-c') +
         rc('Wireless access point','sends and receives wireless signals, wired into the network','ou-c') +
       '</div>', init: revealInit }; },
-    confidenceSlide,
+    checkSlide('orbit'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Nicely networked</h1>' +
       '<p class="lead pp">You built a network with a switch, a server, and a wireless access point.</p>' +
@@ -5641,7 +5999,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 2 min","Mr Whiteflix is starting up","The button opens Mr Whiteflix in its own tab. Press the power button, which also takes it full screen, then say nothing and let it start up. Pick Pupil one and read the second row title out loud: 'Because you watched Slam Squad'. Somebody has already decided what this person sees, and nobody has typed anything yet. Skip intro is there if you're short of time. Close the tab to get back to the deck."],
     ["Activity 3 · 6 min","Searching Mr Whiteflix","This one opens straight on the search page. Tick the boxes and watch the search bar write the search for them, which is the point for Year 5: their choices become keywords. Then tap a programme; the Why is this here panel in the details shows the three scores that put it in that order. Compare those three bars with how the class scored their paper webpages ten minutes ago. Say plainly that a real search engine counts links between pages too, which this one cannot show."],
     ["Plenary · 3 min","Would this page score well?","Show a page that repeats its keyword dozens of times. Search engines can detect that and penalise the page instead of rewarding it."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Get into orbit","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Pupils tap anywhere on the rings: the closer to the centre, the surer they are."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how searches can be influenced."]
   ];
   var Y56_SLIDES5 = [
@@ -5721,7 +6079,7 @@ window.HB_GAUGE = (function(){
       '<p class="lead pp" style="max-width:34ch">A page that repeats &ldquo;our school&rdquo; forty times in a row.</p>' +
       '<div class="d2-rc pp" data-step="1" style="max-width:32ch" id="d2seo"><b>Tap for the answer</b><span class="ans">Search engines can detect keyword repeated in an unnatural way, and penalise the page instead of ranking it higher.</span></div>',
       init:function(el){ var c=el.querySelector('#d2seo'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
-    confidenceSlide,
+    checkSlide('orbit'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Well ranked</h1>' +
       '<p class="lead pp">You scored a webpage, then tried to optimise it.</p>' +
@@ -5960,7 +6318,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 7 min","Map your network","Mark on the network map where you found each device, and whether its connection is wired or wireless."],
     ["Project · 12 min","Pitch it in one minute","Read the four ticks out before anyone starts, so pupils know what a good pitch contains rather than being judged on confidence. Tap each one as you hear it. One minute each, and if the class is large run a gallery walk of the network drawings instead and pitch only three or four."],
     ["Plenary · 4 min","Networks, and the internet","Computers connected together make a network. Networks connected together make the internet, reached through a router."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Clear the fog","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Pupils tap the line itself: the further right, the clearer it is, and the picture behind clears as you go."],
     ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
   ];
   var Y34_SLIDES6 = [
@@ -6037,7 +6395,7 @@ window.HB_GAUGE = (function(){
         rc('A network','computers connected together','in-c') +
         rc('The internet','many networks, connected together, reached through a router','ou-c') +
       '</div>', init: revealInit }; },
-    confidenceSlide,
+    checkSlide('fog'),
     function(){ return { steps:0, html:
       '<h1 class="pp">That&rsquo;s the unit done</h1>' +
       '<p class="lead pp">You built networks, spotted their real parts around school, and found out how they link to the internet.</p>' +
@@ -6084,7 +6442,7 @@ window.HB_GAUGE = (function(){
     ["Plenary · 3 min","Watch: Social media algorithms explained","A short TED-Ed video applying the same influence-and-money idea to social media instead of search, as a bridge to the next unit."],
     ["Plenary · 4 min","Targeted or not?","A bus-side advert reaches everyone who passes, whether they're interested or not. A search advert reaches people already looking for that exact thing."],
     ["Plenary · 5 min","Spot the mistakes","New: a short passage with two mistakes hidden in it (search engines don't crawl live, and they make money from advertising, not selling computers). Pupils tap each wrong word; progress shows how many they've found. Demo of the new spot-the-mistake slide type for this year group."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Place your bet","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Four chips means they would bet everything they can do it, so ask a four-chip pupil to prove it."],
     ["Next time · 1 min","End of unit","That's the whole unit done. Well done!"]
   ];
   var Y56_SLIDES6 = [
@@ -6178,7 +6536,7 @@ window.HB_GAUGE = (function(){
        "Search","engines","mostly","make","their","money","from","selling","computers."],
       [3, 30]
     ); },
-    confidenceSlide,
+    checkSlide('chips'),
     function(){ return { steps:0, html:
       '<h1 class="pp">That&rsquo;s the unit done</h1>' +
       '<p class="lead pp">You searched, refined, ranked, and worked out how search engines make their money.</p>' +
@@ -6813,26 +7171,40 @@ window.HB_GAUGE = (function(){
   };
 
   /* =================== YEAR 1/2 · TECHNOLOGY AROUND US · LESSON 5 =================== */
+  // Rebuilt for a term with no pupil keyboards. The old version opened
+  // "your saved work" from Lesson 4, which never existed, so this lesson
+  // stands on its own: eight sentences somebody else got wrong, fixed on
+  // the board one child at a time while the class says what to do.
+  Object.assign(PH, {"cat":"<path d=\"M96,140a12,12,0,1,1-12-12A12,12,0,0,1,96,140Zm76-12a12,12,0,1,0,12,12A12,12,0,0,0,172,128Zm60-80v88c0,52.93-46.65,96-104,96S24,188.93,24,136V48A16,16,0,0,1,51.31,36.69c.14.14.26.27.38.41L69,57a111.22,111.22,0,0,1,118.1,0L204.31,37.1c.12-.14.24-.27.38-.41A16,16,0,0,1,232,48Zm-16,0-21.56,24.8A8,8,0,0,1,183.63,74,88.86,88.86,0,0,0,168,64.75V88a8,8,0,1,1-16,0V59.05a97.43,97.43,0,0,0-16-2.72V88a8,8,0,1,1-16,0V56.33a97.43,97.43,0,0,0-16,2.72V88a8,8,0,1,1-16,0V64.75A88.86,88.86,0,0,0,72.37,74a8,8,0,0,1-10.81-1.17L40,48v88c0,41.66,35.21,76,80,79.67V195.31l-13.66-13.66a8,8,0,0,1,11.32-11.31L128,180.68l10.34-10.34a8,8,0,0,1,11.32,11.31L136,195.31v20.36c44.79-3.69,80-38,80-79.67Z\"/>","fish":"<path d=\"M168,76a12,12,0,1,1-12-12A12,12,0,0,1,168,76Zm48.72,67.64c-19.37,34.9-55.44,53.76-107.24,56.1l-22,51.41A8,8,0,0,1,80.1,256l-.51,0a8,8,0,0,1-7.19-5.78L57.6,198.39,5.8,183.56a8,8,0,0,1-1-15.05l51.41-22c2.35-51.78,21.21-87.84,56.09-107.22,24.75-13.74,52.74-15.84,71.88-15.18,18.64.64,36,4.27,38.86,6a8,8,0,0,1,2.83,2.83c1.69,2.85,5.33,20.21,6,38.85C232.55,90.89,230.46,118.89,216.72,143.64Zm-55.18,29a52.11,52.11,0,0,1-33.4-44.78A52.09,52.09,0,0,1,83.37,94.47q-10.45,23.79-11.3,57.59a8,8,0,0,1-4.85,7.17L31.83,174.37l34.45,9.86a8,8,0,0,1,5.49,5.5l9.84,34.44,15.16-35.4a8,8,0,0,1,7.17-4.84Q137.71,183.12,161.54,172.64ZM212.42,43.57c-14.15-3-64.1-11-100.3,14.75a81.21,81.21,0,0,0-16,15.07,36,36,0,0,0,39.35,38.44,8,8,0,0,1,8.73,8.73,36,36,0,0,0,38.47,39.34,80.81,80.81,0,0,0,15-16C223.42,107.73,215.42,57.74,212.42,43.57Z\"/>","sun":"<path d=\"M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z\"/>","bird":"<path d=\"M176,68a12,12,0,1,1-12-12A12,12,0,0,1,176,68Zm64,12a8,8,0,0,1-3.56,6.66L216,100.28V120A104.11,104.11,0,0,1,112,224H24a16,16,0,0,1-12.49-26l.1-.12L96,96.63V76.89C96,43.47,122.79,16.16,155.71,16H156a60,60,0,0,1,57.21,41.86l23.23,15.48A8,8,0,0,1,240,80Zm-22.42,0L201.9,69.54a8,8,0,0,1-3.31-4.64A44,44,0,0,0,156,32h-.22C131.64,32.12,112,52.25,112,76.89V99.52a8,8,0,0,1-1.85,5.13L24,208h26.9l70.94-85.12a8,8,0,1,1,12.29,10.24L71.75,208H112a88.1,88.1,0,0,0,88-88V96a8,8,0,0,1,3.56-6.66Z\"/>","house":"<path d=\"M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z\"/>","cursor-text":"<path d=\"M184,208a8,8,0,0,1-8,8H160a40,40,0,0,1-32-16,40,40,0,0,1-32,16H80a8,8,0,0,1,0-16H96a24,24,0,0,0,24-24V136H104a8,8,0,0,1,0-16h16V80A24,24,0,0,0,96,56H80a8,8,0,0,1,0-16H96a40,40,0,0,1,32,16,40,40,0,0,1,32-16h16a8,8,0,0,1,0,16H160a24,24,0,0,0-24,24v40h16a8,8,0,0,1,0,16H136v40a24,24,0,0,0,24,24h16A8,8,0,0,1,184,208Z\"/>","arrow-left":"<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>","backspace":"<path d=\"M216,40H68.53a16.08,16.08,0,0,0-13.72,7.77L9.14,123.88a8,8,0,0,0,0,8.24l45.67,76.11A16.08,16.08,0,0,0,68.53,216H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM61.67,204.12,68.53,200h0ZM216,200H68.53l-43.2-72,43.2-72H216ZM106.34,146.34,124.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L136,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L147.31,128l18.35,18.34a8,8,0,0,1-11.32,11.32L136,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32Z\"/>","arrow-fat-up":"<path d=\"M229.66,114.34l-96-96a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,32,128H72v80a16,16,0,0,0,16,16h80a16,16,0,0,0,16-16V128h40a8,8,0,0,0,5.66-13.66ZM176,112a8,8,0,0,0-8,8v88H88V120a8,8,0,0,0-8-8H51.31L128,35.31,204.69,112Z\"/>","text-aa":"<path d=\"M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z\"/>"});
   var Y12META5 = { eyebrow:'Technology around us &middot; Lesson 5', exitHash:'#/g/y12' };
   var Y12_NOTES5 = [
-    ["Introduction · 3 min","Developing keyboard skills","Recap the mouse and the keyboard. Read a statement, pupils point to or move toward whichever device it describes."],
-    ["Introduction · 2 min","Today you will…","Read the three together."],
-    ["Activity 1 · 5 min","Opening a file","Open the paint program, click the open-image icon, and find last lesson's self-portrait by its file name."],
-    ["Activity 1 · 3 min","Why the name mattered","A sensible file name from Lesson 4 makes it easy to find the right file now."],
-    ["Activity 2 · 4 min","Three new keys","Space bar: a gap between words. Backspace: removes the letter just before the cursor. Arrow keys: move the cursor left or right without deleting anything."],
-    ["Activity 2 · 4 min","Fix the typo","A checked on-slide activity, not just a definition: pupils move the cursor with the arrow buttons, then backspace to remove one extra letter from CATT until it reads CAT. Checked automatically when the word's fixed."],
-    ["Activity 2 · 15 min","Write a sentence","Not just a word this time. Add a text box above or below the self-portrait and write a short sentence, using backspace and the arrow keys to fix mistakes."],
-    ["Activity 2 · 5 min","Need a starter?","Pupils who want one can use a sentence starter: my name is…, my school is…, I live in…"],
-    ["Plenary · 4 min","Why name it sensibly?","Think, pair, share. It helps you find the file quickly, and shows what it is without opening it."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Introduction · 2 min","Fixing mistakes","Recap Lesson 4: they found the letters of their name and used Backspace. Today they fix sentences somebody else got wrong."],
+    ["Introduction · 1 min","Today you will…","Read the three together."],
+    ["Introduction · 3 min","Mouse, or keyboard?","Take an answer for each before tapping it. Writing needs the keyboard; putting the cursor in the right place can be done with either."],
+    ["Introduction · 3 min","What's a cursor?","The flashing line shows where the next letter will go. Nearly every fix starts with putting the cursor in the right place, and that's the habit to build today."],
+    ["Activity 1 · 4 min","Keys for fixing","Four cards. Take a guess before revealing each one. On this keyboard Shift lasts for one letter, the same as tapping it once on a real one."],
+    ["Activity 2 · 20 min","Fix it","Eight sentences, each with a mistake, getting harder as they go: an extra letter, a missing letter, a wrong letter, a capital, a space, a full stop, then two sentences with two mistakes each. One child at the board per sentence. Before they touch anything, the class tells them where the cursor needs to go and which key to press, so the rest of the room is doing the thinking too. Tapping between two letters moves the cursor, which is what clicking does on a real computer. The picture shows the word the writer meant, and Need a clue? says what kind of mistake it is. It only celebrates when the sentence is exactly right, capitals and full stop included. Next sentence skips ahead if you're short of time, and the dots jump to any sentence."],
+    ["Plenary · 3 min","How did you get on?","A checked self-review. Pupils tick what they really did today, and telling the person at the board what to press counts."],
+    ["Plenary · 3 min","Get into orbit","The three things from Today you will, one at a time. Read each one out, then send pupils up to tap the rings: the closer to the middle, the surer they are. Several pupils or just one both work, and every tap stays on the board. View all shows all three together; Undo takes back the last tap."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: using technology safely and responsibly."]
+  ];
+  // bad sentence, fixed sentence, picture of the word they meant, clue
+  var Y12_FIX = [
+    ['The catt is fat.','The cat is fat.','cat','One letter too many.'],
+    ['The dg can run.','The dog can run.','dog','A letter is missing.'],
+    ['I can see a fash.','I can see a fish.','fish','One letter is wrong.'],
+    ['sam is my friend.','Sam is my friend.','text-aa','A name needs a capital letter. Use Shift.'],
+    ['The sun ishot.','The sun is hot.','sun','Two words are stuck together.'],
+    ['The bus is red','The bus is red.','bus','A sentence ends with a full stop.'],
+    ['the bird can fly','The bird can fly.','bird','Two things to fix.'],
+    ['My hous is bigg.','My house is big.','house','Two things to fix.']
   ];
   var Y12_SLIDES5 = [
     function(){ return { steps:0, html:
-      '<h1 class="pp">Developing <em>keyboard</em> skills</h1>' +
-      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('keyboard',56)+ph('arrow-right',56)+ph('pencil-simple',56) + '</div>' }; },
+      '<h1 class="pp">Fixing <em>mistakes</em></h1>' +
+      '<div class="pp" style="display:flex;gap:clamp(14px,4vw,34px);color:var(--proc)">' + ph('keyboard',56)+ph('cursor-text',56)+ph('backspace',56) + '</div>' }; },
     function(){
-      var items = ["Open my work from a saved file","Use the arrow keys to move the cursor","Edit text by deleting letters"];
+      var items = ["Move the cursor to the right place","Take letters out and put letters in","Use a capital letter and a full stop"];
       return { steps:items.length, html:
         '<h1 class="pp">Today you will…</h1>' +
         '<div style="display:flex;flex-direction:column;gap:14px;text-align:left;max-width:26ch">' +
@@ -6847,91 +7219,164 @@ window.HB_GAUGE = (function(){
         rc('Draw a picture','mouse','in-c') +
         rc('Write a sentence','keyboard','pr-c') +
       '</div>', init: revealInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">What&rsquo;s a cursor?</h1>' +
+      '<div class="d2-kb-screen pp" style="width:auto;padding:8px 34px"><span class="d2-kb-text">I like ca</span><span class="d2-kb-caret"></span><span class="d2-kb-text">ts.</span></div>' +
+      '<p class="lead pp">The flashing line is called the cursor.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700;color:var(--proc)">It shows where the next letter will go. To fix a mistake, put the cursor in the right place first.</p>' }; },
     function(){ return { steps:0, html:
-      '<h1 class="pp">Opening a file</h1>' +
-      '<p class="lead pp">Open your paint program, then click the open-image icon.</p>' +
-      '<p class="lead pp" style="font-weight:700">Find your self-portrait from last lesson by its file name.</p>' }; },
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Three new keys</h1>' +
+      '<h1 class="pp">Keys for fixing</h1>' +
       '<div class="d2-reveal pp">' +
-        rc('Space bar','a gap between words','in-c') +
-        rc('Backspace','removes the letter just before the cursor','pr-c') +
-        rc('Arrow keys','move the cursor left or right, without deleting anything','ou-c') +
+        rc('Backspace','takes away the letter just before the cursor','pr-c') +
+        rc('Arrow keys','move the cursor, without taking anything away','in-c') +
+        rc('Shift','makes the next letter a capital','ou-c') +
+        rc('Full stop','goes at the end of a sentence') +
       '</div>', init: revealInit }; },
     function(){
-      var TYPO = "CATT", TARGET = "CAT";
+      var ROWS = [['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M']];
+      function keys(list){ return list.map(function(k){ return '<span class="d2-kb-key" data-k="'+k+'">'+k+'</span>'; }).join(''); }
       return { steps:0, html:
-        '<h1 class="pp">Fix the typo</h1>' +
-        '<p class="lead pp">Move the cursor with the arrows, then backspace to remove the extra letter.</p>' +
-        '<div class="pp" id="d2fixword" style="display:flex;gap:6px;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(2rem,6vw,3.2rem);font-weight:700;min-height:1.6em"></div>' +
-        '<div class="pp" style="display:flex;gap:10px;justify-content:center">' +
-          '<button class="d2-gbtn ghost" id="d2fixleft">&larr;</button>' +
-          '<button class="d2-gbtn" id="d2fixback">Backspace</button>' +
-          '<button class="d2-gbtn ghost" id="d2fixright">&rarr;</button>' +
-        '</div>' +
-        '<p class="lead" id="d2fixmsg" style="min-height:1.4em;font-weight:700"></p>',
+        '<div class="d2-kb d2-fix pp">' +
+          '<div class="d2-fix-top">' +
+            '<span class="d2-fix-pic" id="d2fixPic"></span>' +
+            '<div class="d2-kb-screen d2-fix-screen" id="d2fixScreen"></div>' +
+          '</div>' +
+          '<div class="d2-kb-rows">' +
+            '<div class="d2-kb-row">' + keys(ROWS[0]) + '<span class="d2-kb-key wide" data-k="BACK">Backspace</span></div>' +
+            '<div class="d2-kb-row" style="padding:0 4%">' + keys(ROWS[1]) + '</div>' +
+            '<div class="d2-kb-row"><span class="d2-kb-key wide" data-k="SHIFT">' + ph('arrow-fat-up',22) + '&nbsp;Shift</span>' + keys(ROWS[2]) + '<span class="d2-kb-key" data-k=".">.</span></div>' +
+            '<div class="d2-kb-row"><span class="d2-kb-key wide" data-k="LEFT" aria-label="Left arrow">' + ph('arrow-left',30) + '</span><span class="d2-kb-key space" data-k="SPACE">space</span><span class="d2-kb-key wide" data-k="RIGHT" aria-label="Right arrow">' + ph('arrow-right',30) + '</span></div>' +
+          '</div>' +
+          '<div class="d2-kb-bar">' +
+            '<span class="d2-fix-dots" id="d2fixDots"></span>' +
+            '<button class="d2-kb-btn" id="d2fixClue">Need a clue?</button>' +
+            '<button class="d2-kb-btn" id="d2fixReset">Start again</button>' +
+            '<button class="d2-kb-btn go" id="d2fixNext">Next sentence</button>' +
+          '</div>' +
+          '<div class="d2-kb-out" id="d2fixOut"></div>' +
+        '</div>',
         init:function(el){
-          var letters = TYPO.split(''), pos = letters.length, done = false;
-          var word = el.querySelector('#d2fixword'), msg = el.querySelector('#d2fixmsg');
-          function render(){
-            word.innerHTML = letters.map(function(ch,i){
-              return (i === pos ? '<span style="width:3px;height:1em;background:var(--proc);display:inline-block;margin:0 1px"></span>' : '') +
-                '<span>' + ch + '</span>';
-            }).join('') + (pos === letters.length ? '<span style="width:3px;height:1em;background:var(--proc);display:inline-block;margin:0 1px"></span>' : '');
+          var screen = el.querySelector('#d2fixScreen'), out = el.querySelector('#d2fixOut'), pic = el.querySelector('#d2fixPic');
+          var dots = el.querySelector('#d2fixDots'), shiftKey = el.querySelector('[data-k="SHIFT"]');
+          var round = 0, chars = [], pos = 0, shift = false, fixed = false, won = [];
+          function say(t, c){ out.textContent = t || ''; out.style.color = c || 'var(--muted)'; }
+          function drawDots(){
+            dots.innerHTML = Y12_FIX.map(function(r, i){
+              return '<button class="d2-fix-dot' + (i === round ? ' now' : '') + (won[i] ? ' done' : '') + '" data-r="' + i + '" aria-label="Sentence ' + (i + 1) + '"></button>';
+            }).join('');
           }
-          render();
-          el.querySelector('#d2fixleft').addEventListener('click', function(){ if(done) return; pos = Math.max(0, pos-1); render(); });
-          el.querySelector('#d2fixright').addEventListener('click', function(){ if(done) return; pos = Math.min(letters.length, pos+1); render(); });
-          el.querySelector('#d2fixback').addEventListener('click', function(){
-            if(done || pos === 0) return;
-            letters.splice(pos-1, 1); pos--;
-            render();
-            if(letters.join('') === TARGET){ done = true; msg.style.color = 'var(--out)'; msg.textContent = 'Fixed it! ' + TARGET; burst(); }
+          function draw(){
+            // each letter is its own span so a tap can land between two of them
+            screen.innerHTML = chars.map(function(ch, i){
+              return (i === pos ? '<span class="d2-kb-caret"></span>' : '') + '<span class="d2-fix-ch" data-i="' + i + '">' + (ch === ' ' ? '&nbsp;' : ch) + '</span>';
+            }).join('') + (pos === chars.length ? '<span class="d2-kb-caret"></span>' : '');
+            shiftKey.classList.toggle('held', shift);
+          }
+          function load(r){
+            round = r; chars = Y12_FIX[r][0].split(''); pos = chars.length; shift = false; fixed = false;
+            pic.innerHTML = ph(Y12_FIX[r][2], 64);
+            draw(); drawDots();
+            say('Sentence ' + (r + 1) + ' of ' + Y12_FIX.length + '. Find the mistake.');
+          }
+          function check(){
+            if(fixed || chars.join('') !== Y12_FIX[round][1]) return;
+            fixed = true; won[round] = true; drawDots();
+            say(round === Y12_FIX.length - 1 ? 'Fixed. That was the last one.' : 'Fixed it. Who is next?', 'var(--out)');
+            fxArm(); fxCannon(); fxFanfare();
+          }
+          function press(k, node){
+            fxArm(); fxClick();
+            node.classList.add('on');
+            setTimeout(function(){ node.classList.remove('on'); }, 130);
+            if(fixed && k !== 'LEFT' && k !== 'RIGHT') return;
+            if(k === 'BACK'){ if(pos > 0){ chars.splice(pos - 1, 1); pos--; } }
+            else if(k === 'LEFT') pos = Math.max(0, pos - 1);
+            else if(k === 'RIGHT') pos = Math.min(chars.length, pos + 1);
+            else if(k === 'SHIFT'){ shift = !shift; }
+            else if(chars.length < 32){
+              var c = k === 'SPACE' ? ' ' : k === '.' ? '.' : (shift ? k : k.toLowerCase());
+              chars.splice(pos, 0, c); pos++;
+              if(k !== 'SPACE' && k !== '.') shift = false;
+            }
+            draw(); say(''); check();
+          }
+          [].forEach.call(el.querySelectorAll('.d2-kb-key'), function(node){
+            node.addEventListener('pointerdown', function(e){ e.preventDefault(); press(node.getAttribute('data-k'), node); });
+          });
+          // tapping the sentence puts the cursor on whichever side of the
+          // letter was nearer, which is what a mouse click does
+          screen.addEventListener('pointerdown', function(e){
+            e.preventDefault();
+            var ch = e.target.closest('.d2-fix-ch');
+            if(ch){
+              var r = ch.getBoundingClientRect(), i = +ch.getAttribute('data-i');
+              pos = e.clientX < r.left + r.width / 2 ? i : i + 1;
+            } else {
+              var first = screen.querySelector('.d2-fix-ch');
+              pos = first && e.clientX < first.getBoundingClientRect().left ? 0 : chars.length;
+            }
+            fxArm(); fxClick(); draw();
+          });
+          dots.addEventListener('click', function(e){ var d = e.target.closest('[data-r]'); if(d) load(+d.getAttribute('data-r')); });
+          el.querySelector('#d2fixClue').addEventListener('click', function(){ if(!fixed) say(Y12_FIX[round][3], 'var(--proc)'); });
+          el.querySelector('#d2fixReset').addEventListener('click', function(){ won[round] = false; load(round); });
+          el.querySelector('#d2fixNext').addEventListener('click', function(){ load((round + 1) % Y12_FIX.length); });
+          load(0);
+        } };
+    },
+    function(){
+      var TICKS = ["I put the cursor in the right place","I took a letter out, or put one in","I used Shift or a full stop"];
+      return { steps:0, html:
+        '<h1 class="pp">How did you get on?</h1>' +
+        '<p class="lead pp">Tap each one you really did, at the board or by telling the person at the board what to press.</p>' +
+        '<div class="pp" style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:38ch;width:100%" id="d2rubric5">' +
+        TICKS.map(function(t,i){ return '<button class="d2-rtick" data-i="'+i+'" style="display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--hair);background:var(--ground-2);border-radius:14px;padding:12px 16px;font:inherit;font-weight:600;font-size:clamp(1rem,2vw,1.2rem);color:var(--ink);cursor:pointer">' +
+          '<span class="tickmark" style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--hair);display:grid;place-items:center;color:transparent">'+ICON.check+'</span>' + t + '</button>'; }).join('') +
+        '</div>' +
+        '<p class="lead" id="d2rubric5msg" style="min-height:1.4em"></p>',
+        init:function(el){
+          var done = 0, total = TICKS.length, msg = el.querySelector('#d2rubric5msg');
+          [].forEach.call(el.querySelectorAll('.d2-rtick'), function(b){
+            b.addEventListener('click', function(){
+              if(b.classList.contains('on')) return;
+              b.classList.add('on');
+              b.style.borderColor = 'var(--out)'; b.style.background = 'color-mix(in srgb,var(--out) 12%,var(--paper))';
+              b.querySelector('.tickmark').style.color = 'var(--out)'; b.querySelector('.tickmark').style.borderColor = 'var(--out)';
+              done++;
+              msg.style.color = 'var(--out)';
+              if(done === total){ msg.textContent = 'All three, well done.'; burst(); }
+              else msg.textContent = done + ' of ' + total + ' ticked';
+            });
           });
         } }; },
-    function(){ return { steps:1, html:
-      '<h1 class="pp">Write a sentence</h1>' +
-      '<p class="lead pp">Last lesson you typed a word: your name.</p>' +
-      '<p class="lead pp" data-step="1" style="font-weight:700">Add a text box above or below your self-portrait, and write a full sentence.</p>' }; },
+    checkSlide('orbit12'),
     function(){ return { steps:0, html:
-      '<h1 class="pp">Need a starter?</h1>' +
-      '<div class="d2-reveal pp">' +
-        rc('My name is…','finish it your way','in-c') +
-        rc('My school is…','finish it your way','pr-c') +
-        rc('I live in…','finish it your way','ou-c') +
-      '</div>', init: revealInit }; },
-    function(){ return { steps:1, html:
-      '<h1 class="pp">Why name it sensibly?</h1>' +
-      '<div class="d2-rc pp" data-step="1" style="max-width:30ch" id="d2name5"><b>Think, pair, share</b><span class="ans">It helps you find your file quickly, and shows what it is without opening it.</span></div>',
-      init:function(el){ var c=el.querySelector('#d2name5'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
-    confidenceSlide,
-    function(){ return { steps:0, html:
-      '<h1 class="pp">Well typed</h1>' +
-      '<p class="lead pp">You opened a saved file and wrote a whole sentence, fixing mistakes as you went.</p>' +
+      '<h1 class="pp">Well fixed</h1>' +
+      '<p class="lead pp">You moved the cursor, took letters out, put letters in, and used capitals and full stops.</p>' +
       '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: using technology safely and responsibly.</p>' }; }
   ];
   var Y12_QUIZ5 = [
-    {q:"Backspace…", o:["adds a space","deletes the letter just before the cursor","saves your work"], a:1},
-    {q:"Arrow keys let you…", o:["move the cursor without deleting anything","delete a whole sentence","open a new file"], a:0},
-    {q:"To open a file you saved earlier, you need to remember its…", o:["colour","name","size"], a:1},
-    {q:"The space bar…", o:["deletes a letter","adds a space between words","saves your file"], a:1}
+    {q:"The flashing line that shows where your next letter goes is the…", o:["mouse","cursor","screen"], a:1},
+    {q:"Backspace…", o:["adds a space","takes away the letter just before the cursor","saves your work"], a:1},
+    {q:"Arrow keys let you…", o:["move the cursor without taking anything away","delete a whole sentence","open a new file"], a:0},
+    {q:"To make a capital letter, press…", o:["Shift, then the letter","the space bar","Backspace"], a:0}
   ];
   var Y12_SHEETS5 = {
     sentence: function(){
-      return shell(Y12META5,'Finish the sentence',
-        'Pick one sentence starter and finish it. Then copy it onto the computer.',
-        ['My name is ___________________','My school is ___________________','I live in ___________________'].map(function(t){
-          return '<div style="padding:12px 0;border-bottom:1.5px solid #dfe2ec;font-weight:600;font-size:15px">'+t+'</div>';
+      return shell(Y12META5,'Fix the sentences',
+        'Each sentence has a mistake. Write it again underneath, the right way.',
+        ['The dogg is big.','i like my cat.','The sun is hot','My hat is rde.'].map(function(t){
+          return '<div style="padding:10px 0 4px;font-weight:700;font-size:17px">'+t+'</div><div class="lines" style="height:34px"></div>';
         }).join(''));
     },
     keys: function(){
       return shell(Y12META5,'Find the keys',
-        'Draw a keyboard. Put a ring around the space bar, and an arrow pointing to backspace.',
+        'Draw a keyboard. Ring the space bar, draw an arrow to Backspace, and put a star on Shift.',
         '<div class="draw" data-hint="Draw the keyboard" style="height:220px"></div>');
     },
     home: function(){
       return shell(Y12META5,'A sentence at home',
-        'Type or write a short sentence about your day, like you did on the computer.',
+        'Write a short sentence about your day. Check it for a capital letter and a full stop.',
         '<div class="lines s2"></div>');
     }
   };
@@ -6953,7 +7398,7 @@ window.HB_GAUGE = (function(){
     ["Activity 3 · 6 min","Staying safe online","Just like the road, going online needs systems to keep us safe: passwords, trustworthy sites, keeping information private."],
     ["Activity 3 · 3 min","What apps ask for","Apps can gather personal information and share it with other companies. Choose not to share, if you're asked."],
     ["Plenary · 3 min","How do systems help us?","The puffin crossing helps pedestrians. The catalogue store helps customers and staff. Ask how, for each."],
-    ["Plenary · 2 min","How sure are you?","Pupils tap a face."],
+    ["Plenary · 3 min","Crack the vault","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Three columns, from Locked to Cracked it."],
     ["Next time · 1 min","Next lesson","Recap. Next lesson: how a search engine finds information on the web."]
   ];
   var Y56_SLIDES2 = [
@@ -7051,7 +7496,7 @@ window.HB_GAUGE = (function(){
         rc('The puffin crossing','keeps pedestrians safer, without holding up traffic longer than needed','in-c') +
         rc('The catalogue store','helps customers order easily, and helps staff track stock and orders','ou-c') +
       '</div>', init: revealInit }; },
-    confidenceSlide,
+    checkSlide('vault'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Good thinking</h1>' +
       '<p class="lead pp">You compared two systems, and thought about staying safe in the systems you use online.</p>' +
@@ -7143,8 +7588,8 @@ window.HB_GAUGE = (function(){
       taskIntro:'<div class="tcard"><h2>Your task</h2><p>Type your name into a computer. Then save your work, using your name as the file name.</p></div>' },
     'y12/5':{ notes:Y12_NOTES5, slides:Y12_SLIDES5, quiz:Y12_QUIZ5, sheets:Y12_SHEETS5,
       exitHash:Y12META5.exitHash, lessonHash:'#/y12/lesson/5',
-      taskTk:'Technology around us · Lesson 5', taskH1:'Developing keyboard skills',
-      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Open your saved picture from last lesson. Add a sentence to it, using backspace to fix any mistakes.</p></div>' },
+      taskTk:'Technology around us · Lesson 5', taskH1:'Fixing mistakes',
+      taskIntro:'<div class="tcard"><h2>Your task</h2><p>Look at the sentence on the board. Find the mistake, then tell the person at the board where to put the cursor and which key to press.</p></div>' },
     'y12/3':{ notes:Y12_NOTES3, slides:Y12_SLIDES3, quiz:Y12_QUIZ3, sheets:Y12_SHEETS3,
       exitHash:Y12META3.exitHash, lessonHash:'#/y12/lesson/3',
       taskTk:'Technology around us · Lesson 3', taskH1:'Developing mouse skills',
