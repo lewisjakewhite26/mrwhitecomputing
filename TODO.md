@@ -55,6 +55,16 @@ back. See the toolbar timer entry below, built the same session.
   project slides and the network drawing stay deferred until the order
   settles.
 
+- **Mr Whiteflix needs three photos of Lewis.** Mr Whiteflix is its own
+  app now, `whiteflix.html`, opened from Year 5/6 Lessons 5 and 6 the way
+  Quick Click is opened from Year 1/2. The three Mr White programmes
+  (marking books, the photocopier, the whiteboard pens) run on drawn
+  posters until real photos exist. Each photo goes into `WF_IMG` at the
+  bottom of that file under the programme's id (`mark`, `photo`, `pens`)
+  as a 16:9 WebP, about 1024 by 576, and the poster steps aside on its own.
+  The start-up sound and the full screen on the power button have only
+  been checked in a test browser, never on the board itself.
+
 - **Year 1/2 unit rework.** Lessons 3 and 4 are rebuilt around the
   no-devices constraint and are now internally coherent, but the unit
   itself is thin: it teaches operating instructions rather than computing,
