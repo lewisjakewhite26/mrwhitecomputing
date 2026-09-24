@@ -432,6 +432,87 @@
     .nav a.opt{display:none}
     .mgrid{grid-template-columns:repeat(2,1fr)}
   }
+  /* ---------- phones held upright ----------
+     The board is the main target; this only stops a phone from getting
+     a shrunken copy of the board layout. */
+  @media (max-width:760px){
+    html{font-size:14px}
+    :root{--gut:1rem}
+    .nav{height:auto;flex-wrap:wrap;gap:.35rem 1.1rem;padding:.7rem var(--gut) .5rem}
+    .nav::after{content:"";order:5;flex-basis:100%}
+    .nav .logo{order:1;font-size:1.8rem;margin-right:0}
+    .nav .sp{order:2}
+    .nav .sbox{order:3}
+    .nav .mebox{order:4}
+    .nav .bellbox,.nav .fsbtn{display:none}
+    .nav a,.nav a.opt{order:6;display:inline;font-size:.95rem}
+    .sbox.open{order:6;flex-basis:100%}
+    .sbox.open input{width:auto;flex:1;min-width:0}
+    .nav a,.nav a.opt{order:7}
+    .gpage.spage{padding-top:10.4rem}
+    .sbox{padding:.3rem .35rem;gap:.35rem}
+    .bill{height:78vh;min-height:0}
+    .bill .vl{background:linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,.1) 60%,rgba(0,0,0,.35))}
+    .bill .info{left:var(--gut);right:var(--gut);width:auto;bottom:16%;text-align:center}
+    .bill .tl{--ts:3rem;transform-origin:center bottom}
+    .bill .rankline{justify-content:center;font-size:1.1rem}
+    .bill .blurb{font-size:1rem}
+    .bill .btns{justify-content:center}
+    .bill .side{display:none}
+    .btn{font-size:1.05rem;padding:.6rem 1.3rem .6rem 1rem}
+    .btn svg.i{width:1.4rem;height:1.4rem}
+    .rows{margin-top:-4rem}
+    .row{margin-bottom:1.6rem}
+    .row h2{font-size:1.15rem}
+    .row h2 .pips,.arrow{display:none}
+    .rail{gap:.5rem}
+    .card,.sk-rail .sk{--w:calc((100vw - 2 * var(--gut) - 1rem) / 2.4);width:var(--w)}
+    .card .tl{--ts:1.1rem}
+    .t10item{--w:calc((100vw - 2 * var(--gut)) / 1.5)}
+    .grid{grid-template-columns:repeat(2,1fr);gap:1rem .5rem}
+    .gpage{padding-top:7.6rem}
+    .gpage h1{font-size:1.8rem}
+    #modal{padding:0}
+    .mbox{width:100vw;border-radius:0;min-height:100%}
+    .mhero .in{left:var(--gut);right:var(--gut);bottom:1.2rem}
+    .mhero .tl{--ts:2.4rem;max-width:100%;margin-bottom:1rem}
+    .mbody{padding:0 var(--gut) 2rem}
+    .mcols{grid-template-columns:1fr;gap:.6rem}
+    .why{padding:1rem}
+    .why .bar{grid-template-columns:8.5rem 1fr 2rem;font-size:.9rem;gap:.6rem}
+    .mgrid{grid-template-columns:repeat(2,1fr);gap:.7rem}
+    #profiles h1{font-size:2.2rem}
+    .pf-list{flex-wrap:wrap;justify-content:center;gap:1.4rem}
+    .pf,.pf .av{width:7rem}
+    .pf .av{height:7rem}
+    #boot .word .logo{font-size:15vw}
+    .skipintro{right:1rem;bottom:1.5rem;font-size:1rem}
+    /* the player letterboxes, like any film on a phone held upright */
+    #player .art{inset:auto 0;top:50%;height:auto;aspect-ratio:16/9;transform:translateY(-50%);overflow:hidden}
+    .pbtns{gap:1.2rem}
+    .pbtns svg.i{width:2rem;height:2rem}
+    .pbtns .ttl,.pbtns .pvol,.pbtns .pnext{display:none}
+    .pbtns .psubs{margin-left:auto}
+    .pbottom{padding:2rem 1rem 1.2rem}
+    .caption{font-size:1.15rem;bottom:calc(50% - 28vw - 3.2rem);padding:0 1rem}
+    .ppause{left:1rem;right:1rem;top:auto;bottom:22%}
+    .ppause .tl{--ts:2.4rem}
+    .hqbar{flex-wrap:wrap;padding:.8rem var(--gut);gap:.6rem}
+    .hqbar .logo{font-size:1.6rem}
+    .hqbar .tabs{order:5;margin-left:0;flex-basis:100%}
+    .hqbar .ghost span,.hqbar .fsbtn{display:none}
+    .hqbody{padding:1rem var(--gut) 2rem}
+    .chal{flex-direction:column;align-items:flex-start;gap:.5rem}
+    .chal .t{min-width:0;font-size:1.1rem}
+    .hqh{flex-direction:column;gap:.2rem}
+    .hqh h2{font-size:2rem}
+    .t10grid{grid-template-columns:repeat(2,1fr);gap:1rem .6rem}
+    .tt{height:38vw}
+    .tt .ps .tl{--ts:.8rem}
+    .sliders{grid-template-columns:1fr;gap:1.2rem;padding:1rem}
+    .cmp{grid-template-columns:1fr}
+    .tv .g2 .card{width:auto}
+  }
   @media (prefers-reduced-motion:reduce){
     .bill .art .art-img,.mhero .art-img,#player .art .art-img,.sk::after,.power{animation:none}
   }
@@ -534,8 +615,8 @@
     <span class="logo">MR WHITEFLIX</span><span class="staff">HQ &middot; STAFF ONLY</span>
     <div class="tabs"><button class="tab" type="button" data-tab="controls">Top 10 controls</button><button class="tab" type="button" data-tab="compare">Two accounts</button></div>
     <span class="sp"></span>
-    <button class="ghost hqreset" type="button"><svg class="i" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/></svg> Reset</button>
-    <button class="ghost hqout" type="button"><svg class="i" viewBox="0 0 256 256" aria-hidden="true"><path d="M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L204.69,120H112a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,229.66,122.34Z"/></svg> Back to Mr Whiteflix</button>
+    <button class="ghost hqreset" type="button"><svg class="i" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/></svg> <span>Reset</span></button>
+    <button class="ghost hqout" type="button"><svg class="i" viewBox="0 0 256 256" aria-hidden="true"><path d="M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L204.69,120H112a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,229.66,122.34Z"/></svg> <span>Back to Mr Whiteflix</span></button>
     <button class="ic fsbtn" type="button" aria-label="Full screen"><svg class="i" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,48V88a8,8,0,0,1-16,0V56H168a8,8,0,0,1,0-16h40A8,8,0,0,1,216,48ZM88,200H56V168a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H88a8,8,0,0,0,0-16Zm120-40a8,8,0,0,0-8,8v32H168a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V168A8,8,0,0,0,208,160ZM88,40H48a8,8,0,0,0-8,8V88a8,8,0,0,0,16,0V56H88a8,8,0,0,0,0-16Z"/></svg></button>
   </div>
   <div class="hqbody"></div>
