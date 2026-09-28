@@ -2238,8 +2238,8 @@ window.HB_GAUGE = (function(){
     {n:1,live:true,title:"How does a digital device work?",obj:"Every digital device takes an input, runs a process and makes an output. Find the rule in a machine, and build a strong password.",vocab:["digital device","input","process","output","password"],dur:"45 min",
       openHref:"#/y34/lesson/1", sheetBase:"#/y34/sheet/1/",
       resources:[["m","IPO machines"],["d","Spot the digital devices"],["p","Strong passwords"],["hw","Homework"]]},
-    {n:2,live:true,title:"What parts make up a digital device?",obj:"Sort input and output devices, describe a simple process, and design your own digital device.",vocab:["input device","output device","process","digital device"],dur:"45 min",openHref:"#/y34/lesson/2",sheetBase:"#/y34/sheet/2/",resources:[["match","Match input, device, output"],["invent","Invent a device"],["hw","Homework"]]},
-    {n:3,live:true,title:"How do digital devices help us?",obj:"Compare how a task can be done with a digital device and with non-digital tools, and say when each is the better fit.",vocab:["digital","non-digital","program"],dur:"45 min",openHref:"#/y34/lesson/3",sheetBase:"#/y34/sheet/3/",resources:[["tasks","What can you use a device for?"],["review","Learner review"],["hw","Digital or not, at home"]]},
+    {n:2,live:true,title:"What parts make up a digital device?",obj:"Sort input and output devices, compare a digital way of working with a non-digital way, and design an invention that solves a real problem in our school.",vocab:["input device","output device","process","digital device"],dur:"60 min",openHref:"#/y34/lesson/2",sheetBase:"#/y34/sheet/2/",resources:[["match","Match input, device, output"],["school","Invent something our school needs"],["hw","Homework"]]},
+    {n:3,live:false,soonTag:"Folded into Lesson 2",title:"Reserved",obj:"The digital-vs-paper comparison and the school invention task now run inside Lesson 2. This slot is free for whatever comes next.",vocab:[],dur:"",openHref:"#/y34/lesson/3",sheetBase:"#/y34/sheet/3/",resources:[]},
     {n:4,live:true,title:"How am I connected?",obj:"Recognise different kinds of connection, pass a message through a network, and discuss why a network needs a switch.",vocab:["connection","network","network switch"],dur:"45 min",openHref:"#/y34/lesson/4",sheetBase:"#/y34/sheet/4/",resources:[["connections","My connections"],["switch","Becoming a computer network"],["hw","A network at home"]]},
     {n:5,live:true,title:"How are computers connected?",obj:"Recognise the devices in a network, follow a file through a switch and a server, and explain what a wireless access point does.",vocab:["server","wireless access point","network switch"],dur:"45 min",openHref:"#/y34/lesson/5",sheetBase:"#/y34/sheet/5/",resources:[["roleplay","Build your own network"],["match","Match the vocabulary"],["hw","Computer networks around us"]]},
     {n:6,live:true,title:"What does our school network look like?",obj:"Identify how devices in a network connect together, spot networked devices around you, and explain the benefits of a network.",vocab:["network cable","network socket","router"],dur:"45 min",openHref:"#/y34/lesson/6",sheetBase:"#/y34/sheet/6/",resources:[["hunt","Scavenger hunt"],["map","Mapping a network"],["hw","A network at home"]]}
@@ -2285,8 +2285,8 @@ window.HB_GAUGE = (function(){
         ['y3c','Y3','To recognise how digital devices can change the way we work'],
         ['y4a','Y4','To explain how a computer network can be used to share information'],
         ['y4b','Y4','To explore how digital devices can be connected'],['y4c','Y4','To recognise the physical components of a network']],
-      map:{1:['y3a','y3b'],2:['y3b','y3a'],3:['y3c'],4:['y4b','y4a'],5:['y4c','y4a'],6:['y4c','y4b','y4a']},
-      notes:{}
+      map:{1:['y3a','y3b'],2:['y3b','y3a','y3c'],3:[],4:['y4b','y4a'],5:['y4c','y4a'],6:['y4c','y4b','y4a']},
+      notes:{3:'Lesson 3 is folded into Lesson 2 for now. This slot is free.'}
     },
     y56:{
       list:[['y5a','Y5','To explain that computers can be connected together to form systems'],
@@ -2313,7 +2313,7 @@ window.HB_GAUGE = (function(){
     y34:{
       label:'Year 3 and 4',
       unit:'Connecting Computers',
-      intro:'Six lessons on digital devices and how they are joined together. It starts with the three jobs every digital device does: input, process and output. It builds towards mapping the school network.',
+      intro:'Digital devices and how they are joined together. It starts with the three jobs every digital device does: input, process and output, and the invention task that puts that to real use. It builds towards mapping the school network. Lesson 3 is currently a free slot.',
       lessons:LESSONS_Y34,
       glossary:GLOSSARY_Y34,
       icons:ICONS_Y34,
@@ -2413,10 +2413,10 @@ window.HB_GAUGE = (function(){
           '<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (icons[L.n] || '') + '</svg></div>' +
           '<div class="no">Lesson ' + L.n + '</div>' +
           '<div class="mid"><h2>' + L.title + '</h2><p>' + L.obj + '</p>' + epsFor(g.endpoints, L.n) + '</div>' +
-          (L.resources ? '<div class="wsheets">' + L.resources.map(function(r){ return '<a data-sheet="'+r[0]+'">'+r[1]+'</a>'; }).join(' · ') + '</div>' : '') +
+          (L.resources && L.resources.length ? '<div class="wsheets">' + L.resources.map(function(r){ return '<a data-sheet="'+r[0]+'">'+r[1]+'</a>'; }).join(' · ') + '</div>' : '') +
           '<div class="foot">' + (L.live
             ? '<button class="open">Open lesson <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button><span>' + L.dur + '</span>'
-            : '<span class="soon-tag">Coming soon</span><span>' + L.dur + '</span>') + '</div>';
+            : '<span class="soon-tag">' + (L.soonTag || 'Coming soon') + '</span><span>' + L.dur + '</span>') + '</div>';
         if(L.live) el.addEventListener('click', function(){
           if(L.external){ window.open(L.external, '_blank'); return; }
           location.hash = L.openHref || openHref;
@@ -5179,18 +5179,20 @@ window.HB_GAUGE = (function(){
   /* =================== YEAR 3/4 · CONNECTING COMPUTERS · LESSON 2 =================== */
   var Y34META2 = { eyebrow:'Connecting Computers &middot; Lesson 2', exitHash:'#/g/y34' };
   var Y34_NOTES2 = [
-    ["Introduction · 1 min","What parts make up a digital device?","Recap Lesson 1: input, process, output. Today we name the devices that do the input and the output."],
-    ["Introduction · 2 min","Today you will…","Read the three together. Pupils rate themselves at the end."],
+    ["Introduction · 1 min","What parts make up a digital device?","Recap Lesson 1: input, process, output. This lesson carries what used to be two: naming the parts, then the school invention task from the old Lesson 3. Runs about 60 minutes, and Lesson 3's slot is free for now."],
+    ["Introduction · 2 min","Today you will…","Read the three together. Pupils rate themselves on these at the end."],
     ["Introduction · 2 min","Every device: three jobs","Quick recap of the model. Ask for the input, process and output of one device in the room."],
-    ["Activity 1 · 10 min","Input or output?","Sort in pairs first if you have physical devices or the A1 cards. Press Sort to check. Then discuss the tricky ones on the next slide."],
-    ["Activity 1 · 3 min","Some do both, some do neither","A touchscreen is both: you tap it (input) and it shows things (output). A cable is neither. A multifunction printer that also scans is both."],
-    ["Activity 2 · 4 min","One input, many outputs","Pressing one key can change the screen and make a speaker beep and make a printer print. Many inputs can also feed one output: a mouse and a keyboard both making one document."],
-    ["Activity 2 · 6 min","Match it up","Model a full sentence: pressing the keys on the keyboard of a laptop can change what is on the screen, or make the speaker play sounds. Then hand out the A2 sheet to draw the arrows."],
-    ["Activity 3 · 12 min","Invent your own device","Model the disco lights machine first: microphone, check how big it is, light. Build it on the board, read the sentence underneath out loud, then press Run so they watch the token travel through. Then pupils build their own in pairs. The sentence under the machine is the thing to point at when a machine makes no sense: a camera that waits 3 seconds and then spins a motor is allowed, and asking what that would actually be for is a better conversation than marking it wrong. The A3 sheet is still there if you want a paper record."],
-    ["Activity 3 · 3 min","The broken machine","Five machines, each missing one part. Two of the three pieces offered come from the wrong job, so a pupil who is guessing cannot land it. This is the checked moment: a machine that always runs whatever you build cannot tell you who understands input, process and output. Ask which part is missing before anyone taps."],
-    ["Plenary · 4 min","Spot the devices","Read the passage. Ask pupils to count the digital devices and interactions. Our world is full of them."],
+    ["Activity 1 · 10 min","Input or output?","Sort in pairs first if you have physical devices or the cards. Press Sort to check, then discuss the tricky ones on the next slide."],
+    ["Activity 1 · 3 min","Some do both, some do neither","A touchscreen is both: you tap it (input) and it shows things (output). A cable is neither, and a multifunction printer that also scans is both."],
+    ["Activity 1 · 3 min","The broken machine","Five machines, each missing one part, and the two wrong pieces on offer come from the other two jobs, so guessing does not land it. This is the checked moment for input, process and output before anyone builds something of their own. Ask which part is missing before anyone taps."],
+    ["Introduction · 2 min","A digital version of this?","Ask what the digital version of writing on paper is, and the digital version of painting with a brush."],
+    ["Activity 2 · 8 min","Printed by hand, or made on a computer?","Drag the handle across Hokusai's Great Wave. Say first that it is a woodblock print, not a painting: each colour was cut into a separate block of wood by hand and pressed onto paper, which is worth knowing because it is already a way of making the same picture many times, just a slow one. The right-hand side is that same picture put through a computer's flat fills: clean edges, solid blocks of colour, none of the paper showing through. Ask which took longer, which one you can change your mind about, and which one you would rather hang up."],
+    ["Activity 2 · 4 min","Sort the good points","A checked sort, not reveal cards: pupils sort 8 real advantages into Digital / Paper and paint. Discuss any they disagree on, some are genuinely arguable."],
+    ["Activity 2 · 3 min","Think back","Pupils reflect on the Great Wave comparison. Which did they prefer, and why? There is no wrong answer here, it sets up the point that digital is not automatically the better choice."],
+    ["Project · 20 min","Invent something our school needs","The main event. Each pair picks one of the four jobs, all of which are done on paper in this school today: dinner bands, lights left on, the library, or the watering rota. Read what goes wrong, then build the invention on the machine from Activity 1's model, with up to three inputs and three outputs. Name the machine so pairs can find their own again. Take the 'decide these' questions one at a time; the answers matter more than the machine. Hand out the invention sheet if you want a paper record, it has a box for the drawing and explanation, then input, process and output boxes underneath, so it checks the same knowledge as the broken machine did earlier in the lesson."],
+    ["Plenary · 3 min","Sometimes non-digital wins","Discuss: is a digital tool always the better choice? Paper starts instantly and never runs out of battery. Tie it back to the invention: some of today's four jobs might genuinely be fine on paper, and that is a fair answer too."],
     ["Plenary · 3 min","Climb the ladder","The objectives come from this lesson’s Today you will slide. Use the arrows for one at a time, or View all to see them together. Send up as many pupils as you like, or set one mark yourself after a discussion: every tap stays on the board as its own mark and nothing is averaged. Undo takes back the last tap; Clear needs two taps. Four rungs, from Heard of it to Could teach it. The top rung is a real test, so ask whoever taps it to teach it there and then."],
-    ["Next time · 1 min","Next lesson","Recap inputs and outputs. Next lesson: the many ways digital devices help us."]
+    ["Next time · 1 min","Next lesson","Recap. Next lesson: how you are connected to people and devices."]
   ];
   var Y34_SLIDES2 = [
     function(){ return { steps:0, html:
@@ -5198,10 +5200,10 @@ window.HB_GAUGE = (function(){
       '<div class="pp" style="display:flex;gap:clamp(12px,3vw,26px);color:var(--proc);flex-wrap:wrap;justify-content:center">' +
         ph('keyboard',48)+ph('mouse-simple',48)+ph('monitor',48)+ph('speaker-high',48)+ph('printer',48)+ph('microphone',48) + '</div>' }; },
     function(){
-      var items = ["Sort input devices and output devices","Describe a simple process","Design your own digital device"];
+      var items = ["Sort input devices and output devices","Compare a digital way of working with a non-digital way","Design an invention that solves a real problem in our school"];
       return { steps:items.length, html:
         '<h1 class="pp">Today you will…</h1>' +
-        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:26ch">' +
+        '<div style="display:flex;flex-direction:column;gap:12px;text-align:left;max-width:30ch">' +
         items.map(function(t,i){ return '<div class="pp" data-step="'+(i+1)+'" style="display:flex;gap:12px;align-items:center;font-size:clamp(1.05rem,2.1vw,1.35rem);font-weight:600">' +
           '<span style="flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--out) 16%,var(--paper));color:var(--out)">'+ICON.check+'</span>'+t+'</div>'; }).join('') + '</div>' };
     },
@@ -5233,43 +5235,6 @@ window.HB_GAUGE = (function(){
         rc('Cable','Neither. It only carries the signal between parts.') +
       '</div>' +
       '<p class="lead pp">Tap each card.</p>', init: revealInit }; },
-    function(){ return { steps:3, html:
-      '<h1 class="pp">One input, many outputs</h1>' +
-      '<p class="lead pp">Press one key on a keyboard and…</p>' +
-      '<div style="display:flex;gap:clamp(12px,3vw,26px);flex-wrap:wrap;justify-content:center;color:var(--out)">' +
-        '<div class="pp" data-step="1" style="display:flex;flex-direction:column;gap:6px;align-items:center;font-weight:700">'+ph('monitor',44)+'<small>screen shows the letter</small></div>' +
-        '<div class="pp" data-step="2" style="display:flex;flex-direction:column;gap:6px;align-items:center;font-weight:700">'+ph('speaker-high',44)+'<small>speaker can beep</small></div>' +
-        '<div class="pp" data-step="3" style="display:flex;flex-direction:column;gap:6px;align-items:center;font-weight:700">'+ph('printer',44)+'<small>printer can print it</small></div>' +
-      '</div>' }; },
-    function(){ return { steps:3, html:
-      '<h1 class="pp">Match it up</h1>' +
-      '<div style="display:flex;align-items:center;gap:clamp(8px,2vw,20px);flex-wrap:wrap;justify-content:center;font-weight:700">' +
-        '<div class="pp" data-step="1" style="display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--in)">'+ph('keyboard',40)+'<small>keyboard</small></div>' +
-        '<span class="pp" data-step="2" style="color:var(--soft)">→</span>' +
-        '<div class="pp" data-step="2" style="display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--proc)">'+ph('laptop',40)+'<small>laptop</small></div>' +
-        '<span class="pp" data-step="3" style="color:var(--soft)">→</span>' +
-        '<div class="pp" data-step="3" style="display:flex;flex-direction:column;gap:6px;align-items:center;color:var(--out)">'+ph('monitor',40)+'<small>screen</small></div>' +
-      '</div>' +
-      '<p class="lead pp" data-step="3">Pressing the keys can change what you see on the screen.</p>' }; },
-    function(){
-      var pal = function(k, title){
-        return '<div class="mb-pal" data-k="' + k + '"><h4>' + title + '</h4><div class="mb-chips">' +
-          MB_PARTS[k].map(function(p){
-            return '<button type="button" class="mb-chip" data-k="' + k + '" data-id="' + p[0] + '">' + ph(p[2], 18) + p[1] + '</button>';
-          }).join('') + '</div></div>';
-      };
-      return { steps:0, html:
-        '<h1 class="pp">Invent your own device</h1>' +
-        '<div class="mb pp">' +
-          mbMachineHTML() +
-          '<p class="mb-read"></p>' +
-          '<div class="mb-bar">' +
-            '<button type="button" class="d2-gbtn mb-runbtn" disabled>Run it</button>' +
-            '<button type="button" class="d2-gbtn ghost mb-clear">Start again</button>' +
-          '</div>' +
-          '<div class="mb-pals">' + pal('in','Inputs') + pal('pr','Process') + pal('ou','Outputs') + '</div>' +
-        '</div>',
-        init: machineInit }; },
     function(){
       // each round is missing one part, and the two wrong options come from
       // the other two jobs, so guessing by "which word sounds techy" does
@@ -5300,59 +5265,43 @@ window.HB_GAUGE = (function(){
           '</div>' +
         '</div>',
         init: function(el){ brokenInit(el, ROUNDS); } }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">A digital version of this?</h1>' +
+      '<p class="lead pp">Writing on paper, painting with a brush.</p>' +
+      '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">A word processor, and a digital paint program.</p>' }; },
+    artSlide,
     function(){
-      // click-to-select in the story itself, not a tap-to-reveal answer:
-      // TV/streaming service/games console/laptop/smart speaker/satnav are
-      // real devices (lock green on tap); "alarm" and "car" are decoys, the
-      // alarm is a feature of the speaker and the car isn't itself digital
-      var TXT = [
-        ['I turned on the ', null], ['TV', 1], [' to watch a ', null], ['streaming service', 1],
-        ['. I played on my ', null], ['games console', 1], [', then finished my homework on my ', null],
-        ['laptop', 1], ['. I set the ', null], ['alarm', 0], [' on my ', null], ['smart speaker', 1],
-        ['. In the morning the ', null], ['satnav', 1], [' in the ', null], ['car', 0],
-        [' found the quickest route.', null]
-      ];
-      var total = TXT.filter(function(t){ return t[1] === 1; }).length;
-      var html = TXT.map(function(t){
-        return t[1] === null ? t[0] : '<button class="d2-spotword" data-ok="' + t[1] + '">' + t[0] + '</button>';
-      }).join('');
+      var TRAITS = [["Undo fixes a mistake instantly",1],["Fill tool covers a whole area in one tap",1],["Easy to share or print lots of copies",1],["Colours never run dry",1],
+        ["Needs no charging",0],["Starts instantly, no loading",0],["Still works if the wifi or power is down",0],["You can feel the texture as you draw",0]];
       return { steps:0, html:
-        '<h1 class="pp">Spot the devices</h1>' +
-        '<p class="lead pp d2-spotline sz-y34" style="max-width:46ch;justify-content:flex-start;text-align:left">&ldquo;' + html + '&rdquo;</p>' +
-        '<p class="lead pp" id="d2devcount" style="font-weight:700">Tap every digital device in the story. 0 of ' + total + ' found.</p>',
-        init:function(el){
-          var found = 0;
-          var counter = el.querySelector('#d2devcount');
-          [].forEach.call(el.querySelectorAll('.d2-spotword'), function(w){
-            w.addEventListener('click', function(){
-              if(w.classList.contains('found')) return;
-              if(w.getAttribute('data-ok') === '1'){
-                w.classList.add('found');
-                found++;
-                if(found === total){
-                  counter.textContent = 'Found all ' + total + '! Well done.';
-                  counter.style.color = 'var(--out)';
-                  burst();
-                } else {
-                  counter.textContent = 'Tap every digital device in the story. ' + found + ' of ' + total + ' found.';
-                }
-              } else {
-                w.classList.remove('miss'); void w.offsetWidth; w.classList.add('miss');
-              }
-            });
-          });
-        } }; },
+        '<h1 class="pp">Sort the good points</h1>' +
+        '<div class="d2-pool pp" id="d2sortpool">' + TRAITS.map(function(t){ return '<button class="d2-chip" data-ok="'+t[1]+'">'+t[0]+'</button>'; }).join('') + '</div>' +
+        '<div class="d2-bins pp">' +
+          '<div class="d2-bin d"><h4>Digital</h4><div class="items" id="d2binD"></div></div>' +
+          '<div class="d2-bin n"><h4>Paper and paint</h4><div class="items" id="d2binN"></div></div>' +
+        '</div>' +
+        '<button class="d2-gbtn pp" id="d2sortgo">Sort them</button>',
+        init: sortInit }; },
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Think back</h1>' +
+      '<div class="d2-rc pp" data-step="1" style="max-width:34ch" id="d2think"><b>Which did you prefer, and why?</b><span class="ans">There is no wrong answer. Some people prefer paper because it feels direct; some prefer digital because mistakes are easy to fix.</span></div>',
+      init:function(el){ var c=el.querySelector('#d2think'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
+    scenarioSlide,
+    function(){ return { steps:1, html:
+      '<h1 class="pp">Sometimes non-digital wins</h1>' +
+      '<p class="lead pp">A digital tool is not always the better choice.</p>' +
+      '<p class="lead pp" data-step="1" style="font-weight:700">Paper starts instantly, needs no charging, and works when the wifi is down.</p>' }; },
     checkSlide('ladder'),
     function(){ return { steps:0, html:
       '<h1 class="pp">Nice work</h1>' +
-      '<p class="lead pp">You sorted input and output devices, and designed your own.</p>' +
-      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: the many ways digital devices help us.</p>' }; }
+      '<p class="lead pp">You sorted input and output devices, compared a digital and non-digital way of working, and designed an invention for something our school needs.</p>' +
+      '<p class="lead pp" style="color:var(--proc);font-weight:700">Next lesson: how you are connected to people and devices.</p>' }; }
   ];
   var Y34_QUIZ2 = [
     {q:"A keyboard is an…", o:["input device","output device","process"], a:0},
     {q:"A speaker is an…", o:["input device","output device","neither"], a:1},
     {q:"A touchscreen is…", o:["only an input","only an output","both an input and an output"], a:2},
-    {q:"One key press makes the screen show a letter AND the speaker beep. This is…", o:["one input, many outputs","many inputs, one output","no process at all"], a:0}
+    {q:"A good reason to use a non-digital tool sometimes is…", o:["it always looks better","it needs no charging and starts straight away","it is always faster"], a:1}
   ];
   var Y34_SHEETS2 = {
     match: function(){
@@ -5365,14 +5314,19 @@ window.HB_GAUGE = (function(){
           col('Output device', ['Printer','Screen','Speaker','Crossing lights']) +
         '</div>');
     },
-    invent: function(){
-      return shell(Y34META2,'Invent your own digital device',
-        'Design a digital device of your own. Draw it, then fill in its inputs, its process and its outputs.',
-        '<h2>Invention name</h2><div class="lines s2"></div>' +
-        '<div class="draw" data-hint="Draw your device" style="height:180px"></div>' +
-        '<h2 class="in">Inputs: what goes into it</h2><div class="lines s3"></div>' +
-        '<h2 class="pr2">Process: the job it does</h2><div class="lines s3"></div>' +
-        '<h2 class="ou">Outputs: what it does back</h2><div class="lines s3"></div>');
+    school: function(){
+      var pick = MB_SCENARIOS.map(function(s){
+        return '<label style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1.5px solid #dfe2ec;font-weight:600">' +
+          '<span style="width:20px;height:20px;border:1.6px solid #c3c8d4;border-radius:5px;display:inline-block;flex:none"></span>' + s.t + '</label>';
+      }).join('');
+      return shell(Y34META2,'Invent something our school needs',
+        'Circle the job you picked. Draw your invention, explain what it does, then fill in its inputs, its process and its outputs.',
+        '<h2>The job I picked</h2><div style="display:flex;gap:20px;flex-wrap:wrap;margin:8px 0 14px">' + pick + '</div>' +
+        '<div class="draw" data-hint="Draw your invention" style="height:170px"></div>' +
+        '<h2>What it does, and why our school needs it</h2><div class="lines s3"></div>' +
+        '<h2 class="in">Input: what starts it working</h2><div class="lines s2"></div>' +
+        '<h2 class="pr2">Process: the job it does</h2><div class="lines s2"></div>' +
+        '<h2 class="ou">Output: what it does back</h2><div class="lines s2"></div>');
     },
     hw: function(){
       return shell(Y34META2,'Input, process, output at home',

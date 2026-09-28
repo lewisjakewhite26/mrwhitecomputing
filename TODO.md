@@ -35,25 +35,31 @@ back. See the toolbar timer entry below, built the same session.
 
 ## Also outstanding
 
-- **NEXT: Year 3/4 scenario picker.** Agreed 23/09/2026, not yet built.
-  Four cards, each an offline system a digital invention could improve:
-  dinner bands counted by hand at registration, lights left on at
-  playtime, the paper-card library, the watering rota in the school
-  garden. A pair picks one, then builds the invention on the machine
-  builder from Lesson 2, so the tool already exists. Needs two additions
-  to the builder: several inputs or outputs, and a way to name the
-  machine.
+- ~~Year 3/4 scenario picker~~, done: since 28/09/2026 it's the
+  centrepiece of Lesson 2, not a separate slide. Lessons 2 and 3 are
+  merged: Lesson 2 now carries device parts, the Great Wave digital vs
+  paper comparison (Lewis specifically likes this one, keep it), and the
+  school invention task with real time to breathe, about 20 minutes
+  instead of the old 12. Four cards, each an offline system a digital
+  invention could improve: dinner bands counted by hand at registration,
+  lights left on at playtime, the paper-card library, the watering rota
+  in the school garden. A pair picks one and builds the invention on the
+  machine builder, which already supports several inputs or outputs and
+  naming the machine. A matching print worksheet exists too: circle the
+  job, draw the invention and explain it, then input/process/output
+  boxes underneath (`Y34_SHEETS2.school` in `index.html`).
 
   This carries four of the six Year 3/4 end points for the unit, which
   the machine builder alone does not: Y3 "recognise how digital devices
   can change the way we work", and all three Y4 network ones. See
-  `end-points.md`.
+  `end-points.md`. The end-point map moved with it: Lesson 2 now claims
+  all three Y3 end points, Lesson 3's old claim is gone.
 
-  **Placement is undecided.** Lewis has not settled where it goes, and
-  the Lesson 3 to 6 progression is being rebuilt, so build it as a
-  self-contained slide that works wherever it lands. The per-lesson
-  project slides and the network drawing stay deferred until the order
-  settles.
+  Lesson 3's old content (the same digital-vs-paper material, before the
+  merge) is retired into Lesson 2. The Lesson 3 slot itself is now
+  reserved rather than live, marked honestly on the hub card rather than
+  silently vanishing, and free for whatever comes next. Lessons 4 to 6
+  are untouched and keep their numbers.
 
 - **More words for Search from anywhere.** `search-places.html` (opened
   from Year 5/6 Lesson 6) has bat, football, chips and hockey. Each new word
