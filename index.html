@@ -8145,6 +8145,16 @@ window.HB_GAUGE = (function(){
 
       function renderFrame(dt){
         if(!active) return;
+        if(!shapePath){
+          // nothing locked in yet - stop looping and leave the canvas to
+          // drawRawStroke(), which is redrawing it on every pointermove.
+          // This loop used to keep running and clearing the canvas every
+          // frame regardless, which raced drawRawStroke and wiped the pen
+          // line almost as fast as it appeared - invisible while redrawing.
+          // up() restarts the loop once a new shape locks in.
+          rafId = null;
+          return;
+        }
         // compute the fill level from real elapsed time every frame,
         // instead of only moving it once a second when render() fires -
         // that's what was making it jump rather than rise smoothly
