@@ -1165,7 +1165,28 @@
     position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:1px solid var(--hair);
     background:var(--ink);color:#fff;font-size:.8rem;line-height:1;cursor:pointer;display:grid;place-items:center;
   }
+  .d2-tmr-fsbtn{
+    position:absolute;top:-8px;left:-8px;width:24px;height:24px;border-radius:50%;border:1px solid var(--hair);
+    background:var(--ink);color:#fff;cursor:pointer;display:grid;place-items:center;
+  }
+  .d2-tmr-fsbtn svg{width:13px;height:13px}
   .d2-tmr-stage{display:flex;align-items:center;justify-content:center}
+
+  /* ---- timer full screen: the widget itself is the fullscreened element,
+     everything inside it scales up together rather than each mechanic
+     needing its own large-size variant */
+  .d2-tmr-widget:fullscreen,.d2-tmr-widget:-webkit-full-screen{
+    width:100%;height:100%;border-radius:0;border:none;box-shadow:none;
+    display:flex;align-items:center;justify-content:center;background:var(--paper);
+  }
+  .d2-tmr-widget:fullscreen .d2-tmr-closebtn,.d2-tmr-widget:-webkit-full-screen .d2-tmr-closebtn{
+    top:24px;right:24px;width:44px;height:44px;font-size:1.4rem;
+  }
+  .d2-tmr-widget:fullscreen .d2-tmr-fsbtn,.d2-tmr-widget:-webkit-full-screen .d2-tmr-fsbtn{
+    top:24px;left:24px;width:44px;height:44px;
+  }
+  .d2-tmr-widget:fullscreen .d2-tmr-fsbtn svg,.d2-tmr-widget:-webkit-full-screen .d2-tmr-fsbtn svg{width:22px;height:22px}
+  .d2-tmr-widget:fullscreen .d2-tmr-stage,.d2-tmr-widget:-webkit-full-screen .d2-tmr-stage{transform:scale(5)}
 
   /* ---- ring ---- */
   .d2-tmr-ring{position:relative;width:84px;height:84px}
@@ -1952,6 +1973,7 @@
       <button class="d2-gbtn" id="d2-tmr-startbtn" type="button">Start timer</button>
     </div>
     <div class="d2-tmr-widget" id="d2-tmr-widget" hidden>
+      <button class="d2-tmr-fsbtn" id="d2-tmr-fsbtn" type="button" aria-label="Timer full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button>
       <button class="d2-tmr-closebtn" id="d2-tmr-closebtn" type="button" aria-label="Close timer">&times;</button>
       <div class="d2-tmr-stage" id="d2-tmr-stage"></div>
     </div>
@@ -7815,6 +7837,7 @@ window.HB_GAUGE = (function(){
     var widget = document.getElementById('d2-tmr-widget');
     var stage = document.getElementById('d2-tmr-stage');
     var closeBtn = document.getElementById('d2-tmr-closebtn');
+    var fsBtn = document.getElementById('d2-tmr-fsbtn');
     var startBtn = document.getElementById('d2-tmr-startbtn');
     var customInput = document.getElementById('d2-tmr-custom');
     var mechBtns = [].slice.call(pop.querySelectorAll('.d2-tmr-mechbtn'));
@@ -7986,7 +8009,27 @@ window.HB_GAUGE = (function(){
         }
       }, 1000);
     }
-    function close(){ clearInterval(iv); widget.hidden = true; }
+    function close(){
+      clearInterval(iv);
+      if(document.fullscreenElement === widget && document.exitFullscreen) document.exitFullscreen();
+      widget.hidden = true;
+    }
+
+    // fullscreen toggle: the widget element itself goes fullscreen, so the
+    // :fullscreen CSS above can scale every mechanic up together instead of
+    // building a separate large-size version of each one
+    var fsExpandIcon = fsBtn.innerHTML;
+    var fsShrinkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4a2 2 0 0 1-2 2H3M15 3v4a2 2 0 0 0 2 2h4M9 21v-4a2 2 0 0 0-2-2H3M15 21v-4a2 2 0 0 1 2-2h4"/></svg>';
+    function updateFsBtn(){
+      var full = document.fullscreenElement === widget;
+      fsBtn.innerHTML = full ? fsShrinkIcon : fsExpandIcon;
+      fsBtn.setAttribute('aria-label', full ? 'Exit timer full screen' : 'Timer full screen');
+    }
+    fsBtn.addEventListener('click', function(){
+      if(document.fullscreenElement === widget){ document.exitFullscreen && document.exitFullscreen(); }
+      else if(widget.requestFullscreen){ widget.requestFullscreen(); }
+    });
+    document.addEventListener('fullscreenchange', updateFsBtn);
 
     startBtn.addEventListener('click', start);
     closeBtn.addEventListener('click', close);
