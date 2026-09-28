@@ -3008,20 +3008,40 @@ window.HB_GAUGE = (function(){
     if(!drawing) return;
     drawing = false; curStroke = null; persistWB(); wbButtons();
   }
-  function strokeTip(){                                   // draw just the newest segment
+  // draws every new segment since the last call, not just the newest one -
+  // a fast stroke can hand several points to a single pointermove (they
+  // arrive coalesced), and only drawing the tail dropped the rest, which is
+  // what showed up as a dashed or dotted line at speed
+  function strokeTip(){
     if(!curStroke) return;
     var pts = curStroke.pts, n = pts.length, W = wbCanvas.width, H = wbCanvas.height;
+    var drawn = curStroke.drawn || 0;
+    if(n === 1){
+      if(drawn === 0){
+        applyStrokeStyle(curStroke);
+        wbCtx.beginPath();
+        wbCtx.moveTo(pts[0].x*W, pts[0].y*H); wbCtx.lineTo(pts[0].x*W+0.01, pts[0].y*H);
+        wbCtx.stroke();
+        wbCtx.globalCompositeOperation = 'source-over'; wbCtx.globalAlpha = 1;
+      }
+      return;
+    }
+    if(drawn >= n - 1) return;                            // nothing new since the last draw
     applyStrokeStyle(curStroke);
     wbCtx.beginPath();
-    if(n === 1){ wbCtx.moveTo(pts[0].x*W, pts[0].y*H); wbCtx.lineTo(pts[0].x*W+0.01, pts[0].y*H); }
-    else if(n === 2){ wbCtx.moveTo(pts[0].x*W, pts[0].y*H); wbCtx.lineTo(pts[1].x*W, pts[1].y*H); }
-    else {
-      var z = pts[n-3], a = pts[n-2], b = pts[n-1];
-      wbCtx.moveTo((z.x+a.x)/2*W, (z.y+a.y)/2*H);
-      wbCtx.quadraticCurveTo(a.x*W, a.y*H, (a.x+b.x)/2*W, (a.y+b.y)/2*H);
+    for(var i = drawn + 1; i < n; i++){
+      if(i === 1){
+        wbCtx.moveTo(pts[0].x*W, pts[0].y*H);
+        wbCtx.lineTo(pts[1].x*W, pts[1].y*H);
+      } else {
+        var z = pts[i-2], a = pts[i-1], b = pts[i];
+        wbCtx.moveTo((z.x+a.x)/2*W, (z.y+a.y)/2*H);
+        wbCtx.quadraticCurveTo(a.x*W, a.y*H, (a.x+b.x)/2*W, (a.y+b.y)/2*H);
+      }
     }
     wbCtx.stroke();
     wbCtx.globalCompositeOperation = 'source-over'; wbCtx.globalAlpha = 1;
+    curStroke.drawn = n - 1;
   }
   function persistWB(){
     try{ localStorage.setItem('hb_wb_l1', JSON.stringify(wbData)); }
@@ -8101,20 +8121,40 @@ window.HB_GAUGE = (function(){
     if(!wb2Drawing) return;
     wb2Drawing = false; wb2CurStroke = null; wb2Persist(); wb2Buttons();
   }
+  // same fix as the Year 5/6 whiteboard's strokeTip: draw every new segment
+  // since the last call, not just the newest one, so a fast stroke's
+  // coalesced batch of points doesn't get mostly skipped and show up as a
+  // dashed or dotted line
   function wb2StrokeTip(){
     if(!wb2CurStroke) return;
     var pts = wb2CurStroke.pts, n = pts.length, W = wb2Canvas.width, H = wb2Canvas.height;
+    var drawn = wb2CurStroke.drawn || 0;
+    if(n === 1){
+      if(drawn === 0){
+        wb2ApplyStroke(wb2CurStroke);
+        wb2Ctx.beginPath();
+        wb2Ctx.moveTo(pts[0].x*W, pts[0].y*H); wb2Ctx.lineTo(pts[0].x*W+0.01, pts[0].y*H);
+        wb2Ctx.stroke();
+        wb2Ctx.globalCompositeOperation = 'source-over'; wb2Ctx.globalAlpha = 1;
+      }
+      return;
+    }
+    if(drawn >= n - 1) return;
     wb2ApplyStroke(wb2CurStroke);
     wb2Ctx.beginPath();
-    if(n === 1){ wb2Ctx.moveTo(pts[0].x*W, pts[0].y*H); wb2Ctx.lineTo(pts[0].x*W+0.01, pts[0].y*H); }
-    else if(n === 2){ wb2Ctx.moveTo(pts[0].x*W, pts[0].y*H); wb2Ctx.lineTo(pts[1].x*W, pts[1].y*H); }
-    else {
-      var z = pts[n-3], a = pts[n-2], b = pts[n-1];
-      wb2Ctx.moveTo((z.x+a.x)/2*W, (z.y+a.y)/2*H);
-      wb2Ctx.quadraticCurveTo(a.x*W, a.y*H, (a.x+b.x)/2*W, (a.y+b.y)/2*H);
+    for(var i = drawn + 1; i < n; i++){
+      if(i === 1){
+        wb2Ctx.moveTo(pts[0].x*W, pts[0].y*H);
+        wb2Ctx.lineTo(pts[1].x*W, pts[1].y*H);
+      } else {
+        var z = pts[i-2], a = pts[i-1], b = pts[i];
+        wb2Ctx.moveTo((z.x+a.x)/2*W, (z.y+a.y)/2*H);
+        wb2Ctx.quadraticCurveTo(a.x*W, a.y*H, (a.x+b.x)/2*W, (a.y+b.y)/2*H);
+      }
     }
     wb2Ctx.stroke();
     wb2Ctx.globalCompositeOperation = 'source-over'; wb2Ctx.globalAlpha = 1;
+    wb2CurStroke.drawn = n - 1;
   }
   function redrawWB2(){
     if(!wb2Ctx || !wb2Canvas.width) return;
