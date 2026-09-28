@@ -8024,9 +8024,40 @@ window.HB_GAUGE = (function(){
       var redrawBtn = stage.querySelector('.d2-tmr-redraw');
       var ctx = canvas.getContext('2d');
       var cssW = 150, cssH = 150;
-      var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-      canvas.width = cssW * dpr; canvas.height = cssH * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      function sizeCanvas(w, h){
+        cssW = w; cssH = h;
+        wrap.style.width = w + 'px'; wrap.style.height = h + 'px';
+        var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      sizeCanvas(150, 150);
+
+      // full screen doesn't just make this mechanic's canvas look bigger
+      // via the shared transform:scale the other mechanics use - on
+      // Android touch, a scaled ancestor was leaving taps unable to find
+      // the canvas at all, presumably a hit-testing quirk of the board's
+      // browser rather than a spec bug, but a scale transform on the path
+      // to a drawing surface is risky regardless of the exact cause. So
+      // this mechanic opts out: it cancels the shared scale and grows the
+      // canvas to real, physical CSS pixels instead, which is what a
+      // finger needs to actually land on the thing it's touching.
+      function onFsChange(){
+        var full = document.fullscreenElement === widget;
+        stage.style.transform = full ? 'none' : '';
+        var big = full ? Math.max(120, Math.min(window.innerWidth, window.innerHeight) * 0.72) : 150;
+        if(big !== cssW || big !== cssH){
+          // the old points were drawn for the old canvas size - carry them
+          // over pointless at a different scale, so start fresh instead
+          shapePath = null; bbox = null; pts = []; bubbles = [];
+          hint.hidden = false; redrawBtn.hidden = true;
+          sizeCanvas(big, big);
+          ctx.clearRect(0, 0, cssW, cssH);
+        }
+      }
+      document.addEventListener('fullscreenchange', onFsChange);
+      onFsChange();
 
       var active = true;
       var drawing = false, pts = [], shapePath = null, bbox = null;
@@ -8082,7 +8113,7 @@ window.HB_GAUGE = (function(){
       function down(e){
         if(shapePath) return; // locked - use Redraw first
         drawing = true; pts = [pos(e)];
-        canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+        try{ canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); }catch(err){}
       }
       function move(e){
         if(!drawing) return;
@@ -8161,6 +8192,7 @@ window.HB_GAUGE = (function(){
       mechStop = function(){
         active = false;
         if(rafId) cancelAnimationFrame(rafId);
+        document.removeEventListener('fullscreenchange', onFsChange);
         canvas.removeEventListener('pointerdown', down);
         canvas.removeEventListener('pointermove', move);
         canvas.removeEventListener('pointerup', up);
