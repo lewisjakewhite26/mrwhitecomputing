@@ -55,6 +55,16 @@ back. See the toolbar timer entry below, built the same session.
   project slides and the network drawing stay deferred until the order
   settles.
 
+- **More words for Search from anywhere.** `search-places.html` (opened
+  from Year 5/6 Lesson 6) has bat, football, chips and hockey. Each new word
+  needs five pretend results for each of the five places, added to
+  `R` and `TERMS` in its script. Good candidates, each different for a
+  real reason: cricket (the insect in the USA), biscuit (a savoury roll in
+  the USA), jumper (a pinafore dress in the USA), Christmas (summer in
+  Australia), weather (local forecast, °F in the USA), and price of a
+  football (five different currencies). Pants works too, but costs five
+  minutes of giggling.
+
 - **Mr Whiteflix needs three photos of Lewis.** Mr Whiteflix is its own
   app now, `whiteflix.html`, opened from Year 5/6 Lessons 5 and 6 the way
   Quick Click is opened from Year 1/2. The three Mr White programmes
