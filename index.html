@@ -3700,12 +3700,13 @@ window.HB_GAUGE = (function(){
     var pairs = ART_PAIRS.filter(function(p){ return p.left && p.right; });
     return { steps:0, html:
       '<h1 class="pp">Made by hand, or made on a computer?</h1>' +
-      '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="artFlat">' +
-        '<feGaussianBlur stdDeviation="1.4"/>' +
-        '<feComponentTransfer>' +
-          '<feFuncR type="discrete" tableValues="0 .2 .4 .6 .8 1"/>' +
-          '<feFuncG type="discrete" tableValues="0 .2 .4 .6 .8 1"/>' +
-          '<feFuncB type="discrete" tableValues="0 .2 .4 .6 .8 1"/>' +
+      '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="artFlat" color-interpolation-filters="sRGB">' +
+        '<feGaussianBlur stdDeviation="3" result="b"/>' +
+        '<feColorMatrix in="b" type="saturate" values="2" result="s"/>' +
+        '<feComponentTransfer in="s">' +
+          '<feFuncR type="discrete" tableValues="0 .33 .66 1"/>' +
+          '<feFuncG type="discrete" tableValues="0 .33 .66 1"/>' +
+          '<feFuncB type="discrete" tableValues="0 .33 .66 1"/>' +
         '</feComponentTransfer>' +
       '</filter></svg>' +
       '<div class="art pp">' +
