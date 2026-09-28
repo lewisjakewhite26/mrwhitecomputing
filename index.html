@@ -5501,6 +5501,7 @@ window.HB_GAUGE = (function(){
     ["Introduction · 2 min","Staying safe while you search","Search engines can store what you search and use it to advertise to you. Only visit trustworthy sites and never share personal information."],
     ["Introduction · 3 min","These are all search engines","Bing, Google, DuckDuckGo, Ecosia and Swisscows. Ask which pupils recognise. Note what makes each one different."],
     ["Introduction · 2 min","A search engine is a system","Input: your search term. Process: the search engine works out what to show. Output: the results list. The next three lessons cover the process."],
+    ["Introduction · 4 min","Searching for bat","Tap the search bar (or press next) to type bat, then ask what results they expect; most will say the animal. Tap again: every result is about cricket bats. Then ask what they could type to find the animal, and have them write a better search on their whiteboards."],
     ["Activity 1 · 15 min","Write the instructions","Pairs write full instructions to answer a set question by searching, without naming the answer itself. Swap with another pair, test the instructions on a real device, and give feedback."],
     ["Activity 2 · 8 min","Put each search in the right order","A checked sequence, not reveal cards: pupils reorder three scrambled steps per place name (Rugby, Sale, Boot) into first search, why it missed, and the better second search. Tap Check the order when done."],
     ["Activity 3 · 10 min","Comparing search engines","As a class, agree one search term. Pupils try it in all five search engines and record the top result, the number of adverts, and anything they notice."],
@@ -5544,6 +5545,54 @@ window.HB_GAUGE = (function(){
         '<div class="arr pp" data-step="3">→</div>' +
         '<div class="box ou pp" data-step="3"><b>Output</b><span>The list of results you see.</span></div>' +
       '</div>' }; },
+    // "bat": the class expects the animal, the results are all cricket.
+    // Step 1 types the word, step 2 shows the results, step 3 asks how to
+    // find the animal. Tapping the search bar moves on, same as next.
+    function(){
+      function BAT(deg){ return '<svg viewBox="-40 -10 120 140" aria-hidden="true" style="display:block;height:100%;width:auto;max-width:100%"><g transform="rotate(' + deg + ' 20 60)"><rect x="16" y="2" width="8" height="36" rx="3" fill="#2B3A4A"/><path d="M8 36h24v68q0 13-12 13t-12-13z" fill="#E8C98A" stroke="#B08A4A" stroke-width="2"/></g></svg>'; }
+      var RESULTS = [
+        ['Cricket shop','Cricket bats: which size is right for me?','Junior bats come in sizes from 1 up to Harrow, so you can pick one that fits your height.'],
+        ['Sport facts','Why are cricket bats made of willow?','Willow is light but tough, so the ball flies off the bat.'],
+        ['Cricket club','How to look after a new cricket bat','Rub in a little oil and knock it in before you play with a hard ball.']
+      ];
+      return { steps:3, html:
+        '<button type="button" class="pp" id="d2bat-bar" aria-label="Search" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:16px;width:min(92%,760px);padding:clamp(12px,2vw,20px) clamp(18px,3vw,30px);border-radius:999px;background:#fff;border:2px solid #DADCE0;box-shadow:0 2px 10px rgba(32,33,36,.18)">' +
+          '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" style="flex:none"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>' +
+          '<span style="font-size:clamp(1.6rem,3.4vw,2.6rem);color:#202124;letter-spacing:.01em"><span id="d2bat-txt"></span><span id="d2bat-caret" style="display:inline-block;width:3px;height:1.05em;margin-left:2px;vertical-align:-.12em;background:#1A73E8"></span></span>' +
+        '</button>' +
+        '<h1 class="pp" data-step="1" id="d2bat-q1" style="transition-delay:.9s">What results might I find?</h1>' +
+        '<div class="pp" data-step="2" id="d2bat-res" style="width:min(92%,760px);text-align:left;display:flex;flex-direction:column;gap:clamp(12px,2vw,20px)">' +
+          '<div style="display:flex;gap:10px;height:clamp(64px,10vw,104px)">' + [0,1,2,3].map(function(k){
+            return '<div style="flex:1;min-width:0;height:100%;box-sizing:border-box;border-radius:12px;overflow:hidden;background:' + ['#EEF3E6','#F4EEE2','#E7EFF6','#F1ECE4'][k] + ';display:flex;justify-content:center;padding:4px">' + BAT([-24,12,-8,28][k]) + '</div>';
+          }).join('') + '</div>' +
+          RESULTS.map(function(r){
+            return '<div><div style="font-size:clamp(.8rem,1.3vw,1rem);color:#4D5156">' + r[0] + '</div>' +
+              '<div style="font-size:clamp(1.05rem,2vw,1.45rem);color:#1A0DAB;font-weight:600;line-height:1.25">' + r[1] + '</div>' +
+              '<div style="font-size:clamp(.9rem,1.5vw,1.1rem);color:#4D5156;line-height:1.35">' + r[2] + '</div></div>';
+          }).join('') +
+        '</div>' +
+        '<h1 class="pp" data-step="3" style="font-size:clamp(1.5rem,3vw,2.3rem)">What could I type to find the <em>animal</em>?</h1>',
+        init:function(el){
+          var txt = el.querySelector('#d2bat-txt'), caret = el.querySelector('#d2bat-caret');
+          var q1 = el.querySelector('#d2bat-q1'), res = el.querySelector('#d2bat-res');
+          var timers = [], typed = false, at = 0;
+          if(!RM && caret.animate) caret.animate([{opacity:1},{opacity:0}], {duration:550, iterations:Infinity, direction:'alternate'});
+          function clear(){ timers.forEach(clearTimeout); timers = []; }
+          el.addEventListener('d2step', function(ev){
+            at = ev.detail;
+            q1.style.display = at >= 2 ? 'none' : '';
+            res.style.display = at >= 2 ? '' : 'none';
+            if(at === 0){ clear(); typed = false; txt.textContent = ''; return; }
+            if(typed) return;
+            typed = true;
+            if(RM || at >= 2){ txt.textContent = 'bat'; return; }
+            'bat'.split('').forEach(function(ch, i){ timers.push(setTimeout(function(){ txt.textContent += ch; }, 250 + i * 260)); });
+          });
+          el.querySelector('#d2bat-bar').addEventListener('click', function(){
+            if(at < 3){ var n = document.getElementById('d2-next'); if(n) n.click(); }
+          });
+        } };
+    },
     function(){ return { steps:0, html:
       '<h1 class="pp">Write the instructions</h1>' +
       '<p class="lead pp" style="max-width:38ch">In what year was Mahatma Gandhi born? Write full steps for someone else to follow to find out, without telling them the answer.</p>' +
