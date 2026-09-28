@@ -255,6 +255,13 @@ Year 6:
 
 ### Autumn 2: Video production
 
+Out of date for this cycle. The long-term plan (`updated-5-6-curriculum.pdf`)
+and the KS1 and 2 curriculum map both put Vector Drawing in Autumn 2 and
+Video Editing in Spring 1. The school document has no end points for Vector
+Drawing, so that unit uses the Teach Computing objectives instead; see
+`y56-vector-plan.md`. The Video production end points below stay as the
+document wrote them, for when Video Editing comes round in Spring.
+
 Information technology, creating media. Microsoft Photos.
 
 Year 5:
