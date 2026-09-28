@@ -8031,6 +8031,7 @@ window.HB_GAUGE = (function(){
       var active = true;
       var drawing = false, pts = [], shapePath = null, bbox = null;
       var waterFrac = 0, bubbles = [], rafId = null, lastT = null, goCallback = null;
+      var countStart = null, countTotal = 0;
       var reduceMotion = document.documentElement.classList.contains('rm');
 
       function styleColor(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#6f5ce6'; }
@@ -8069,8 +8070,14 @@ window.HB_GAUGE = (function(){
       }
 
       function pos(e){
+        // the widget's CSS transform:scale in full screen (or any future
+        // zoom) changes the canvas's rendered box without changing its own
+        // 150x150 coordinate space, so map back through the ratio rather
+        // than trusting clientX/Y directly - otherwise every point lands
+        // far outside the canvas the moment it's scaled up
         var r = canvas.getBoundingClientRect();
-        return { x: e.clientX - r.left, y: e.clientY - r.top };
+        var sx = cssW / r.width, sy = cssH / r.height;
+        return { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sy };
       }
       function down(e){
         if(shapePath) return; // locked - use Redraw first
@@ -8107,6 +8114,12 @@ window.HB_GAUGE = (function(){
 
       function renderFrame(dt){
         if(!active) return;
+        // compute the fill level from real elapsed time every frame,
+        // instead of only moving it once a second when render() fires -
+        // that's what was making it jump rather than rise smoothly
+        if(countStart !== null){
+          waterFrac = Math.min(1, (performance.now() - countStart) / 1000 / countTotal);
+        }
         ctx.clearRect(0, 0, cssW, cssH);
         if(shapePath && bbox){
           var waterY = bbox.maxY - (bbox.maxY - bbox.minY) * waterFrac;
@@ -8137,8 +8150,10 @@ window.HB_GAUGE = (function(){
       }
 
       // fills up as time passes rather than draining away - a full
-      // container reads as "nearly there" instead of "running out"
-      render = function(remaining, total){ waterFrac = 1 - Math.max(0, remaining) / total; };
+      // container reads as "nearly there" instead of "running out".
+      // render() only needs to note when counting actually began and how
+      // long it runs for; renderFrame() does the smooth, every-frame maths
+      render = function(remaining, total){ if(countStart === null){ countStart = performance.now(); countTotal = total; } };
       onDone = null;
       mechAwait = function(go){
         if(shapePath) go(); else goCallback = go;
