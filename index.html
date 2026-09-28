@@ -6574,6 +6574,7 @@ window.HB_GAUGE = (function(){
     ["Activity 2 · 12 min","Put each search in the right order","A checked sequence, not reveal cards: pupils reorder three scrambled steps per scenario (Priya, Marcus, Sophie), the same mechanic as Lesson 3."],
     ["Activity 3 · 9 min","Whiteflix HQ","It opens on a staff pass check, then HQ. Hand the board over. Three sliders decide the order of the top ten, and it reorders as they drag. Set the challenge: get a programme rated 1.4 to number one. Turning paid up is not enough, because other sponsored shows are in the list: it only works once the other two sliders go right down to nothing, so money is the only thing that counts. That is the point to draw out. When someone manages it, ask the question that matters, which is who benefits from that order and who loses. Nobody has lied and no result is fake; somebody just changed what counts. Then press Back to Mr Whiteflix: the Top 10 row on the homepage has changed for everyone."],
     ["Activity 3 · 6 min","Two pupils, one search","Opens on the Two accounts tab in HQ. Type two pupils' real names in. Same search, two accounts, two different orders, and no explanation on the screen. Wait. Someone will say it is not fair. Ask them what the search engine would have to know about them to do this, and whether they would turn it off if they could."],
+    ["Activity 3 · 6 min","Where are you searching from?","Opens Search from anywhere in a new tab. Pick bat, then tap the UK and the USA: cricket, then baseball. Ask why the same word gives different results. Try football and hockey too. Year 6: tap Show the data and find location_used. Every result is pretend, written for the lesson."],
     ["Activity 3 · 8 min","What can't you find on the web?","Discuss in groups of four: private information, feelings and smells, your own thoughts, and face-to-face contact don't live on the web."],
     ["Plenary · 4 min","How do search engines make money?","Search 'guitar'. The top results are often sponsored, paid for by companies who want to rank higher for that term."],
     ["Plenary · 3 min","Watch: Social media algorithms explained","A short TED-Ed video applying the same influence-and-money idea to social media instead of search, as a bridge to the next unit."],
@@ -6642,6 +6643,14 @@ window.HB_GAUGE = (function(){
         init: seqInit }; },
     wfLaunch('#hq', 'Whiteflix HQ', 'Three sliders decide the Top 10. Can you get a programme rated 1.4 to number 1?', 'Open Whiteflix HQ'),
     wfLaunch('#compare', 'Two pupils, one search', 'The same words, typed on two different accounts.', 'Open two accounts'),
+    // Search from anywhere is its own page too, search-places.html: pick a
+    // word, pick a place on the map, and the pretend results change.
+    function(){ return { steps:0, html:
+      '<h1 class="pp">Where are you searching from?</h1>' +
+      '<p class="lead pp">The same word, searched from five different places.</p>' +
+      '<div class="d2-photobar pp">' +
+        '<a class="d2-photobtn" href="search-places.html" target="_blank" rel="noopener" style="text-decoration:none">' + ph('globe',20) + ' Open the map</a>' +
+      '</div>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">What can&rsquo;t you find on the web?</h1>' +
       '<div class="d2-reveal pp">' +
