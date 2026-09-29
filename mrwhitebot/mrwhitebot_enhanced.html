@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mr White-bot &middot; Fixing Mistakes</title>
+<style>
+ /*
+========================================================================
+==
+   SECTION 1: THEME & COLOR PALETTE
+========================================================================
+== */
+ :root {
+  --ink: #1b1d22;
+  --paper: #eef1f8;
+  --accent: #2563eb;
+  --crt-bg: #041208;
+  --phosphor: #4df89b;
+  --phosphor-alert: #ff5565;
+}
+* { box-sizing: border-box; user-select: none; }
+html, body {
+    margin: 0; padding: 0; background: var(--paper); height: 100%; overflow: hidden;
+    font-family: ui-rounded, 'SF Pro Rounded', 'Segoe UI', system-ui, sans-serif;
+}
+ /*
+========================================================================
+==
+    SECTION 2: STAGE & DISCO ENVIRONMENT (CLIP 6)
+========================================================================
+== */
+.stage {
+    position: relative; width: 100vw; height: 100vh; display: grid; place-items: center;
+    background: radial-gradient(circle at 50% 30%, #f6f8fd, #e2e7f3);
+    transition: background 1.2s cubic-bezier(.4,0,.2,1);
+}
+.stage.party {
+    background: radial-gradient(circle at 50% 40%, #2a164d 0%, #15092a 65%, #0d041c 100%);
+}
+.scene {
+    position: relative; width: 1040px; height: 660px; max-width: 96vw; max-height: 84vh;
+}
+ .floor {
+     position: absolute; left: 0; right: 0; bottom: 78px; height: 3px;
+     background: #cdd3e2; border-radius: 2px; transition: opacity .8s ease;
+ }
+ .stage.party .floor { opacity: 0; }
+ /* Disco Rig: Light Beams, Ball & Dance Tiles */
+ .disco-rig {
+     position: absolute; inset: 0; pointer-events: none; opacity: 0;
+     transition: opacity 1.2s ease;
+ }
+ .stage.party .disco-rig { opacity: 1; }
+ .beam {
+     position: absolute; top: -40px; left: 50%; width: 280px; height: 680px;
+     clip-path: polygon(48% 0%, 52% 0%, 100% 100%, 0% 100%);
+     mix-blend-mode: screen; transform-origin: 50% 0; opacity: .45;
+ }
+ .beam.b1 { background: linear-gradient(180deg, #ff0077, transparent); margin-left: -380px;
+animation: sweep1 4s ease-in-out infinite; }
+ .beam.b2 { background: linear-gradient(180deg, #00d2ff, transparent); margin-left: -140px;
+animation: sweep2 3.2s ease-in-out infinite; }
+ .beam.b3 { background: linear-gradient(180deg, #ffd000, transparent); margin-left: 110px;
+animation: sweep3 3.6s ease-in-out infinite; }
+ .beam.b4 { background: linear-gradient(180deg, #00ff88, transparent); margin-left: 340px;
+animation: sweep4 2.8s ease-in-out infinite; }
+ @keyframes sweep1 { 0%,100%{transform:rotate(-22deg)} 50%{transform:rotate(10deg)} }
+ @keyframes sweep2 { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(26deg)} }
+ @keyframes sweep3 { 0%,100%{transform:rotate(-24deg)} 50%{transform:rotate(8deg)} }
+ @keyframes sweep4 { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(22deg)} }
+ .discoball {
+  position: absolute; left: 8%; top: 20px; transform: translateX(-50%); width: 70px; height:
+70px;
+ }
+ .discoball .rod { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); width:
+3px; height: 30px; background: #9297a4; }
+ .discoball .ball {
+     position: absolute; inset: 0; border-radius: 50%;
+     background: repeating-conic-gradient(#fff 0deg 15deg, #a0a8ba 15deg 30deg);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4), inset -8px -8px 16px rgba(0,0,0,.35), inset 6px 6px
+12px #fff;
+     animation: discospin 3s linear infinite;
+ }
+ @keyframes discospin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+ .dance-floor {
+     position: absolute; left: 0; right: 0; bottom: 58px; height: 26px;
+     display: flex; justify-content: center; gap: 10px; opacity: 0; transition: opacity .8s ease;
+ }
+ .stage.party .dance-floor { opacity: 1; }
+  .pad { width: 38px; height: 18px; border-radius: 5px; animation: padPulse 1.2s ease-in-out
+infinite; }
+ .pad:nth-child(1){ animation-delay:0s; background:#ff477e; }
+ .pad:nth-child(2){ animation-delay:.15s; background:#ffd166; }
+ .pad:nth-child(3){ animation-delay:.3s; background:#06d6a0; }
+ .pad:nth-child(4){ animation-delay:.45s; background:#118ab2; }
+ .pad:nth-child(5){ animation-delay:.6s; background:#8338ec; }
+ .pad:nth-child(6){ animation-delay:.75s; background:#ff477e; }
+ .pad:nth-child(7){ animation-delay:.9s; background:#ffd166; }
+ .pad:nth-child(8){ animation-delay:1.05s; background:#06d6a0; }
+ @keyframes padPulse { 0%,100%{opacity:.3;transform:scaleY(1)}
+50%{opacity:1;transform:scaleY(1.5)} }
+ /*
+========================================================================
+==
+     SECTION 3: ROBOT ANATOMY & RIGGING
+========================================================================
+== */
+ .botWrap {
+     position: absolute; bottom: 78px; left: 60px; width: 340px; height: 490px;
+     transition: left 2.8s cubic-bezier(.42, 0, .58, 1);
+ }
+ .bot {
+     position: relative; width: 340px; height: 490px; transform-origin: 50% 100%;
+    filter: grayscale(1) brightness(.45); transform: rotate(4deg) translateY(4px);
+    transition: filter .6s ease, transform .6s cubic-bezier(.34,1.56,.64,1);
+}
+.bot.on { filter: none; transform: rotate(0) translateY(0); }
+.bot.bob { animation: idleBob 2.8s ease-in-out infinite; }
+@keyframes idleBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+/* Sleep indicators & Electrical Spurt */
+.zzz {
+    position: absolute; right: 18px; top: -36px; display: flex; gap: 4px; pointer-events: none;
+    transition: opacity .4s ease;
+}
+.zzz.hide { opacity: 0; }
+.zzz span {
+    font-weight: 900; color: #848c9c; text-shadow: 0 2px 0 rgba(255,255,255,.8);
+    animation: zFloat 2.6s ease-in-out infinite; opacity: 0; display: inline-block;
+}
+.zzz span:nth-child(1){ font-size:16px; animation-delay:0s; }
+.zzz span:nth-child(2){ font-size:22px; animation-delay:.5s; }
+.zzz span:nth-child(3){ font-size:28px; animation-delay:1s; }
+@keyframes zFloat {
+    0%{opacity:0;transform:translate(0,6px) scale(.8)}
+    20%{opacity:1} 70%{opacity:1}
+     100%{opacity:0;transform:translate(18px,-32px) scale(1.1)}
+ }
+ .spark {
+     position: absolute; left: 50%; bottom: 590px; transform: translateX(-50%) scale(.4);
+  width: 140px; height: 140px; margin-left: -70px; margin-bottom: -50px; pointer-events: none;
+opacity: 0;
+ }
+ .spark.go { animation: zapBurst .4s ease-out; }
+ .spark.big.go { animation: zapBurstBig .6s ease-out; }
+ @keyframes zapBurst { 0%{opacity:0;transform:scale(.3)} 20%{opacity:1;transform:scale(1)}
+100%{opacity:0;transform:scale(1.2)} }
+ @keyframes zapBurstBig { 0%{opacity:0;transform:scale(.3)}
+25%{opacity:1;transform:scale(1.6)} 60%{opacity:1;transform:scale(1.3)}
+100%{opacity:0;transform:scale(1.8)} }
+ .spark svg { width: 100%; height: 100%; }
+ .bot.twitch { animation: twitchWiggle .3s ease; }
+ @keyframes twitchWiggle {
+     0%,100%{transform:rotate(4deg) translateY(4px)}
+     30%{transform:rotate(1deg) translateY(2px) translateX(-6px)}
+     70%{transform:rotate(8deg) translateY(5px) translateX(6px)}
+ }
+ .bot.jolt { animation: wakeJolt .7s cubic-bezier(.34,1.56,.64,1); }
+ @keyframes wakeJolt {
+     0%{transform:translateY(8px) scaleY(.9)}
+    35%{transform:translateY(-22px) scaleY(1.08)}
+    65%{transform:translateY(4px) scaleY(.97)}
+    100%{transform:translateY(0) scaleY(1)}
+}
+/* Limbs & Body Geometry */
+.leg {
+    position: absolute; bottom: 0; width: 64px; height: 110px;
+    background: linear-gradient(180deg, #e8ebf3, #c0c5d2);
+    border: 3px solid #888e9c; border-radius: 18px 18px 24px 24px;
+    box-shadow: inset 0 -8px 14px rgba(0,0,0,.12); transform-origin: 50% 0%;
+}
+.leg.l { left: 70px; } .leg.r { right: 70px; }
+.foot {
+    position: absolute; bottom: -14px; width: 84px; height: 34px;
+    background: linear-gradient(180deg, #d4d8e2, #a6abb8);
+    border: 3px solid #828795; border-radius: 16px;
+}
+.foot.l { left: 60px; } .foot.r { right: 60px; }
+.torso {
+    position: absolute; left: 38px; bottom: 96px; width: 264px; height: 220px;
+    background: linear-gradient(160deg, #f7f9fd, #cbd0dc);
+    border: 4px solid #848a98; border-radius: 40px;
+     box-shadow: inset 0 10px 18px rgba(255,255,255,.7), inset 0 -18px 26px rgba(0,0,0,.14);
+     transform-origin: 50% 100%; transition: transform .3s ease;
+ }
+ .chest {
+  position: absolute; left: 50%; top: 40px; transform: translateX(-50%); width: 96px; height:
+96px; border-radius: 50%;
+     background: radial-gradient(circle at 38% 32%, #8ce5ff, #1c7ec4 70%, #0d528f);
+   border: 5px solid #373e4b; box-shadow: 0 0 0 0 rgba(70,190,255,0); transition: box-shadow
+.5s ease;
+ }
+ .chest::after { content:""; position: absolute; inset: 13px; border-radius: 50%; border: 2px solid
+rgba(255,255,255,.5); }
+ .bot.on .chest { box-shadow: 0 0 20px 4px rgba(70,190,255,.65); }
+ .vent { position: absolute; width: 38px; height: 6px; background: #8e94a2; border-radius: 3px; }
+ .vent.a { left: 44px; bottom: 34px; } .vent.b { left: 44px; bottom: 22px; }
+ .vent.c { right: 44px; bottom: 34px; } .vent.d { right: 44px; bottom: 22px; }
+ /* Pivot Arms */
+ .arm {
+     position: absolute; top: 250px; width: 34px; height: 154px;
+     background: linear-gradient(180deg, #eef1f7, #c2c7d4);
+     border: 3px solid #8a909e; border-radius: 17px;
+     transform-origin: 50% 14px; transition: transform .4s ease;
+ }
+ .arm.l { left: 6px; transform: rotate(18deg); }
+ .arm.r { right: 6px; transform: rotate(-18deg); }
+ .bot.on .arm.l { transform: rotate(8deg); }
+ .bot.on .arm.r { transform: rotate(-8deg); }
+ .hand {
+     position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+     width: 46px; height: 46px; border-radius: 50%;
+     background: linear-gradient(160deg, #e5e8f0, #b5b9c5); border: 3px solid #848a98;
+ }
+ /* Head & Screen */
+ .neck {
+     position: absolute; left: 50%; bottom: 308px; transform: translateX(-50%);
+     width: 52px; height: 34px; background: linear-gradient(180deg, #d5d9e3, #8a909e);
+     border: 3px solid #848a98; border-radius: 8px;
+ }
+ .ant-stem {
+     position: absolute; left: 50%; bottom: 558px; transform: translateX(-50%);
+  width: 6px; height: 46px; background: #848a98; border-radius: 3px; transform-origin: 50%
+100%;
+ }
+ .ant-dot {
+     position: absolute; left: 50%; bottom: 598px; transform: translateX(-50%);
+     width: 18px; height: 18px; border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #ffe27c, #dc9f00);
+  box-shadow: 0 0 0 rgba(255,200,60,0); transition: box-shadow .4s ease, background .4s
+ease;
+    }
+    .bot.on .ant-dot { box-shadow: 0 0 14px 4px rgba(255,205,60,.75); }
+    .bot.blink .ant-dot { animation: antPulse 1s steps(2) infinite; }
+    @keyframes antPulse { 50%{ opacity: .3; } }
+    .head {
+        position: absolute; left: 50%; bottom: 332px; transform: translateX(-50%) rotate(7deg);
+        width: 224px; height: 198px; background: linear-gradient(160deg, #f5f7fc, #ccd1dc);
+        border: 5px solid #757b88; border-radius: 28px;
+  box-shadow: inset 0 8px 14px rgba(255,255,255,.6), inset 0 -14px 20px rgba(0,0,0,.14), 0
+10px 22px rgba(0,0,0,.16);
+        transform-origin: 50% 90%; transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+    }
+    .bot.on .head { transform: translateX(-50%) rotate(0); }
+    .bolt { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #7c828e;
+}
+    .bolt.tl { left: 14px; top: 14px; } .bolt.tr { right: 14px; top: 14px; }
+    .bolt.bl { left: 14px; bottom: 14px; } .bolt.br { right: 14px; bottom: 14px; }
+    .screen {
+        position: absolute; left: 24px; top: 24px; width: 176px; height: 150px;
+        border-radius: 12px; overflow: hidden; background: var(--crt-bg);
+        border: 4px solid #171a20; box-shadow: inset 0 0 24px 6px rgba(0,0,0,.9);
+ }
+ .screen .face {
+     position: absolute; left: 50%; top: 38%; transform: translate(-50%,-50%);
+  width: 150%; height: 150%; filter: grayscale(1) brightness(1.2) contrast(1.6) sepia(1)
+hue-rotate(78deg) saturate(5);
+     mix-blend-mode: screen; opacity: 0; transition: opacity .3s ease;
+ }
+ .screen .face.show { opacity: .95; }
+ .screen .glow { position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%,
+rgba(70,255,140,.32), transparent 70%); }
+ .screen .scan { position: absolute; inset: 0; pointer-events: none; background:
+repeating-linear-gradient(0deg, rgba(0,0,0,.4) 0 1px, transparent 1px 3px); }
+ .screen .vignette { position: absolute; inset: 0; box-shadow: inset 0 0 32px 14px rgba(0,0,0,.8);
+border-radius: 8px; }
+ /*
+========================================================================
+==
+     SECTION 4: COORDINATED ANIMATION STATES
+========================================================================
+== */
+ /* Walk Cycle */
+ .bot.walk { animation: walkBounce .48s ease-in-out infinite; }
+ .bot.walk .leg.l { animation: legStepL .48s ease-in-out infinite; }
+ .bot.walk .leg.r { animation: legStepR .48s ease-in-out infinite; }
+ .bot.walk .arm.l { animation: armSwingL .48s ease-in-out infinite; }
+ .bot.walk .arm.r { animation: armSwingR .48s ease-in-out infinite; }
+ @keyframes walkBounce { 0%,100%{transform:translateY(0) rotate(1deg)}
+50%{transform:translateY(-8px) rotate(-1deg)} }
+ @keyframes legStepL { 0%,100%{transform:rotate(-14deg)} 50%{transform:rotate(16deg)} }
+ @keyframes legStepR { 0%,100%{transform:rotate(16deg)} 50%{transform:rotate(-14deg)} }
+ @keyframes armSwingL { 0%,100%{transform:rotate(18deg)} 50%{transform:rotate(-12deg)} }
+ @keyframes armSwingR { 0%,100%{transform:rotate(-18deg)} 50%{transform:rotate(12deg)} }
+ /* Typing Cycle */
+ .bot.typing .arm.l { animation: typeArmL .28s ease-in-out infinite alternate; }
+ .bot.typing .arm.r { animation: typeArmR .28s ease-in-out infinite alternate .14s; }
+ @keyframes typeArmL { 0%{transform:rotate(12deg) translateY(0)}
+100%{transform:rotate(24deg) translateY(6px)} }
+ @keyframes typeArmR { 0%{transform:rotate(-10deg) translateY(0)}
+100%{transform:rotate(-22deg) translateY(6px)} }
+ /* Double-Take Reaction */
+ .bot.confused .head { animation: headDoubleTake .75s cubic-bezier(.25,1.4,.5,1) forwards; }
+ .bot.confused .ant-stem, .bot.confused .ant-dot { animation: antWiggle .7s ease forwards; }
+ .bot.confused .ant-dot {
+     background: radial-gradient(circle at 35% 30%, #ff8585, #ef233c) !important;
+     box-shadow: 0 0 16px 5px rgba(239,35,60,.85) !important;
+ }
+ @keyframes headDoubleTake {
+     0% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(13deg); }
+    55% { transform: translateX(-50%) rotate(13deg); }
+    75% { transform: translateX(-50%) rotate(-6deg); }
+    100% { transform: translateX(-50%) rotate(0deg); }
+}
+@keyframes antWiggle {
+    0%{transform:translateX(-50%) rotate(0)}
+    30%{transform:translateX(-50%) rotate(24deg)}
+    60%{transform:translateX(-50%) rotate(-18deg)}
+    85%{transform:translateX(-50%) rotate(8deg)}
+    100%{transform:translateX(-50%) rotate(0)}
+}
+/* Disco Celebration Dance */
+.bot.dance { animation: danceTorso .56s ease-in-out infinite; }
+.bot.dance .head { animation: danceHead .56s ease-in-out infinite; }
+.bot.dance .leg.l { animation: danceLegL .56s ease-in-out infinite; }
+.bot.dance .leg.r { animation: danceLegR .56s ease-in-out infinite; }
+.bot.dance .arm.l { animation: danceArmL .56s ease-in-out infinite; }
+.bot.dance .arm.r { animation: danceArmR .56s ease-in-out infinite; }
+.bot.dance .ant-dot { animation: discoAntenna 1s linear infinite; }
+@keyframes danceTorso {
+    0%,100%{transform:translateY(0) rotate(-4deg)}
+     50%{transform:translateY(-16px) rotate(4deg)}
+ }
+ @keyframes danceHead { 0%,100%{transform:translateX(-50%) rotate(6deg)}
+50%{transform:translateX(-50%) rotate(-6deg)} }
+ @keyframes danceLegL { 0%,100%{transform:translateX(0) rotate(0)}
+50%{transform:translateX(-14px) rotate(-14deg)} }
+ @keyframes danceLegR { 0%,100%{transform:translateX(0) rotate(0)}
+50%{transform:translateX(14px) rotate(14deg)} }
+  @keyframes danceArmL { 0%,100%{transform:rotate(12deg)} 50%{transform:rotate(-75deg)
+translateY(-14px)} }
+  @keyframes danceArmR { 0%,100%{transform:rotate(-12deg)} 50%{transform:rotate(75deg)
+translateY(-14px)} }
+ @keyframes discoAntenna {
+     0%{ background:#ff5964; box-shadow:0 0 16px 5px #ff5964; }
+     25%{ background:#f7b801; box-shadow:0 0 16px 5px #f7b801; }
+     50%{ background:#35a7ff; box-shadow:0 0 16px 5px #35a7ff; }
+     75%{ background:#38b000; box-shadow:0 0 16px 5px #38b000; }
+     100%{ background:#ff5964; box-shadow:0 0 16px 5px #ff5964; }
+ }
+ /*
+========================================================================
+==
+     SECTION 5: THE DESK CRT MONITOR & HIGHLIGHTS
+========================================================================
+= */
+ .desk {
+     position: absolute; bottom: 78px; right: 50px; width: 330px; height: 300px;
+     transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.34,1.56,.64,1);
+ }
+ .desk.focus { transform: scale(1.1); }
+ .desk .stand {
+     position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 22px; height: 60px; background: linear-gradient(180deg, #c5cad6, #888e9d);
+border-radius: 4px;
+ }
+ .desk .base {
+     position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+     width: 130px; height: 16px; background: #888e9d; border-radius: 8px;
+ }
+ .desk .mon {
+     position: absolute; left: 50%; bottom: 60px; transform: translateX(-50%);
+     width: 330px; height: 236px; background: linear-gradient(160deg, #f4f6fa, #c7ccd8);
+     border: 5px solid #757b88; border-radius: 22px; box-shadow: 0 12px 24px rgba(0,0,0,.18);
+ }
+ .desk .scr {
+     position: absolute; left: 22px; top: 22px; right: 22px; bottom: 22px;
+     border-radius: 12px; overflow: hidden; background: var(--crt-bg);
+     border: 4px solid #171a20; box-shadow: inset 0 0 28px 8px rgba(0,0,0,.9);
+ }
+ .desk .scr .glow {
+  position: absolute; inset: 0; background: radial-gradient(circle at 50% 35%,
+rgba(77,248,155,.28), transparent 75%);
+     opacity: 0; transition: opacity .6s ease, background .4s ease;
+ }
+ .desk.on .scr .glow { opacity: 1; }
+ .desk.error .scr .glow {
+     background: radial-gradient(circle at 50% 35%, rgba(255,85,101,.35), transparent 75%);
+ }
+ .desk .scr .scan {
+     position: absolute; inset: 0; pointer-events: none;
+     background: repeating-linear-gradient(0deg, rgba(0,0,0,.4) 0 1px, transparent 1px 3px);
+ }
+ .desk .scr .txt {
+     position: absolute; left: 16px; right: 16px; top: 50%; transform: translateY(-50%);
+     font-family: 'SF Mono', Consolas, Menlo, ui-monospace, monospace; font-weight: 800;
+     color: var(--phosphor); text-shadow: 0 0 8px rgba(77,248,155,.75);
+     font-size: clamp(1.2rem, 2.3vw, 1.6rem); line-height: 1.35;
+     opacity: 0; transition: opacity .3s ease;
+ }
+ .desk .scr .txt.show { opacity: 1; }
+ .desk .scr .caret { display: inline-block; width: .12em; }
+ .desk .scr .caret.on { animation: careBlink .8s steps(2) infinite; }
+ @keyframes careBlink { 50%{opacity:0} }
+ .typo-tag {
+     display: inline-block; border-radius: 4px; padding: 0 2px; transition: all .4s ease;
+ }
+ .typo-tag.flagged {
+     color: var(--phosphor-alert); text-shadow: 0 0 10px rgba(255,85,101,.9);
+     animation: typoPulse .9s ease-in-out infinite alternate;
+ }
+ @keyframes typoPulse { 0%{transform:scale(1)} 100%{transform:scale(1.12); text-decoration:
+underline;} }
+ .desk .dot {
+     position: absolute; right: 18px; top: 16px; width: 9px; height: 9px; border-radius: 50%;
+     background: #373b45; transition: background .4s ease, box-shadow .4s ease;
+ }
+ .desk.on .dot { background: #4df89b; box-shadow: 0 0 8px 3px rgba(77,248,155,.8); }
+ /*
+========================================================================
+==
+     SECTION 6: SUBTITLES & CARPET CAPTIONS
+========================================================================
+== */
+ .cap-box {
+     position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%);
+     width: 90%; max-width: 880px; text-align: center; pointer-events: none;
+ }
+ .cap {
+     display: inline-block; min-height: 1.6em; padding: 6px 18px; border-radius: 20px;
+     font-size: clamp(1.25rem, 2.7vw, 1.85rem); font-weight: 800; color: var(--ink);
+     background: rgba(255,255,255,.65); backdrop-filter: blur(8px);
+     box-shadow: 0 4px 16px rgba(0,0,0,.08); opacity: 0; transform: translateY(8px);
+     transition: opacity .3s ease, transform .3s ease, color .6s ease, background .6s ease;
+ }
+ .cap.show { opacity: 1; transform: translateY(0); }
+ .stage.party .cap { color: #fff; background: rgba(0,0,0,.45); box-shadow: 0 4px 20px
+rgba(0,0,0,.3); }
+ .cap .caret { display: inline-block; width: .1em; animation: careBlink .8s steps(2) infinite; }
+ /*
+========================================================================
+==
+     SECTION 7: HUD NAVIGATION & STANDBY OVERLAY
+========================================================================
+== */
+ .hud {
+     position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+     display: flex; gap: 8px; background: rgba(255,255,255,.8); backdrop-filter: blur(10px);
+     padding: 6px 12px; border-radius: 30px; box-shadow: 0 4px 14px rgba(0,0,0,.08); z-index: 10;
+}
+.stage.party .hud { background: rgba(30,15,50,.7); }
+.hud-btn {
+    border: none; background: transparent; padding: 6px 14px; border-radius: 20px;
+    font-size: .95rem; font-weight: 700; color: #4b5563; cursor: pointer; transition: all .2s;
+}
+.stage.party .hud-btn { color: #e2e8f0; }
+.hud-btn:hover { background: rgba(0,0,0,.06); }
+.hud-btn.active { background: var(--accent); color: #fff; }
+.standby {
+    position: absolute; inset: 0; background: rgba(238,241,248,.96);
+    display: grid; place-items: center; z-index: 20; cursor: pointer;
+}
+.standby.hidden { display: none; }
+.play-badge {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    font-weight: 800; font-size: 1.4rem; color: var(--ink);
+}
+.play-badge .ring {
+    width: 96px; height: 96px; border-radius: 50%; background: var(--ink);
+    display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+ }
+ .play-badge:hover .ring { transform: scale(1.08); }
+ .play-badge svg { width: 38px; height: 38px; fill: #fff; margin-left: 5px; }
+</style>
+</head>
+<body>
+<!-- HUD CONTROLS -->
+<div class="hud" id="hud">
+ <button class="hud-btn active" onclick="loadClip(0)">Clip 1 (robott)</button>
+ <button class="hud-btn" onclick="loadClip(1)">Clip 2 (disco bll)</button>
+ <button class="hud-btn" onclick="loadClip(2)">Clip 3 (hartburn)</button>
+ <button class="hud-btn" onclick="loadClip(3)">Clip 4 (goodmusic)</button>
+ <button class="hud-btn" onclick="loadClip(4)">Clip 5 (lihts/brigt)</button>
+ <button class="hud-btn" onclick="loadClip(5)">Clip 6 (Disco!)</button>
+</div>
+<!-- MAIN VIEWPORT -->
+<div class="stage" id="stage">
+ <!-- Party Lighting Effects -->
+ <div class="disco-rig">
+   <div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div
+class="beam b4"></div>
+     <div class="discoball"><div class="rod"></div><div class="ball"></div></div>
+  <div class="dance-floor">
+    <div class="pad"></div><div class="pad"></div><div class="pad"></div><div
+class="pad"></div>
+    <div class="pad"></div><div class="pad"></div><div class="pad"></div><div
+class="pad"></div>
+  </div>
+ </div>
+ <div class="scene">
+  <div class="floor"></div>
+  <!-- The Robot Assembly -->
+  <div class="botWrap" id="botWrap">
+   <div class="bot" id="bot">
+    <div class="leg l"></div><div class="leg r"></div>
+    <div class="foot l"></div><div class="foot r"></div>
+    <div class="torso">
+      <div class="chest"></div>
+      <div class="vent a"></div><div class="vent b"></div><div class="vent c"></div><div
+class="vent d"></div>
+    </div>
+    <div class="arm l"><div class="hand"></div></div>
+    <div class="arm r"><div class="hand"></div></div>
+    <div class="neck"></div>
+    <div class="ant-stem"></div><div class="ant-dot"></div>
+    <div class="zzz" id="zzz"><span>Z</span><span>Z</span><span>Z</span></div>
+     <div class="spark" id="spark">
+      <svg viewBox="0 0 100 100">
+       <polygon points="52,4 30,52 46,52 34,96 74,42 54,42" fill="#fff59d" stroke="#f2c200"
+stroke-width="3"/>
+      </svg>
+     </div>
+     <div class="head">
+      <div class="bolt tl"></div><div class="bolt tr"></div><div class="bolt bl"></div><div
+class="bolt br"></div>
+      <div class="screen">
+       <img class="face smile" src="../whiteflix/img/face_smile.webp" alt="smiling face">
+       <img class="face stare" src="../whiteflix/img/face_stare.webp" alt="confused face">
+       <div class="glow"></div>
+       <div class="scan"></div>
+       <div class="vignette"></div>
+      </div>
+     </div>
+   </div>
+  </div>
+  <!-- Interactive Desk Monitor -->
+  <div class="desk" id="desk">
+   <div class="stand"></div><div class="base"></div>
+   <div class="mon">
+    <div class="dot"></div>
+    <div class="scr">
+         <div class="glow"></div>
+      <div class="txt" id="dtxt"><span id="dsent"></span><span class="caret on"
+id="dcaret">|</span></div>
+         <div class="scan"></div>
+    </div>
+   </div>
+  </div>
+  <!-- Classroom Subtitle Prompts -->
+  <div class="cap-box">
+    <div class="cap" id="cap"><span id="capTxt"></span><span class="caret"
+id="capCaret">|</span></div>
+  </div>
+ </div>
+</div>
+<!-- Standby Unlock Screen -->
+<div class="standby" id="standby">
+ <div class="play-badge">
+  <div class="ring"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+  <span id="standbyLabel">Start Lesson Animation</span>
+ </div>
+</div>
+<script>
+ /*
+========================================================================
+==
+   SCRIPT SECTION 1: CLIP CONFIGURATION DATA
+========================================================================
+== */
+ const CLIPS = [
+  {
+      intro: "It's disco day at school!",
+      intro2: "But Mr White-bot is fast asleep...",
+      sentenceSegments: [
+       { text: "Mr White-bot is a " },
+       { text: "robott.", typo: true }
+      ],
+      isParty: false,
+      needsWakeUp: true
+  },
+  {
+      intro: "Next up — decorations for the disco!",
+      sentenceSegments: [
+       { text: "He will bring a disco " },
+       { text: "bll.", typo: true }
+    ],
+    isParty: false
+},
+{
+    intro: "Now, where is the party going to be?",
+    sentenceSegments: [
+     { text: "The party is at " },
+     { text: "hartburn.", typo: true }
+    ],
+    isParty: false
+},
+{
+    intro: "What kind of tunes will he play?",
+    sentenceSegments: [
+     { text: "He will play " },
+     { text: "goodmusic.", typo: true }
+    ],
+    isParty: false
+},
+{
+    intro: "Last check — what will the hall look like?",
+    sentenceSegments: [
+      { text: "The " },
+      { text: "lihts", typo: true },
+      { text: " are so " },
+      { text: "brigt.", typo: true }
+     ],
+     isParty: false
+ },
+ {
+     intro: "Every mistake is fixed — the invite is ready!",
+     intro2: "Time for Mr White-bot's disco!",
+     isParty: true
+ }
+];
+let currentClipIndex = 0;
+let activeRunToken = 0;
+/* DOM Handle Lookup */
+const stage = document.getElementById('stage'),
+      botWrap = document.getElementById('botWrap'),
+      bot = document.getElementById('bot'),
+      spark = document.getElementById('spark'),
+      zzz = document.getElementById('zzz'),
+      cap = document.getElementById('cap'),
+      capTxt = document.getElementById('capTxt'),
+      capCaret = document.getElementById('capCaret'),
+      desk = document.getElementById('desk'),
+      dtxt = document.getElementById('dtxt'),
+      dsent = document.getElementById('dsent'),
+      dcaret = document.getElementById('dcaret'),
+      standby = document.getElementById('standby'),
+      faceSmile = document.querySelector('.face.smile'),
+      faceStare = document.querySelector('.face.stare'),
+      hudButtons = document.querySelectorAll('.hud-btn');
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+ /*
+========================================================================
+==
+  SCRIPT SECTION 2: SYNTHESIZED PROCEDURAL SOUND ENGINE
+========================================================================
+== */
+let ac = null;
+function getAudio() {
+ if (!ac) {
+     const AC = window.AudioContext || window.webkitAudioContext;
+     ac = new AC();
+ }
+    if (ac.state === 'suspended') ac.resume();
+    return ac;
+}
+function tone(type, freq, dur, vol, endFreq) {
+    const ctx = getAudio(); if (!ctx) return;
+    const t = ctx.currentTime, osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    if (endFreq) osc.frequency.exponentialRampToValueAtTime(Math.max(10, endFreq), t + dur);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + .01);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(t); osc.stop(t + dur + .05);
+}
+function noiseClick(dur, vol) {
+    const ctx = getAudio(); if (!ctx) return;
+    const buf = ctx.createBuffer(1, Math.max(1, ctx.sampleRate * dur), ctx.sampleRate),
+        data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource(), filter = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = buf;
+    filter.type = 'highpass'; filter.frequency.setValueAtTime(1400, ctx.currentTime);
+    g.gain.setValueAtTime(vol, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + dur);
+    src.connect(filter); filter.connect(g); g.connect(ctx.destination);
+    src.start();
+}
+function sndZap(big = false) {
+    tone('sawtooth', big ? 980 : 760, big ? .32 : .12, big ? .18 : .09, big ? 60 : 180);
+    noiseClick(big ? .25 : .1, big ? .25 : .12);
+}
+function sndBoot() { tone('sine', 160, .55, .2, 720); }
+function sndStep() { tone('sine', 85, .04, .18, 40); noiseClick(.03, .06); }
+function sndKeyClack() {
+    tone('triangle', 420 + Math.random() * 120, .03, .07);
+    noiseClick(.018, .08);
+}
+function sndDoubleTake() {
+    tone('sine', 540, .14, .18, 220);
+    setTimeout(() => tone('sawtooth', 200, .3, .12, 110), 120);
+}
+let discoLoopTimer = null;
+const ARPEGGIO = [261.63, 329.63, 392.00, 523.25, 440.00, 349.23, 392.00, 329.63];
+ function startDiscoBeat() {
+     stopDiscoBeat();
+     let step = 0;
+     discoLoopTimer = setInterval(() => {
+      if (step % 4 === 0) tone('sine', 130, .18, .28, 45);
+      if (step % 2 === 1) noiseClick(.025, .08);
+      tone('square', ARPEGGIO[step % ARPEGGIO.length], .12, .035);
+      step++;
+     }, 140);
+ }
+ function stopDiscoBeat() {
+     if (discoLoopTimer) { clearInterval(discoLoopTimer); discoLoopTimer = null; }
+ }
+ /*
+========================================================================
+==
+     SCRIPT SECTION 3: CAPTIONS & SPARK TRIGGER HELPERS
+========================================================================
+== */
+ function showCap(t) { capCaret.style.display = 'none'; capTxt.textContent = t;
+cap.classList.add('show'); }
+ function hideCap() { cap.classList.remove('show'); capTxt.textContent = ''; }
+ async function typeCap(text, token) {
+    capTxt.textContent = '';
+    cap.classList.add('show');
+    capCaret.style.display = 'inline-block';
+    for (let i = 0; i < text.length; i++) {
+        if (token !== activeRunToken) return;
+        capTxt.textContent += text[i];
+        if (text[i] !== ' ') sndKeyClack();
+        await wait(45 + Math.random() * 30);
+    }
+}
+function fireAntennaSpark(big) {
+    spark.classList.remove('go', 'big');
+    void spark.offsetWidth;
+    if (big) spark.classList.add('big');
+    spark.classList.add('go');
+}
+ /*
+========================================================================
+==
+    SCRIPT SECTION 4: ANIMATION SEQUENCE ORCHESTRATION
+========================================================================
+== */
+async function runClip(index) {
+const token = ++activeRunToken;
+const clip = CLIPS[index];
+stopDiscoBeat();
+hideCap();
+desk.classList.remove('on', 'focus', 'error');
+dtxt.classList.remove('show');
+dsent.innerHTML = '';
+bot.classList.remove('walk', 'typing', 'confused', 'dance', 'bob', 'blink');
+stage.classList.toggle('party', Boolean(clip.isParty));
+if (clip.isParty) {
+ botWrap.style.left = '50%';
+ botWrap.style.transform = 'translateX(-50%)';
+ bot.classList.add('on', 'bob');
+ faceSmile.classList.add('show');
+ faceStare.classList.remove('show');
+ zzz.classList.add('hide');
+ await wait(400); if (token !== activeRunToken) return;
+ showCap(clip.intro);
+ await wait(2400); if (token !== activeRunToken) return;
+ hideCap();
+ await wait(400); if (token !== activeRunToken) return;
+ showCap(clip.intro2);
+    await wait(2000); if (token !== activeRunToken) return;
+    hideCap();
+    startDiscoBeat();
+    bot.classList.remove('bob');
+    bot.classList.add('dance');
+    await wait(1200); if (token !== activeRunToken) return;
+    showCap("Mr White-bot is having the best time!");
+    await wait(3200); if (token !== activeRunToken) return;
+    hideCap();
+    await wait(600); if (token !== activeRunToken) return;
+    await typeCap("Great job fixing every mistake today!", token);
+    return;
+}
+botWrap.style.transform = 'none';
+if (clip.needsWakeUp) {
+    botWrap.style.left = '60px';
+    bot.classList.remove('on');
+    faceSmile.classList.remove('show');
+    faceStare.classList.remove('show');
+    zzz.classList.remove('hide');
+    await wait(500); if (token !== activeRunToken) return;
+    showCap(clip.intro);
+await wait(2500); if (token !== activeRunToken) return;
+hideCap();
+await wait(500); if (token !== activeRunToken) return;
+showCap(clip.intro2);
+await wait(2500); if (token !== activeRunToken) return;
+hideCap();
+await wait(800); if (token !== activeRunToken) return;
+for (let j = 0; j < 2; j++) {
+    fireAntennaSpark(false); sndZap(false);
+    bot.classList.add('twitch');
+    await wait(350);
+    bot.classList.remove('twitch');
+    await wait(600);
+}
+fireAntennaSpark(true); sndZap(true);
+await wait(140); if (token !== activeRunToken) return;
+bot.classList.add('jolt', 'on', 'blink');
+zzz.classList.add('hide');
+faceSmile.classList.add('show');
+await wait(650); if (token !== activeRunToken) return;
+bot.classList.add('bob');
+showCap("Mr White-bot wakes up!");
+ await wait(2200); if (token !== activeRunToken) return;
+ hideCap();
+ await wait(500); if (token !== activeRunToken) return;
+ showCap("Time to write the disco invite...");
+ bot.classList.remove('bob');
+ bot.classList.add('walk');
+ botWrap.style.left = '300px';
+ for (let s = 0; s < 6; s++) {
+     await wait(450); if (token !== activeRunToken) return;
+     sndStep();
+ }
+ bot.classList.remove('walk');
+ bot.classList.add('bob');
+ hideCap();
+} else {
+ botWrap.style.left = '300px';
+ bot.classList.add('on', 'bob', 'blink');
+ faceSmile.classList.add('show');
+ faceStare.classList.remove('show');
+ zzz.classList.add('hide');
+ await wait(400); if (token !== activeRunToken) return;
+ showCap(clip.intro);
+    await wait(2200); if (token !== activeRunToken) return;
+    hideCap();
+}
+desk.classList.add('on');
+sndBoot();
+await wait(900); if (token !== activeRunToken) return;
+bot.classList.add('typing');
+dtxt.classList.add('show');
+dcaret.style.display = 'inline-block';
+for (const seg of clip.sentenceSegments) {
+    const span = document.createElement('span');
+    if (seg.typo) span.className = 'typo-tag';
+    dsent.appendChild(span);
+    for (let c = 0; c < seg.text.length; c++) {
+        if (token !== activeRunToken) return;
+        span.textContent += seg.text[c];
+        if (seg.text[c] !== ' ') sndKeyClack();
+        const charDelay = seg.text[c] === ' ' ? 140 : (80 + Math.random() * 60);
+        await wait(charDelay);
+    }
+}
+bot.classList.remove('typing');
+    dcaret.style.display = 'none';
+    await wait(600); if (token !== activeRunToken) return;
+    desk.classList.add('focus', 'error');
+    document.querySelectorAll('.typo-tag').forEach(el => el.classList.add('flagged'));
+    bot.classList.add('confused');
+    faceSmile.classList.remove('show');
+    faceStare.classList.add('show');
+    sndDoubleTake();
+    showCap("Hold on... something's not right!");
+    await wait(2600); if (token !== activeRunToken) return;
+    hideCap();
+    await wait(400); if (token !== activeRunToken) return;
+    await typeCap("Can you spot the mistake and help Mr White-bot fix it?", token);
+}
+ /*
+========================================================================
+==
+    SCRIPT SECTION 5: HUD & KEYBOARD SHORTCUT DISPATCHER
+========================================================================
+== */
+function loadClip(index) {
+    currentClipIndex = index;
+    hudButtons.forEach((b, i) => b.classList.toggle('active', i === index));
+     runClip(index);
+ }
+ standby.addEventListener('click', () => {
+     standby.classList.add('hidden');
+     getAudio();
+     loadClip(currentClipIndex);
+ });
+ window.addEventListener('keydown', (e) => {
+     if (e.code >= 'Digit1' && e.code <= 'Digit6') {
+         const idx = parseInt(e.code.replace('Digit', '')) - 1;
+         loadClip(idx);
+     } else if (e.code === 'ArrowRight' && currentClipIndex < CLIPS.length - 1) {
+         loadClip(currentClipIndex + 1);
+     } else if (e.code === 'ArrowLeft' && currentClipIndex > 0) {
+         loadClip(currentClipIndex - 1);
+     } else if (e.code === 'Space') {
+         loadClip(currentClipIndex);
+     }
+ });
+</script>
+</body>
+</html>
