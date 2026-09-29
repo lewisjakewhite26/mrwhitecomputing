@@ -8,19 +8,39 @@
   :root{ --ink:#1b1d22; --paper:#eef1f8; }
   html,body{margin:0;padding:0;background:#eef1f8;height:100%;overflow:hidden;
     font-family:ui-rounded,'SF Pro Rounded',Verdana,sans-serif}
-  .stage{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:22px}
+  .stage{position:relative;width:100vw;height:100vh;display:flex;
+    align-items:center;justify-content:center}
+  .scene{position:relative;width:1000px;height:640px;max-width:96vw;max-height:82vh}
 
-  /* ---- robot ---- */
-  .bot{position:relative;width:340px;height:560px;flex:none;filter:grayscale(1) brightness(.45);
-    transition:filter 1.1s ease}
-  .bot.on{filter:none}
+  /* ---- floor ---- */
+  .floor{position:absolute;left:0;right:0;bottom:78px;height:2px;background:#d4d8e2}
+
+  /* ---- robot wrapper: handles walking across the scene ---- */
+  .botWrap{position:absolute;bottom:78px;left:60px;width:340px;height:490px;
+    transition:left 1.8s cubic-bezier(.45,.05,.55,.95)}
+
+  .bot{position:relative;width:340px;height:490px;transform-origin:50% 100%;
+    filter:grayscale(1) brightness(.42);transform:rotate(5deg) translateY(4px);
+    transition:filter .5s ease,transform .5s ease}
+  .bot.on{filter:none;transform:rotate(0) translateY(0)}
+  .bot.on .head{transform:rotate(0)}
+  .bot.on .arm.l{transform:rotate(8deg)} .bot.on .arm.r{transform:rotate(-8deg)}
   .bot.bob{animation:bob 2.6s ease-in-out infinite}
-  @keyframes bob{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes bob{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+  .bot.jolt{animation:jolt .5s ease}
+  @keyframes jolt{
+    0%{transform:translateX(0) rotate(5deg)} 15%{transform:translateX(-9px) rotate(-4deg)}
+    32%{transform:translateX(8px) rotate(4deg)} 50%{transform:translateX(-6px) rotate(-3deg)}
+    68%{transform:translateX(4px) rotate(2deg)} 84%{transform:translateX(-2px) rotate(-1deg)}
+    100%{transform:translateX(0) rotate(0)} }
 
   .leg{position:absolute;bottom:0;width:64px;height:110px;background:linear-gradient(180deg,#e7e9ef,#c3c7d1);
-    border:3px solid #9297a4;border-radius:16px 16px 22px 22px;box-shadow:inset 0 -8px 14px rgba(0,0,0,.12)}
+    border:3px solid #9297a4;border-radius:16px 16px 22px 22px;box-shadow:inset 0 -8px 14px rgba(0,0,0,.12);
+    transform-origin:50% 0%}
   .leg.l{left:70px} .leg.r{right:70px}
+  .bot.walk .leg{animation:legswing .46s ease-in-out infinite}
+  .bot.walk .leg.r{animation-delay:.23s}
+  @keyframes legswing{ 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(16deg)} }
   .foot{position:absolute;bottom:-14px;width:84px;height:34px;background:linear-gradient(180deg,#d3d7e0,#a7acb9);
     border:3px solid #8c919e;border-radius:16px}
   .foot.l{left:60px} .foot.r{right:60px}
@@ -31,18 +51,22 @@
     box-shadow:inset 0 10px 18px rgba(255,255,255,.6), inset 0 -18px 26px rgba(0,0,0,.14)}
   .chest{position:absolute;left:50%;top:40px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;
     background:radial-gradient(circle at 38% 32%,#8be0ff,#1f7fc4 70%,#0d5794);
-    border:5px solid #3b4250;box-shadow:0 0 0 0 rgba(70,190,255,0);transition:box-shadow 1.1s ease}
+    border:5px solid #3b4250;box-shadow:0 0 0 0 rgba(70,190,255,0);transition:box-shadow .5s ease}
   .bot.on .chest{box-shadow:0 0 18px 4px rgba(70,190,255,.55)}
   .chest::after{content:"";position:absolute;inset:14px;border-radius:50%;border:2px solid rgba(255,255,255,.5)}
   .vent{position:absolute;width:38px;height:6px;background:#9297a4;border-radius:3px;bottom:34px}
   .vent.a{left:44px} .vent.b{left:44px;bottom:22px} .vent.c{right:44px} .vent.d{right:44px;bottom:22px}
 
   .arm{position:absolute;top:250px;width:34px;height:150px;background:linear-gradient(180deg,#eef0f5,#c3c7d1);
-    border:3px solid #9297a4;border-radius:17px;box-shadow:inset -6px 0 10px rgba(0,0,0,.10)}
-  .arm.l{left:6px;transform:rotate(8deg)} .arm.r{right:6px;transform:rotate(-8deg)}
+    border:3px solid #9297a4;border-radius:17px;box-shadow:inset -6px 0 10px rgba(0,0,0,.10);
+    transition:transform .5s ease}
+  .arm.l{left:6px;transform:rotate(24deg)} .arm.r{right:6px;transform:rotate(-24deg)}
   .hand{position:absolute;top:382px;width:46px;height:46px;border-radius:50%;
     background:linear-gradient(160deg,#e3e6ed,#b7bbc7);border:3px solid #8c919e}
   .hand.l{left:-3px} .hand.r{right:-3px}
+  .bot.typing .hand.l{animation:tap .32s ease-in-out infinite}
+  .bot.typing .hand.r{animation:tap .32s ease-in-out infinite .16s}
+  @keyframes tap{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
 
   .neck{position:absolute;left:50%;bottom:308px;transform:translateX(-50%);width:52px;height:34px;
     background:linear-gradient(180deg,#d3d7e0,#9297a4);border:3px solid #8c919e;border-radius:8px}
@@ -55,9 +79,19 @@
   .bot.blink .ant-dot{animation:antblink 1s steps(2) infinite}
   @keyframes antblink{ 50%{opacity:.25} }
 
+  /* electric spark burst off the antenna tip */
+  .spark{position:absolute;left:50%;bottom:598px;transform:translateX(-50%) scale(.4);width:120px;height:120px;
+    margin-left:-60px;margin-bottom:-52px;pointer-events:none;opacity:0}
+  .spark.go{animation:sparkgo .35s ease-out}
+  @keyframes sparkgo{ 0%{opacity:0;transform:translateX(-50%) scale(.3)} 15%{opacity:1;transform:translateX(-50%) scale(1)}
+    60%{opacity:1} 100%{opacity:0;transform:translateX(-50%) scale(1.15)} }
+  .spark svg{width:100%;height:100%}
+
   .head{position:absolute;left:50%;bottom:332px;transform:translateX(-50%);width:222px;height:196px;
     background:linear-gradient(160deg,#f2f4f9,#c9cdd8);border:5px solid #7d838f;border-radius:26px;
-    box-shadow:inset 0 8px 14px rgba(255,255,255,.6), inset 0 -14px 20px rgba(0,0,0,.14), 0 10px 20px rgba(0,0,0,.18)}
+    box-shadow:inset 0 8px 14px rgba(255,255,255,.6), inset 0 -14px 20px rgba(0,0,0,.14), 0 10px 20px rgba(0,0,0,.18);
+    transition:transform .5s ease}
+  .bot .head{transform:translateX(-50%) rotate(9deg)}
   .bolt{position:absolute;width:10px;height:10px;border-radius:50%;background:#7d838f;box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
   .bolt.tl{left:14px;top:14px} .bolt.tr{right:14px;top:14px} .bolt.bl{left:14px;bottom:14px} .bolt.br{right:14px;bottom:14px}
 
@@ -65,27 +99,45 @@
     background:#03150a;border:4px solid #1b1e24;box-shadow:inset 0 0 24px 6px rgba(0,0,0,.85)}
   .screen .face{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:150%;height:150%;
     filter:grayscale(1) brightness(1.15) contrast(1.5) sepia(1) hue-rotate(78deg) saturate(4.5);
-    mix-blend-mode:screen;opacity:0;transition:opacity .5s ease}
+    mix-blend-mode:screen;opacity:0;transition:opacity .3s ease}
   .screen .face.show{opacity:.95}
   .screen .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(70,255,140,.35),rgba(0,20,8,0) 68%)}
   .screen .scan{position:absolute;inset:0;pointer-events:none;
     background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,rgba(0,0,0,0) 1px 3px)}
   .screen .vignette{position:absolute;inset:0;box-shadow:inset 0 0 30px 14px rgba(0,0,0,.75);border-radius:8px}
-  .screen .flicker{position:absolute;inset:0;background:rgba(30,255,120,.05)}
 
-  /* ---- caption + sentence card ---- */
-  .cap{min-height:1.6em;font-size:clamp(1.1rem,2.4vw,1.6rem);font-weight:700;color:var(--ink);
+  /* ---- the desk screen he types on ---- */
+  .desk{position:absolute;bottom:78px;right:70px;width:280px;height:270px}
+  .desk .stand{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:18px;height:56px;
+    background:linear-gradient(180deg,#c9cdd8,#9297a4);border-radius:4px}
+  .desk .base{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:110px;height:14px;
+    background:#9297a4;border-radius:8px}
+  .desk .mon{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);width:280px;height:200px;
+    background:linear-gradient(160deg,#f2f4f9,#c9cdd8);border:5px solid #7d838f;border-radius:20px;
+    box-shadow:0 10px 20px rgba(0,0,0,.16)}
+  .desk .scr{position:absolute;left:20px;top:20px;right:20px;bottom:20px;border-radius:10px;overflow:hidden;
+    background:#03150a;border:4px solid #1b1e24;box-shadow:inset 0 0 24px 6px rgba(0,0,0,.85)}
+  .desk .scr .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(70,255,140,.28),rgba(0,20,8,0) 70%);
+    opacity:0;transition:opacity .5s ease}
+  .desk.on .scr .glow{opacity:1}
+  .desk .scr .scan{position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,rgba(0,0,0,0) 1px 3px)}
+  .desk .scr .txt{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-50%);
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;letter-spacing:.02em;color:#4dffa0;
+    text-shadow:0 0 6px rgba(80,255,150,.7);font-size:clamp(.95rem,1.9vw,1.25rem);line-height:1.3;
+    opacity:0;transition:opacity .3s ease}
+  .desk .scr .txt.show{opacity:1}
+  .desk .scr .caret{display:inline-block;width:.09em}
+  .desk .scr .caret.on{animation:care 1s steps(2) infinite}
+  @keyframes care{ 50%{opacity:0} }
+  .desk .dot{position:absolute;right:16px;top:14px;width:8px;height:8px;border-radius:50%;background:#3a3f4a;transition:background .4s ease}
+  .desk.on .dot{background:#57e08a;box-shadow:0 0 6px 2px rgba(87,224,138,.7)}
+
+  /* ---- bottom caption ---- */
+  .cap{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);min-height:1.6em;
+    font-size:clamp(1.1rem,2.4vw,1.6rem);font-weight:700;color:var(--ink);
     text-align:center;max-width:80vw;opacity:0;transition:opacity .3s ease}
   .cap.show{opacity:1}
-  .card{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:18px 30px;
-    box-shadow:0 8px 0 var(--ink);min-height:1.4em;opacity:0;transform:translateY(14px);
-    transition:opacity .3s ease,transform .3s ease}
-  .card.show{opacity:1;transform:translateY(0)}
-  .card span{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;letter-spacing:.03em;
-    font-size:clamp(1.5rem,4.4vw,2.6rem);color:var(--ink)}
-  .caret{display:inline-block;width:.09em}
-  .caret.on{animation:care 1s steps(2) infinite}
-  @keyframes care{ 50%{opacity:0} }
 
   /* ---- standby ---- */
   .standby{position:absolute;inset:0;background:rgba(238,241,248,.96);display:flex;
@@ -99,31 +151,51 @@
 </head>
 <body>
 <div class="stage">
-  <div class="bot" id="bot">
-    <div class="leg l"></div><div class="leg r"></div>
-    <div class="foot l"></div><div class="foot r"></div>
-    <div class="torso">
-      <div class="chest"></div>
-      <div class="vent a"></div><div class="vent b"></div><div class="vent c"></div><div class="vent d"></div>
-    </div>
-    <div class="arm l"></div><div class="arm r"></div>
-    <div class="hand l"></div><div class="hand r"></div>
-    <div class="neck"></div>
-    <div class="ant-stem"></div><div class="ant-dot"></div>
-    <div class="head">
-      <div class="bolt tl"></div><div class="bolt tr"></div><div class="bolt bl"></div><div class="bolt br"></div>
-      <div class="screen">
-        <img class="face smile show" src="../whiteflix/img/face_smile.webp">
-        <img class="face stare" src="../whiteflix/img/face_stare.webp">
-        <div class="glow"></div>
-        <div class="flicker"></div>
-        <div class="scan"></div>
-        <div class="vignette"></div>
+  <div class="scene">
+    <div class="floor"></div>
+
+    <div class="botWrap" id="botWrap">
+      <div class="bot" id="bot">
+        <div class="leg l"></div><div class="leg r"></div>
+        <div class="foot l"></div><div class="foot r"></div>
+        <div class="torso">
+          <div class="chest"></div>
+          <div class="vent a"></div><div class="vent b"></div><div class="vent c"></div><div class="vent d"></div>
+        </div>
+        <div class="arm l"></div><div class="arm r"></div>
+        <div class="hand l"></div><div class="hand r"></div>
+        <div class="neck"></div>
+        <div class="ant-stem"></div><div class="ant-dot"></div>
+        <div class="spark" id="spark">
+          <svg viewBox="0 0 100 100"><polygon points="52,4 30,52 46,52 34,96 74,42 54,42" fill="#fff59d" stroke="#f2c200" stroke-width="3"/></svg>
+        </div>
+        <div class="head">
+          <div class="bolt tl"></div><div class="bolt tr"></div><div class="bolt bl"></div><div class="bolt br"></div>
+          <div class="screen">
+            <img class="face smile show" src="../whiteflix/img/face_smile.webp">
+            <img class="face stare" src="../whiteflix/img/face_stare.webp">
+            <div class="glow"></div>
+            <div class="scan"></div>
+            <div class="vignette"></div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="desk" id="desk">
+      <div class="stand"></div><div class="base"></div>
+      <div class="mon">
+        <div class="dot"></div>
+        <div class="scr">
+          <div class="glow"></div>
+          <div class="txt" id="dtxt"><span id="dsent"></span><span class="caret" id="dcaret">|</span></div>
+          <div class="scan"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cap" id="cap"></div>
   </div>
-  <div class="cap" id="cap"></div>
-  <div class="card" id="card"><span id="sent"></span><span class="caret" id="caret">|</span></div>
 </div>
 <div class="standby" id="standby">
   <div class="playbtn">
@@ -132,9 +204,11 @@
   </div>
 </div>
 <script>
-  var bot = document.getElementById('bot'), cap = document.getElementById('cap'),
-      card = document.getElementById('card'), sent = document.getElementById('sent'),
-      caret = document.getElementById('caret'), standby = document.getElementById('standby'),
+  var botWrap = document.getElementById('botWrap'), bot = document.getElementById('bot'),
+      spark = document.getElementById('spark'),
+      cap = document.getElementById('cap'), desk = document.getElementById('desk'),
+      dtxt = document.getElementById('dtxt'), dsent = document.getElementById('dsent'), dcaret = document.getElementById('dcaret'),
+      standby = document.getElementById('standby'),
       faceSmile = document.querySelector('.face.smile'), faceStare = document.querySelector('.face.stare');
 
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
@@ -143,17 +217,32 @@
   var AC = window.AudioContext || window.webkitAudioContext;
   var ac = null;
   function ctx(){ if(!ac && AC) ac = new AC(); return ac; }
+  function noiseBuf(c, secs){
+    var b = c.createBuffer(1, Math.max(1, c.sampleRate * secs), c.sampleRate), d = b.getChannelData(0);
+    for(var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    return b;
+  }
   function tone(type, f, dur, vol, f2){
     var c = ctx(); if(!c) return;
     var t = c.currentTime, o = c.createOscillator(), g = c.createGain();
     o.type = type; o.frequency.setValueAtTime(f, t);
     if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
-    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .015);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012);
     g.gain.exponentialRampToValueAtTime(.0001, t + dur);
     o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + .05);
   }
-  function sndPowerOn(){ tone('sine', 180, .5, .2, 620); }
-  function sndBeep(){ tone('square', 720, .09, .09); }
+  function hiss(dur, vol, type, f1, f2, q){
+    var c = ctx(); if(!c) return;
+    var t = c.currentTime, n = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    n.buffer = noiseBuf(c, dur + .1); f.type = type || 'bandpass'; f.Q.value = q || 1;
+    f.frequency.setValueAtTime(f1, t); if(f2) f.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .01);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    n.connect(f); f.connect(g); g.connect(c.destination); n.start(t); n.stop(t + dur + .1);
+  }
+  function sndZap(){ hiss(.28, .5, 'bandpass', 3200, 800, 4); tone('sawtooth', 900, .22, .12, 90); }
+  function sndBoot(){ tone('sine', 200, .45, .18, 640); }
+  function sndStep(){ hiss(.05, .12, 'lowpass', 220); }
   function sndClack(){ tone('square', 340 + Math.random() * 90, .04, .05); }
   function sndHmm(){ tone('sine', 420, .5, .16, 260); }
 
@@ -161,34 +250,63 @@
 
   async function typeOut(text){
     for(var i = 0; i < text.length; i++){
-      sent.textContent += text[i];
+      dsent.textContent += text[i];
       if(text[i] !== ' ') sndClack();
       await wait(85 + Math.random() * 60);
     }
   }
-  function showCap(text){ cap.textContent = text; cap.classList.add('show'); }
+  function showCap(t){ cap.textContent = t; cap.classList.add('show'); }
   function hideCap(){ cap.classList.remove('show'); }
 
   async function run(){
-    // power on
-    await wait(200);
-    sndPowerOn();
-    bot.classList.add('on');
-    await wait(1100);
-    bot.classList.add('bob', 'blink');
-    showCap('Mr White-bot is getting ready for the disco.');
-    await wait(2200);
+    // establish the scene
+    await wait(300);
+    showCap("It's disco day at school!");
+    await wait(1900);
+    hideCap();
+    await wait(350);
+    showCap('But Mr White-bot is fast asleep...');
+    await wait(1900);
     hideCap();
     await wait(500);
 
-    // typing
-    showCap("He's writing the invite...");
-    card.classList.add('show');
-    caret.classList.add('on');
-    await wait(900);
+    // the spark that wakes him
+    spark.classList.add('go');
+    sndZap();
+    await wait(120);
+    bot.classList.add('jolt');
+    bot.classList.add('on', 'blink');
+    await wait(500);
+    bot.classList.add('bob');
+    spark.classList.remove('go');
+    showCap('He wakes up with a jolt!');
+    await wait(1700);
+    hideCap();
+    await wait(400);
+
+    // walk over to the screen
+    showCap('Time to write the disco invite...');
+    bot.classList.remove('bob');
+    bot.classList.add('walk');
+    botWrap.style.left = '290px';
+    for(var s = 0; s < 4; s++){ await wait(430); sndStep(); }
+    await wait(200);
+    bot.classList.remove('walk');
+    bot.classList.add('bob');
+
+    // arrive, screen boots up
+    desk.classList.add('on');
+    sndBoot();
+    await wait(1000);
+
+    // type the invite
+    bot.classList.add('typing');
+    dtxt.classList.add('show');
+    dcaret.classList.add('on');
     await typeOut(SENTENCE);
-    caret.classList.remove('on');
-    caret.style.opacity = 0;
+    bot.classList.remove('typing');
+    dcaret.classList.remove('on');
+    dcaret.style.opacity = 0;
     await wait(600);
     hideCap();
 
