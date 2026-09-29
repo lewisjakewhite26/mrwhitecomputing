@@ -363,6 +363,10 @@
     faceStare.classList.add('show');
     sndHmm();
     showCap("Hold on... something's not right!");
+    await wait(2400);
+    hideCap();
+    await wait(500);
+    showCap('Can you spot the mistake and help Mr White-bot fix it?');
   }
 
   standby.addEventListener('click', function(){
