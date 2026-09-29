@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mr White-bot &middot; Fixing mistakes &middot; round 3</title>
+<style>
+  :root{ --ink:#1b1d22; --paper:#eef1f8; }
+  html,body{margin:0;padding:0;background:#eef1f8;height:100%;overflow:hidden;
+    font-family:ui-rounded,'SF Pro Rounded',Verdana,sans-serif}
+  .stage{position:relative;width:100vw;height:100vh;display:flex;
+    align-items:center;justify-content:center}
+  .scene{position:relative;width:1000px;height:640px;max-width:96vw;max-height:82vh}
+
+  .floor{position:absolute;left:0;right:0;bottom:78px;height:2px;background:#d4d8e2}
+
+  .botWrap{position:absolute;bottom:78px;left:290px;width:340px;height:490px}
+  .bot{position:relative;width:340px;height:490px}
+  .bot.bob{animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+
+  .leg{position:absolute;bottom:0;width:64px;height:110px;background:linear-gradient(180deg,#e7e9ef,#c3c7d1);
+    border:3px solid #9297a4;border-radius:16px 16px 22px 22px;box-shadow:inset 0 -8px 14px rgba(0,0,0,.12)}
+  .leg.l{left:70px} .leg.r{right:70px}
+  .foot{position:absolute;bottom:-14px;width:84px;height:34px;background:linear-gradient(180deg,#d3d7e0,#a7acb9);
+    border:3px solid #8c919e;border-radius:16px}
+  .foot.l{left:60px} .foot.r{right:60px}
+
+  .torso{position:absolute;left:38px;bottom:96px;width:264px;height:220px;
+    background:linear-gradient(160deg,#f4f6fb,#c9cdd8);
+    border:4px solid #8c919e;border-radius:38px;
+    box-shadow:inset 0 10px 18px rgba(255,255,255,.6), inset 0 -18px 26px rgba(0,0,0,.14)}
+  .chest{position:absolute;left:50%;top:40px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;
+    background:radial-gradient(circle at 38% 32%,#8be0ff,#1f7fc4 70%,#0d5794);
+    border:5px solid #3b4250;box-shadow:0 0 18px 4px rgba(70,190,255,.55)}
+  .chest::after{content:"";position:absolute;inset:14px;border-radius:50%;border:2px solid rgba(255,255,255,.5)}
+  .vent{position:absolute;width:38px;height:6px;background:#9297a4;border-radius:3px;bottom:34px}
+  .vent.a{left:44px} .vent.b{left:44px;bottom:22px} .vent.c{right:44px} .vent.d{right:44px;bottom:22px}
+
+  .arm{position:absolute;top:250px;width:34px;height:150px;background:linear-gradient(180deg,#eef0f5,#c3c7d1);
+    border:3px solid #9297a4;border-radius:17px;box-shadow:inset -6px 0 10px rgba(0,0,0,.10)}
+  .arm.l{left:6px;transform:rotate(8deg)} .arm.r{right:6px;transform:rotate(-8deg)}
+  .hand{position:absolute;top:382px;width:46px;height:46px;border-radius:50%;
+    background:linear-gradient(160deg,#e3e6ed,#b7bbc7);border:3px solid #8c919e}
+  .hand.l{left:-3px} .hand.r{right:-3px}
+  .bot.typing .hand.l{animation:tap .32s ease-in-out infinite}
+  .bot.typing .hand.r{animation:tap .32s ease-in-out infinite .16s}
+  @keyframes tap{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+
+  .neck{position:absolute;left:50%;bottom:308px;transform:translateX(-50%);width:52px;height:34px;
+    background:linear-gradient(180deg,#d3d7e0,#9297a4);border:3px solid #8c919e;border-radius:8px}
+
+  .ant-stem{position:absolute;left:50%;bottom:558px;transform:translateX(-50%);width:5px;height:46px;
+    background:#8c919e;border-radius:3px}
+  .ant-dot{position:absolute;left:50%;bottom:598px;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#ffe07a,#e0a300);box-shadow:0 0 10px 3px rgba(255,200,60,.7)}
+  .bot.blink .ant-dot{animation:antblink 1s steps(2) infinite}
+  @keyframes antblink{ 50%{opacity:.25} }
+
+  .head{position:absolute;left:50%;bottom:332px;transform:translateX(-50%);width:222px;height:196px;
+    background:linear-gradient(160deg,#f2f4f9,#c9cdd8);border:5px solid #7d838f;border-radius:26px;
+    box-shadow:inset 0 8px 14px rgba(255,255,255,.6), inset 0 -14px 20px rgba(0,0,0,.14), 0 10px 20px rgba(0,0,0,.18)}
+  .bolt{position:absolute;width:10px;height:10px;border-radius:50%;background:#7d838f;box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+  .bolt.tl{left:14px;top:14px} .bolt.tr{right:14px;top:14px} .bolt.bl{left:14px;bottom:14px} .bolt.br{right:14px;bottom:14px}
+
+  .screen{position:absolute;left:24px;top:24px;width:174px;height:148px;border-radius:12px;overflow:hidden;
+    background:#03150a;border:4px solid #1b1e24;box-shadow:inset 0 0 24px 6px rgba(0,0,0,.85)}
+  .screen .face{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:150%;height:150%;
+    filter:grayscale(1) brightness(1.15) contrast(1.5) sepia(1) hue-rotate(78deg) saturate(4.5);
+    mix-blend-mode:screen;opacity:0;transition:opacity .3s ease}
+  .screen .face.show{opacity:.95}
+  .screen .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(70,255,140,.35),rgba(0,20,8,0) 68%)}
+  .screen .scan{position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,rgba(0,0,0,0) 1px 3px)}
+  .screen .vignette{position:absolute;inset:0;box-shadow:inset 0 0 30px 14px rgba(0,0,0,.75);border-radius:8px}
+
+  /* ---- the desk screen he types on ---- */
+  .desk{position:absolute;bottom:78px;right:70px;width:280px;height:270px}
+  .desk .stand{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:18px;height:56px;
+    background:linear-gradient(180deg,#c9cdd8,#9297a4);border-radius:4px}
+  .desk .base{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:110px;height:14px;
+    background:#9297a4;border-radius:8px}
+  .desk .mon{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);width:280px;height:200px;
+    background:linear-gradient(160deg,#f2f4f9,#c9cdd8);border:5px solid #7d838f;border-radius:20px;
+    box-shadow:0 10px 20px rgba(0,0,0,.16)}
+  .desk .scr{position:absolute;left:20px;top:20px;right:20px;bottom:20px;border-radius:10px;overflow:hidden;
+    background:#03150a;border:4px solid #1b1e24;box-shadow:inset 0 0 24px 6px rgba(0,0,0,.85)}
+  .desk .scr .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(70,255,140,.28),rgba(0,20,8,0) 70%);
+    opacity:0;transition:opacity .5s ease}
+  .desk.on .scr .glow{opacity:1}
+  .desk .scr .scan{position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,rgba(0,0,0,0) 1px 3px)}
+  .desk .scr .txt{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-50%);
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;letter-spacing:.02em;color:#4dffa0;
+    text-shadow:0 0 6px rgba(80,255,150,.7);font-size:clamp(.95rem,1.9vw,1.25rem);line-height:1.3;
+    opacity:0;transition:opacity .3s ease}
+  .desk .scr .txt.show{opacity:1}
+  .desk .scr .caret{display:inline-block;width:.09em}
+  .desk .scr .caret.on{animation:care 1s steps(2) infinite}
+  @keyframes care{ 50%{opacity:0} }
+  .desk .dot{position:absolute;right:16px;top:14px;width:8px;height:8px;border-radius:50%;background:#3a3f4a;transition:background .4s ease}
+  .desk.on .dot{background:#57e08a;box-shadow:0 0 6px 2px rgba(87,224,138,.7)}
+
+  .cap{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);min-height:1.6em;
+    font-size:clamp(1.1rem,2.4vw,1.6rem);font-weight:700;color:var(--ink);
+    text-align:center;max-width:80vw;opacity:0;transition:opacity .3s ease}
+  .cap.show{opacity:1}
+  .cap .caret{display:none;width:.08em}
+  .cap .caret.on{display:inline-block;animation:care 1s steps(2) infinite}
+
+  .standby{position:absolute;inset:0;background:rgba(238,241,248,.96);display:flex;
+    align-items:center;justify-content:center;z-index:5;cursor:pointer}
+  .standby.hidden{display:none}
+  .playbtn{display:flex;flex-direction:column;align-items:center;gap:10px;font-weight:800;
+    font-size:1.3rem;color:var(--ink)}
+  .playbtn .ring{width:88px;height:88px;border-radius:50%;background:#1b1d22;display:grid;place-items:center}
+  .playbtn svg{width:34px;height:34px;fill:#fff}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="scene">
+    <div class="floor"></div>
+
+    <div class="botWrap" id="botWrap">
+      <div class="bot bob blink" id="bot">
+        <div class="leg l"></div><div class="leg r"></div>
+        <div class="foot l"></div><div class="foot r"></div>
+        <div class="torso">
+          <div class="chest"></div>
+          <div class="vent a"></div><div class="vent b"></div><div class="vent c"></div><div class="vent d"></div>
+        </div>
+        <div class="arm l"></div><div class="arm r"></div>
+        <div class="hand l"></div><div class="hand r"></div>
+        <div class="neck"></div>
+        <div class="ant-stem"></div><div class="ant-dot"></div>
+        <div class="head">
+          <div class="bolt tl"></div><div class="bolt tr"></div><div class="bolt bl"></div><div class="bolt br"></div>
+          <div class="screen">
+            <img class="face smile show" src="../whiteflix/img/face_smile.webp">
+            <img class="face stare" src="../whiteflix/img/face_stare.webp">
+            <div class="glow"></div>
+            <div class="scan"></div>
+            <div class="vignette"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desk" id="desk">
+      <div class="stand"></div><div class="base"></div>
+      <div class="mon">
+        <div class="dot"></div>
+        <div class="scr">
+          <div class="glow"></div>
+          <div class="txt" id="dtxt"><span id="dsent"></span><span class="caret" id="dcaret">|</span></div>
+          <div class="scan"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cap" id="cap"><span id="capTxt"></span><span class="caret" id="capCaret">|</span></div>
+  </div>
+</div>
+<div class="standby" id="standby">
+  <div class="playbtn">
+    <div class="ring"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <span>Press to play</span>
+  </div>
+</div>
+<script>
+  var bot = document.getElementById('bot'),
+      cap = document.getElementById('cap'), capTxt = document.getElementById('capTxt'),
+      capCaret = document.getElementById('capCaret'), desk = document.getElementById('desk'),
+      dtxt = document.getElementById('dtxt'), dsent = document.getElementById('dsent'), dcaret = document.getElementById('dcaret'),
+      standby = document.getElementById('standby'),
+      faceSmile = document.querySelector('.face.smile'), faceStare = document.querySelector('.face.stare');
+
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+  var AC = window.AudioContext || window.webkitAudioContext;
+  var ac = null;
+  function ctx(){ if(!ac && AC) ac = new AC(); return ac; }
+  function tone(type, f, dur, vol, f2){
+    var c = ctx(); if(!c) return;
+    var t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + .05);
+  }
+  function sndBoot(){ tone('sine', 200, .45, .18, 640); }
+  function sndClack(){ tone('square', 340 + Math.random() * 90, .04, .05); }
+  function sndHmm(){ tone('sine', 420, .5, .16, 260); }
+
+  var SENTENCE = 'The party is at hartburn.';
+  var INTRO = "Now, where's the party again?";
+
+  async function typeOut(text){
+    for(var i = 0; i < text.length; i++){
+      dsent.textContent += text[i];
+      if(text[i] !== ' ') sndClack();
+      await wait(110 + Math.random() * 70);
+    }
+  }
+  function showCap(t){ capCaret.classList.remove('on'); capTxt.textContent = t; cap.classList.add('show'); }
+  function hideCap(){ cap.classList.remove('show'); capTxt.textContent = ''; capCaret.classList.remove('on'); }
+  async function typeCap(text){
+    capTxt.textContent = '';
+    cap.classList.add('show');
+    capCaret.classList.add('on');
+    for(var i = 0; i < text.length; i++){
+      capTxt.textContent += text[i];
+      if(text[i] !== ' ') sndClack();
+      await wait(60 + Math.random() * 45);
+    }
+  }
+
+  async function run(){
+    await wait(600);
+    showCap(INTRO);
+    await wait(2400);
+    hideCap();
+    await wait(500);
+
+    desk.classList.add('on');
+    sndBoot();
+    await wait(1200);
+
+    bot.classList.add('typing');
+    dtxt.classList.add('show');
+    dcaret.classList.add('on');
+    await typeOut(SENTENCE);
+    bot.classList.remove('typing');
+    dcaret.classList.remove('on');
+    dcaret.style.opacity = 0;
+    await wait(900);
+
+    await wait(500);
+    faceSmile.classList.remove('show');
+    faceStare.classList.add('show');
+    sndHmm();
+    showCap("Hold on... something's not right!");
+    await wait(2400);
+    hideCap();
+    await wait(500);
+    await typeCap('Can you spot the mistake and help Mr White-bot fix it?');
+  }
+
+  standby.addEventListener('click', function(){
+    standby.classList.add('hidden');
+    ctx();
+    run();
+  });
+</script>
+</body>
+</html>

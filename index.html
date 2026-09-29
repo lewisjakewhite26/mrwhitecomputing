@@ -7407,9 +7407,11 @@ window.HB_GAUGE = (function(){
       '</div>', init: revealInit }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Mr White-bot is throwing a disco</h1>' +
-      '<p class="lead pp" style="max-width:32ch">Watch what happens - then come back here to fix it.</p>' +
-      '<div class="d2-photobar pp">' +
-        '<a class="d2-photobtn" href="mrwhitebot/clip1.html" target="_blank" rel="noopener" style="text-decoration:none">' + ph('monitor',20) + ' Watch: round 1</a>' +
+      '<p class="lead pp" style="max-width:36ch">Before each round on the next slide, open its clip. It plays through and freezes on the mistake - switch back here to fix it, then open the next one.</p>' +
+      '<div class="d2-photobar pp" style="flex-wrap:wrap">' +
+        [1,2,3,4,5].map(function(n){
+          return '<a class="d2-photobtn" href="mrwhitebot/clip' + n + '.html" target="_blank" rel="noopener" style="text-decoration:none">' + ph('monitor',20) + ' Watch: round ' + n + '</a>';
+        }).join('') +
       '</div>' }; },
     function(){
       var ROWS = [['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M']];
