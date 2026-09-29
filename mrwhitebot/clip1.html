@@ -161,6 +161,8 @@
     font-size:clamp(1.1rem,2.4vw,1.6rem);font-weight:700;color:var(--ink);
     text-align:center;max-width:80vw;opacity:0;transition:opacity .3s ease}
   .cap.show{opacity:1}
+  .cap .caret{display:none;width:.08em}
+  .cap .caret.on{display:inline-block;animation:care 1s steps(2) infinite}
 
   /* ---- standby ---- */
   .standby{position:absolute;inset:0;background:rgba(238,241,248,.96);display:flex;
@@ -221,7 +223,7 @@
       </div>
     </div>
 
-    <div class="cap" id="cap"></div>
+    <div class="cap" id="cap"><span id="capTxt"></span><span class="caret" id="capCaret">|</span></div>
   </div>
 </div>
 <div class="standby" id="standby">
@@ -233,7 +235,8 @@
 <script>
   var botWrap = document.getElementById('botWrap'), bot = document.getElementById('bot'),
       spark = document.getElementById('spark'), zzz = document.getElementById('zzz'),
-      cap = document.getElementById('cap'), desk = document.getElementById('desk'),
+      cap = document.getElementById('cap'), capTxt = document.getElementById('capTxt'),
+      capCaret = document.getElementById('capCaret'), desk = document.getElementById('desk'),
       dtxt = document.getElementById('dtxt'), dsent = document.getElementById('dsent'), dcaret = document.getElementById('dcaret'),
       standby = document.getElementById('standby'),
       faceSmile = document.querySelector('.face.smile'), faceStare = document.querySelector('.face.stare');
@@ -283,8 +286,18 @@
       await wait(110 + Math.random() * 70);
     }
   }
-  function showCap(t){ cap.textContent = t; cap.classList.add('show'); }
-  function hideCap(){ cap.classList.remove('show'); }
+  function showCap(t){ capCaret.classList.remove('on'); capTxt.textContent = t; cap.classList.add('show'); }
+  function hideCap(){ cap.classList.remove('show'); capTxt.textContent = ''; capCaret.classList.remove('on'); }
+  async function typeCap(text){
+    capTxt.textContent = '';
+    cap.classList.add('show');
+    capCaret.classList.add('on');
+    for(var i = 0; i < text.length; i++){
+      capTxt.textContent += text[i];
+      if(text[i] !== ' ') sndClack();
+      await wait(60 + Math.random() * 45);
+    }
+  }
   function fireSpark(big){
     spark.classList.remove('go', 'big');
     void spark.offsetWidth; // restart the CSS animation
@@ -366,7 +379,7 @@
     await wait(2400);
     hideCap();
     await wait(500);
-    showCap('Can you spot the mistake and help Mr White-bot fix it?');
+    await typeCap('Can you spot the mistake and help Mr White-bot fix it?');
   }
 
   standby.addEventListener('click', function(){
