@@ -31,12 +31,12 @@
       radial-gradient(42vw 42vw at 100% 110%, rgba(47,107,224,0.07), transparent 62%),
       linear-gradient(165deg, var(--ground-1), var(--ground-2));
   }
-  .screen{display:none;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:clamp(20px,4vw,56px);text-align:center;position:relative}
+  .screen{display:none;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,40px) clamp(20px,4vw,56px) 90px;text-align:center;position:relative}
   .screen.on{display:flex}
 
-  h1{font-weight:800;font-size:clamp(2rem,5.2vw,3.4rem);letter-spacing:-0.02em;margin:0 0 14px}
-  .lead{color:var(--muted);font-size:clamp(1.05rem,2.2vw,1.5rem);max-width:44ch;line-height:1.5;margin:0 auto 20px}
-  .kick{font-weight:700;color:var(--proc);font-size:clamp(1rem,1.6vw,1.3rem);margin:0 0 8px;letter-spacing:.02em}
+  h1{font-weight:800;font-size:clamp(1.8rem,4.6vw,3rem);letter-spacing:-0.02em;margin:0 0 10px}
+  .lead{color:var(--muted);font-size:clamp(1rem,2vw,1.35rem);max-width:44ch;line-height:1.5;margin:0 auto 14px}
+  .kick{font-weight:700;color:var(--proc);font-size:clamp(.95rem,1.5vw,1.2rem);margin:0 0 6px;letter-spacing:.02em}
 
   .big-btn{border:0;border-radius:999px;padding:20px 48px;font-weight:800;font-size:clamp(1.1rem,2vw,1.5rem);background:var(--ink);color:#fff;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .16s var(--ease)}
   .big-btn:hover{transform:scale(1.04)}
@@ -52,86 +52,112 @@
   .dots span{width:7px;height:7px;border-radius:50%;background:var(--paper-edge)}
   .dots span.on{background:var(--proc)}
 
-  /* ---------- generic card row ---------- */
-  .cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:900px}
-  .card{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:22px 20px;width:190px;box-shadow:var(--shadow-sm)}
-  .card .ic{font-size:2.2rem;margin-bottom:8px}
-  .card b{display:block;font-size:1.05rem;margin-bottom:4px}
-  .card span{color:var(--soft);font-size:.9rem;line-height:1.4}
-
   /* ---------- search bar (generic, reused per engine) ---------- */
-  .sbar{display:flex;align-items:center;gap:14px;width:min(92%,680px);padding:16px 26px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(32,33,36,.16);margin:0 auto}
+  .sbar{display:flex;align-items:center;gap:14px;width:min(92%,680px);padding:16px 26px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(32,33,36,.16);margin:0 auto;all:unset;box-sizing:border-box;cursor:pointer;justify-content:flex-start}
   .sbar svg{flex:none}
-  .sbar .txt{font-size:clamp(1.2rem,2.6vw,1.7rem);color:#202124}
+  .sbar .txt{font-size:clamp(1.15rem,2.4vw,1.6rem);color:#202124;text-align:left}
+  .sbar .caret{display:inline-block;width:3px;height:1.05em;margin-left:2px;vertical-align:-.14em;background:#1A73E8}
+  .tapme{color:var(--soft);font-size:.85rem;font-weight:700;margin-top:10px;letter-spacing:.02em;animation:pulseTap 1.6s infinite;transition:opacity .3s}
+  .tapme.gone{animation:none;opacity:0!important}
+  @keyframes pulseTap{0%,100%{opacity:.55}50%{opacity:1}}
 
   /* ---- Google-flavoured results ---- */
-  .g-wrap{width:min(94%,700px);text-align:left;margin:22px auto 0;display:flex;flex-direction:column;gap:18px}
+  .g-wrap{width:min(94%,700px);text-align:left;margin:20px auto 0;display:flex;flex-direction:column;gap:16px;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;pointer-events:none}
+  .g-wrap.on{opacity:1;transform:translateY(0);pointer-events:auto}
+  .g-res{opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+  .g-wrap.on .g-res{opacity:1;transform:translateY(0)}
+  .g-wrap.on .g-res:nth-child(1){transition-delay:.05s}
+  .g-wrap.on .g-res:nth-child(2){transition-delay:.2s}
+  .g-wrap.on .g-res:nth-child(3){transition-delay:.35s}
   .g-res .g-src{font-size:.85rem;color:#4D5156}
-  .g-res .g-title{font-size:clamp(1rem,2vw,1.3rem);color:#1A0DAB;font-weight:600;line-height:1.25}
-  .g-res .g-snip{font-size:clamp(.85rem,1.4vw,1rem);color:#4D5156;line-height:1.35}
+  .g-res .g-title{font-size:clamp(1rem,2vw,1.25rem);color:#1A0DAB;font-weight:600;line-height:1.25}
+  .g-res .g-snip{font-size:clamp(.82rem,1.3vw,.98rem);color:#4D5156;line-height:1.35}
+
+  .ask-row{margin-top:16px;opacity:0;transition:opacity .4s;transition-delay:.5s}
+  .ask-row.on{opacity:1}
+  .ask-row p{font-weight:700;margin:0 0 10px}
+  .reveal-btn{border:2px solid var(--proc);background:#fff;color:var(--proc);font-weight:700;border-radius:999px;padding:9px 22px;cursor:pointer;font-size:.95rem}
+  .reveal-btn:hover{background:var(--proc);color:#fff}
+  .note-out{display:inline-block;margin-top:12px;background:#EDF6F0;color:#0E9C6A;font-weight:700;font-size:.85rem;padding:6px 14px;border-radius:999px;opacity:0;transform:scale(.9);transition:opacity .3s,transform .3s}
+  .note-out.on{opacity:1;transform:scale(1)}
+
+  /* the ad card, blurred until the class ad-shown is added */
+  .g-res.ad-card{filter:blur(5px);opacity:.55;transition:filter .5s,opacity .5s,box-shadow .5s;border-radius:10px}
+  .g-res.ad-card.ad-shown{filter:blur(0);opacity:1;box-shadow:0 0 0 3px rgba(214,158,46,.5);padding:8px 10px;margin:-8px -10px}
+  .g-res.ad-card .adtag{display:none;background:#F5B942;color:#4A3400;font-weight:800;font-size:.7rem;padding:2px 8px;border-radius:999px;margin-bottom:4px}
+  .g-res.ad-card.ad-shown .adtag{display:inline-block}
 
   /* ---- DuckDuckGo flavour ---- */
-  #s-ddg{background:#fff}
-  .ddg-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
-  .ddg-orb{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#FFEADA,#FFAE42 55%,#DE5833 100%);box-shadow:inset 0 -6px 10px rgba(0,0,0,.15)}
-  .ddg-word{font-weight:800;font-size:1.5rem;color:#2C2C2C}
-  #s-ddg .sbar{border:2px solid #DDD}
+  #s3{background:#fff}
+  .ddg-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
+  .ddg-orb{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#FFEADA,#FFAE42 55%,#DE5833 100%);box-shadow:inset 0 -6px 10px rgba(0,0,0,.15)}
+  .ddg-word{font-weight:800;font-size:1.4rem;color:#2C2C2C}
+  #s3 .sbar{border:2px solid #DDD}
   .ddg-res .g-title{color:#2C2C2C}
   .ddg-res .g-src{color:#4C4C4C}
-  .ddg-note{display:inline-block;margin-top:16px;background:#EDF6F0;color:#0E9C6A;font-weight:700;font-size:.85rem;padding:6px 14px;border-radius:999px}
 
   /* ---- Ecosia flavour ---- */
-  #s-eco{background:linear-gradient(180deg,#F4FBF6,#E9F6EC)}
-  .eco-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
-  .eco-leaf{width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:32px solid #4CAF6D;border-radius:50% 50% 50% 0;transform:rotate(45deg)}
-  .eco-word{font-weight:800;font-size:1.5rem;color:#2F5D3A}
-  #s-eco .sbar{border:2px solid #CFE9D6}
+  #s4{background:linear-gradient(180deg,#F4FBF6,#E9F6EC)}
+  .eco-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
+  .eco-leaf{width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid #4CAF6D;border-radius:50% 50% 50% 0;transform:rotate(45deg)}
+  .eco-word{font-weight:800;font-size:1.4rem;color:#2F5D3A}
+  #s4 .sbar{border:2px solid #CFE9D6}
   .eco-res .g-title{color:#2F5D3A}
   .tree-counter{display:flex;align-items:center;gap:10px;justify-content:center;background:#fff;border:1px solid #CFE9D6;border-radius:999px;padding:8px 18px;margin:14px auto 0;width:fit-content;font-weight:700;color:#2F5D3A}
   .tree-bar{width:120px;height:8px;border-radius:999px;background:#DCEEE0;overflow:hidden}
-  .tree-bar i{display:block;height:100%;width:71%;background:#4CAF6D}
+  .tree-bar i{display:block;height:100%;width:96%;background:#4CAF6D;transition:width 1.1s var(--ease)}
+  .tree-burst{opacity:0;transform:scale(.7);transition:opacity .4s,transform .4s;font-weight:800;color:#2F5D3A;margin-top:8px;font-size:1.05rem}
+  .tree-burst.on{opacity:1;transform:scale(1)}
 
-  /* ---- bat slide ---- */
+  /* ---- bat / typed-search shared bits ---- */
   .batbox{width:min(92%,700px);margin:0 auto}
-  .bat-imgs{display:flex;gap:10px;height:clamp(64px,10vw,100px);margin-bottom:14px}
-  .bat-imgs div{flex:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem}
+  .bat-imgs{display:flex;gap:10px;height:clamp(56px,9vw,90px);margin-bottom:12px}
+  .bat-imgs div{flex:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+  .q-out{opacity:0;transition:opacity .4s;font-weight:700;margin-top:16px}
+  .q-out.on{opacity:1}
 
   /* ---- refine slide ---- */
-  .refine-row{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;max-width:900px;margin-top:10px}
-  .refine-card{background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;padding:20px 22px;width:320px;text-align:left;box-shadow:var(--shadow-sm)}
-  .refine-card h4{margin:0 0 6px;color:var(--proc)}
-  .refine-card code{background:var(--ground-2);border-radius:6px;padding:2px 7px;font-size:1.05rem}
-  .refine-card p{margin:8px 0 0;color:var(--muted);font-size:.95rem;line-height:1.4}
+  .refine-row{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;max-width:900px;margin-top:6px}
+  .refine-card{background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;padding:18px 20px;width:320px;text-align:left;box-shadow:var(--shadow-sm);cursor:pointer}
+  .refine-card h4{margin:0;color:var(--proc);display:flex;align-items:center;justify-content:space-between}
+  .refine-card h4 .plus{font-weight:800;color:var(--soft);transition:transform .3s}
+  .refine-card.open h4 .plus{transform:rotate(45deg)}
+  .refine-card .body{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+  .refine-card.open .body{max-height:200px}
+  .refine-card code{background:var(--ground-2);border-radius:6px;padding:2px 7px;font-size:1.02rem}
+  .refine-card p{margin:8px 0 0;color:var(--muted);font-size:.92rem;line-height:1.4}
 
   .toolbar{position:fixed;top:16px;right:16px;z-index:50}
   .toolbar a{color:var(--soft);font-size:.85rem;text-decoration:none;font-weight:600}
 
-  /* ---- mind map (what else can you search on) ---- */
-  .mindmap{position:relative;width:640px;max-width:94vw;height:460px;max-height:56vh;margin:6px auto 0;flex:none}
-  .mm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-  .mm-svg line{stroke:var(--paper-edge);stroke-width:3;transition:stroke .3s}
-  .mm-svg line.lit{stroke:var(--proc)}
-  .mm-center{position:absolute;left:50%;top:50%;width:140px;height:140px;transform:translate(-50%,-50%);border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;line-height:1.25;text-align:center;padding:14px;box-shadow:var(--shadow-md)}
-  .mm-node{position:absolute;width:110px;height:110px;border-radius:50%;background:var(--paper);border:2px solid var(--paper-edge);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:all .3s var(--ease);padding:8px;text-align:center}
-  .mm-node .ic{font-size:1.6rem;transition:font-size .3s}
-  .mm-node b{display:block;font-size:.9rem;margin-top:3px}
-  .mm-node span.ans{display:none;font-size:.68rem;color:#fff;font-weight:500;line-height:1.2;margin-top:2px}
-  .mm-node.n-top{left:50%;top:90px;transform:translate(-50%,-50%)}
-  .mm-node.n-right{left:490px;top:50%;transform:translate(-50%,-50%)}
-  .mm-node.n-bottom{left:50%;top:370px;transform:translate(-50%,-50%)}
-  .mm-node.n-left{left:150px;top:50%;transform:translate(-50%,-50%)}
-  .mm-node.revealed{width:140px;height:140px;background:var(--proc);border-color:var(--proc)}
-  .mm-node.revealed .ic{font-size:1.2rem}
-  .mm-node.revealed b{color:#fff}
-  .mm-node.revealed span.ans{display:block}
-  .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:8px}
-  .mm-synth.on{opacity:1}
+  /* ---- predict & sort (what else can you search on) ---- */
+  .sort-wrap{width:min(96%,820px);margin:6px auto 0}
+  .sort-bins{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+  .bin{flex:1;min-width:220px;background:var(--paper);border:2px dashed var(--paper-edge);border-radius:16px;padding:14px;min-height:120px;transition:border-color .3s,background .3s}
+  .bin h4{margin:0 0 8px;font-size:.95rem;color:var(--muted)}
+  .bin .items{display:flex;flex-wrap:wrap;gap:8px;min-height:40px}
+  .bin.checked.correct{border-color:var(--out);background:#EEFBF3}
+  .pool{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+  .chip{display:flex;align-items:center;gap:8px;background:var(--paper);border:2px solid var(--paper-edge);border-radius:999px;padding:8px 16px 8px 10px;cursor:pointer;font-weight:700;font-size:.95rem;transition:all .2s var(--ease);box-shadow:var(--shadow-sm)}
+  .chip .ic{font-size:1.3rem}
+  .chip.selected{border-color:var(--proc);box-shadow:0 0 0 3px rgba(108,76,224,.2)}
+  .chip.placed{cursor:default}
+  .chip .reason{display:none;font-size:.72rem;font-weight:500;color:var(--muted);max-width:16ch;line-height:1.25}
+  .chip.checked .reason{display:block}
+  .chip.checked .ic{filter:none}
+  .chip.checked.right{border-color:var(--out);background:#EEFBF3}
+  .chip.checked.wrong{border-color:var(--red);background:#FDEEED}
+  .sort-hint{color:var(--soft);font-size:.88rem;margin:0 0 14px}
+  .check-btn{border:0;background:var(--ink);color:#fff;font-weight:800;border-radius:999px;padding:12px 30px;cursor:pointer;font-size:1rem}
+  .check-btn:disabled{opacity:.35;cursor:default}
+  .sort-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:14px}
+  .sort-synth.on{opacity:1}
 
   /* ---- whiteflix teacher-notes screen ---- */
-  .tnotes{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:22px 26px;max-width:560px;text-align:left;box-shadow:var(--shadow-sm);margin:20px auto 0}
+  .tnotes{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:20px 24px;max-width:560px;text-align:left;box-shadow:var(--shadow-sm);margin:16px auto 0}
   .tnotes h4{margin:0 0 10px;color:var(--proc)}
-  .tnotes ol{margin:0;padding-left:20px;color:var(--muted);line-height:1.6;font-size:.98rem}
-  .tnotes li{margin-bottom:6px}
+  .tnotes ol{margin:0;padding-left:20px;color:var(--muted);line-height:1.55;font-size:.95rem}
+  .tnotes li{margin-bottom:5px}
 </style>
 
 <div class="toolbar"><a href="javascript:void(0)" onclick="document.documentElement.requestFullscreen && document.documentElement.requestFullscreen()">Fullscreen</a></div>
@@ -147,15 +173,20 @@
 <div class="screen" id="s2">
   <p class="kick">Search engine 1 &middot; 8 min</p>
   <h1>Google</h1>
-  <p class="lead">The world&rsquo;s most used search engine.</p>
-  <div class="sbar">
+  <p class="lead">The world&rsquo;s most used search engine. Tap the search bar.</p>
+  <button type="button" class="sbar" id="gBar">
     <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-    <span class="txt">best school in stockton</span>
-  </div>
-  <div class="g-wrap">
+    <span class="txt"><span id="gTxt"></span><span class="caret" id="gCaret"></span></span>
+  </button>
+  <p class="tapme" id="gTap">tap to search</p>
+  <div class="g-wrap" id="gResults">
     <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
-    <div class="g-res"><div class="g-src">Ad &middot; somecompany.com</div><div class="g-title" style="color:#006621">Sponsored: Compare Schools Near You</div><div class="g-snip">This one is paid for. Someone bought their way to the top of the list.</div></div>
+    <div class="g-res ad-card" id="gAd"><div class="adtag">Sponsored</div><div class="g-src">somecompany.com</div><div class="g-title" style="color:#006621">Compare Schools Near You</div><div class="g-snip">This one is paid for. Someone bought their way to the top of the list.</div></div>
     <div class="g-res"><div class="g-src">ofsted.gov.uk</div><div class="g-title">Ofsted report: Hartburn Primary School</div><div class="g-snip">The latest inspection report and outcomes.</div></div>
+  </div>
+  <div class="ask-row" id="gAsk">
+    <p>Which one do you think someone paid to put there?</p>
+    <button type="button" class="reveal-btn" id="gReveal">Reveal it</button>
   </div>
 </div>
 
@@ -163,23 +194,36 @@
 <div class="screen" id="s3">
   <p class="kick">Search engine 2 &middot; 6 min &middot; we can&rsquo;t open this one at school, so here&rsquo;s a recreation</p>
   <div class="ddg-mark"><div class="ddg-orb"></div><span class="ddg-word">DuckDuckGo</span></div>
-  <p class="lead">Built around <b>not tracking what you search</b>. It doesn&rsquo;t remember you or follow you around with ads afterwards.</p>
-  <div class="sbar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">best school in stockton</span></div>
-  <div class="g-wrap ddg-res">
+  <p class="lead">Built around <b>not tracking what you search</b>. Same search as before &mdash; tap the bar.</p>
+  <button type="button" class="sbar" id="dBar">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+    <span class="txt"><span id="dTxt"></span><span class="caret" id="dCaret"></span></span>
+  </button>
+  <p class="tapme" id="dTap">tap to search</p>
+  <div class="g-wrap ddg-res" id="dResults">
     <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
     <div class="g-res"><div class="g-src">ofsted.gov.uk</div><div class="g-title">Ofsted report: Hartburn Primary School</div><div class="g-snip">The latest inspection report and outcomes.</div></div>
   </div>
-  <span class="ddg-note">Notice: no sponsored result, and no ad up top</span>
+  <div class="ask-row" id="dAsk">
+    <p>Same search as Google. What&rsquo;s different about this list?</p>
+    <button type="button" class="reveal-btn" id="dReveal">Reveal it</button>
+    <div><span class="note-out" id="dNote">No ad, and no sponsored result &mdash; DuckDuckGo says it doesn&rsquo;t track you to target ads</span></div>
+  </div>
 </div>
 
 <!-- 4: Ecosia mockup -->
 <div class="screen" id="s4">
   <p class="kick">Search engine 3 &middot; 6 min &middot; a recreation</p>
   <div class="eco-mark"><div class="eco-leaf"></div><span class="eco-word">ecosia</span></div>
-  <p class="lead">Puts its advertising profits into <b>planting trees</b>. About 45 searches plants one tree.</p>
-  <div class="sbar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">best school in stockton</span></div>
-  <div class="tree-counter">🌳 <span id="ecoCount">142,857,318</span> trees planted <span class="tree-bar"><i></i></span></div>
-  <div class="g-wrap eco-res">
+  <p class="lead">Puts its advertising profits into <b>planting trees</b>. Same search again &mdash; tap the bar.</p>
+  <button type="button" class="sbar" id="eBar">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+    <span class="txt"><span id="eTxt"></span><span class="caret" id="eCaret"></span></span>
+  </button>
+  <p class="tapme" id="eTap">tap to search</p>
+  <div class="tree-counter"><span>🌳</span> <span id="ecoCount">142,857,317</span> trees planted <span class="tree-bar"><i id="ecoBar" style="width:96%"></i></span></div>
+  <p class="tree-burst" id="ecoBurst">🌱 That search was the one &mdash; tree #142,857,318 just got planted!</p>
+  <div class="g-wrap eco-res" id="eResults">
     <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
   </div>
 </div>
@@ -189,53 +233,55 @@
   <p class="kick">Try it yourself &middot; 6 min</p>
   <h1>Searching for &ldquo;bat&rdquo;</h1>
   <div class="batbox">
-    <div class="sbar" style="margin-bottom:18px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">bat</span></div>
-    <div class="bat-imgs"><div style="background:#EEF3E6">🏏</div><div style="background:#F4EEE2">🏏</div><div style="background:#E7EFF6">🏏</div><div style="background:#F1ECE4">🏏</div></div>
-    <div class="g-wrap">
+    <button type="button" class="sbar" id="bBar" style="margin-bottom:14px">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+      <span class="txt"><span id="bTxt"></span><span class="caret" id="bCaret"></span></span>
+    </button>
+    <p class="tapme" id="bTap">tap to search</p>
+    <div class="bat-imgs" id="bImgs" style="opacity:0;transition:opacity .4s"><div style="background:#EEF3E6">🏏</div><div style="background:#F4EEE2">🏏</div><div style="background:#E7EFF6">🏏</div><div style="background:#F1ECE4">🏏</div></div>
+    <div class="g-wrap" id="bResults">
       <div class="g-res"><div class="g-src">Cricket shop</div><div class="g-title">Cricket bats: which size is right for me?</div></div>
       <div class="g-res"><div class="g-src">Sport facts</div><div class="g-title">Why are cricket bats made of willow?</div></div>
     </div>
   </div>
-  <p class="lead" style="margin-top:22px;font-weight:700">Every result is about cricket. What could you type instead to find the flying animal?</p>
+  <p class="q-out lead" id="bQ">Every result is about cricket. What could you type instead to find the flying animal?</p>
 </div>
 
 <!-- 6: refine -->
 <div class="screen" id="s6">
   <p class="kick">Getting better results &middot; 10 min</p>
   <h1>Refining your search</h1>
+  <p class="lead" style="margin-bottom:16px">Tap each one to see it in action.</p>
   <div class="refine-row">
-    <div class="refine-card">
-      <h4>Speech marks &ldquo; &rdquo;</h4>
-      <p><code>black labrador dog</code> finds pages with those words anywhere.</p>
-      <p><code>"black labrador dog"</code> finds only that exact phrase, in that exact order.</p>
+    <div class="refine-card" id="rCard1"><h4>Speech marks &ldquo; &rdquo; <span class="plus">+</span></h4>
+      <div class="body">
+        <p><code>black labrador dog</code> finds pages with those words anywhere.</p>
+        <p><code>"black labrador dog"</code> finds only that exact phrase, in that exact order.</p>
+      </div>
     </div>
-    <div class="refine-card">
-      <h4>Minus symbol &minus;</h4>
-      <p><code>jaguar</code> mixes the animal with the car.</p>
-      <p><code>jaguar -car</code> removes every result that mentions &ldquo;car&rdquo;, leaving mostly the animal.</p>
+    <div class="refine-card" id="rCard2"><h4>Minus symbol &minus; <span class="plus">+</span></h4>
+      <div class="body">
+        <p><code>jaguar</code> mixes the animal with the car.</p>
+        <p><code>jaguar -car</code> removes every result that mentions &ldquo;car&rdquo;, leaving mostly the animal.</p>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- 7: what else -->
+<!-- 7: predict & sort -->
 <div class="screen" id="s7">
   <p class="kick">One more thing &middot; 5 min</p>
   <h1>What else can you search on?</h1>
-  <p class="lead">Tap each one to find out what it actually searches.</p>
-  <div class="mindmap">
-    <svg class="mm-svg" viewBox="0 0 640 460">
-      <line id="line-amazon" x1="320" y1="230" x2="320" y2="90"></line>
-      <line id="line-wikipedia" x1="320" y1="230" x2="490" y2="230"></line>
-      <line id="line-youtube" x1="320" y1="230" x2="320" y2="370"></line>
-      <line id="line-netflix" x1="320" y1="230" x2="150" y2="230"></line>
-    </svg>
-    <div class="mm-center">What else can<br>you search on?</div>
-    <button type="button" class="mm-node n-top" data-node="amazon"><span class="ic">📦</span><b>Amazon</b><span class="ans">Searches products for sale</span></button>
-    <button type="button" class="mm-node n-right" data-node="wikipedia"><span class="ic">📖</span><b>Wikipedia</b><span class="ans">Searches its own encyclopaedia articles</span></button>
-    <button type="button" class="mm-node n-bottom" data-node="youtube"><span class="ic">▶️</span><b>YouTube</b><span class="ans">Searches videos on YouTube only</span></button>
-    <button type="button" class="mm-node n-left" data-node="netflix"><span class="ic">🎬</span><b>Netflix</b><span class="ans">Searches shows and films in its library</span></button>
+  <div class="sort-wrap">
+    <p class="sort-hint">Tap a name, then tap the bin you think it belongs in. Some might surprise you.</p>
+    <div class="pool" id="sortPool"></div>
+    <div class="sort-bins">
+      <div class="bin" data-bin="web"><h4>Searches the WHOLE internet</h4><div class="items"></div></div>
+      <div class="bin" data-bin="own"><h4>Only searches its OWN site</h4><div class="items"></div></div>
+    </div>
+    <button type="button" class="check-btn" id="sortCheck" disabled>Check answers</button>
+    <p class="lead sort-synth" id="sortSynth">None of them search the whole web &mdash; every one only looks inside its own little world.</p>
   </div>
-  <p class="lead mm-synth" id="mmSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
 </div>
 
 <!-- 8: Mr Whiteflix, IWB only -->
@@ -287,24 +333,169 @@
   document.getElementById('nextBtn').addEventListener('click', function(){ go(1); });
   document.getElementById('prevBtn').addEventListener('click', function(){ go(-1); });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'ArrowRight' || e.key === ' ') go(1);
+    var tag = (document.activeElement && document.activeElement.tagName) || '';
+    if(tag === 'BUTTON' && document.activeElement.id !== 'nextBtn' && document.activeElement.id !== 'prevBtn') return;
+    if(e.key === 'ArrowRight') go(1);
     if(e.key === 'ArrowLeft') go(-1);
   });
   render();
 
-  // mind map: tap a node to reveal its answer; once all four are revealed, show the synthesis line
-  var mmRevealed = {};
-  [].forEach.call(document.querySelectorAll('.mm-node'), function(node){
-    node.addEventListener('click', function(){
-      var key = node.getAttribute('data-node');
-      if(mmRevealed[key]) return;
-      mmRevealed[key] = true;
-      node.classList.add('revealed');
-      var line = document.getElementById('line-' + key);
-      if(line) line.classList.add('lit');
-      if(Object.keys(mmRevealed).length === 4){
-        document.getElementById('mmSynth').classList.add('on');
+  /* ---------- generic type-then-reveal search bar ---------- */
+  function wireSearch(opts){
+    // opts: {bar, txtEl, caretEl, tapEl, query, onDone}
+    var typed = false;
+    if(opts.caretEl.animate){
+      opts.caretEl.animate([{opacity:1},{opacity:0}], {duration:550, iterations:Infinity, direction:'alternate'});
+    }
+    opts.bar.addEventListener('click', function(){
+      if(typed) return;
+      typed = true;
+      opts.tapEl.classList.add('gone');
+      var q = opts.query, i = 0;
+      var timer = setInterval(function(){
+        opts.txtEl.textContent = q.slice(0, i + 1);
+        i++;
+        if(i >= q.length){
+          clearInterval(timer);
+          setTimeout(function(){ opts.onDone(); }, 450);
+        }
+      }, 90);
+    });
+  }
+
+  // Google
+  wireSearch({
+    bar: document.getElementById('gBar'), txtEl: document.getElementById('gTxt'), caretEl: document.getElementById('gCaret'),
+    tapEl: document.getElementById('gTap'), query: 'best school in stockton',
+    onDone: function(){
+      document.getElementById('gResults').classList.add('on');
+      setTimeout(function(){ document.getElementById('gAsk').classList.add('on'); }, 600);
+    }
+  });
+  document.getElementById('gReveal').addEventListener('click', function(){
+    document.getElementById('gAd').classList.add('ad-shown');
+    this.style.display = 'none';
+  });
+
+  // DuckDuckGo
+  wireSearch({
+    bar: document.getElementById('dBar'), txtEl: document.getElementById('dTxt'), caretEl: document.getElementById('dCaret'),
+    tapEl: document.getElementById('dTap'), query: 'best school in stockton',
+    onDone: function(){
+      document.getElementById('dResults').classList.add('on');
+      setTimeout(function(){ document.getElementById('dAsk').classList.add('on'); }, 600);
+    }
+  });
+  document.getElementById('dReveal').addEventListener('click', function(){
+    document.getElementById('dNote').classList.add('on');
+    this.style.display = 'none';
+  });
+
+  // Ecosia
+  wireSearch({
+    bar: document.getElementById('eBar'), txtEl: document.getElementById('eTxt'), caretEl: document.getElementById('eCaret'),
+    tapEl: document.getElementById('eTap'), query: 'best school in stockton',
+    onDone: function(){
+      document.getElementById('ecoBar').style.width = '100%';
+      setTimeout(function(){
+        document.getElementById('ecoCount').textContent = '142,857,318';
+        document.getElementById('ecoBurst').classList.add('on');
+        document.getElementById('ecoBar').style.width = '4%';
+      }, 700);
+      setTimeout(function(){ document.getElementById('eResults').classList.add('on'); }, 1300);
+    }
+  });
+
+  // bat example
+  wireSearch({
+    bar: document.getElementById('bBar'), txtEl: document.getElementById('bTxt'), caretEl: document.getElementById('bCaret'),
+    tapEl: document.getElementById('bTap'), query: 'bat',
+    onDone: function(){
+      document.getElementById('bImgs').style.opacity = '1';
+      document.getElementById('bResults').classList.add('on');
+      setTimeout(function(){ document.getElementById('bQ').classList.add('on'); }, 700);
+    }
+  });
+
+  /* ---------- refine cards: tap to open ---------- */
+  [].forEach.call(document.querySelectorAll('.refine-card'), function(card){
+    card.addEventListener('click', function(){ card.classList.toggle('open'); });
+  });
+
+  /* ---------- predict & sort ---------- */
+  var SORT_ITEMS = [
+    {id:'amazon', icon:'📦', label:'Amazon', correct:'own', reason:'Searches products for sale'},
+    {id:'wikipedia', icon:'📖', label:'Wikipedia', correct:'own', reason:'Searches its own encyclopaedia articles'},
+    {id:'youtube', icon:'▶️', label:'YouTube', correct:'own', reason:'Searches videos on YouTube only'},
+    {id:'netflix', icon:'🎬', label:'Netflix', correct:'own', reason:'Searches shows and films in its library'}
+  ];
+  var placement = {};
+  var selected = null;
+  var checked = false;
+  var poolEl = document.getElementById('sortPool');
+  var binWeb = document.querySelector('.bin[data-bin="web"] .items');
+  var binOwn = document.querySelector('.bin[data-bin="own"] .items');
+  var checkBtn = document.getElementById('sortCheck');
+
+  function chipEl(item){
+    var c = document.createElement('button');
+    c.type = 'button';
+    c.className = 'chip';
+    c.setAttribute('data-id', item.id);
+    c.innerHTML = '<span class="ic">' + item.icon + '</span><span><b>' + item.label + '</b><span class="reason">' + item.reason + '</span></span>';
+    c.addEventListener('click', function(){
+      if(checked) return;
+      // something else is picked up: tapping anywhere in a bin (even on a chip already there) drops it here
+      if(selected && selected !== item.id){
+        var bin = c.closest('.bin');
+        if(bin){ placement[selected] = bin.getAttribute('data-bin'); selected = null; renderSort(); return; }
       }
+      if(placement[item.id]){
+        // already placed, nothing else picked up: tapping it sends it back to the pool
+        delete placement[item.id];
+        renderSort();
+        return;
+      }
+      selected = (selected === item.id) ? null : item.id;
+      renderSort();
+    });
+    return c;
+  }
+  function renderSort(){
+    poolEl.innerHTML = '';
+    binWeb.innerHTML = '';
+    binOwn.innerHTML = '';
+    SORT_ITEMS.forEach(function(item){
+      var c = chipEl(item);
+      if(placement[item.id] === 'web'){ c.classList.add('placed'); binWeb.appendChild(c); }
+      else if(placement[item.id] === 'own'){ c.classList.add('placed'); binOwn.appendChild(c); }
+      else { if(selected === item.id) c.classList.add('selected'); poolEl.appendChild(c); }
+    });
+    checkBtn.disabled = Object.keys(placement).length < SORT_ITEMS.length;
+  }
+  [].forEach.call(document.querySelectorAll('.bin'), function(bin){
+    bin.addEventListener('click', function(e){
+      if(e.target.closest('.chip')) return; // a chip inside the bin handles its own click (send back to pool)
+      if(checked || !selected) return;
+      placement[selected] = bin.getAttribute('data-bin');
+      selected = null;
+      renderSort();
     });
   });
+  checkBtn.addEventListener('click', function(){
+    checked = true;
+    var allCorrect = true;
+    SORT_ITEMS.forEach(function(item){
+      var chip = document.querySelector('.chip[data-id="' + item.id + '"]');
+      if(!chip) return;
+      chip.classList.add('checked');
+      var right = placement[item.id] === item.correct;
+      chip.classList.add(right ? 'right' : 'wrong');
+      if(!right) allCorrect = false;
+    });
+    document.querySelector('.bin[data-bin="own"]').classList.add('checked', 'correct');
+    checkBtn.disabled = true;
+    document.getElementById('sortSynth').classList.add('on');
+  });
+  renderSort();
 </script>
