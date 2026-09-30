@@ -89,24 +89,30 @@
 
   /* ---- DuckDuckGo flavour ---- */
   #s3{background:#fff}
-  .ddg-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
-  .ddg-orb{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#FFEADA,#FFAE42 55%,#DE5833 100%);box-shadow:inset 0 -6px 10px rgba(0,0,0,.15)}
-  .ddg-word{font-weight:800;font-size:1.4rem;color:#2C2C2C}
-  #s3 .sbar{border:2px solid #DDD}
+  .ddg-mark{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:10px}
+  .ddg-orb{width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#FFEADA,#FFAE42 50%,#DE5833 100%);box-shadow:inset 0 -8px 14px rgba(0,0,0,.15),0 8px 20px -8px rgba(222,88,51,.45)}
+  .ddg-word{font-weight:800;font-size:2.1rem;color:#2C2C2C;letter-spacing:-.01em}
+  .ddg-tagline{color:#6B6B6B;font-size:1.05rem;font-weight:600;margin:0 0 24px}
+  #s3 .sbar{border:2px solid #DDD;position:relative;padding-right:60px}
+  #s3 .sbar .go-dot{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:#DE5833;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px -4px rgba(222,88,51,.6)}
   .ddg-res .g-title{color:#2C2C2C}
   .ddg-res .g-src{color:#4C4C4C}
 
   /* ---- Ecosia flavour ---- */
   #s4{background:linear-gradient(180deg,#F4FBF6,#E9F6EC)}
-  .eco-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
-  .eco-leaf{width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid #4CAF6D;border-radius:50% 50% 50% 0;transform:rotate(45deg)}
-  .eco-word{font-weight:800;font-size:1.4rem;color:#2F5D3A}
-  #s4 .sbar{border:2px solid #CFE9D6}
+  .eco-mark{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:10px}
+  .eco-leaf{width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:38px solid #4CAF6D;border-radius:50% 50% 50% 0;transform:rotate(45deg);filter:drop-shadow(0 6px 10px rgba(76,175,109,.35))}
+  .eco-word{font-weight:800;font-size:2.1rem;color:#2F5D3A;letter-spacing:-.01em}
+  .eco-tagline{color:#5C8A67;font-size:1.05rem;font-weight:600;margin:0 0 24px}
+  #s4 .sbar{border:2px solid #CFE9D6;position:relative;padding-right:60px}
+  #s4 .sbar .go-dot{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:#4CAF6D;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px -4px rgba(76,175,109,.6)}
   .eco-res .g-title{color:#2F5D3A}
-  .tree-counter{display:flex;align-items:center;gap:10px;justify-content:center;background:#fff;border:1px solid #CFE9D6;border-radius:999px;padding:8px 18px;margin:14px auto 0;width:fit-content;font-weight:700;color:#2F5D3A}
-  .tree-bar{width:120px;height:8px;border-radius:999px;background:#DCEEE0;overflow:hidden}
+  .tree-counter{display:flex;flex-direction:column;align-items:center;gap:6px;margin:22px auto 0}
+  .tree-count-n{font-weight:800;font-size:2.5rem;color:#2F5D3A;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:12px;line-height:1}
+  .tree-count-l{color:#5C8A67;font-weight:700;font-size:.95rem;letter-spacing:.01em}
+  .tree-bar{width:170px;height:8px;border-radius:999px;background:#DCEEE0;overflow:hidden;margin-top:6px}
   .tree-bar i{display:block;height:100%;width:96%;background:#4CAF6D;transition:width 1.1s var(--ease)}
-  .tree-burst{opacity:0;transform:scale(.7);transition:opacity .4s,transform .4s;font-weight:800;color:#2F5D3A;margin-top:8px;font-size:1.05rem}
+  .tree-burst{opacity:0;transform:scale(.7);transition:opacity .4s,transform .4s;font-weight:800;color:#2F5D3A;margin-top:12px;font-size:1.05rem}
   .tree-burst.on{opacity:1;transform:scale(1)}
 
   /* ---- bat / typed-search shared bits ---- */
@@ -195,10 +201,12 @@
 <div class="screen" id="s3">
   <p class="kick">Search engine 2 &middot; 6 min &middot; we can&rsquo;t open this one at school, so here&rsquo;s a recreation</p>
   <div class="ddg-mark"><div class="ddg-orb"></div><span class="ddg-word">DuckDuckGo</span></div>
+  <p class="ddg-tagline">Privacy, simplified.</p>
   <p class="lead">Built around <b>not tracking what you search</b>. Same search as before &mdash; tap the bar.</p>
   <button type="button" class="sbar" id="dBar">
     <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
     <span class="txt"><span id="dTxt"></span><span class="caret" id="dCaret"></span></span>
+    <span class="go-dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg></span>
   </button>
   <p class="tapme" id="dTap">tap to search</p>
   <div class="g-wrap ddg-res" id="dResults">
@@ -216,13 +224,19 @@
 <div class="screen" id="s4">
   <p class="kick">Search engine 3 &middot; 6 min &middot; a recreation</p>
   <div class="eco-mark"><div class="eco-leaf"></div><span class="eco-word">ecosia</span></div>
+  <p class="eco-tagline">The search engine that plants trees</p>
   <p class="lead">Puts its advertising profits into <b>planting trees</b>. Same search again &mdash; tap the bar.</p>
   <button type="button" class="sbar" id="eBar">
     <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
     <span class="txt"><span id="eTxt"></span><span class="caret" id="eCaret"></span></span>
+    <span class="go-dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg></span>
   </button>
   <p class="tapme" id="eTap">tap to search</p>
-  <div class="tree-counter"><span>🌳</span> <span id="ecoCount">142,857,317</span> trees planted <span class="tree-bar"><i id="ecoBar" style="width:96%"></i></span></div>
+  <div class="tree-counter">
+    <div class="tree-count-n"><span>🌳</span><span id="ecoCount">142,857,317</span></div>
+    <div class="tree-count-l">trees planted</div>
+    <span class="tree-bar"><i id="ecoBar" style="width:96%"></i></span>
+  </div>
   <p class="tree-burst" id="ecoBurst">🌱 That search was the one &mdash; tree #142,857,318 just got planted!</p>
   <div class="g-wrap eco-res" id="eResults">
     <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
