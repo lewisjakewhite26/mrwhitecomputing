@@ -55,7 +55,7 @@
   .site span{font-family:var(--mono);font-size:17px;color:#aab4c2;text-align:center;line-height:1.25}
   .ico.fl{background:linear-gradient(145deg,#ff7aa8,#e84a7f)}
   .ico.yd{background:linear-gradient(145deg,#4cc38a,#2c9463)}
-  .ico.hp{background:linear-gradient(145deg,#5b8ef0,#3563c9)}
+  .ico.cr{background:linear-gradient(145deg,#ffa94d,#e8662f)}
   .ico.yt{background:#fff}
 
   /* google bits */
@@ -164,10 +164,10 @@
   var YT = '<svg viewBox="0 0 48 34" width="46"><rect width="48" height="34" rx="9" fill="#FF0000"/><path d="M19 10v14l12-7z" fill="#fff"/></svg>';
 
   function site(k, label){
-    var inner = k === 'yt' ? YT : ({fl:'FL', yd:'YD', hp:'HP'})[k];
+    var inner = k === 'yt' ? YT : ({fl:'FL', yd:'YD', cr:'CR'})[k];
     return '<div class="ico ' + k + '">' + inner + '</div><span>' + label + '</span>';
   }
-  var SITES = [['fl','flamingoland.co.uk'],['yd','days-out-<br>yorkshire.co.uk'],['hp','hartburnprimary<br>.co.uk'],['yt','youtube.com']];
+  var SITES = [['fl','flamingoland.co.uk'],['yd','days-out-<br>yorkshire.co.uk'],['cr','coolroller<br>coasters.com'],['yt','youtube.com']];
   function tiles(n){ var s=''; for(var i=0;i<n;i++) s+='<span class="tile"></span>'; return s; }
 
   function result(ic, bg, name, path, title, desc){
@@ -176,7 +176,7 @@
   }
   var R_FL = result('FL','#ff5d95','Flamingo Land','flamingoland.co.uk › zoo','Meet the animals | Flamingo Land Zoo','Watch the flamingos at feeding time, then say hello to the rest of the animals in our zoo.');
   var R_YD = result('YD','#2c9463','Days Out Yorkshire','days-out-yorkshire.co.uk › zoos','The best zoos to visit in Yorkshire','Our pick of zoos and wildlife parks for a family day out, with Flamingo Land at the top.');
-  var R_HP = result('HP','#3563c9','Hartburn Primary','hartburnprimary.co.uk › trips','Year 6 trip to Flamingo Land','Photos from our trip: the flamingos, the rides and a very muddy picnic.');
+  var R_HP = result('CR','#e8662f','Cool Rollercoasters','coolrollercoasters.com › flamingo-land','Flamingo Land: every ride rated','We rode them all so you don&rsquo;t have to. And the zoo is worth a stop between rides.');
   var R_YT = result('▶','#ff0000','YouTube','youtube.com › watch','Our day at Flamingo Land! (vlog)','Rides, animals and far too much ice cream.');
 
   /* ---------- helpers ---------- */
@@ -282,7 +282,7 @@
         '<div class="cap" id="c">Every link it finds goes onto a list of pages to visit.</div>',
       play:function(r, tl){
         var list = r.querySelector('#list'), sites = r.querySelectorAll('.site .ico');
-        var ITEMS = [['flamingoland.co.uk',1],['flamingoland.co.uk/zoo',2],['flamingoland.co.uk/rides',3],['flamingoland.co.uk/tickets',0],['flamingoland.co.uk/staff-only',0],['days-out-yorkshire.co.uk/zoos',2]];
+        var ITEMS = [['flamingoland.co.uk',1],['flamingoland.co.uk/zoo',2],['flamingoland.co.uk/rides',3],['flamingoland.co.uk/tickets',0],['flamingoland.co.uk/staff-only',0],['coolrollercoasters.com/flamingo-land',1]];
         tl.fromTo(r.querySelectorAll('.site'), { opacity:0, y:-16 }, { opacity:1, y:0, duration:.4, stagger:.1 }, .2);
         tl.fromTo(r.querySelector('#p'), { opacity:0, scale:.96 }, { opacity:1, scale:1, duration:.5 }, '-=.1');
         ITEMS.forEach(function(it){
@@ -507,7 +507,7 @@
         tl.set(r.querySelector('#c'), { opacity:0 });
         tl.fromTo(r.querySelector('#p'), { opacity:0, y:20 }, { opacity:1, y:0, duration:.5 }, .15);
         tl.fromTo(items, { opacity:0, x:-16 }, { opacity:1, x:0, duration:.3, stagger:.1 });
-        // yt, hp, yd, fl start at 0..3 · after each rule, positions update
+        // yt, cr, yd, fl start at 0..3 · after each rule, positions update
         var steps = [ [1,3,2,0], [2,3,1,0], [3,2,1,0], [3,2,1,0] ];
         steps.forEach(function(st, k){
           tl.add(function(){ pills[k].classList.add('on'); }, '+=.55');
