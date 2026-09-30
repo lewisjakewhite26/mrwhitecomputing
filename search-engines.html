@@ -1,108 +1,116 @@
 <!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Let's Go Searching</title>
 <style>
   :root{
-    --ground-1:#EDEFF7;
-    --ground-2:#F5F5FA;
-    --paper:#FCFCFE;
-    --paper-edge:#E7E9F2;
-    --ink:#1C2431;
-    --muted:#4A5261;
-    --soft:#6B7280;
-    --in:#2F6BE0;
-    --proc:#6C4CE0;
-    --out:#0E9C6A;
-    --red:#D8443C;
-    --hair:rgba(28,36,49,0.12);
-    --shadow-lg:0 26px 64px -20px rgba(24,28,45,0.26), 0 10px 24px -14px rgba(24,28,45,0.18);
-    --shadow-md:0 14px 32px -14px rgba(24,28,45,0.2);
-    --shadow-sm:0 6px 16px -8px rgba(24,28,45,0.18);
+    --bg:#0B0F17;
+    --surface:#141B2D;
+    --surface-card:#1B243B;
+    --border:rgba(255,255,255,0.1);
+    --text:#F8FAFC;
+    --text-muted:#94A3B8;
+    --text-dim:#64748B;
+    --brand:#6366F1;
+    --brand-bright:#818CF8;
+    --google-a:#4285F4;
+    --ddg-a:#DE5833;
+    --eco-a:#10B981;
     --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     --ease:cubic-bezier(.16,1,.3,1);
   }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
   body{
-    margin:0;font-family:var(--font);color:var(--ink);
-    background:
-      radial-gradient(50vw 50vw at 8% -10%, rgba(108,76,224,0.08), transparent 60%),
-      radial-gradient(42vw 42vw at 100% 110%, rgba(47,107,224,0.07), transparent 62%),
-      linear-gradient(165deg, var(--ground-1), var(--ground-2));
+    font-family:var(--font);background:var(--bg);color:var(--text);
+    height:100vh;width:100vw;overflow:hidden;display:flex;flex-direction:column;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(99,102,241,.14), transparent 55%),
+      radial-gradient(circle at 100% 100%, rgba(16,185,129,.08), transparent 45%);
   }
 
-  h1{font-weight:800;font-size:clamp(1.8rem,4.6vw,3rem);letter-spacing:-0.02em;margin:0 0 10px}
-  .lead{color:var(--muted);font-size:clamp(1rem,2vw,1.35rem);max-width:44ch;line-height:1.5;margin:0 auto 14px}
-  .kick{font-weight:700;color:var(--proc);font-size:clamp(.9rem,1.4vw,1.1rem);margin:0 0 6px;letter-spacing:.02em}
+  /* ---------- header ---------- */
+  header{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(11,15,23,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);gap:14px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.05rem;white-space:nowrap}
+  .badge{font-size:.68rem;padding:3px 9px;background:rgba(99,102,241,.16);border:1px solid rgba(99,102,241,.4);color:var(--brand-bright);border-radius:999px;font-weight:700;letter-spacing:.02em}
+  .nav-rack{display:flex;background:rgba(255,255,255,.04);border:1px solid var(--border);padding:4px;border-radius:999px;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;max-width:720px}
+  .nav-rack::-webkit-scrollbar{display:none}
+  .nav-btn{flex:none;background:transparent;border:0;color:var(--text-muted);font-size:.86rem;font-weight:700;padding:8px 16px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .2s var(--ease)}
+  .nav-btn.active{background:#fff;color:#0B0F17}
+  .backlink{color:var(--text-muted);font-size:.8rem;font-weight:700;text-decoration:none;white-space:nowrap;border:1px solid var(--border);border-radius:8px;padding:8px 12px;flex:none}
+  .backlink:hover{color:#fff;border-color:rgba(255,255,255,.3)}
 
-  .big-btn{border:0;border-radius:999px;padding:20px 48px;font-weight:800;font-size:clamp(1.1rem,2vw,1.5rem);background:var(--ink);color:#fff;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .16s var(--ease);text-decoration:none;display:inline-block}
-  .big-btn:hover{transform:scale(1.04)}
-  .big-btn.go{background:var(--proc)}
+  /* ---------- viewport / screens ---------- */
+  .viewport{flex:1;position:relative;overflow:hidden}
+  .screen{position:absolute;inset:0;display:none;opacity:0;transform:scale(.985);transition:opacity .3s ease,transform .3s var(--ease);padding:26px 24px 34px;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;text-align:center}
+  .screen.active{display:flex;opacity:1;transform:scale(1)}
+  .screen.center{justify-content:center}
 
-  /* ---------- top bar / section nav ---------- */
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;justify-content:space-between;padding:13px 22px;background:rgba(252,252,254,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--paper-edge)}
-  .brand{font-weight:800;font-size:.98rem;white-space:nowrap}
-  .secdots{display:flex;gap:7px}
-  .secdots button{width:8px;height:8px;border-radius:999px;background:var(--paper-edge);border:0;padding:0;cursor:pointer;transition:width .25s var(--ease),background .25s}
-  .secdots button.on{background:var(--proc);width:24px}
-  .backlink{color:var(--soft);font-size:.85rem;font-weight:700;text-decoration:none;white-space:nowrap}
-  .backlink:hover{color:var(--ink)}
+  h1{font-weight:800;font-size:clamp(1.7rem,4vw,2.5rem);letter-spacing:-.02em;margin:0 0 10px}
+  .kick{font-weight:700;color:var(--brand-bright);font-size:.85rem;margin:0 0 6px;letter-spacing:.02em}
+  .lead{color:var(--text-muted);font-size:clamp(.95rem,1.8vw,1.15rem);max-width:46ch;line-height:1.5;margin:0 auto 14px}
 
-  /* ---------- sections ---------- */
-  .part{min-height:100vh;padding:104px 20px 60px;display:flex;flex-direction:column;align-items:center;text-align:center;scroll-margin-top:70px}
-  .part:last-of-type{padding-bottom:140px}
-  .scrolldown{margin-top:26px;border:2px solid var(--proc);background:transparent;color:var(--proc);font-weight:700;border-radius:999px;padding:12px 26px;cursor:pointer;font-size:1rem}
-  .scrolldown:hover{background:var(--proc);color:#fff}
+  .big-btn{border:0;border-radius:12px;padding:16px 38px;font-weight:800;font-size:1.1rem;background:var(--brand);color:#fff;cursor:pointer;transition:transform .16s var(--ease);text-decoration:none;display:inline-block}
+  .big-btn:hover{transform:scale(1.03)}
+  .big-btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
 
-  /* ---------- realistic browser frame ---------- */
-  .browser{width:min(94%,720px);margin:22px auto 0;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg);background:#fff;border:1px solid var(--paper-edge);text-align:left}
-  .browser-bar{display:flex;align-items:center;gap:12px;padding:11px 16px;background:#EBEBEB;border-bottom:1px solid #D7D7D7}
-  .traffic{display:flex;gap:6px;flex:none}
-  .traffic i{width:11px;height:11px;border-radius:50%;display:block}
-  .traffic i:nth-child(1){background:#FF5F57}
-  .traffic i:nth-child(2){background:#FEBC2E}
-  .traffic i:nth-child(3){background:#28C840}
-  .addr{flex:1;background:#fff;border-radius:999px;padding:7px 14px;display:flex;align-items:center;gap:8px;font-size:.82rem;color:#3C4043;min-width:0;border:1px solid #DDD}
-  .addr svg{flex:none}
-  .addr .url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .reload{flex:none;color:#5F6368;font-size:1.05rem}
-  .browser-body{position:relative;padding:38px 22px 34px;min-height:400px;overflow:hidden}
-  .loadbar{position:absolute;left:0;top:0;height:3px;width:0;background:var(--accent,#1A73E8);z-index:6;transition:width .55s ease}
-  .loadbar.go{width:100%}
+  /* ================= ENGINES STAGE ================= */
+  .engine-canvas{width:min(96vw,1100px);display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;padding-top:4px}
+  .engine-selector{display:flex;gap:10px;flex:none}
+  .engine-tab{flex:1;padding:11px 14px;border-radius:12px;background:var(--surface);border:2px solid var(--border);color:var(--text-muted);font-size:.92rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s}
+  .tab-dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .engine-tab.active{color:#fff;background:rgba(255,255,255,.06)}
+  .engine-tab.active[data-e="google"]{border-color:var(--google-a)}
+  .engine-tab.active[data-e="ddg"]{border-color:var(--ddg-a)}
+  .engine-tab.active[data-e="eco"]{border-color:var(--eco-a)}
 
-  .bpage{width:100%}
-  .bpage.home{transition:opacity .28s,transform .28s}
-  .bpage.home.leaving{opacity:0;transform:translateY(-8px)}
-  .bpage.results{display:none;opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s}
-  .bpage.results.on{opacity:1;transform:translateY(0)}
+  .browser-frame{flex:1;min-height:360px;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 45px rgba(0,0,0,.5)}
+  .browser-header{background:#F1F3F4;border-bottom:1px solid #E0E2E6;padding:9px 16px;display:flex;align-items:center;gap:12px;flex:none}
+  .win-dots{display:flex;gap:6px;flex:none}
+  .win-dot{width:10px;height:10px;border-radius:50%}
+  .w-r{background:#FF5F56}.w-y{background:#FFBD2E}.w-g{background:#27C93F}
+  .url-chip{flex:1;background:#fff;border:1px solid #DADCE0;border-radius:999px;padding:6px 14px;font-size:.8rem;color:#3C4043;display:flex;align-items:center;gap:8px;min-width:0}
+  .url-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-  /* ---------- search bar (generic, reused per engine) ---------- */
-  .sbar{display:flex;align-items:center;gap:12px;width:min(100%,600px);padding:15px 22px;border-radius:999px;background:#fff;border:1px solid #DFE1E5;box-shadow:0 2px 10px rgba(32,33,36,.1);margin:0 auto;all:unset;box-sizing:border-box;cursor:pointer;justify-content:flex-start;position:relative}
-  .sbar:hover{box-shadow:0 2px 14px rgba(32,33,36,.2)}
+  .browser-view{flex:1;position:relative;overflow-y:auto;padding:30px 24px;background:#fff;color:#202124}
+  .engine-panel{display:none}
+  .engine-panel.active{display:block}
+
+  .engine-home{display:flex;flex-direction:column;align-items:center;width:100%;max-width:560px;margin:0 auto;text-align:center}
+  .engine-wordmark{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .wm-dot{width:16px;height:16px;border-radius:50%}
+  .wm-text{font-weight:800;font-size:1.7rem;letter-spacing:-.01em;color:#202124}
+  .wm-tag{color:#70757A;font-size:.92rem;font-weight:600;margin-bottom:22px}
+
+  .sbar{display:flex;align-items:center;gap:12px;width:100%;padding:14px 20px;border-radius:999px;background:#fff;border:1px solid #DFE1E5;box-shadow:0 4px 14px rgba(32,33,36,.08);cursor:pointer;position:relative;all:unset;box-sizing:border-box;justify-content:flex-start}
+  .sbar:hover{box-shadow:0 6px 20px rgba(32,33,36,.16)}
   .sbar svg{flex:none}
-  .sbar .txt{font-size:clamp(1.05rem,2.2vw,1.35rem);color:#202124;text-align:left;flex:1;min-width:0;white-space:nowrap;overflow:hidden}
+  .sbar .txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;font-size:clamp(1rem,2vw,1.2rem);color:#202124;text-align:left}
   .sbar .caret{display:inline-block;width:3px;height:1.05em;margin-left:1px;vertical-align:-.14em;background:#1A73E8}
-  .sbar .mic{margin-left:auto;opacity:.7}
-  .tapme{color:var(--soft);font-size:.82rem;font-weight:700;margin-top:10px;letter-spacing:.02em;animation:pulseTap 1.6s infinite;transition:opacity .3s;text-align:center}
+  .go-dot{margin-left:auto;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+  .tapme{color:#9AA0A6;font-size:.8rem;font-weight:700;margin-top:10px;animation:pulseTap 1.6s infinite;transition:opacity .3s}
   .tapme.gone{animation:none;opacity:0!important}
   @keyframes pulseTap{0%,100%{opacity:.55}50%{opacity:1}}
 
-  /* ---------- autocomplete dropdown ---------- */
-  .ac-box{width:min(100%,600px);margin:0 auto;background:#fff;border-radius:0 0 18px 18px;box-shadow:0 14px 28px -10px rgba(32,33,36,.22);max-height:0;overflow:hidden;opacity:0;transition:max-height .3s var(--ease),opacity .25s;margin-top:-14px;padding-top:14px}
-  .ac-box.on{max-height:220px;opacity:1}
-  .ac-row{display:flex;align-items:center;gap:12px;padding:9px 22px;font-size:.98rem;color:#4A4A4A}
-  .ac-row svg{flex:none;opacity:.55}
-  .ac-row.main{color:var(--ink);font-weight:700;transition:background .2s}
-  .ac-row.main.chosen{background:var(--ground-2)}
+  .ac-popover{position:relative;left:0;right:0;background:#fff;border-radius:0 0 18px 18px;box-shadow:0 14px 28px -10px rgba(32,33,36,.22);max-height:0;overflow:hidden;opacity:0;transition:max-height .3s var(--ease),opacity .25s;margin-top:-14px;padding-top:14px}
+  .ac-popover.on{max-height:220px;opacity:1}
+  .ac-item{display:flex;align-items:center;gap:12px;padding:9px 20px;font-size:.95rem;color:#4A4A4A}
+  .ac-item svg{flex:none;opacity:.5}
+  .ac-item.main{color:#202124;font-weight:700;transition:background .2s}
+  .ac-item.main.chosen{background:#F8F9FA}
 
-  /* ---- Google-flavoured results ---- */
-  .g-logo{font-size:clamp(2.1rem,5vw,2.7rem);font-weight:700;letter-spacing:-.02em;margin:0 auto 22px;text-align:center;font-family:Arial,Helvetica,sans-serif}
-  .res-tabs{display:flex;gap:22px;border-bottom:1px solid var(--paper-edge);margin-bottom:16px;font-size:.85rem;color:var(--soft);font-weight:600}
-  .res-tabs span{padding-bottom:9px}
-  .res-tabs span.active{color:var(--ink);border-bottom:2px solid var(--accent,var(--proc));margin-bottom:-1px}
-  .res-count{font-size:.78rem;color:var(--soft);margin:0 0 16px}
-  .g-wrap{width:100%;text-align:left;display:flex;flex-direction:column;gap:18px;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;pointer-events:none}
+  .loadbar{position:absolute;left:0;top:0;height:3px;width:0;background:var(--e-accent,#1A73E8);z-index:6;transition:width .55s ease}
+  .loadbar.go{width:100%}
+
+  .engine-results{max-width:720px;margin:0 auto;text-align:left;display:none;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+  .engine-results.on{display:block;opacity:1;transform:translateY(0)}
+  .res-tabs{display:flex;gap:20px;border-bottom:1px solid #E7E9ED;margin-bottom:14px;font-size:.82rem;color:#70757A;font-weight:600}
+  .res-tabs span{padding-bottom:8px}
+  .res-tabs span.active{color:#202124;border-bottom:2px solid var(--e-accent,#1A73E8);margin-bottom:-1px}
+  .res-count{font-size:.76rem;color:#70757A;margin:0 0 14px}
+  .g-wrap{display:flex;flex-direction:column;gap:16px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;pointer-events:none}
   .g-wrap.on{opacity:1;transform:translateY(0);pointer-events:auto}
   .g-res{opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
   .g-wrap.on .g-res{opacity:1;transform:translateY(0)}
@@ -110,422 +118,417 @@
   .g-wrap.on .g-res:nth-child(2){transition-delay:.2s}
   .g-wrap.on .g-res:nth-child(3){transition-delay:.35s}
   .chip-row{display:flex;align-items:center;gap:9px;margin-bottom:3px}
-  .favicon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.68rem;font-weight:800;flex:none}
-  .g-res .g-src{font-size:.85rem;color:#4D5156}
-  .g-res .g-title{font-size:clamp(1rem,2vw,1.2rem);color:#1A0DAB;font-weight:600;line-height:1.25;margin-top:1px}
-  .g-res .g-snip{font-size:clamp(.82rem,1.3vw,.96rem);color:#4D5156;line-height:1.4;margin-top:2px}
-
-  .ask-row{margin-top:20px;opacity:0;transition:opacity .4s;transition-delay:.5s;text-align:left}
+  .favicon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:800;flex:none}
+  .g-src{font-size:.83rem;color:#4D5156}
+  .g-title{font-size:clamp(1rem,2vw,1.18rem);color:#1A0DAB;font-weight:600;line-height:1.25;margin-top:1px}
+  .g-snip{font-size:clamp(.82rem,1.3vw,.94rem);color:#4D5156;line-height:1.4;margin-top:2px}
+  .g-res.ad-card{filter:blur(5px);opacity:.55;transition:filter .5s,opacity .5s,box-shadow .5s;border-radius:10px}
+  .g-res.ad-card.ad-shown{filter:blur(0);opacity:1;box-shadow:0 0 0 3px rgba(245,158,11,.5);padding:8px 10px;margin:-8px -10px}
+  .adtag{display:none;background:#FEF3C7;color:#92400E;font-weight:800;font-size:.68rem;padding:2px 8px;border-radius:999px;margin-bottom:6px}
+  .g-res.ad-card.ad-shown .adtag{display:inline-block}
+  .ask-row{margin-top:18px;opacity:0;transition:opacity .4s;transition-delay:.5s;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px}
   .ask-row.on{opacity:1}
-  .ask-row p{font-weight:700;margin:0 0 10px}
-  .reveal-btn{border:2px solid var(--proc);background:#fff;color:var(--proc);font-weight:700;border-radius:999px;padding:9px 22px;cursor:pointer;font-size:.95rem}
-  .reveal-btn:hover{background:var(--proc);color:#fff}
-  .note-out{display:inline-block;margin-top:12px;background:#EDF6F0;color:#0E9C6A;font-weight:700;font-size:.85rem;padding:6px 14px;border-radius:999px;opacity:0;transform:scale(.9);transition:opacity .3s,transform .3s}
+  .ask-row p{font-weight:700;margin:0 0 10px;font-size:.92rem}
+  .reveal-btn{border:0;background:var(--e-accent,#6366F1);color:#fff;font-weight:700;border-radius:999px;padding:9px 20px;cursor:pointer;font-size:.88rem}
+  .note-out{display:inline-block;margin-top:12px;background:#ECFDF5;color:#047857;font-weight:700;font-size:.82rem;padding:6px 14px;border-radius:999px;opacity:0;transform:scale(.9);transition:opacity .3s,transform .3s}
   .note-out.on{opacity:1;transform:scale(1)}
 
-  .g-res.ad-card{filter:blur(5px);opacity:.55;transition:filter .5s,opacity .5s,box-shadow .5s;border-radius:10px}
-  .g-res.ad-card.ad-shown{filter:blur(0);opacity:1;box-shadow:0 0 0 3px rgba(214,158,46,.5);padding:8px 10px;margin:-8px -10px}
-  .g-res.ad-card .adtag{display:none;background:#F5B942;color:#4A3400;font-weight:800;font-size:.7rem;padding:2px 8px;border-radius:999px;margin-bottom:6px}
-  .g-res.ad-card.ad-shown .adtag{display:inline-block}
-
-  /* ---- DuckDuckGo flavour ---- */
-  .ddg-home{text-align:center}
-  .ddg-mark{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:8px}
-  .ddg-word{font-weight:800;font-size:1.9rem;color:#2C2C2C;letter-spacing:-.01em}
-  .ddg-tagline{color:#6B6B6B;font-size:.98rem;font-weight:600;margin:0 0 22px}
-  .sbar.ddg-bar{border:2px solid #DDD;padding-right:56px}
-  .go-dot{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px -4px rgba(0,0,0,.35)}
-  .go-dot.ddg{background:#DE5833}
-  .go-dot.eco{background:#4CAF6D}
-  .ddg-res .g-title{color:#2C2C2C}
-  .ddg-res .g-src{color:#4C4C4C}
-
-  /* original duck illustration (not a recreation of any brand's mascot) */
-  .duck{position:relative;width:76px;height:66px;margin:0 auto 4px}
-  .duck-body{position:absolute;left:6px;bottom:0;width:62px;height:38px;background:#8FC7D6;border-radius:50% 50% 46% 46%}
-  .duck-wing{position:absolute;left:18px;bottom:6px;width:30px;height:20px;background:#6FA9BA;border-radius:50% 50% 50% 14%;transform:rotate(-10deg)}
-  .duck-head{position:absolute;right:0;top:0;width:34px;height:34px;background:#9FD2E0;border-radius:50%}
-  .duck-eye{position:absolute;right:9px;top:11px;width:5px;height:5px;background:#1C2431;border-radius:50%}
-  .duck-beak{position:absolute;right:-10px;top:16px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:15px solid #F5A623}
-  .duck-feet{position:absolute;left:26px;bottom:-5px;width:16px;height:6px;background:#F5A623;border-radius:0 0 6px 6px}
-
-  /* ---- Ecosia flavour ---- */
-  .eco-home{text-align:center}
-  .eco-mark{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:8px}
-  .eco-leaf{width:0;height:0;border-left:17px solid transparent;border-right:17px solid transparent;border-bottom:34px solid #4CAF6D;border-radius:50% 50% 50% 0;transform:rotate(45deg);filter:drop-shadow(0 6px 10px rgba(76,175,109,.35))}
-  .eco-word{font-weight:800;font-size:1.9rem;color:#2F5D3A;letter-spacing:-.01em}
-  .eco-tagline{color:#5C8A67;font-size:.98rem;font-weight:600;margin:0 0 22px}
-  .sbar.eco-bar{border:2px solid #CFE9D6;padding-right:56px}
-  .eco-res .g-title{color:#2F5D3A}
-  .tree-counter{display:flex;flex-direction:column;align-items:center;gap:5px;margin:24px auto 0}
-  .tree-count-n{font-weight:800;font-size:2.3rem;color:#2F5D3A;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:10px;line-height:1}
-  .tree-count-l{color:#5C8A67;font-weight:700;font-size:.92rem;letter-spacing:.01em}
-  .tree-bar{width:160px;height:8px;border-radius:999px;background:#DCEEE0;overflow:hidden;margin-top:6px}
-  .tree-bar i{display:block;height:100%;width:96%;background:#4CAF6D;transition:width 1.1s var(--ease)}
-  .tree-burst{opacity:0;transform:scale(.7);transition:opacity .4s,transform .4s;font-weight:800;color:#2F5D3A;margin-top:10px;font-size:1rem}
+  .tree-counter{display:flex;flex-direction:column;align-items:center;gap:5px;margin:22px auto 0}
+  .tree-count-n{font-weight:800;font-size:2.1rem;color:#0E7D53;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:10px;line-height:1}
+  .tree-count-l{color:#3F8467;font-weight:700;font-size:.88rem}
+  .tree-bar{width:150px;height:8px;border-radius:999px;background:#DCF3E6;overflow:hidden;margin-top:6px}
+  .tree-bar i{display:block;height:100%;width:96%;background:#10B981;transition:width 1.1s var(--ease)}
+  .tree-burst{opacity:0;transform:scale(.7);transition:opacity .4s,transform .4s;font-weight:800;color:#0E7D53;margin-top:10px;font-size:.95rem}
   .tree-burst.on{opacity:1;transform:scale(1)}
 
-  /* ---- bat / typed-search shared bits ---- */
-  .batbox{width:min(92%,700px);margin:0 auto}
-  .bat-imgs{display:flex;gap:10px;height:clamp(56px,9vw,90px);margin-bottom:12px}
-  .bat-imgs div{flex:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
-  .q-out{opacity:0;transition:opacity .4s;font-weight:700;margin-top:16px}
+  .canvas-note{flex:none;color:var(--text-muted);font-size:.85rem;text-align:center;margin-top:2px}
+
+  /* ================= OPERATOR WORKBENCH ================= */
+  .workbench-layout{width:min(96vw,1100px);display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0;padding-top:4px}
+  .wb-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;display:flex;flex-direction:column;text-align:left;min-height:0}
+  .wb-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .operator-badge{font-size:1.2rem;font-weight:900;font-family:ui-monospace,Menlo,monospace;padding:3px 12px;border-radius:8px;background:rgba(99,102,241,.18);color:var(--brand-bright);border:1px solid rgba(99,102,241,.4)}
+  .wb-title{font-size:1.15rem;font-weight:800;color:#fff}
+  .wb-desc{font-size:.88rem;color:var(--text-muted);margin-bottom:16px;line-height:1.45}
+  .search-mockup-strip{background:var(--surface-card);border:1px solid var(--border);border-radius:12px;padding:13px;display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+  .mock-tag{padding:7px 14px;border-radius:8px;background:#fff;color:#0B0F17;font-family:ui-monospace,Menlo,monospace;font-size:.98rem;font-weight:700}
+  .operator-toggle-btn{padding:9px 16px;border-radius:8px;border:2px dashed rgba(255,255,255,.25);background:transparent;color:var(--text-muted);font-size:.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s}
+  .operator-toggle-btn.on{border-style:solid;border-color:var(--brand-bright);background:var(--brand-bright);color:#0B0F17}
+  .wb-feed{flex:1;background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;color:#202124;overflow-y:auto;min-height:150px}
+  .feed-item{padding:9px 12px;border-radius:8px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:.88rem;transition:all .3s}
+  .feed-item b{display:block;font-size:.92rem;margin-bottom:1px}
+  .feed-item span{color:#64748B;font-size:.8rem}
+  .feed-item.hidden-by-op{opacity:.3;text-decoration:line-through;filter:grayscale(1)}
+
+  /* ================= NETWORK MAP ================= */
+  .network-container{width:min(96vw,1100px);flex:1;min-height:420px;background:var(--surface);border:1px solid var(--border);border-radius:22px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 25px 50px rgba(0,0,0,.5);margin-top:4px}
+  .network-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .net-line{stroke:rgba(255,255,255,.14);stroke-width:3;stroke-dasharray:6 6;transition:all .5s ease}
+  .net-line.pulsed{stroke:var(--brand-bright);stroke-width:4;stroke-dasharray:none;filter:drop-shadow(0 0 8px #6366F1)}
+  .net-center{position:absolute;width:150px;height:150px;border-radius:50%;background:#0B0F17;border:3px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;z-index:10;transition:all .4s;font-weight:800;font-size:.88rem;line-height:1.3;color:#fff}
+  .net-center.master-open{border-color:var(--eco-a);box-shadow:0 0 40px rgba(16,185,129,.4)}
+  .net-node{position:absolute;width:130px;padding:14px;border-radius:16px;background:var(--surface-card);border:2px solid var(--border);color:#fff;display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;cursor:pointer;z-index:10;transition:all .25s var(--ease)}
+  .net-node:hover{transform:scale(1.05)}
+  .net-node.unlocked{border-color:var(--brand-bright);box-shadow:0 0 24px rgba(99,102,241,.3)}
+  .node-ic{font-size:1.6rem}
+  .node-app-name{font-weight:800;font-size:.92rem}
+  .node-scope-reveal{font-size:.7rem;background:rgba(0,0,0,.3);padding:5px 8px;border-radius:7px;color:var(--text-muted);display:none;margin-top:2px;line-height:1.3}
+  .net-node.unlocked .node-scope-reveal{display:block;color:var(--brand-bright)}
+  .pos-top{top:6%;left:50%;transform:translateX(-50%)}
+  .pos-right{right:4%;top:50%;transform:translateY(-50%)}
+  .pos-bottom{bottom:6%;left:50%;transform:translateX(-50%)}
+  .pos-left{left:4%;top:50%;transform:translateY(-50%)}
+  .net-synth{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(11,15,23,.95);border:1px solid var(--border);border-radius:999px;padding:10px 20px;font-size:.85rem;font-weight:700;color:var(--text-muted);opacity:0;transition:opacity .4s;white-space:nowrap;max-width:90%;text-align:center;z-index:20}
+  .net-synth.on{opacity:1}
+
+  /* ================= bat / try-it ================= */
+  .batbox{width:min(92%,600px);margin:0 auto}
+  .bat-frame{background:#fff;border-radius:16px;padding:26px 22px;box-shadow:0 20px 45px rgba(0,0,0,.5);color:#202124}
+  .bat-imgs{display:flex;gap:10px;height:clamp(50px,9vw,80px);margin:14px 0 12px}
+  .bat-imgs div{flex:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.7rem}
+  .q-out{opacity:0;transition:opacity .4s;font-weight:700;margin-top:14px;color:#202124}
   .q-out.on{opacity:1}
 
-  /* ---- refine slide ---- */
-  .refine-row{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;max-width:900px;margin-top:6px}
-  .refine-card{background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;padding:18px 20px;width:320px;text-align:left;box-shadow:var(--shadow-sm);cursor:pointer}
-  .refine-card h4{margin:0;color:var(--proc);display:flex;align-items:center;justify-content:space-between}
-  .refine-card h4 .plus{font-weight:800;color:var(--soft);transition:transform .3s}
-  .refine-card.open h4 .plus{transform:rotate(45deg)}
-  .refine-card .body{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
-  .refine-card.open .body{max-height:200px}
-  .refine-card code{background:var(--ground-2);border-radius:6px;padding:2px 7px;font-size:1.02rem}
-  .refine-card p{margin:8px 0 0;color:var(--muted);font-size:.92rem;line-height:1.4}
-
-  /* ---- mind map (what else can you search on) ---- */
-  .mindmap{position:relative;width:640px;max-width:94vw;height:460px;max-height:56vh;margin:6px auto 0;flex:none}
-  .mm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-  .mm-svg line{stroke:var(--paper-edge);stroke-width:3;stroke-dasharray:6 7;transition:stroke .3s}
-  .mm-svg line.lit{stroke:var(--proc);stroke-dasharray:none}
-  .mm-center{position:absolute;left:50%;top:50%;width:140px;height:140px;transform:translate(-50%,-50%);border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;line-height:1.25;text-align:center;padding:14px;box-shadow:var(--shadow-md)}
-  .mm-node{position:absolute;width:110px;height:110px;border-radius:50%;background:var(--paper);border:2px solid var(--paper-edge);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s,transform .25s var(--ease);padding:8px;text-align:center}
-  .mm-node:not(.revealed):hover{transform:translate(-50%,-50%) scale(1.06)}
-  .mm-node .ic{font-size:1.9rem;transition:font-size .3s,transform .5s var(--ease)}
-  .mm-node b{display:block;font-size:.92rem;margin-top:3px}
-  .mm-node span.ans{display:block;height:0;overflow:hidden;font-size:.7rem;color:#fff;font-weight:500;line-height:1.25;margin-top:0;opacity:0;transition:opacity .3s .1s}
-  .mm-node.n-top{left:50%;top:90px;transform:translate(-50%,-50%)}
-  .mm-node.n-right{left:490px;top:50%;transform:translate(-50%,-50%)}
-  .mm-node.n-bottom{left:50%;top:370px;transform:translate(-50%,-50%)}
-  .mm-node.n-left{left:150px;top:50%;transform:translate(-50%,-50%)}
-  .mm-node.revealed{width:150px;height:150px;background:var(--proc);border-color:var(--proc);animation:mmPop .4s var(--ease)}
-  .mm-node.revealed .ic{font-size:1.3rem;transform:translateY(-2px)}
-  .mm-node.revealed b{color:#fff}
-  .mm-node.revealed span.ans{height:auto;opacity:1;margin-top:3px}
-  @keyframes mmPop{0%{transform:translate(-50%,-50%) scale(.85)}55%{transform:translate(-50%,-50%) scale(1.12)}100%{transform:translate(-50%,-50%) scale(1)}}
-  .mm-hint{color:var(--soft);font-size:.85rem;font-weight:700;margin-top:4px}
-  .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:10px}
-  .mm-synth.on{opacity:1}
-
-  /* ---- whiteflix teacher-notes screen ---- */
-  .tnotes{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:20px 24px;max-width:560px;text-align:left;box-shadow:var(--shadow-sm);margin:18px auto 0}
-  .tnotes h4{margin:0 0 10px;color:var(--proc)}
-  .tnotes ol{margin:0;padding-left:20px;color:var(--muted);line-height:1.55;font-size:.95rem}
+  /* ================= whiteflix ================= */
+  .tnotes{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;max-width:560px;text-align:left;margin:18px auto 0}
+  .tnotes h4{margin:0 0 10px;color:var(--brand-bright);font-size:1rem}
+  .tnotes ol{margin:0;padding-left:20px;color:var(--text-muted);line-height:1.55;font-size:.92rem}
   .tnotes li{margin-bottom:5px}
 
+  @media (max-width:760px){
+    .workbench-layout{grid-template-columns:1fr;grid-auto-rows:auto;flex:none;height:auto}
+    .wb-card{min-height:340px}
+    .wb-feed{max-height:220px}
+  }
   @media (max-width:560px){
-    .topbar{padding:10px 14px}
-    .brand{display:none}
-    .part{padding:96px 14px 50px}
+    .brand span.badge{display:none}
+    header{padding:0 12px;gap:8px}
+    .screen{padding:18px 14px 26px}
+    .network-container{min-height:520px}
+    .net-node{width:108px;padding:10px}
+    .pos-top{top:4%}.pos-bottom{bottom:4%}
   }
 </style>
+</head>
+<body>
 
-<header class="topbar">
-  <div class="brand">Let&rsquo;s go searching</div>
-  <nav class="secdots" id="secdots"></nav>
+<header>
+  <div class="brand">Computing <span class="badge">IWB mode</span></div>
+  <nav class="nav-rack" id="navRack"></nav>
   <a class="backlink" href="index.html">Back to lessons</a>
 </header>
 
-<!-- intro -->
-<section class="part" id="sec-intro">
-  <p class="kick">Intro &middot; 5 min</p>
-  <h1>Let&rsquo;s go searching</h1>
-  <p class="lead">Recap: what a search engine does. Today: three different search engines, how to get better results out of them, and something new at the end.</p>
-  <button type="button" class="scrolldown" data-goto="sec-google">Start &darr;</button>
-</section>
+<main class="viewport" id="viewport">
 
-<!-- Google -->
-<section class="part" id="sec-google">
-  <p class="kick">Search engine 1 &middot; 8 min</p>
-  <h1>Google</h1>
-  <p class="lead">The world&rsquo;s most used search engine. Tap the search bar.</p>
-  <div class="browser" style="--accent:#1A73E8">
-    <div class="browser-bar">
-      <span class="traffic"><i></i><i></i><i></i></span>
-      <div class="addr"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#5F9E63" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="url" id="gUrl">google.com</span></div>
-      <span class="reload">&#8635;</span>
+  <!-- intro -->
+  <section class="screen active center" id="stage-intro">
+    <p class="kick">Intro &middot; 5 min</p>
+    <h1>Let&rsquo;s go searching</h1>
+    <p class="lead">Recap: what a search engine does. Today: three different search engines, how to get better results out of them, and something new at the end.</p>
+    <button type="button" class="big-btn" onclick="showScreen('stage-engines')">Start</button>
+  </section>
+
+  <!-- engines -->
+  <section class="screen" id="stage-engines">
+    <p class="kick">Search engines &middot; 18 min</p>
+    <h1 style="margin-bottom:4px">Three companies, one search</h1>
+    <p class="lead" id="engineLead" style="margin-bottom:12px">The world&rsquo;s most used search engine. Tap the bar to search.</p>
+    <div class="engine-canvas">
+      <div class="engine-selector">
+        <button type="button" class="engine-tab active" data-e="google" onclick="setEngine('google')"><span class="tab-dot" style="background:#4285F4"></span>Google</button>
+        <button type="button" class="engine-tab" data-e="ddg" onclick="setEngine('ddg')"><span class="tab-dot" style="background:#DE5833"></span>DuckDuckGo</button>
+        <button type="button" class="engine-tab" data-e="eco" onclick="setEngine('eco')"><span class="tab-dot" style="background:#10B981"></span>Ecosia</button>
+      </div>
+      <div class="browser-frame" style="--e-accent:#1A73E8" id="browserFrame">
+        <div class="browser-header">
+          <div class="win-dots"><div class="win-dot w-r"></div><div class="win-dot w-y"></div><div class="win-dot w-g"></div></div>
+          <div class="url-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span id="activeUrlDisplay">google.com</span>
+          </div>
+        </div>
+        <div class="browser-view">
+          <div class="loadbar" id="gLoad"></div>
+
+          <!-- GOOGLE PANEL -->
+          <div class="engine-panel active" data-panel="google">
+            <div class="engine-home" id="gHome">
+              <div class="engine-wordmark"><span class="wm-dot" style="background:#4285F4"></span><span class="wm-text">Google</span></div>
+              <p class="wm-tag">The world&rsquo;s most used search engine</p>
+              <button type="button" class="sbar" id="gBar">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+                <span class="txt"><span id="gTxt"></span><span class="caret" id="gCaret"></span></span>
+              </button>
+              <p class="tapme" id="gTap">tap to search</p>
+              <div class="ac-popover" id="gAc">
+                <div class="ac-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best school in stockton on tees</span></div>
+                <div class="ac-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best schools near me ofsted rated</span></div>
+                <div class="ac-item main" id="gAcMain"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>best school in stockton</span></div>
+              </div>
+            </div>
+            <div class="engine-results" id="gResultsPanel">
+              <div class="res-tabs"><span class="active">All</span><span>Images</span><span>News</span><span>Maps</span></div>
+              <p class="res-count">About 24,600,000 results (0.34 seconds)</p>
+              <div class="g-wrap" id="gResults">
+                <div class="g-res">
+                  <div class="chip-row"><span class="favicon" style="background:#6366F1">H</span><span class="g-src">hartburnprimary.co.uk</span></div>
+                  <div class="g-title">Hartburn Primary School &ndash; Home</div>
+                  <div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div>
+                </div>
+                <div class="g-res ad-card" id="gAd">
+                  <div class="adtag">Sponsored</div>
+                  <div class="chip-row"><span class="favicon" style="background:#F59E0B">S</span><span class="g-src">somecompany.com</span></div>
+                  <div class="g-title" style="color:#047857">Compare Schools Near You</div>
+                  <div class="g-snip">This one is paid for. Someone bought their way to the top of the list.</div>
+                </div>
+                <div class="g-res">
+                  <div class="chip-row"><span class="favicon" style="background:#8B1E3F">O</span><span class="g-src">ofsted.gov.uk</span></div>
+                  <div class="g-title">Ofsted report: Hartburn Primary School</div>
+                  <div class="g-snip">The latest inspection report and outcomes.</div>
+                </div>
+              </div>
+              <div class="ask-row" id="gAsk">
+                <p>Which one do you think someone paid to put there?</p>
+                <button type="button" class="reveal-btn" id="gReveal">Reveal it</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- DUCKDUCKGO PANEL -->
+          <div class="engine-panel" data-panel="ddg">
+            <div class="engine-home" id="dHome">
+              <div class="engine-wordmark"><span class="wm-dot" style="background:#DE5833"></span><span class="wm-text">DuckDuckGo</span></div>
+              <p class="wm-tag">Doesn&rsquo;t track what you search</p>
+              <button type="button" class="sbar" id="dBar">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+                <span class="txt"><span id="dTxt"></span><span class="caret" id="dCaret"></span></span>
+                <span class="go-dot" style="background:#DE5833"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg></span>
+              </button>
+              <p class="tapme" id="dTap">tap to search</p>
+              <div class="ac-popover" id="dAc">
+                <div class="ac-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best school stockton reviews</span></div>
+                <div class="ac-item main" id="dAcMain"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>best school in stockton</span></div>
+              </div>
+            </div>
+            <div class="engine-results" id="dResultsPanel">
+              <div class="res-tabs"><span class="active">All</span><span>Images</span><span>Videos</span><span>News</span></div>
+              <div class="g-wrap" id="dResults">
+                <div class="g-res">
+                  <div class="chip-row"><span class="favicon" style="background:#6366F1">H</span><span class="g-src">hartburnprimary.co.uk</span></div>
+                  <div class="g-title" style="color:#202124">Hartburn Primary School &ndash; Home</div>
+                  <div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div>
+                </div>
+                <div class="g-res">
+                  <div class="chip-row"><span class="favicon" style="background:#8B1E3F">O</span><span class="g-src">ofsted.gov.uk</span></div>
+                  <div class="g-title" style="color:#202124">Ofsted report: Hartburn Primary School</div>
+                  <div class="g-snip">The latest inspection report and outcomes.</div>
+                </div>
+              </div>
+              <div class="ask-row" id="dAsk">
+                <p>Same search as Google. What&rsquo;s different about this list?</p>
+                <button type="button" class="reveal-btn" id="dReveal">Reveal it</button>
+                <div><span class="note-out" id="dNote">No ad, and no sponsored result &mdash; DuckDuckGo says it doesn&rsquo;t track you to target ads</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ECOSIA PANEL -->
+          <div class="engine-panel" data-panel="eco">
+            <div class="engine-home" id="eHome">
+              <div class="engine-wordmark"><span class="wm-dot" style="background:#10B981"></span><span class="wm-text">Ecosia</span></div>
+              <p class="wm-tag">Puts its ad profits into planting trees</p>
+              <button type="button" class="sbar" id="eBar">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+                <span class="txt"><span id="eTxt"></span><span class="caret" id="eCaret"></span></span>
+                <span class="go-dot" style="background:#10B981"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg></span>
+              </button>
+              <p class="tapme" id="eTap">tap to search</p>
+              <div class="ac-popover" id="eAc">
+                <div class="ac-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best school in stockton sustainability</span></div>
+                <div class="ac-item main" id="eAcMain"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#5F6368" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>best school in stockton</span></div>
+              </div>
+              <div class="tree-counter">
+                <div class="tree-count-n"><span id="ecoCount">142,857,317</span></div>
+                <div class="tree-count-l">trees planted</div>
+                <span class="tree-bar"><i id="ecoBar" style="width:96%"></i></span>
+              </div>
+              <p class="tree-burst" id="ecoBurst">That search was the one &mdash; tree #142,857,318 just got planted!</p>
+            </div>
+            <div class="engine-results" id="eResultsPanel">
+              <div class="res-tabs"><span class="active">All</span><span>Images</span><span>Videos</span><span>Maps</span></div>
+              <div class="g-wrap" id="eResults">
+                <div class="g-res">
+                  <div class="chip-row"><span class="favicon" style="background:#6366F1">H</span><span class="g-src">hartburnprimary.co.uk</span></div>
+                  <div class="g-title" style="color:#0E7D53">Hartburn Primary School &ndash; Home</div>
+                  <div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div>
+                </div>
+                <div class="g-res">
+                  <div class="chip-row"><span class="favicon" style="background:#8B1E3F">O</span><span class="g-src">ofsted.gov.uk</span></div>
+                  <div class="g-title" style="color:#0E7D53">Ofsted report: Hartburn Primary School</div>
+                  <div class="g-snip">The latest inspection report and outcomes.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="canvas-note">Same query, three companies. Tap the bar, then switch tabs to compare.</p>
     </div>
-    <div class="browser-body">
-      <div class="loadbar" id="gLoad"></div>
-      <div class="bpage home on" id="gHome">
-        <div class="g-logo"><span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#F4B400">o</span><span style="color:#4285F4">g</span><span style="color:#0F9D58">l</span><span style="color:#EA4335">e</span></div>
-        <button type="button" class="sbar" id="gBar">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-          <span class="txt"><span id="gTxt"></span><span class="caret" id="gCaret"></span></span>
-          <svg class="mic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#4285F4" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+  </section>
+
+  <!-- try it yourself: bat -->
+  <section class="screen center" id="stage-bat">
+    <p class="kick">Try it yourself &middot; 6 min</p>
+    <h1>Searching for &ldquo;bat&rdquo;</h1>
+    <div class="batbox">
+      <div class="bat-frame">
+        <button type="button" class="sbar" id="bBar">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+          <span class="txt"><span id="bTxt"></span><span class="caret" id="bCaret"></span></span>
         </button>
-        <p class="tapme" id="gTap">tap to search</p>
-        <div class="ac-box" id="gAc">
-          <div class="ac-row"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best school in stockton on tees</span></div>
-          <div class="ac-row"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best schools near me ofsted rated</span></div>
-          <div class="ac-row main" id="gAcMain"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>best school in stockton</span></div>
+        <p class="tapme" id="bTap">tap to search</p>
+        <div class="bat-imgs" id="bImgs" style="opacity:0;transition:opacity .4s"><div style="background:#EEF3E6">&#127951;</div><div style="background:#F4EEE2">&#127951;</div><div style="background:#E7EFF6">&#127951;</div><div style="background:#F1ECE4">&#127951;</div></div>
+        <div class="g-wrap" id="bResults" style="--e-accent:#6366F1">
+          <div class="g-res"><div class="g-src">Cricket shop</div><div class="g-title" style="color:#1A0DAB">Cricket bats: which size is right for me?</div></div>
+          <div class="g-res"><div class="g-src">Sport facts</div><div class="g-title" style="color:#1A0DAB">Why are cricket bats made of willow?</div></div>
         </div>
-      </div>
-      <div class="bpage results" id="gResultsPage">
-        <div class="res-tabs"><span class="active" style="border-color:#1A73E8">All</span><span>Images</span><span>News</span><span>Maps</span></div>
-        <p class="res-count">About 24,600,000 results (0.34 seconds)</p>
-        <div class="g-wrap" id="gResults">
-          <div class="g-res">
-            <div class="chip-row"><span class="favicon" style="background:#6C4CE0">H</span><span class="g-src">hartburnprimary.co.uk</span></div>
-            <div class="g-title">Hartburn Primary School &ndash; Home</div>
-            <div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div>
-          </div>
-          <div class="g-res ad-card" id="gAd">
-            <div class="adtag">Sponsored</div>
-            <div class="chip-row"><span class="favicon" style="background:#F5A623">S</span><span class="g-src">somecompany.com</span></div>
-            <div class="g-title" style="color:#006621">Compare Schools Near You</div>
-            <div class="g-snip">This one is paid for. Someone bought their way to the top of the list.</div>
-          </div>
-          <div class="g-res">
-            <div class="chip-row"><span class="favicon" style="background:#8B1E3F">O</span><span class="g-src">ofsted.gov.uk</span></div>
-            <div class="g-title">Ofsted report: Hartburn Primary School</div>
-            <div class="g-snip">The latest inspection report and outcomes.</div>
-          </div>
-        </div>
-        <div class="ask-row" id="gAsk">
-          <p>Which one do you think someone paid to put there?</p>
-          <button type="button" class="reveal-btn" id="gReveal">Reveal it</button>
-        </div>
+        <p class="q-out" id="bQ">Every result is about cricket. What could you type instead to find the flying animal?</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- DuckDuckGo -->
-<section class="part" id="sec-ddg">
-  <p class="kick">Search engine 2 &middot; 6 min &middot; we can&rsquo;t open this one at school, so here&rsquo;s a recreation</p>
-  <h1>DuckDuckGo</h1>
-  <p class="lead">Built around <b>not tracking what you search</b>. Same search as before &mdash; tap the bar.</p>
-  <div class="browser" style="--accent:#DE5833">
-    <div class="browser-bar">
-      <span class="traffic"><i></i><i></i><i></i></span>
-      <div class="addr"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#5F9E63" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="url" id="dUrl">duckduckgo.com</span></div>
-      <span class="reload">&#8635;</span>
-    </div>
-    <div class="browser-body">
-      <div class="loadbar" id="dLoad"></div>
-      <div class="bpage home on ddg-home" id="dHome">
-        <div class="duck" aria-hidden="true">
-          <div class="duck-body"></div>
-          <div class="duck-wing"></div>
-          <div class="duck-feet"></div>
-          <div class="duck-head"><div class="duck-eye"></div></div>
-          <div class="duck-beak"></div>
+  <!-- operator workbench -->
+  <section class="screen" id="stage-workbench">
+    <p class="kick">Getting better results &middot; 10 min</p>
+    <h1 style="margin-bottom:4px">The operator workbench</h1>
+    <p class="lead" style="margin-bottom:10px">Turn each operator on and off &mdash; watch which results drop out.</p>
+    <div class="workbench-layout">
+      <div class="wb-card">
+        <div class="wb-head"><span class="operator-badge">&ldquo; &rdquo;</span><span class="wb-title">Exact phrase</span></div>
+        <p class="wb-desc">Speech marks force an exact match, word for word, in that order.</p>
+        <div class="search-mockup-strip">
+          <span class="mock-tag" id="phraseMock">black labrador dog</span>
+          <button type="button" class="operator-toggle-btn" id="phraseToggle">Turn on &ldquo; &rdquo;</button>
         </div>
-        <div class="ddg-mark"><span class="ddg-word">DuckDuckGo</span></div>
-        <p class="ddg-tagline">Privacy, simplified.</p>
-        <button type="button" class="sbar ddg-bar" id="dBar">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-          <span class="txt"><span id="dTxt"></span><span class="caret" id="dCaret"></span></span>
-          <span class="go-dot ddg" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg></span>
-        </button>
-        <p class="tapme" id="dTap">tap to search</p>
-        <div class="ac-box" id="dAc">
-          <div class="ac-row"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best school stockton reviews</span></div>
-          <div class="ac-row main" id="dAcMain"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>best school in stockton</span></div>
-        </div>
+        <div class="wb-feed" id="phraseFeed"></div>
       </div>
-      <div class="bpage results ddg-res" id="dResultsPage">
-        <div class="res-tabs"><span class="active" style="border-color:#DE5833">All</span><span>Images</span><span>Videos</span><span>News</span></div>
-        <div class="g-wrap" id="dResults">
-          <div class="g-res">
-            <div class="chip-row"><span class="favicon" style="background:#6C4CE0">H</span><span class="g-src">hartburnprimary.co.uk</span></div>
-            <div class="g-title">Hartburn Primary School &ndash; Home</div>
-            <div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div>
-          </div>
-          <div class="g-res">
-            <div class="chip-row"><span class="favicon" style="background:#8B1E3F">O</span><span class="g-src">ofsted.gov.uk</span></div>
-            <div class="g-title">Ofsted report: Hartburn Primary School</div>
-            <div class="g-snip">The latest inspection report and outcomes.</div>
-          </div>
+      <div class="wb-card">
+        <div class="wb-head"><span class="operator-badge">&minus;</span><span class="wb-title">Remove a word</span></div>
+        <p class="wb-desc">A minus sign strips out any result that mentions the word after it.</p>
+        <div class="search-mockup-strip">
+          <span class="mock-tag" id="minusMock">jaguar</span>
+          <button type="button" class="operator-toggle-btn" id="minusToggle">Turn on &minus;car</button>
         </div>
-        <div class="ask-row" id="dAsk">
-          <p>Same search as Google. What&rsquo;s different about this list?</p>
-          <button type="button" class="reveal-btn" id="dReveal">Reveal it</button>
-          <div><span class="note-out" id="dNote">No ad, and no sponsored result &mdash; DuckDuckGo says it doesn&rsquo;t track you to target ads</span></div>
-        </div>
+        <div class="wb-feed" id="minusFeed"></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Ecosia -->
-<section class="part" id="sec-eco">
-  <p class="kick">Search engine 3 &middot; 6 min &middot; a recreation</p>
-  <h1>Ecosia</h1>
-  <p class="lead">Puts its advertising profits into <b>planting trees</b>. Same search again &mdash; tap the bar.</p>
-  <div class="browser" style="--accent:#4CAF6D">
-    <div class="browser-bar">
-      <span class="traffic"><i></i><i></i><i></i></span>
-      <div class="addr"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#5F9E63" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="url" id="eUrl">ecosia.org</span></div>
-      <span class="reload">&#8635;</span>
+  <!-- network map: walled gardens -->
+  <section class="screen" id="stage-network">
+    <p class="kick">One more thing &middot; 5 min</p>
+    <h1>What else can you search on?</h1>
+    <p class="lead" style="margin-bottom:6px">Tap each app &mdash; what do you think it actually searches?</p>
+    <div class="network-container">
+      <svg class="network-svg" viewBox="0 0 900 600" preserveAspectRatio="none">
+        <line class="net-line" id="line-amazon" x1="450" y1="300" x2="450" y2="90"></line>
+        <line class="net-line" id="line-wikipedia" x1="450" y1="300" x2="790" y2="300"></line>
+        <line class="net-line" id="line-youtube" x1="450" y1="300" x2="450" y2="510"></line>
+        <line class="net-line" id="line-netflix" x1="450" y1="300" x2="110" y2="300"></line>
+      </svg>
+      <div class="net-center" id="netCenter">What else can<br>you search on?</div>
+      <button type="button" class="net-node pos-top" data-node="amazon"><span class="node-ic">&#128230;</span><span class="node-app-name">Amazon</span><span class="node-scope-reveal">Searches products for sale</span></button>
+      <button type="button" class="net-node pos-right" data-node="wikipedia"><span class="node-ic">&#128214;</span><span class="node-app-name">Wikipedia</span><span class="node-scope-reveal">Searches its own encyclopaedia articles</span></button>
+      <button type="button" class="net-node pos-bottom" data-node="youtube"><span class="node-ic">&#9654;&#65039;</span><span class="node-app-name">YouTube</span><span class="node-scope-reveal">Searches videos on YouTube only</span></button>
+      <button type="button" class="net-node pos-left" data-node="netflix"><span class="node-ic">&#127916;</span><span class="node-app-name">Netflix</span><span class="node-scope-reveal">Searches shows and films in its library</span></button>
+      <p class="net-synth" id="netSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
     </div>
-    <div class="browser-body">
-      <div class="loadbar" id="eLoad"></div>
-      <div class="bpage home on eco-home" id="eHome">
-        <div class="eco-mark"><div class="eco-leaf"></div><span class="eco-word">ecosia</span></div>
-        <p class="eco-tagline">The search engine that plants trees</p>
-        <button type="button" class="sbar eco-bar" id="eBar">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-          <span class="txt"><span id="eTxt"></span><span class="caret" id="eCaret"></span></span>
-          <span class="go-dot eco" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg></span>
-        </button>
-        <p class="tapme" id="eTap">tap to search</p>
-        <div class="ac-box" id="eAc">
-          <div class="ac-row"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>best school in stockton sustainability</span></div>
-          <div class="ac-row main" id="eAcMain"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#5F6368" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>best school in stockton</span></div>
-        </div>
-        <div class="tree-counter">
-          <div class="tree-count-n"><span>&#127795;</span><span id="ecoCount">142,857,317</span></div>
-          <div class="tree-count-l">trees planted</div>
-          <span class="tree-bar"><i id="ecoBar" style="width:96%"></i></span>
-        </div>
-        <p class="tree-burst" id="ecoBurst">&#127793; That search was the one &mdash; tree #142,857,318 just got planted!</p>
-      </div>
-      <div class="bpage results eco-res" id="eResultsPage">
-        <div class="res-tabs"><span class="active" style="border-color:#4CAF6D">All</span><span>Images</span><span>Videos</span><span>Maps</span></div>
-        <div class="g-wrap" id="eResults">
-          <div class="g-res">
-            <div class="chip-row"><span class="favicon" style="background:#6C4CE0">H</span><span class="g-src">hartburnprimary.co.uk</span></div>
-            <div class="g-title">Hartburn Primary School &ndash; Home</div>
-            <div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div>
-          </div>
-          <div class="g-res">
-            <div class="chip-row"><span class="favicon" style="background:#8B1E3F">O</span><span class="g-src">ofsted.gov.uk</span></div>
-            <div class="g-title">Ofsted report: Hartburn Primary School</div>
-            <div class="g-snip">The latest inspection report and outcomes.</div>
-          </div>
-        </div>
-      </div>
+  </section>
+
+  <!-- whiteflix -->
+  <section class="screen center" id="stage-whiteflix">
+    <p class="kick">Last thing &middot; 12 min &middot; you drive this one, on the board</p>
+    <h1>One search box you haven&rsquo;t met yet&hellip;</h1>
+    <p class="lead">Nobody has their own login. This stays on the board &mdash; you open it, you click, they watch and call out.</p>
+    <a class="big-btn" href="whiteflix.html" target="_blank" rel="noopener">Open Mr Whiteflix</a>
+    <div class="tnotes">
+      <h4>What to do</h4>
+      <ol>
+        <li>Press the power button. It goes full screen &mdash; say nothing, let it start up.</li>
+        <li>Pick Pupil one. Read the second row title out loud: &ldquo;Because you watched Slam Squad&rdquo;.</li>
+        <li>Ask: who decided this person would see that? Nobody has typed anything yet.</li>
+        <li>That&rsquo;s the whole point for today &mdash; save the ranking sliders and the two-accounts trick for another lesson. Skip intro is there if you&rsquo;re short of time.</li>
+      </ol>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- bat -->
-<section class="part" id="sec-bat">
-  <p class="kick">Try it yourself &middot; 6 min</p>
-  <h1>Searching for &ldquo;bat&rdquo;</h1>
-  <div class="batbox">
-    <button type="button" class="sbar" id="bBar" style="margin-bottom:14px;box-shadow:var(--shadow-sm)">
-      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-      <span class="txt"><span id="bTxt"></span><span class="caret" id="bCaret"></span></span>
-    </button>
-    <p class="tapme" id="bTap">tap to search</p>
-    <div class="bat-imgs" id="bImgs" style="opacity:0;transition:opacity .4s"><div style="background:#EEF3E6">&#127951;</div><div style="background:#F4EEE2">&#127951;</div><div style="background:#E7EFF6">&#127951;</div><div style="background:#F1ECE4">&#127951;</div></div>
-    <div class="g-wrap" id="bResults">
-      <div class="g-res"><div class="g-src">Cricket shop</div><div class="g-title">Cricket bats: which size is right for me?</div></div>
-      <div class="g-res"><div class="g-src">Sport facts</div><div class="g-title">Why are cricket bats made of willow?</div></div>
-    </div>
-  </div>
-  <p class="q-out lead" id="bQ">Every result is about cricket. What could you type instead to find the flying animal?</p>
-</section>
+  <!-- plenary -->
+  <section class="screen center" id="stage-plenary">
+    <p class="kick">Plenary &middot; 2 min</p>
+    <h1>Good searching</h1>
+    <p class="lead">You compared three search engines, refined a search two different ways, and met a search box that already knows what someone likes before they&rsquo;ve typed a thing.</p>
+    <button type="button" class="big-btn ghost" onclick="showScreen('stage-intro')">Back to the start</button>
+  </section>
 
-<!-- refine -->
-<section class="part" id="sec-refine">
-  <p class="kick">Getting better results &middot; 10 min</p>
-  <h1>Refining your search</h1>
-  <p class="lead" style="margin-bottom:16px">Tap each one to see it in action.</p>
-  <div class="refine-row">
-    <div class="refine-card" id="rCard1"><h4>Speech marks &ldquo; &rdquo; <span class="plus">+</span></h4>
-      <div class="body">
-        <p><code>black labrador dog</code> finds pages with those words anywhere.</p>
-        <p><code>"black labrador dog"</code> finds only that exact phrase, in that exact order.</p>
-      </div>
-    </div>
-    <div class="refine-card" id="rCard2"><h4>Minus symbol &minus; <span class="plus">+</span></h4>
-      <div class="body">
-        <p><code>jaguar</code> mixes the animal with the car.</p>
-        <p><code>jaguar -car</code> removes every result that mentions &ldquo;car&rdquo;, leaving mostly the animal.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- mind map -->
-<section class="part" id="sec-mindmap">
-  <p class="kick">One more thing &middot; 5 min</p>
-  <h1>What else can you search on?</h1>
-  <p class="mm-hint">Tap each one &mdash; what do you think it actually searches?</p>
-  <div class="mindmap">
-    <svg class="mm-svg" viewBox="0 0 640 460">
-      <line id="line-amazon" x1="320" y1="230" x2="320" y2="90"></line>
-      <line id="line-wikipedia" x1="320" y1="230" x2="490" y2="230"></line>
-      <line id="line-youtube" x1="320" y1="230" x2="320" y2="370"></line>
-      <line id="line-netflix" x1="320" y1="230" x2="150" y2="230"></line>
-    </svg>
-    <div class="mm-center">What else can<br>you search on?</div>
-    <button type="button" class="mm-node n-top" data-node="amazon"><span class="ic">&#128230;</span><b>Amazon</b><span class="ans">Searches products for sale</span></button>
-    <button type="button" class="mm-node n-right" data-node="wikipedia"><span class="ic">&#128214;</span><b>Wikipedia</b><span class="ans">Searches its own encyclopaedia articles</span></button>
-    <button type="button" class="mm-node n-bottom" data-node="youtube"><span class="ic">&#9654;&#65039;</span><b>YouTube</b><span class="ans">Searches videos on YouTube only</span></button>
-    <button type="button" class="mm-node n-left" data-node="netflix"><span class="ic">&#127916;</span><b>Netflix</b><span class="ans">Searches shows and films in its library</span></button>
-  </div>
-  <p class="lead mm-synth" id="mmSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
-</section>
-
-<!-- Mr Whiteflix, IWB only -->
-<section class="part" id="sec-whiteflix">
-  <p class="kick">Last thing &middot; 12 min &middot; you drive this one, on the board</p>
-  <h1>One search box you haven&rsquo;t met yet&hellip;</h1>
-  <p class="lead">Nobody has their own login. This stays on the board &mdash; you open it, you click, they watch and call out.</p>
-  <a class="big-btn go" href="whiteflix.html" target="_blank" rel="noopener">Open Mr Whiteflix</a>
-  <div class="tnotes">
-    <h4>What to do</h4>
-    <ol>
-      <li>Press the power button. It goes full screen &mdash; say nothing, let it start up.</li>
-      <li>Pick Pupil one. Read the second row title out loud: &ldquo;Because you watched Slam Squad&rdquo;.</li>
-      <li>Ask: who decided this person would see that? Nobody has typed anything yet.</li>
-      <li>That&rsquo;s the whole point for today &mdash; save the ranking sliders and the two-accounts trick for another lesson. Skip intro is there if you&rsquo;re short of time.</li>
-    </ol>
-  </div>
-</section>
-
-<!-- plenary -->
-<section class="part" id="sec-plenary">
-  <p class="kick">Plenary &middot; 2 min</p>
-  <h1>Good searching</h1>
-  <p class="lead">You compared three search engines, refined a search two different ways, and met a search box that already knows what someone likes before they&rsquo;ve typed a thing.</p>
-  <button type="button" class="scrolldown" data-goto="sec-intro">Back to the top &uarr;</button>
-</section>
+</main>
 
 <script>
-  var SECTIONS = ['sec-intro','sec-google','sec-ddg','sec-eco','sec-bat','sec-refine','sec-mindmap','sec-whiteflix','sec-plenary'];
-  var dotsEl = document.getElementById('secdots');
-  var dotButtons = SECTIONS.map(function(id){
+  var STAGES = [
+    {id:'stage-intro', label:'Intro'},
+    {id:'stage-engines', label:'Engines'},
+    {id:'stage-bat', label:'Try it'},
+    {id:'stage-workbench', label:'Refine'},
+    {id:'stage-network', label:'Explore'},
+    {id:'stage-whiteflix', label:'Whiteflix'},
+    {id:'stage-plenary', label:'Done'}
+  ];
+  var navRack = document.getElementById('navRack');
+  STAGES.forEach(function(s, i){
     var b = document.createElement('button');
     b.type = 'button';
-    b.setAttribute('aria-label', id);
-    b.addEventListener('click', function(){
-      var el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:'smooth'});
-    });
-    dotsEl.appendChild(b);
-    return b;
-  });
-  [].forEach.call(document.querySelectorAll('[data-goto]'), function(btn){
-    btn.addEventListener('click', function(){
-      var el = document.getElementById(btn.getAttribute('data-goto'));
-      if(el) el.scrollIntoView({behavior:'smooth'});
-    });
+    b.className = 'nav-btn' + (i === 0 ? ' active' : '');
+    b.textContent = (i + 1) + '. ' + s.label;
+    b.setAttribute('data-target', s.id);
+    b.addEventListener('click', function(){ showScreen(s.id); });
+    navRack.appendChild(b);
   });
 
-  if('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(!entry.isIntersecting) return;
-        var idx = SECTIONS.indexOf(entry.target.id);
-        if(idx === -1) return;
-        dotButtons.forEach(function(d, i){ d.classList.toggle('on', i === idx); });
-      });
-    }, {threshold:0.5});
-    SECTIONS.forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) io.observe(el);
+  function showScreen(id){
+    STAGES.forEach(function(s){
+      document.getElementById(s.id).classList.toggle('active', s.id === id);
+    });
+    [].forEach.call(navRack.children, function(b){
+      b.classList.toggle('active', b.getAttribute('data-target') === id);
     });
   }
 
-  /* ---------- rich engine demo: type, autocomplete, loading, results ---------- */
+  /* ---------- engine tabs ---------- */
+  var ENGINE_URL = {
+    google: {home:'google.com', result:'google.com/search?q=best+school+in+stockton', searched:false, accent:'#1A73E8'},
+    ddg: {home:'duckduckgo.com', result:'duckduckgo.com/?q=best+school+in+stockton', searched:false, accent:'#DE5833'},
+    eco: {home:'ecosia.org', result:'ecosia.org/search?q=best+school+in+stockton', searched:false, accent:'#10B981'}
+  };
+  var ENGINE_LEAD = {
+    google: 'The world’s most used search engine. Tap the bar to search.',
+    ddg: 'We can’t open this one at school, so here’s a close recreation — it’s built around not tracking what you search.',
+    eco: 'A recreation — it puts its advertising profits into planting trees. Same search again.'
+  };
+  var urlDisplay = document.getElementById('activeUrlDisplay');
+  var browserFrame = document.getElementById('browserFrame');
+  var engineLead = document.getElementById('engineLead');
+
+  function setEngine(e){
+    document.querySelectorAll('.engine-tab').forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-e') === e); });
+    document.querySelectorAll('.engine-panel').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-panel') === e); });
+    var st = ENGINE_URL[e];
+    urlDisplay.textContent = st.searched ? st.result : st.home;
+    browserFrame.style.setProperty('--e-accent', st.accent);
+    engineLead.textContent = ENGINE_LEAD[e];
+  }
+  window.setEngine = setEngine;
+
+  /* ---------- rich engine demo ---------- */
   function runEngineDemo(cfg){
-    // cfg: bar, txt, caret, tap, ac, acMain, query, urlEl, resultUrl, loadEl, homeEl, resultsPage, gWrap, afterResults
     var typed = false;
     if(cfg.caret.animate){
       cfg.caret.animate([{opacity:1},{opacity:0}], {duration:550, iterations:Infinity, direction:'alternate'});
@@ -546,15 +549,16 @@
             if(cfg.ac) cfg.ac.classList.remove('on');
             if(cfg.loadEl) cfg.loadEl.classList.add('go');
             setTimeout(function(){
-              if(cfg.urlEl) cfg.urlEl.textContent = cfg.resultUrl;
-              cfg.homeEl.classList.add('leaving');
-              setTimeout(function(){ cfg.homeEl.style.display = 'none'; }, 280);
-              cfg.resultsPage.style.display = 'block';
-              requestAnimationFrame(function(){ cfg.resultsPage.classList.add('on'); });
+              ENGINE_URL[cfg.key].searched = true;
+              if(document.querySelector('.engine-tab.active').getAttribute('data-e') === cfg.key){
+                urlDisplay.textContent = ENGINE_URL[cfg.key].result;
+              }
+              cfg.homeEl.style.display = 'none';
+              cfg.resultsPage.classList.add('on');
               setTimeout(function(){
                 cfg.gWrap.classList.add('on');
                 if(cfg.afterResults) cfg.afterResults();
-              }, 260);
+              }, 200);
               if(cfg.loadEl) setTimeout(function(){ cfg.loadEl.classList.remove('go'); cfg.loadEl.style.width = '0'; }, 650);
             }, 550);
           }, 400);
@@ -563,13 +567,11 @@
     });
   }
 
-  // Google
   runEngineDemo({
-    bar: document.getElementById('gBar'), txt: document.getElementById('gTxt'), caret: document.getElementById('gCaret'),
+    key:'google', bar: document.getElementById('gBar'), txt: document.getElementById('gTxt'), caret: document.getElementById('gCaret'),
     tap: document.getElementById('gTap'), ac: document.getElementById('gAc'), acMain: document.getElementById('gAcMain'),
-    query: 'best school in stockton', urlEl: document.getElementById('gUrl'), resultUrl: 'google.com/search?q=best+school+in+stockton',
-    loadEl: document.getElementById('gLoad'), homeEl: document.getElementById('gHome'), resultsPage: document.getElementById('gResultsPage'),
-    gWrap: document.getElementById('gResults'),
+    query: 'best school in stockton', loadEl: document.getElementById('gLoad'), homeEl: document.getElementById('gHome'),
+    resultsPage: document.getElementById('gResultsPanel'), gWrap: document.getElementById('gResults'),
     afterResults: function(){ setTimeout(function(){ document.getElementById('gAsk').classList.add('on'); }, 500); }
   });
   document.getElementById('gReveal').addEventListener('click', function(){
@@ -577,13 +579,11 @@
     this.style.display = 'none';
   });
 
-  // DuckDuckGo
   runEngineDemo({
-    bar: document.getElementById('dBar'), txt: document.getElementById('dTxt'), caret: document.getElementById('dCaret'),
+    key:'ddg', bar: document.getElementById('dBar'), txt: document.getElementById('dTxt'), caret: document.getElementById('dCaret'),
     tap: document.getElementById('dTap'), ac: document.getElementById('dAc'), acMain: document.getElementById('dAcMain'),
-    query: 'best school in stockton', urlEl: document.getElementById('dUrl'), resultUrl: 'duckduckgo.com/?q=best+school+in+stockton',
-    loadEl: document.getElementById('dLoad'), homeEl: document.getElementById('dHome'), resultsPage: document.getElementById('dResultsPage'),
-    gWrap: document.getElementById('dResults'),
+    query: 'best school in stockton', loadEl: null, homeEl: document.getElementById('dHome'),
+    resultsPage: document.getElementById('dResultsPanel'), gWrap: document.getElementById('dResults'),
     afterResults: function(){ setTimeout(function(){ document.getElementById('dAsk').classList.add('on'); }, 500); }
   });
   document.getElementById('dReveal').addEventListener('click', function(){
@@ -591,13 +591,11 @@
     this.style.display = 'none';
   });
 
-  // Ecosia
   runEngineDemo({
-    bar: document.getElementById('eBar'), txt: document.getElementById('eTxt'), caret: document.getElementById('eCaret'),
+    key:'eco', bar: document.getElementById('eBar'), txt: document.getElementById('eTxt'), caret: document.getElementById('eCaret'),
     tap: document.getElementById('eTap'), ac: document.getElementById('eAc'), acMain: document.getElementById('eAcMain'),
-    query: 'best school in stockton', urlEl: document.getElementById('eUrl'), resultUrl: 'ecosia.org/search?q=best+school+in+stockton',
-    loadEl: document.getElementById('eLoad'), homeEl: document.getElementById('eHome'), resultsPage: document.getElementById('eResultsPage'),
-    gWrap: document.getElementById('eResults'),
+    query: 'best school in stockton', loadEl: null, homeEl: document.getElementById('eHome'),
+    resultsPage: document.getElementById('eResultsPanel'), gWrap: document.getElementById('eResults'),
     afterResults: function(){
       document.getElementById('ecoBar').style.width = '100%';
       setTimeout(function(){
@@ -608,7 +606,7 @@
     }
   });
 
-  /* ---------- simple typed search for the bat example (no browser chrome) ---------- */
+  /* ---------- bat: simple typed search ---------- */
   function wireSearch(opts){
     var typed = false;
     if(opts.caretEl.animate){
@@ -639,24 +637,72 @@
     }
   });
 
-  /* ---------- refine cards: tap to open ---------- */
-  [].forEach.call(document.querySelectorAll('.refine-card'), function(card){
-    card.addEventListener('click', function(){ card.classList.toggle('open'); });
+  /* ---------- operator workbench: live filtering ---------- */
+  var PHRASE_ITEMS = [
+    {title:'Black Labrador Dog — Breed Guide', src:'dogbreeds.co.uk', match:true},
+    {title:'Dogs: black, Labrador & other breeds compared', src:'petfacts.com', match:false},
+    {title:'Labrador colours: is black rare?', src:'vetadvice.org', match:false},
+    {title:'Dog training tips for large breeds', src:'trainmydog.co.uk', match:false}
+  ];
+  var MINUS_ITEMS = [
+    {title:'Jaguar — Luxury Cars & SUVs', src:'jaguar.com', hideOnMinus:true},
+    {title:'Jaguar: the Amazon rainforest’s top predator', src:'wildlifefacts.org', hideOnMinus:false},
+    {title:'2026 Jaguar F-Type review', src:'carmag.co.uk', hideOnMinus:true},
+    {title:'Jaguar facts for kids: speed, habitat, diet', src:'natgeokids.com', hideOnMinus:false}
+  ];
+
+  function buildFeed(container, items, hideKey){
+    items.forEach(function(item){
+      var row = document.createElement('div');
+      row.className = 'feed-item';
+      if(hideKey) row.setAttribute('data-hide', item[hideKey] ? '1' : '0');
+      row.innerHTML = '<b>' + item.title + '</b><span>' + item.src + '</span>';
+      container.appendChild(row);
+    });
+  }
+  var phraseFeed = document.getElementById('phraseFeed');
+  var minusFeed = document.getElementById('minusFeed');
+  buildFeed(phraseFeed, PHRASE_ITEMS, 'matchInverse');
+  // mark phrase items: hide the ones that DON'T match the exact phrase when operator is on
+  [].forEach.call(phraseFeed.children, function(row, i){ row.setAttribute('data-hide', PHRASE_ITEMS[i].match ? '0' : '1'); });
+  buildFeed(minusFeed, MINUS_ITEMS, 'hideOnMinus');
+
+  var phraseOn = false, minusOn = false;
+  document.getElementById('phraseToggle').addEventListener('click', function(){
+    phraseOn = !phraseOn;
+    this.classList.toggle('on', phraseOn);
+    this.textContent = phraseOn ? 'Using “ ” now' : 'Turn on “ ”';
+    document.getElementById('phraseMock').textContent = phraseOn ? '"black labrador dog"' : 'black labrador dog';
+    [].forEach.call(phraseFeed.children, function(row){
+      row.classList.toggle('hidden-by-op', phraseOn && row.getAttribute('data-hide') === '1');
+    });
+  });
+  document.getElementById('minusToggle').addEventListener('click', function(){
+    minusOn = !minusOn;
+    this.classList.toggle('on', minusOn);
+    this.textContent = minusOn ? 'Using −car now' : 'Turn on −car';
+    document.getElementById('minusMock').textContent = minusOn ? 'jaguar -car' : 'jaguar';
+    [].forEach.call(minusFeed.children, function(row){
+      row.classList.toggle('hidden-by-op', minusOn && row.getAttribute('data-hide') === '1');
+    });
   });
 
-  /* ---------- mind map: tap a node to reveal its answer ---------- */
-  var mmRevealed = {};
-  [].forEach.call(document.querySelectorAll('.mm-node'), function(node){
+  /* ---------- network map ---------- */
+  var netRevealed = {};
+  [].forEach.call(document.querySelectorAll('.net-node'), function(node){
     node.addEventListener('click', function(){
       var key = node.getAttribute('data-node');
-      if(mmRevealed[key]) return;
-      mmRevealed[key] = true;
-      node.classList.add('revealed');
+      if(netRevealed[key]) return;
+      netRevealed[key] = true;
+      node.classList.add('unlocked');
       var line = document.getElementById('line-' + key);
-      if(line) line.classList.add('lit');
-      if(Object.keys(mmRevealed).length === 4){
-        setTimeout(function(){ document.getElementById('mmSynth').classList.add('on'); }, 250);
+      if(line) line.classList.add('pulsed');
+      if(Object.keys(netRevealed).length === 4){
+        document.getElementById('netCenter').classList.add('master-open');
+        setTimeout(function(){ document.getElementById('netSynth').classList.add('on'); }, 250);
       }
     });
   });
 </script>
+</body>
+</html>
