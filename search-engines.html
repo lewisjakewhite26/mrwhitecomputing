@@ -1,0 +1,243 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Let's Go Searching</title>
+<style>
+  :root{
+    --ground-1:#EDEFF7;
+    --ground-2:#F5F5FA;
+    --paper:#FCFCFE;
+    --paper-edge:#E7E9F2;
+    --ink:#1C2431;
+    --muted:#4A5261;
+    --soft:#6B7280;
+    --in:#2F6BE0;
+    --proc:#6C4CE0;
+    --out:#0E9C6A;
+    --red:#D8443C;
+    --hair:rgba(28,36,49,0.12);
+    --shadow-lg:0 26px 64px -20px rgba(24,28,45,0.26), 0 10px 24px -14px rgba(24,28,45,0.18);
+    --shadow-md:0 14px 32px -14px rgba(24,28,45,0.2);
+    --shadow-sm:0 6px 16px -8px rgba(24,28,45,0.18);
+    --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;font-family:var(--font);color:var(--ink);overflow:hidden;
+    background:
+      radial-gradient(50vw 50vw at 8% -10%, rgba(108,76,224,0.08), transparent 60%),
+      radial-gradient(42vw 42vw at 100% 110%, rgba(47,107,224,0.07), transparent 62%),
+      linear-gradient(165deg, var(--ground-1), var(--ground-2));
+  }
+  .screen{display:none;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:clamp(20px,4vw,56px);text-align:center;position:relative}
+  .screen.on{display:flex}
+
+  h1{font-weight:800;font-size:clamp(2rem,5.2vw,3.4rem);letter-spacing:-0.02em;margin:0 0 14px}
+  .lead{color:var(--muted);font-size:clamp(1.05rem,2.2vw,1.5rem);max-width:44ch;line-height:1.5;margin:0 auto 20px}
+  .kick{font-weight:700;color:var(--proc);font-size:clamp(1rem,1.6vw,1.3rem);margin:0 0 8px;letter-spacing:.02em}
+
+  .big-btn{border:0;border-radius:999px;padding:20px 48px;font-weight:800;font-size:clamp(1.1rem,2vw,1.5rem);background:var(--ink);color:#fff;cursor:pointer;box-shadow:var(--shadow-md);transition:transform .16s var(--ease)}
+  .big-btn:hover{transform:scale(1.04)}
+  .big-btn.go{background:var(--proc)}
+
+  /* ---------- nav ---------- */
+  .navbar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:50;background:var(--paper);border:1px solid var(--paper-edge);border-radius:999px;padding:8px 10px;box-shadow:var(--shadow-md)}
+  .navbtn{border:0;background:transparent;color:var(--ink);font-weight:700;font-size:1rem;padding:10px 18px;border-radius:999px;cursor:pointer}
+  .navbtn:hover{background:var(--ground-2)}
+  .navbtn:disabled{opacity:.3;cursor:default}
+  .navbtn.next{background:var(--proc);color:#fff}
+  .dots{display:flex;gap:6px;padding:0 4px}
+  .dots span{width:7px;height:7px;border-radius:50%;background:var(--paper-edge)}
+  .dots span.on{background:var(--proc)}
+
+  /* ---------- generic card row ---------- */
+  .cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:900px}
+  .card{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:22px 20px;width:190px;box-shadow:var(--shadow-sm)}
+  .card .ic{font-size:2.2rem;margin-bottom:8px}
+  .card b{display:block;font-size:1.05rem;margin-bottom:4px}
+  .card span{color:var(--soft);font-size:.9rem;line-height:1.4}
+
+  /* ---------- search bar (generic, reused per engine) ---------- */
+  .sbar{display:flex;align-items:center;gap:14px;width:min(92%,680px);padding:16px 26px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(32,33,36,.16);margin:0 auto}
+  .sbar svg{flex:none}
+  .sbar .txt{font-size:clamp(1.2rem,2.6vw,1.7rem);color:#202124}
+
+  /* ---- Google-flavoured results ---- */
+  .g-wrap{width:min(94%,700px);text-align:left;margin:22px auto 0;display:flex;flex-direction:column;gap:18px}
+  .g-res .g-src{font-size:.85rem;color:#4D5156}
+  .g-res .g-title{font-size:clamp(1rem,2vw,1.3rem);color:#1A0DAB;font-weight:600;line-height:1.25}
+  .g-res .g-snip{font-size:clamp(.85rem,1.4vw,1rem);color:#4D5156;line-height:1.35}
+
+  /* ---- DuckDuckGo flavour ---- */
+  #s-ddg{background:#fff}
+  .ddg-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+  .ddg-orb{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#FFEADA,#FFAE42 55%,#DE5833 100%);box-shadow:inset 0 -6px 10px rgba(0,0,0,.15)}
+  .ddg-word{font-weight:800;font-size:1.5rem;color:#2C2C2C}
+  #s-ddg .sbar{border:2px solid #DDD}
+  .ddg-res .g-title{color:#2C2C2C}
+  .ddg-res .g-src{color:#4C4C4C}
+  .ddg-note{display:inline-block;margin-top:16px;background:#EDF6F0;color:#0E9C6A;font-weight:700;font-size:.85rem;padding:6px 14px;border-radius:999px}
+
+  /* ---- Ecosia flavour ---- */
+  #s-eco{background:linear-gradient(180deg,#F4FBF6,#E9F6EC)}
+  .eco-mark{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+  .eco-leaf{width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:32px solid #4CAF6D;border-radius:50% 50% 50% 0;transform:rotate(45deg)}
+  .eco-word{font-weight:800;font-size:1.5rem;color:#2F5D3A}
+  #s-eco .sbar{border:2px solid #CFE9D6}
+  .eco-res .g-title{color:#2F5D3A}
+  .tree-counter{display:flex;align-items:center;gap:10px;justify-content:center;background:#fff;border:1px solid #CFE9D6;border-radius:999px;padding:8px 18px;margin:14px auto 0;width:fit-content;font-weight:700;color:#2F5D3A}
+  .tree-bar{width:120px;height:8px;border-radius:999px;background:#DCEEE0;overflow:hidden}
+  .tree-bar i{display:block;height:100%;width:71%;background:#4CAF6D}
+
+  /* ---- bat slide ---- */
+  .batbox{width:min(92%,700px);margin:0 auto}
+  .bat-imgs{display:flex;gap:10px;height:clamp(64px,10vw,100px);margin-bottom:14px}
+  .bat-imgs div{flex:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem}
+
+  /* ---- refine slide ---- */
+  .refine-row{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;max-width:900px;margin-top:10px}
+  .refine-card{background:var(--paper);border:1px solid var(--paper-edge);border-radius:16px;padding:20px 22px;width:320px;text-align:left;box-shadow:var(--shadow-sm)}
+  .refine-card h4{margin:0 0 6px;color:var(--proc)}
+  .refine-card code{background:var(--ground-2);border-radius:6px;padding:2px 7px;font-size:1.05rem}
+  .refine-card p{margin:8px 0 0;color:var(--muted);font-size:.95rem;line-height:1.4}
+
+  .toolbar{position:fixed;top:16px;right:16px;z-index:50}
+  .toolbar a{color:var(--soft);font-size:.85rem;text-decoration:none;font-weight:600}
+</style>
+
+<div class="toolbar"><a href="javascript:void(0)" onclick="document.documentElement.requestFullscreen && document.documentElement.requestFullscreen()">Fullscreen</a></div>
+
+<!-- 1: intro -->
+<div class="screen on" id="s1">
+  <p class="kick">Hartburn Computing &middot; Year 5/6</p>
+  <h1>Let&rsquo;s go searching</h1>
+  <p class="lead">Google, DuckDuckGo and Ecosia &mdash; and the odd ways they&rsquo;re all a bit different.</p>
+</div>
+
+<!-- 2: Google mockup -->
+<div class="screen" id="s2">
+  <p class="kick">Search engine 1</p>
+  <h1>Google</h1>
+  <p class="lead">The world&rsquo;s most used search engine.</p>
+  <div class="sbar">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+    <span class="txt">best school in stockton</span>
+  </div>
+  <div class="g-wrap">
+    <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
+    <div class="g-res"><div class="g-src">Ad &middot; somecompany.com</div><div class="g-title" style="color:#006621">Sponsored: Compare Schools Near You</div><div class="g-snip">This one is paid for. Someone bought their way to the top of the list.</div></div>
+    <div class="g-res"><div class="g-src">ofsted.gov.uk</div><div class="g-title">Ofsted report: Hartburn Primary School</div><div class="g-snip">The latest inspection report and outcomes.</div></div>
+  </div>
+</div>
+
+<!-- 3: DuckDuckGo mockup -->
+<div class="screen" id="s3">
+  <p class="kick">Search engine 2 &middot; we can&rsquo;t open this one at school, so here&rsquo;s a recreation</p>
+  <div class="ddg-mark"><div class="ddg-orb"></div><span class="ddg-word">DuckDuckGo</span></div>
+  <p class="lead">Built around <b>not tracking what you search</b>. It doesn&rsquo;t remember you or follow you around with ads afterwards.</p>
+  <div class="sbar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">best school in stockton</span></div>
+  <div class="g-wrap ddg-res">
+    <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
+    <div class="g-res"><div class="g-src">ofsted.gov.uk</div><div class="g-title">Ofsted report: Hartburn Primary School</div><div class="g-snip">The latest inspection report and outcomes.</div></div>
+  </div>
+  <span class="ddg-note">Notice: no sponsored result, and no ad up top</span>
+</div>
+
+<!-- 4: Ecosia mockup -->
+<div class="screen" id="s4">
+  <p class="kick">Search engine 3 &middot; a recreation</p>
+  <div class="eco-mark"><div class="eco-leaf"></div><span class="eco-word">ecosia</span></div>
+  <p class="lead">Puts its advertising profits into <b>planting trees</b>. About 45 searches plants one tree.</p>
+  <div class="sbar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">best school in stockton</span></div>
+  <div class="tree-counter">🌳 <span id="ecoCount">142,857,318</span> trees planted <span class="tree-bar"><i></i></span></div>
+  <div class="g-wrap eco-res">
+    <div class="g-res"><div class="g-src">hartburnprimary.co.uk</div><div class="g-title">Hartburn Primary School &ndash; Home</div><div class="g-snip">A warm, ambitious school in Stockton-on-Tees where every child belongs.</div></div>
+  </div>
+</div>
+
+<!-- 5: bat -->
+<div class="screen" id="s5">
+  <p class="kick">Try it yourself</p>
+  <h1>Searching for &ldquo;bat&rdquo;</h1>
+  <div class="batbox">
+    <div class="sbar" style="margin-bottom:18px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">bat</span></div>
+    <div class="bat-imgs"><div style="background:#EEF3E6">🏏</div><div style="background:#F4EEE2">🏏</div><div style="background:#E7EFF6">🏏</div><div style="background:#F1ECE4">🏏</div></div>
+    <div class="g-wrap">
+      <div class="g-res"><div class="g-src">Cricket shop</div><div class="g-title">Cricket bats: which size is right for me?</div></div>
+      <div class="g-res"><div class="g-src">Sport facts</div><div class="g-title">Why are cricket bats made of willow?</div></div>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:22px;font-weight:700">Every result is about cricket. What could you type instead to find the flying animal?</p>
+</div>
+
+<!-- 6: refine -->
+<div class="screen" id="s6">
+  <p class="kick">Getting better results</p>
+  <h1>Refining your search</h1>
+  <div class="refine-row">
+    <div class="refine-card">
+      <h4>Speech marks &ldquo; &rdquo;</h4>
+      <p><code>black labrador dog</code> finds pages with those words anywhere.</p>
+      <p><code>"black labrador dog"</code> finds only that exact phrase, in that exact order.</p>
+    </div>
+    <div class="refine-card">
+      <h4>Minus symbol &minus;</h4>
+      <p><code>jaguar</code> mixes the animal with the car.</p>
+      <p><code>jaguar -car</code> removes every result that mentions &ldquo;car&rdquo;, leaving mostly the animal.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 7: what else -->
+<div class="screen" id="s7">
+  <p class="kick">One more thing</p>
+  <h1>What else can you search on?</h1>
+  <p class="lead">These all have a search box too &mdash; but they only search their own site, not the whole web.</p>
+  <div class="cards">
+    <div class="card"><div class="ic">📦</div><b>Amazon</b><span>Searches products for sale</span></div>
+    <div class="card"><div class="ic">📖</div><b>Wikipedia</b><span>Searches its own encyclopaedia articles</span></div>
+    <div class="card"><div class="ic">▶️</div><b>YouTube</b><span>Searches videos on YouTube only</span></div>
+    <div class="card"><div class="ic">🎬</div><b>Netflix</b><span>Searches shows and films in its library</span></div>
+  </div>
+</div>
+
+<!-- 8: outro -> whiteflix -->
+<div class="screen" id="s8">
+  <p class="kick">Last thing</p>
+  <h1>One search box you haven&rsquo;t met yet&hellip;</h1>
+  <p class="lead">It searches something a bit different.</p>
+  <a class="big-btn go" href="whiteflix.html" target="_blank" rel="noopener">Meet Mr Whiteflix</a>
+</div>
+
+<div class="navbar">
+  <button class="navbtn" id="prevBtn">Back</button>
+  <div class="dots" id="dots"></div>
+  <button class="navbtn next" id="nextBtn">Next</button>
+</div>
+
+<script>
+  var SCREENS = ['s1','s2','s3','s4','s5','s6','s7','s8'];
+  var at = 0;
+  var dotsEl = document.getElementById('dots');
+  SCREENS.forEach(function(){ var d = document.createElement('span'); dotsEl.appendChild(d); });
+
+  function render(){
+    SCREENS.forEach(function(id, i){ document.getElementById(id).classList.toggle('on', i === at); });
+    [].forEach.call(dotsEl.children, function(d, i){ d.classList.toggle('on', i === at); });
+    document.getElementById('prevBtn').disabled = at === 0;
+    document.getElementById('nextBtn').disabled = at === SCREENS.length - 1;
+  }
+  function go(delta){
+    at = Math.max(0, Math.min(SCREENS.length - 1, at + delta));
+    render();
+  }
+  document.getElementById('nextBtn').addEventListener('click', function(){ go(1); });
+  document.getElementById('prevBtn').addEventListener('click', function(){ go(-1); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if(e.key === 'ArrowLeft') go(-1);
+  });
+  render();
+</script>
