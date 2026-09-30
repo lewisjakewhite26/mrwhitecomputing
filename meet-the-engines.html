@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet the Search Engines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Inter:wght@400;600;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{ --bg:#080a0f; --tx:#e9eef5; --mu:#aeb8c6; --cy:#45cfe0; --sk:'Cabin Sketch',cursive; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center}
+  .scene{position:absolute;left:0;top:0;width:1600px;height:810px}
+  .glow{position:absolute;left:50%;top:300px;width:1100px;height:900px;margin-left:-550px;margin-top:-450px;border-radius:50%;pointer-events:none}
+  .logo{position:absolute;left:50%;top:40px;width:460px;height:460px;margin-left:-230px}
+  .logo svg{width:100%;height:100%;overflow:visible}
+  .name{position:absolute;left:0;right:0;top:520px;text-align:center;font-size:92px;font-weight:800;letter-spacing:-.03em}
+  .line{position:absolute;left:0;right:0;top:648px;text-align:center;font-size:36px;font-weight:600;color:var(--mu)}
+  .kick{position:absolute;left:0;right:0;top:34px;text-align:center;font-family:var(--sk);font-size:30px;letter-spacing:.12em;text-transform:uppercase;color:#6f7a8b}
+
+  .col{position:absolute;top:60px;width:440px;text-align:center}
+  .col .mini{width:300px;height:300px;margin:0 auto}
+  .col .mini svg{width:100%;height:100%;overflow:visible}
+  .col h2{font-size:54px;font-weight:800;letter-spacing:-.02em;margin:26px 0 10px}
+  .col p{font-size:27px;line-height:1.35;color:var(--mu);margin:0 20px}
+  .ask{position:absolute;left:0;right:0;top:640px;text-align:center;font-family:var(--sk);font-size:52px;letter-spacing:.03em}
+
+  .nav{position:absolute;left:0;right:0;bottom:0;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 44px}
+  .btn{font:inherit;font-size:22px;font-weight:600;min-height:54px;padding:0 30px;border-radius:999px;border:2px solid #3a4454;background:transparent;color:var(--tx);cursor:pointer}
+  .btn.primary{background:var(--cy);border-color:var(--cy);color:#06222a}
+  .btn:disabled{opacity:.3;cursor:default}
+  .dots{display:flex;gap:12px}
+  .dot{width:14px;height:14px;border-radius:50%;border:2px solid #4a5566;background:transparent;padding:0;cursor:pointer}
+  .dot.on{background:var(--cy);border-color:var(--cy)}
+  .replay{position:absolute;right:44px;top:24px;font:inherit;font-size:18px;color:#8390a3;background:none;border:1.5px solid #2c3441;border-radius:999px;padding:8px 18px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+  <div id="host"></div>
+  <button class="replay" id="replay" type="button">&#8635; Play again</button>
+  <nav class="nav">
+    <button class="btn" id="back" type="button">Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn primary" id="next" type="button">Next</button>
+  </nav>
+</div></div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage'), host = document.getElementById('host');
+  function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', fit); fit();
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var U = 0; function uid(){ return 'u' + (++U); }
+
+  var STAR = 'M0,-12 L3,-3 L12,0 L3,3 L0,12 L-3,3 L-12,0 L-3,-3Z';
+  function sparkles(){
+    return [[-150,-118,1],[146,-70,.7],[128,128,.85],[-140,110,.6]].map(function(p){
+      return '<path class="spk" d="' + STAR + '" fill="#fff" transform="translate(' + p[0] + ' ' + p[1] + ') scale(' + p[2] + ')" opacity="0"/>';
+    }).join('');
+  }
+  // a soft white bar that sweeps across whatever shape is in the mask
+  function glintDefs(id, maskShapes){
+    return '<linearGradient id="g' + id + '" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<mask id="m' + id + '" maskUnits="userSpaceOnUse" x="-200" y="-200" width="400" height="400">' + maskShapes + '</mask>';
+  }
+  function glintLayer(id){
+    return '<g mask="url(#m' + id + ')"><rect class="glint" x="-340" y="-200" width="110" height="400" fill="url(#g' + id + ')" transform="skewX(-18)"/></g>';
+  }
+  function finish(tl, svg){
+    tl.to(svg.querySelector('.glint'), { attr:{ x:260 }, duration:.9, ease:'power2.inOut' }, '+=.15');
+    var s = svg.querySelectorAll('.spk');
+    tl.fromTo(s, { opacity:0, scale:0, transformOrigin:'50% 50%' }, { opacity:1, scale:1, duration:.25, stagger:.1, ease:'back.out(3)' }, '<.1');
+    tl.to(s, { opacity:0, scale:0, duration:.3, stagger:.1 }, '>.15');
+  }
+
+  /* ---------------- Google: dots bob, then fly out and draw the G ---------------- */
+  function google(){
+    var id = uid(), R = 90, SW = 36;
+    var ARCS = [['#4285F4',-1,46],['#34A853',44,146],['#FBBC05',144,216],['#EA4335',214,318]];
+    function arc(c, a, b, white){
+      var len = b - a;
+      return '<circle ' + (white ? '' : 'class="arc" ') + 'r="' + R + '" fill="none" stroke="' + (white ? '#fff' : c) + '" stroke-width="' + SW + '" pathLength="360" stroke-dasharray="' + len + ' 720" stroke-dashoffset="' + (white ? 0 : len) + '" transform="rotate(' + a + ')"/>';
+    }
+    var bar = function(white){ return '<line ' + (white ? '' : 'class="bar" ') + 'x1="0" y1="0" x2="' + (R + SW / 2) + '" y2="0" stroke="' + (white ? '#fff' : '#4285F4') + '" stroke-width="' + SW + '" pathLength="100" stroke-dasharray="100 200" stroke-dashoffset="' + (white ? 0 : 100) + '"/>'; };
+    var mask = ARCS.map(function(a){ return arc(a[0], a[1], a[2], true); }).join('') + bar(true);
+    var DOTS = [['#4285F4',-96],['#EA4335',-32],['#FBBC05',32],['#34A853',96]];
+    var svg = '<svg viewBox="-180 -180 360 360"><defs>' + glintDefs(id, mask) + '</defs>' +
+      ARCS.map(function(a){ return arc(a[0], a[1], a[2]); }).join('') + bar() +
+      DOTS.map(function(d){ return '<circle class="gdot" cx="' + d[1] + '" cy="0" r="' + SW / 2 + '" fill="' + d[0] + '"/>'; }).join('') +
+      glintLayer(id) + sparkles() + '</svg>';
+    return { svg:svg, play:function(el, tl){
+      var dots = el.querySelectorAll('.gdot'), arcs = el.querySelectorAll('.arc'), b = el.querySelector('.bar');
+      tl.from(dots, { scale:0, transformOrigin:'50% 50%', duration:.35, stagger:.09, ease:'back.out(3)' }, .2);
+      dots.forEach(function(d, i){
+        tl.to(d, { y:-38, duration:.26, ease:'power1.out', yoyo:true, repeat:3 }, .7 + i * .11);
+      });
+      // where each dot lands: the start of its own arc (blue lands where the bar meets the curve)
+      var land = [[R,0],[R*Math.cos(214*Math.PI/180),R*Math.sin(214*Math.PI/180)],[R*Math.cos(144*Math.PI/180),R*Math.sin(144*Math.PI/180)],[R*Math.cos(44*Math.PI/180),R*Math.sin(44*Math.PI/180)]];
+      var arcFor = [0,3,2,1];
+      var t0 = 2.1;
+      dots.forEach(function(d, i){
+        var dur = .7 + i * .1;
+        tl.to(d, { x:land[i][0] - DOTS[i][1], y:land[i][1], duration:dur, ease:'power2.inOut' }, t0 + i * .06);
+        var a = arcs[arcFor[i]];
+        tl.to(a, { attr:{ 'stroke-dashoffset':0 }, duration:.6, ease:'power2.out' }, t0 + i * .06 + dur - .08);
+        tl.to(d, { opacity:0, duration:.12 }, t0 + i * .06 + dur);
+      });
+      tl.to(b, { attr:{ 'stroke-dashoffset':0 }, duration:.45, ease:'power2.out' }, t0 + .75);
+      finish(tl, el);
+    } };
+  }
+
+  /* ---------------- DuckDuckGo: ring draws, the duck rises in, blinks, bow tie pops ---------------- */
+  function duck(){
+    var id = uid(), cid = uid();
+    var svg = '<svg viewBox="-180 -180 360 360"><defs>' + glintDefs(id, '<circle r="116" fill="#fff"/>') +
+        '<clipPath id="c' + cid + '"><circle r="100"/></clipPath></defs>' +
+      '<circle class="disc" r="116" fill="#DE5833"/>' +
+      '<g clip-path="url(#c' + cid + ')">' +
+        '<g class="body"><path d="M-72,170 C-98,62 -88,-46 -36,-80 C0,-102 52,-90 64,-50 C74,-18 46,6 41,42 C37,82 48,122 56,170 Z" fill="#fff"/>' +
+        '</g>' +
+        '<g class="beak"><path d="M35,-26 C58,-40 90,-32 98,-17 C86,-7 61,-5 37,-9 Z" fill="#FDD20A"/><path d="M37,-9 C60,-5 82,-7 92,4 C76,15 53,11 39,4 Z" fill="#F9A51B"/></g>' +
+        '<g class="eye"><circle cx="12" cy="-50" r="12.5" fill="#2D4F8E"/><circle cx="16.5" cy="-54" r="4.2" fill="#fff"/></g>' +
+        '<g class="tie"><path d="M-4,80 L-46,58 L-42,104 Z" fill="#67BD49"/><path d="M-4,80 L36,56 L33,104 Z" fill="#67BD49"/><circle cx="-4" cy="80" r="10" fill="#4CA83A"/></g>' +
+      '</g>' +
+      '<circle class="ring" r="100" fill="none" stroke="#fff" stroke-width="7" pathLength="360" stroke-dasharray="360 720" stroke-dashoffset="360" transform="rotate(-90)"/>' +
+      glintLayer(id) + sparkles() + '</svg>';
+    return { svg:svg, play:function(el, tl){
+      tl.from(el.querySelector('.disc'), { scale:0, transformOrigin:'50% 50%', duration:.6, ease:'back.out(1.8)' }, .2);
+      tl.to(el.querySelector('.ring'), { attr:{ 'stroke-dashoffset':0 }, duration:.8, ease:'power2.inOut' }, '-=.15');
+      tl.from(el.querySelector('.body'), { y:190, duration:.8, ease:'back.out(1.1)' }, '-=.3');
+      tl.from(el.querySelector('.eye'), { scale:0, transformOrigin:'50% 50%', duration:.35, ease:'back.out(3)' }, '-=.1');
+      tl.from(el.querySelector('.beak'), { x:-30, scale:.3, opacity:0, transformOrigin:'0% 50%', duration:.6, ease:'elastic.out(1,.5)' }, '-=.05');
+      tl.to(el.querySelector('.eye'), { scaleY:.1, transformOrigin:'50% 50%', duration:.09, yoyo:true, repeat:1 }, '+=.35');
+      tl.from(el.querySelector('.tie'), { scale:0, rotation:-50, transformOrigin:'50% 50%', duration:.5, ease:'back.out(3)' }, '+=.1');
+      finish(tl, el);
+    } };
+  }
+
+  /* ---------------- Ecosia: trunk grows, the leaves bloom, the E appears, it sways ---------------- */
+  function ecosia(){
+    var id = uid();
+    var LEAVES = [[0,-12,42],[0,-54,40],[-40,-22,32],[40,-22,32],[-26,14,30],[28,14,30]];
+    var svg = '<svg viewBox="-180 -180 360 360"><defs>' + glintDefs(id, '<circle r="116" fill="#fff"/>') + '</defs>' +
+      '<circle class="disc" r="116" fill="#b4eabf"/>' +
+      '<g class="tree">' +
+        '<rect class="trunk" x="-10" y="4" width="20" height="84" rx="6" fill="#127a2e"/>' +
+        LEAVES.map(function(l){ return '<circle class="leaf" cx="' + l[0] + '" cy="' + l[1] + '" r="' + l[2] + '" fill="#127a2e"/>'; }).join('') +
+        '<g class="e" fill="#fff"><rect class="es" x="-20" y="-50" width="13" height="66" rx="2"/><rect class="eb" x="-20" y="-50" width="40" height="13" rx="2"/><rect class="eb" x="-20" y="-23" width="33" height="12" rx="2"/><rect class="eb" x="-20" y="3" width="40" height="13" rx="2"/></g>' +
+      '</g>' + glintLayer(id) + sparkles() + '</svg>';
+    return { svg:svg, play:function(el, tl){
+      tl.from(el.querySelector('.disc'), { scale:0, transformOrigin:'50% 50%', duration:.6, ease:'back.out(1.8)' }, .2);
+      tl.from(el.querySelector('.trunk'), { scaleY:0, transformOrigin:'50% 100%', duration:.6, ease:'power2.out' }, '-=.1');
+      tl.from(el.querySelectorAll('.leaf'), { scale:0, transformOrigin:'50% 50%', duration:.45, stagger:.11, ease:'back.out(2.4)' }, '-=.15');
+      tl.from(el.querySelector('.es'), { scaleY:0, transformOrigin:'50% 0%', duration:.3, ease:'power2.out' }, '+=.05');
+      tl.from(el.querySelectorAll('.eb'), { scaleX:0, transformOrigin:'0% 50%', duration:.25, stagger:.1, ease:'power2.out' }, '-=.05');
+      var tree = el.querySelector('.tree');
+      tl.to(tree, { rotation:4, svgOrigin:'0 88', duration:.4, ease:'sine.inOut' }, '+=.1');
+      tl.to(tree, { rotation:-3, svgOrigin:'0 88', duration:.55, ease:'sine.inOut' });
+      tl.to(tree, { rotation:0, svgOrigin:'0 88', duration:.45, ease:'sine.inOut' });
+      finish(tl, el);
+    } };
+  }
+
+  var ENGINES = [
+    { make:google, name:'Google', line:'The most used search engine in the world.', glow:'rgba(66,133,244,.16)' },
+    { make:duck, name:'DuckDuckGo', line:'Doesn&rsquo;t keep track of what you search.', glow:'rgba(222,88,51,.18)' },
+    { make:ecosia, name:'Ecosia', line:'Uses the money it makes to plant trees.', glow:'rgba(76,175,109,.17)' }
+  ];
+
+  function engineBeat(e){
+    return { build:function(r, tl){
+      var L = e.make();
+      r.innerHTML = '<div class="glow" style="background:radial-gradient(closest-side,' + e.glow + ',transparent)"></div>' +
+        '<div class="logo">' + L.svg + '</div>' +
+        '<div class="name">' + e.name + '</div><div class="line">' + e.line + '</div>';
+      var logo = r.querySelector('.logo');
+      L.play(logo, tl);
+      tl.fromTo(r.querySelector('.name'), { opacity:0, y:24 }, { opacity:1, y:0, duration:.6, ease:'power3.out' }, '-=.9');
+      tl.fromTo(r.querySelector('.line'), { opacity:0, y:14 }, { opacity:1, y:0, duration:.6, ease:'power3.out' }, '-=.2');
+    } };
+  }
+
+  var BEATS = ENGINES.map(engineBeat).concat([{ build:function(r, tl){
+    var html = '<div class="kick">Three search engines</div>';
+    var made = ENGINES.map(function(e, i){
+      var L = e.make();
+      html += '<div class="col" style="left:' + (140 + i * 440) + 'px"><div class="mini">' + L.svg + '</div><h2>' + e.name + '</h2><p>' + e.line + '</p></div>';
+      return L;
+    });
+    html += '<div class="ask">They all do the same job. So which would you choose?</div>';
+    r.innerHTML = html;
+    var cols = r.querySelectorAll('.col');
+    made.forEach(function(L, i){
+      var t = gsap.timeline(); L.play(cols[i].querySelector('.mini'), t); t.progress(1);
+    });
+    tl.fromTo(cols, { opacity:0, y:30 }, { opacity:1, y:0, duration:.6, stagger:.2, ease:'power3.out' }, .2);
+    tl.fromTo(r.querySelector('.ask'), { opacity:0 }, { opacity:1, duration:.6 }, '+=.4');
+  } }]);
+
+  /* ---------------- deck ---------------- */
+  var at = 0, tl = null, dots = document.getElementById('dots');
+  BEATS.forEach(function(_, i){
+    var d = document.createElement('button'); d.className = 'dot'; d.type = 'button';
+    d.setAttribute('aria-label', 'Go to step ' + (i + 1));
+    d.addEventListener('click', function(e){ e.stopPropagation(); go(i); });
+    dots.appendChild(d);
+  });
+  function go(n){
+    at = Math.max(0, Math.min(BEATS.length - 1, n));
+    if(tl) tl.kill();
+    var old = host.querySelector('.scene');
+    var r = document.createElement('div'); r.className = 'scene'; r.style.opacity = 0;
+    host.appendChild(r);
+    tl = gsap.timeline({ paused:true });
+    BEATS[at].build(r, tl);
+    if(old) gsap.to(old, { opacity:0, duration:.45, onComplete:function(){ old.remove(); } });
+    gsap.to(r, { opacity:1, duration:.6, delay:old ? .3 : 0, onStart:function(){ tl.play(0); if(reduce) tl.progress(1, false); } });
+    [].forEach.call(dots.children, function(d, i){ d.classList.toggle('on', i === at); });
+    document.getElementById('back').disabled = at === 0;
+    document.getElementById('next').disabled = at === BEATS.length - 1;
+  }
+  function next(){
+    if(tl && tl.progress() > 0 && tl.progress() < 1){ tl.progress(1, false); return; }
+    if(at < BEATS.length - 1) go(at + 1);
+  }
+  document.getElementById('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  document.getElementById('back').addEventListener('click', function(e){ e.stopPropagation(); go(at - 1); });
+  document.getElementById('replay').addEventListener('click', function(e){ e.stopPropagation(); go(at); });
+  host.addEventListener('click', next);
+  addEventListener('keydown', function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); go(at - 1); }
+  });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ go(0); }); else go(0);
+})();
+</script>
+</body>
+</html>
