@@ -105,20 +105,47 @@
 
   .toolbar{position:fixed;top:16px;right:16px;z-index:50}
   .toolbar a{color:var(--soft);font-size:.85rem;text-decoration:none;font-weight:600}
+
+  /* ---- mind map (what else can you search on) ---- */
+  .mindmap{position:relative;width:640px;max-width:94vw;height:460px;max-height:56vh;margin:6px auto 0;flex:none}
+  .mm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .mm-svg line{stroke:var(--paper-edge);stroke-width:3;transition:stroke .3s}
+  .mm-svg line.lit{stroke:var(--proc)}
+  .mm-center{position:absolute;left:50%;top:50%;width:140px;height:140px;transform:translate(-50%,-50%);border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;line-height:1.25;text-align:center;padding:14px;box-shadow:var(--shadow-md)}
+  .mm-node{position:absolute;width:110px;height:110px;border-radius:50%;background:var(--paper);border:2px solid var(--paper-edge);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:all .3s var(--ease);padding:8px;text-align:center}
+  .mm-node .ic{font-size:1.6rem;transition:font-size .3s}
+  .mm-node b{display:block;font-size:.9rem;margin-top:3px}
+  .mm-node span.ans{display:none;font-size:.68rem;color:#fff;font-weight:500;line-height:1.2;margin-top:2px}
+  .mm-node.n-top{left:50%;top:90px;transform:translate(-50%,-50%)}
+  .mm-node.n-right{left:490px;top:50%;transform:translate(-50%,-50%)}
+  .mm-node.n-bottom{left:50%;top:370px;transform:translate(-50%,-50%)}
+  .mm-node.n-left{left:150px;top:50%;transform:translate(-50%,-50%)}
+  .mm-node.revealed{width:140px;height:140px;background:var(--proc);border-color:var(--proc)}
+  .mm-node.revealed .ic{font-size:1.2rem}
+  .mm-node.revealed b{color:#fff}
+  .mm-node.revealed span.ans{display:block}
+  .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:8px}
+  .mm-synth.on{opacity:1}
+
+  /* ---- whiteflix teacher-notes screen ---- */
+  .tnotes{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:22px 26px;max-width:560px;text-align:left;box-shadow:var(--shadow-sm);margin:20px auto 0}
+  .tnotes h4{margin:0 0 10px;color:var(--proc)}
+  .tnotes ol{margin:0;padding-left:20px;color:var(--muted);line-height:1.6;font-size:.98rem}
+  .tnotes li{margin-bottom:6px}
 </style>
 
 <div class="toolbar"><a href="javascript:void(0)" onclick="document.documentElement.requestFullscreen && document.documentElement.requestFullscreen()">Fullscreen</a></div>
 
 <!-- 1: intro -->
 <div class="screen on" id="s1">
-  <p class="kick">Hartburn Computing &middot; Year 5/6</p>
+  <p class="kick">Intro &middot; 5 min</p>
   <h1>Let&rsquo;s go searching</h1>
-  <p class="lead">Google, DuckDuckGo and Ecosia &mdash; and the odd ways they&rsquo;re all a bit different.</p>
+  <p class="lead">Recap: what a search engine does. Today: three different search engines, how to get better results out of them, and something new at the end.</p>
 </div>
 
 <!-- 2: Google mockup -->
 <div class="screen" id="s2">
-  <p class="kick">Search engine 1</p>
+  <p class="kick">Search engine 1 &middot; 8 min</p>
   <h1>Google</h1>
   <p class="lead">The world&rsquo;s most used search engine.</p>
   <div class="sbar">
@@ -134,7 +161,7 @@
 
 <!-- 3: DuckDuckGo mockup -->
 <div class="screen" id="s3">
-  <p class="kick">Search engine 2 &middot; we can&rsquo;t open this one at school, so here&rsquo;s a recreation</p>
+  <p class="kick">Search engine 2 &middot; 6 min &middot; we can&rsquo;t open this one at school, so here&rsquo;s a recreation</p>
   <div class="ddg-mark"><div class="ddg-orb"></div><span class="ddg-word">DuckDuckGo</span></div>
   <p class="lead">Built around <b>not tracking what you search</b>. It doesn&rsquo;t remember you or follow you around with ads afterwards.</p>
   <div class="sbar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">best school in stockton</span></div>
@@ -147,7 +174,7 @@
 
 <!-- 4: Ecosia mockup -->
 <div class="screen" id="s4">
-  <p class="kick">Search engine 3 &middot; a recreation</p>
+  <p class="kick">Search engine 3 &middot; 6 min &middot; a recreation</p>
   <div class="eco-mark"><div class="eco-leaf"></div><span class="eco-word">ecosia</span></div>
   <p class="lead">Puts its advertising profits into <b>planting trees</b>. About 45 searches plants one tree.</p>
   <div class="sbar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">best school in stockton</span></div>
@@ -159,7 +186,7 @@
 
 <!-- 5: bat -->
 <div class="screen" id="s5">
-  <p class="kick">Try it yourself</p>
+  <p class="kick">Try it yourself &middot; 6 min</p>
   <h1>Searching for &ldquo;bat&rdquo;</h1>
   <div class="batbox">
     <div class="sbar" style="margin-bottom:18px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="txt">bat</span></div>
@@ -174,7 +201,7 @@
 
 <!-- 6: refine -->
 <div class="screen" id="s6">
-  <p class="kick">Getting better results</p>
+  <p class="kick">Getting better results &middot; 10 min</p>
   <h1>Refining your search</h1>
   <div class="refine-row">
     <div class="refine-card">
@@ -192,23 +219,47 @@
 
 <!-- 7: what else -->
 <div class="screen" id="s7">
-  <p class="kick">One more thing</p>
+  <p class="kick">One more thing &middot; 5 min</p>
   <h1>What else can you search on?</h1>
-  <p class="lead">These all have a search box too &mdash; but they only search their own site, not the whole web.</p>
-  <div class="cards">
-    <div class="card"><div class="ic">📦</div><b>Amazon</b><span>Searches products for sale</span></div>
-    <div class="card"><div class="ic">📖</div><b>Wikipedia</b><span>Searches its own encyclopaedia articles</span></div>
-    <div class="card"><div class="ic">▶️</div><b>YouTube</b><span>Searches videos on YouTube only</span></div>
-    <div class="card"><div class="ic">🎬</div><b>Netflix</b><span>Searches shows and films in its library</span></div>
+  <p class="lead">Tap each one to find out what it actually searches.</p>
+  <div class="mindmap">
+    <svg class="mm-svg" viewBox="0 0 640 460">
+      <line id="line-amazon" x1="320" y1="230" x2="320" y2="90"></line>
+      <line id="line-wikipedia" x1="320" y1="230" x2="490" y2="230"></line>
+      <line id="line-youtube" x1="320" y1="230" x2="320" y2="370"></line>
+      <line id="line-netflix" x1="320" y1="230" x2="150" y2="230"></line>
+    </svg>
+    <div class="mm-center">What else can<br>you search on?</div>
+    <button type="button" class="mm-node n-top" data-node="amazon"><span class="ic">📦</span><b>Amazon</b><span class="ans">Searches products for sale</span></button>
+    <button type="button" class="mm-node n-right" data-node="wikipedia"><span class="ic">📖</span><b>Wikipedia</b><span class="ans">Searches its own encyclopaedia articles</span></button>
+    <button type="button" class="mm-node n-bottom" data-node="youtube"><span class="ic">▶️</span><b>YouTube</b><span class="ans">Searches videos on YouTube only</span></button>
+    <button type="button" class="mm-node n-left" data-node="netflix"><span class="ic">🎬</span><b>Netflix</b><span class="ans">Searches shows and films in its library</span></button>
+  </div>
+  <p class="lead mm-synth" id="mmSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
+</div>
+
+<!-- 8: Mr Whiteflix, IWB only -->
+<div class="screen" id="s8">
+  <p class="kick">Last thing &middot; 12 min &middot; you drive this one, on the board</p>
+  <h1>One search box you haven&rsquo;t met yet&hellip;</h1>
+  <p class="lead">Nobody has their own login. This stays on the board &mdash; you open it, you click, they watch and call out.</p>
+  <a class="big-btn go" href="whiteflix.html" target="_blank" rel="noopener">Open Mr Whiteflix</a>
+  <div class="tnotes">
+    <h4>What to do</h4>
+    <ol>
+      <li>Press the power button. It goes full screen &mdash; say nothing, let it start up.</li>
+      <li>Pick Pupil one. Read the second row title out loud: &ldquo;Because you watched Slam Squad&rdquo;.</li>
+      <li>Ask: who decided this person would see that? Nobody has typed anything yet.</li>
+      <li>That&rsquo;s the whole point for today &mdash; save the ranking sliders and the two-accounts trick for another lesson. Skip intro is there if you&rsquo;re short of time.</li>
+    </ol>
   </div>
 </div>
 
-<!-- 8: outro -> whiteflix -->
-<div class="screen" id="s8">
-  <p class="kick">Last thing</p>
-  <h1>One search box you haven&rsquo;t met yet&hellip;</h1>
-  <p class="lead">It searches something a bit different.</p>
-  <a class="big-btn go" href="whiteflix.html" target="_blank" rel="noopener">Meet Mr Whiteflix</a>
+<!-- 9: plenary -->
+<div class="screen" id="s9">
+  <p class="kick">Plenary &middot; 2 min</p>
+  <h1>Good searching</h1>
+  <p class="lead">You compared three search engines, refined a search two different ways, and met a search box that already knows what someone likes before they&rsquo;ve typed a thing.</p>
 </div>
 
 <div class="navbar">
@@ -218,7 +269,7 @@
 </div>
 
 <script>
-  var SCREENS = ['s1','s2','s3','s4','s5','s6','s7','s8'];
+  var SCREENS = ['s1','s2','s3','s4','s5','s6','s7','s8','s9'];
   var at = 0;
   var dotsEl = document.getElementById('dots');
   SCREENS.forEach(function(){ var d = document.createElement('span'); dotsEl.appendChild(d); });
@@ -240,4 +291,20 @@
     if(e.key === 'ArrowLeft') go(-1);
   });
   render();
+
+  // mind map: tap a node to reveal its answer; once all four are revealed, show the synthesis line
+  var mmRevealed = {};
+  [].forEach.call(document.querySelectorAll('.mm-node'), function(node){
+    node.addEventListener('click', function(){
+      var key = node.getAttribute('data-node');
+      if(mmRevealed[key]) return;
+      mmRevealed[key] = true;
+      node.classList.add('revealed');
+      var line = document.getElementById('line-' + key);
+      if(line) line.classList.add('lit');
+      if(Object.keys(mmRevealed).length === 4){
+        document.getElementById('mmSynth').classList.add('on');
+      }
+    });
+  });
 </script>
