@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Google Finds It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{
+    --bg:#080a0f; --panel:#0e131a; --line:#232a35;
+    --cy:#45cfe0; --pu:#9a86ff; --am:#e7b24a; --pk:#ff6b9d;
+    --tx:#e9eef5; --mu:#8792a3; --gr:#4bd48f; --rd:#ff5d5d;
+    --sk:'Cabin Sketch',cursive; --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  body{background:radial-gradient(60vw 50vh at 50% 0%,rgba(69,207,224,.07),transparent 70%),var(--bg)}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center}
+  .scene{position:absolute;left:0;top:0;width:1600px;height:810px}
+  .abs{position:absolute}
+  .sk{font-family:var(--sk);font-weight:700;letter-spacing:.03em}
+  .mono{font-family:var(--mono)}
+  svg.layer{position:absolute;left:0;top:0;width:1600px;height:810px;pointer-events:none;overflow:visible}
+
+  /* panels, in the style of the video */
+  .panel{position:absolute;border:2px solid var(--cy);border-radius:16px;
+    background:linear-gradient(180deg,rgba(69,207,224,.07),rgba(14,19,26,.94) 38%);
+    box-shadow:0 0 0 1px rgba(69,207,224,.06),0 0 46px -12px rgba(69,207,224,.45)}
+  .panel.pu{border-color:var(--pu);background:linear-gradient(180deg,rgba(154,134,255,.09),rgba(14,19,26,.94) 38%);box-shadow:0 0 46px -12px rgba(154,134,255,.5)}
+  .panel.am{border-color:var(--am);background:linear-gradient(180deg,rgba(231,178,74,.08),rgba(14,19,26,.94) 38%);box-shadow:0 0 46px -12px rgba(231,178,74,.45)}
+  .ph{display:flex;align-items:center;justify-content:center;gap:12px;font-family:var(--sk);font-weight:700;font-size:36px;letter-spacing:.05em;text-transform:uppercase;padding:18px 0 8px}
+  .ph svg{width:32px;height:32px;flex:none}
+  .panel .ph{color:var(--tx)}
+  .corner{position:absolute;top:-15px;right:26px;padding:0 12px;background:var(--bg);font-family:var(--sk);font-weight:700;font-size:19px;line-height:28px;letter-spacing:.1em;text-transform:uppercase;font-style:italic;color:var(--cy)}
+  .panel.pu .corner{color:var(--pu)} .panel.am .corner{color:var(--am)}
+  .body{font-size:27px;line-height:1.35;color:#c3ccd8;text-align:center;padding:0 60px}
+  .cap{position:absolute;left:80px;right:80px;bottom:6px;text-align:center;font-size:31px;font-weight:600;line-height:1.3;color:var(--tx)}
+  .cap b{color:var(--pk)}
+
+  /* urls */
+  .url{font-family:var(--mono);font-size:21px;background:#131921;border:1px solid var(--line);border-radius:9px;padding:9px 16px;color:#cfd6e0;display:flex;align-items:center;gap:12px;white-space:nowrap}
+  .url.hl{border-color:var(--cy);background:rgba(69,207,224,.14);color:#fff}
+  .url.ok{border-color:rgba(75,212,143,.6)}
+  .url.bad{border-color:var(--rd);background:rgba(255,93,93,.12);color:#ff9d9d;text-decoration:line-through}
+  .url .mark{margin-left:auto;font-weight:700;font-size:22px}
+  .url.ok .mark{color:var(--gr)} .url.bad .mark{color:var(--rd);text-decoration:none}
+
+  /* sites along the top */
+  .site{position:absolute;width:190px;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .ico{width:74px;height:74px;border-radius:18px;display:grid;place-items:center;font-weight:800;font-size:28px;color:#fff;box-shadow:0 8px 24px -10px rgba(0,0,0,.8)}
+  .site span{font-family:var(--mono);font-size:17px;color:#aab4c2;text-align:center;line-height:1.25}
+  .ico.fl{background:linear-gradient(145deg,#ff7aa8,#e84a7f)}
+  .ico.yd{background:linear-gradient(145deg,#4cc38a,#2c9463)}
+  .ico.hp{background:linear-gradient(145deg,#5b8ef0,#3563c9)}
+  .ico.yt{background:#fff}
+
+  /* google bits */
+  .gbar{display:flex;align-items:center;gap:16px;background:#1d2129;border:1px solid #3a404b;border-radius:999px;padding:16px 26px;font-size:28px;color:#e8eaed;box-shadow:0 10px 30px -12px rgba(0,0,0,.9)}
+  .gbar svg{width:32px;height:32px;flex:none}
+  .caret{display:inline-block;width:3px;height:1.05em;background:#8ab4f8;margin-left:1px;vertical-align:-.12em;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .gres{background:#15181e;border:1px solid #2a2f38;border-radius:18px;padding:18px 28px;display:flex;flex-direction:column;gap:18px}
+  .gr .src{display:flex;align-items:center;gap:12px;font-size:17px;color:#bdc1c6}
+  .gr .src i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;color:#fff;flex:none}
+  .gr .src small{display:block;color:#8e949c;font-size:15px}
+  .gr .t{color:#8ab4f8;font-size:25px;margin:4px 0 2px}
+  .gr .d{color:#bdc1c6;font-size:18px;line-height:1.4}
+
+  /* index tiles */
+  .tile{display:inline-block;width:40px;height:28px;border-radius:5px;border:1.5px solid #465061;
+    background:linear-gradient(#465061,#465061) 7px 8px/22px 2px no-repeat,linear-gradient(#384150,#384150) 7px 14px/16px 2px no-repeat,#151b24}
+  .tile.hot{border-color:var(--pk);background:linear-gradient(#ff6b9d,#ff6b9d) 7px 8px/22px 2px no-repeat,linear-gradient(#ff9dbf,#ff9dbf) 7px 14px/16px 2px no-repeat,rgba(255,107,157,.18);box-shadow:0 0 14px rgba(255,107,157,.6)}
+  .irow{position:absolute;left:44px;right:44px;height:66px;display:flex;align-items:center;gap:24px;background:rgba(255,255,255,.02);border:1px solid rgba(231,178,74,.18);border-radius:12px;padding:0 22px}
+  .irow .w{width:250px;font-family:var(--mono);font-size:28px;font-weight:700;color:var(--am);flex:none}
+  .irow .ts{display:flex;gap:10px;flex-wrap:nowrap;overflow:hidden}
+  .irow.lit{border-color:var(--am);background:rgba(231,178,74,.12);box-shadow:0 0 24px -6px rgba(231,178,74,.6)}
+
+  .chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:24px;font-weight:700;padding:9px 18px;border-radius:10px;border:1.5px solid var(--am);color:var(--am);background:rgba(231,178,74,.1);white-space:nowrap}
+  .chip.pu{border-color:var(--pu);color:#cfc5ff;background:rgba(154,134,255,.12)}
+  .chip.cy{border-color:var(--cy);color:#bff3fa;background:rgba(69,207,224,.12)}
+  .pill{display:inline-flex;align-items:center;font-family:var(--sk);font-weight:700;font-size:23px;letter-spacing:.06em;text-transform:uppercase;padding:9px 20px;border-radius:999px;border:1.5px solid #3a404b;color:#7c8594;transition:all .35s}
+  .pill.on{border-color:var(--pu);background:rgba(154,134,255,.18);color:#fff;box-shadow:0 0 18px -4px rgba(154,134,255,.8)}
+
+  .user{position:absolute;width:150px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .user svg{width:46px;height:46px}
+  .fly{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--cy);box-shadow:0 0 16px 4px rgba(69,207,224,.8);pointer-events:none}
+
+  /* pretend Flamingo Land page */
+  .browser{position:absolute;border-radius:16px;overflow:hidden;background:#fff;color:#1d2330;box-shadow:0 30px 80px -30px rgba(0,0,0,.9),0 0 0 1px #2a313c}
+  .browser .bar{height:52px;background:#e9ecf1;display:flex;align-items:center;gap:10px;padding:0 18px}
+  .browser .bar i{width:13px;height:13px;border-radius:50%;background:#c9ced6;display:block}
+  .browser .addr{margin-left:14px;flex:1;background:#fff;border-radius:999px;padding:7px 16px;font-family:var(--mono);font-size:17px;color:#3a4252}
+  .fl-head{background:linear-gradient(90deg,#ff5d95,#ff8a5b);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:16px 30px}
+  .fl-head b{font-size:28px;font-weight:800;letter-spacing:-.01em}
+  .fl-head nav{display:flex;gap:22px;font-size:19px;font-weight:600}
+  .fl-body{padding:26px 34px}
+  .fl-body h2{font-size:42px;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .fl-body p{font-size:25px;line-height:1.5;margin:0 0 20px;color:#3a4252}
+  .fl-pic{height:150px;border-radius:14px;background:linear-gradient(135deg,#ffd1e1,#ffe7d6);position:relative;overflow:hidden;margin-bottom:22px}
+  .fl-links{display:flex;gap:14px;flex-wrap:wrap}
+  .fl-links a{font-size:21px;font-weight:700;color:#e8457f;background:#fff0f5;border:2px solid #ffc2d6;border-radius:999px;padding:9px 20px;text-decoration:none}
+  .w{border-radius:6px;padding:0 3px;transition:background .25s,color .25s,box-shadow .25s}
+  .w.on{background:#ffe38a;color:#1d2330;box-shadow:0 0 0 2px #f2c94c}
+  .scan{position:absolute;left:0;right:0;height:5px;background:var(--cy);box-shadow:0 0 22px 6px rgba(69,207,224,.7);opacity:0}
+
+  .robot{color:var(--cy)}
+  .sign{position:absolute;border-radius:18px;background:#10161e;border:2px solid #2f3947;overflow:hidden}
+  .sign .sh{font-family:var(--mono);font-size:19px;background:#1a222d;color:#aab4c2;padding:12px 20px}
+  .sign .ok{padding:18px 26px;border-bottom:2px dashed #2f3947}
+  .sign .ok h4,.sign .no h4{margin:0 0 12px;font-family:var(--sk);font-size:32px;letter-spacing:.05em;text-transform:uppercase}
+  .sign .ok h4{color:var(--gr)}
+  .sign .no{padding:18px 26px;background:repeating-linear-gradient(-45deg,rgba(255,93,93,.14) 0 16px,rgba(255,93,93,.05) 16px 32px)}
+  .sign .no h4{color:var(--rd)}
+  .sign .paths{font-family:var(--mono);font-size:23px;color:#dfe5ee;display:flex;gap:18px;flex-wrap:wrap}
+
+  .big{font-family:var(--sk);font-weight:700;letter-spacing:.02em;line-height:1.1}
+  .big em{font-style:normal;color:var(--pk)}
+
+  /* nav */
+  .nav{position:absolute;left:0;right:0;bottom:0;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 44px}
+  .btn{font:inherit;font-size:22px;font-weight:600;min-height:54px;padding:0 30px;border-radius:999px;border:2px solid #3a4454;background:transparent;color:var(--tx);cursor:pointer}
+  .btn.primary{background:var(--cy);border-color:var(--cy);color:#06222a}
+  .btn:disabled{opacity:.3;cursor:default}
+  .dots{display:flex;gap:12px}
+  .dot{width:14px;height:14px;border-radius:50%;border:2px solid #4a5566;background:transparent;padding:0;cursor:pointer}
+  .dot.on{background:var(--cy);border-color:var(--cy)}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+  <div id="host"></div>
+  <nav class="nav">
+    <button class="btn" id="back" type="button">Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn primary" id="next" type="button">Next</button>
+  </nav>
+</div></div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage'), host = document.getElementById('host');
+  var scale = 1;
+  function fit(){
+    scale = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+    stage.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- little drawings ---------- */
+  var G = '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+  var ROBOT = '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><line x1="32" y1="7" x2="32" y2="14"/><circle cx="32" cy="5" r="2.6" fill="currentColor" stroke="none"/><rect x="11" y="14" width="42" height="32" rx="11"/><circle cx="24" cy="30" r="4.2" fill="currentColor" stroke="none"/><circle cx="40" cy="30" r="4.2" fill="currentColor" stroke="none"/><path d="M22 53h20M6 28v6M58 28v6"/></svg>';
+  var LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>';
+  var DB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>';
+  var DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h6"/></svg>';
+  var SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6"/></svg>';
+  var BARS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>';
+  var PERSON = '<svg viewBox="0 0 48 48" fill="#aab4c2"><circle cx="24" cy="16" r="9"/><path d="M7 44c1-10 8-15 17-15s16 5 17 15z"/></svg>';
+  var YT = '<svg viewBox="0 0 48 34" width="46"><rect width="48" height="34" rx="9" fill="#FF0000"/><path d="M19 10v14l12-7z" fill="#fff"/></svg>';
+
+  function site(k, label){
+    var inner = k === 'yt' ? YT : ({fl:'FL', yd:'YD', hp:'HP'})[k];
+    return '<div class="ico ' + k + '">' + inner + '</div><span>' + label + '</span>';
+  }
+  var SITES = [['fl','flamingoland.co.uk'],['yd','days-out-<br>yorkshire.co.uk'],['hp','hartburnprimary<br>.co.uk'],['yt','youtube.com']];
+  function tiles(n){ var s=''; for(var i=0;i<n;i++) s+='<span class="tile"></span>'; return s; }
+
+  function result(ic, bg, name, path, title, desc){
+    return '<div class="gr"><div class="src"><i style="background:' + bg + '">' + ic + '</i><div>' + name + '<small>' + path + '</small></div></div>' +
+      '<div class="t">' + title + '</div><div class="d">' + desc + '</div></div>';
+  }
+  var R_FL = result('FL','#ff5d95','Flamingo Land','flamingoland.co.uk › zoo','Meet the animals | Flamingo Land Zoo','Watch the flamingos at feeding time, then say hello to the rest of the animals in our zoo.');
+  var R_YD = result('YD','#2c9463','Days Out Yorkshire','days-out-yorkshire.co.uk › zoos','The best zoos to visit in Yorkshire','Our pick of zoos and wildlife parks for a family day out, with Flamingo Land at the top.');
+  var R_HP = result('HP','#3563c9','Hartburn Primary','hartburnprimary.co.uk › trips','Year 6 trip to Flamingo Land','Photos from our trip: the flamingos, the rides and a very muddy picnic.');
+  var R_YT = result('▶','#ff0000','YouTube','youtube.com › watch','Our day at Flamingo Land! (vlog)','Rides, animals and far too much ice cream.');
+
+  /* ---------- helpers ---------- */
+  function pos(el){
+    var r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+    return { x:(r.left - s.left) / scale + r.width / scale / 2, y:(r.top - s.top) / scale + r.height / scale / 2,
+             l:(r.left - s.left) / scale, t:(r.top - s.top) / scale, w:r.width / scale, h:r.height / scale };
+  }
+  function type(tl, el, text, at, dur){
+    var o = { n:0 };
+    tl.to(o, { n:text.length, duration:dur, ease:'none', onUpdate:function(){ el.textContent = text.slice(0, Math.round(o.n)); } }, at);
+  }
+  function drawLine(svg, x1, y1, x2, y2, color, dashed){
+    var l = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',x1); l.setAttribute('y1',y1); l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+    l.setAttribute('stroke', color); l.setAttribute('stroke-width', 2.5); l.setAttribute('stroke-linecap','round');
+    var len = Math.hypot(x2-x1, y2-y1);
+    if(dashed){ l.setAttribute('stroke-dasharray','6 8'); l.style.opacity = 0; }
+    else { l.setAttribute('stroke-dasharray', len); l.setAttribute('stroke-dashoffset', len); }
+    svg.appendChild(l);
+    return l;
+  }
+  function growLine(tl, l, at, dur){
+    if(l.getAttribute('stroke-dasharray') === '6 8') tl.to(l, { opacity:.8, duration:dur || .4 }, at);
+    else tl.to(l, { attr:{ 'stroke-dashoffset':0 }, duration:dur || .5, ease:'power2.inOut' }, at);
+  }
+  function fly(root, from, to, tl, at, dur){
+    var d = document.createElement('div'); d.className = 'fly'; d.style.left = from.x + 'px'; d.style.top = from.y + 'px'; d.style.opacity = 0;
+    root.appendChild(d);
+    tl.set(d, { opacity:1 }, at);
+    tl.to(d, { left:to.x, top:to.y, duration:dur || .7, ease:'power2.inOut' }, at);
+    tl.to(d, { opacity:0, duration:.15 }, '>');
+    return d;
+  }
+
+  /* ---------- the beats ---------- */
+  var BEATS = [
+
+    /* 0 · the hook */
+    { html:
+        '<div class="abs sk" id="t" style="left:0;right:0;top:40px;text-align:center;font-size:84px">How does Google find it so fast?</div>' +
+        '<div class="abs gbar" style="left:330px;top:200px;width:940px">' + G + '<span id="q"></span><span class="caret"></span></div>' +
+        '<div class="abs gres" id="res" style="left:330px;top:296px;width:940px">' + R_FL + R_YD + R_HP + '</div>' +
+        '<div class="cap" id="c">Out of <b>billions</b> of pages, it picked these in less than half a second.</div>',
+      play:function(r, tl){
+        tl.set(['#t','#res','#c'].map(function(s){ return r.querySelector(s); }), { opacity:0 });
+        type(tl, r.querySelector('#q'), 'flamingo land zoo', .4, 1.3);
+        tl.fromTo(r.querySelectorAll('.gr'), { opacity:0, y:14 }, { opacity:1, y:0, duration:.25, stagger:.07 }, '+=.35');
+        tl.to(r.querySelector('#res'), { opacity:1, duration:.2 }, '<');
+        tl.fromTo(r.querySelector('#t'), { opacity:0, y:-20 }, { opacity:1, y:0, duration:.6, ease:'back.out(1.6)' }, '+=.6');
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.6 }, '+=.5');
+      } },
+
+    /* 1 · billions */
+    { html:
+        '<div class="abs" id="grid" style="left:100px;top:40px;width:1400px;height:620px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;overflow:hidden"></div>' +
+        '<div class="abs big" id="bw" style="left:360px;right:360px;top:250px;text-align:center;font-size:150px;line-height:1.15;background:rgba(8,10,15,.86);border-radius:30px;box-shadow:0 0 60px 30px rgba(8,10,15,.86)">BILLIONS</div>' +
+        '<div class="cap" id="c" style="bottom:40px">Far too many pages to look through <b>after</b> you press search.</div>',
+      play:function(r, tl){
+        var g = r.querySelector('#grid'), s = '';
+        for(var i=0;i<29*17;i++) s += '<span class="tile" style="opacity:0"></span>';
+        g.innerHTML = s;
+        tl.set([r.querySelector('#bw'), r.querySelector('#c')], { opacity:0 });
+        tl.to(g.children, { opacity:1, duration:.2, stagger:{ each:.004, from:'random' } }, .3);
+        tl.fromTo(r.querySelector('#bw'), { opacity:0, scale:.6 }, { opacity:1, scale:1, duration:.7, ease:'back.out(1.7)' }, '-=.6');
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 }, '+=.3');
+      } },
+
+    /* 2 · two jobs */
+    { html:
+        '<svg class="layer" id="svg"></svg>' +
+        '<div class="panel" id="off" style="left:310px;top:20px;width:980px;height:230px"><div class="corner">Before you search</div>' +
+          '<div class="ph robot">' + ROBOT + '<span style="color:var(--tx)">Job 1: Crawl and index the web</span></div>' +
+          '<p class="body">A robot visits web pages and writes down what is on them. All day, every day.</p></div>' +
+        '<div class="abs chip" id="ix" style="left:720px;top:282px">' + DB.replace('<svg','<svg width="26" height="26"') + ' INDEX</div>' +
+        '<div class="panel pu" id="on" style="left:310px;top:360px;width:980px;height:230px"><div class="corner">When you search</div>' +
+          '<div class="ph" style="color:var(--pu)">' + SEARCH + '<span style="color:var(--tx)">Job 2: Find and rank results</span></div>' +
+          '<p class="body">Looks up your words and puts the best pages first. In a split second.</p></div>' +
+        ['flamingo','rollercoaster','zoo','tickets','giraffe','yorkshire'].map(function(w, i){
+          return '<div class="user" style="left:' + (330 + i*160) + 'px;top:630px">' + PERSON + '<span class="chip pu" style="font-size:18px;padding:5px 12px">' + w + '</span></div>';
+        }).join('') +
+        '<div class="cap" id="c">Google has two jobs. The first one happens <b>before</b> you even search.</div>',
+      play:function(r, tl){
+        var svg = r.querySelector('#svg');
+        var a = drawLine(svg, 800, 250, 800, 282, '#45cfe0'), b = drawLine(svg, 800, 334, 800, 360, '#e7b24a');
+        var us = [].slice.call(r.querySelectorAll('.user')).map(function(u, i){ return drawLine(svg, 405 + i*160, 630, 405 + i*160, 590, '#9a86ff', true); });
+        tl.fromTo(r.querySelector('#off'), { opacity:0, y:-24 }, { opacity:1, y:0, duration:.6, ease:'power3.out' }, .2);
+        growLine(tl, a, '+=.1', .3);
+        tl.fromTo(r.querySelector('#ix'), { opacity:0, scale:.5 }, { opacity:1, scale:1, duration:.4, ease:'back.out(2)' });
+        growLine(tl, b, '>', .3);
+        tl.fromTo(r.querySelector('#on'), { opacity:0, y:24 }, { opacity:1, y:0, duration:.6, ease:'power3.out' });
+        tl.fromTo(r.querySelectorAll('.user'), { opacity:0, y:20 }, { opacity:1, y:0, duration:.35, stagger:.08 });
+        us.forEach(function(l){ growLine(tl, l, '-=.2', .3); });
+        tl.fromTo(r.querySelector('#c'), { opacity:0 }, { opacity:1, duration:.5 }, '+=.2');
+      } },
+
+    /* 3 · the to-visit list */
+    { html:
+        SITES.map(function(s, i){ return '<div class="site" style="left:' + (345 + i*240) + 'px;top:10px">' + site(s[0], s[1]) + '</div>'; }).join('') +
+        '<div class="panel" id="p" style="left:410px;top:200px;width:780px;height:510px"><div class="corner">Before you search</div>' +
+          '<div class="ph" style="color:var(--cy)">' + LINK + '<span style="color:var(--tx)">To-visit list</span></div>' +
+          '<div id="list" style="position:absolute;left:34px;right:34px;top:86px;display:flex;flex-direction:column;gap:12px"></div></div>' +
+        '<div class="cap" id="c">Every link it finds goes onto a list of pages to visit.</div>',
+      play:function(r, tl){
+        var list = r.querySelector('#list'), sites = r.querySelectorAll('.site .ico');
+        var ITEMS = [['flamingoland.co.uk',1],['flamingoland.co.uk/zoo',2],['flamingoland.co.uk/rides',3],['flamingoland.co.uk/tickets',0],['flamingoland.co.uk/staff-only',0],['days-out-yorkshire.co.uk/zoos',2]];
+        tl.fromTo(r.querySelectorAll('.site'), { opacity:0, y:-16 }, { opacity:1, y:0, duration:.4, stagger:.1 }, .2);
+        tl.fromTo(r.querySelector('#p'), { opacity:0, scale:.96 }, { opacity:1, scale:1, duration:.5 }, '-=.1');
+        ITEMS.forEach(function(it){
+          var u = document.createElement('div'); u.className = 'url'; u.textContent = it[0]; u.style.opacity = 0;
+          list.appendChild(u);
+        });
+        tl.add(function(){}); // measure after layout
+        var at = tl.duration() + .2;
+        ITEMS.forEach(function(it, i){
+          var u = list.children[i];
+          var from = pos(sites[it[1]]), to = pos(u);
+          tl.to(sites[it[1]], { scale:1.12, duration:.15, yoyo:true, repeat:1 }, at);
+          fly(r, { x:from.x, y:from.y + 40 }, { x:to.l + 24, y:to.y }, tl, at, .6);
+          tl.fromTo(u, { opacity:0, x:-14 }, { opacity:1, x:0, duration:.3 }, at + .55);
+          at += .55;
+        });
+        tl.fromTo(r.querySelector('#c'), { opacity:0 }, { opacity:1, duration:.5 }, at + .3);
+      } },
+
+    /* 4 · the crawler and the no-robots sign */
+    { html:
+        '<svg class="layer" id="svg"></svg>' +
+        '<div class="panel" id="p" style="left:120px;top:20px;width:620px;height:690px"><div class="corner">Before you search</div>' +
+          '<div class="ph" style="color:var(--cy)">' + ROBOT + '<span style="color:var(--tx)">The crawler</span></div>' +
+          '<div class="robot" id="bot" style="position:absolute;left:250px;top:92px;width:120px">' + ROBOT + '</div>' +
+          '<div class="mono" style="position:absolute;left:0;right:0;top:220px;text-align:center;color:var(--mu);font-size:19px">Google calls it Googlebot</div>' +
+          '<div id="list" style="position:absolute;left:34px;right:34px;top:280px;display:flex;flex-direction:column;gap:12px">' +
+            ['/rides','/zoo','/tickets','/staff-only'].map(function(p){ return '<div class="url">flamingoland.co.uk' + p + '<span class="mark"></span></div>'; }).join('') +
+          '</div></div>' +
+        '<div class="site" id="st" style="left:1070px;top:10px">' + site('fl','flamingoland.co.uk') + '</div>' +
+        '<div class="sign" id="sign" style="left:880px;top:190px;width:580px">' +
+          '<div class="sh">flamingoland.co.uk/robots.txt</div>' +
+          '<div class="ok"><h4>Robots welcome</h4><div class="paths"><span>/rides</span><span>/zoo</span><span>/tickets</span></div></div>' +
+          '<div class="no"><h4>No robots allowed</h4><div class="paths"><span>/staff-only</span></div></div></div>' +
+        '<div class="cap" id="c">Before it goes in, it checks the website&rsquo;s sign. Some pages say <b>no robots allowed</b>.</div>',
+      play:function(r, tl){
+        var svg = r.querySelector('#svg'), rows = r.querySelectorAll('#list .url');
+        tl.fromTo(r.querySelector('#p'), { opacity:0, x:-24 }, { opacity:1, x:0, duration:.5 }, .2);
+        tl.fromTo(rows, { opacity:0, x:-12 }, { opacity:1, x:0, duration:.3, stagger:.08 });
+        tl.fromTo(r.querySelector('#st'), { opacity:0, y:-16 }, { opacity:1, y:0, duration:.4 });
+        tl.add(function(){});
+        var at = tl.duration();
+        var bot = r.querySelector('#bot');
+        tl.to(bot, { x:560, y:40, scale:.6, duration:.8, ease:'power2.inOut' }, at + .2);
+        tl.fromTo(r.querySelector('#sign'), { opacity:0, y:24, rotate:-2 }, { opacity:1, y:0, rotate:0, duration:.55, ease:'back.out(1.6)' }, at + .8);
+        tl.to(bot, { x:0, y:0, scale:1, duration:.8, ease:'power2.inOut' }, at + 1.8);
+        [0,1,2].forEach(function(i){
+          tl.add(function(){ rows[i].classList.add('ok'); rows[i].querySelector('.mark').textContent = '✓'; }, at + 2.7 + i*.35);
+          tl.fromTo(rows[i], { scale:1.04 }, { scale:1, duration:.3 }, at + 2.7 + i*.35);
+        });
+        tl.add(function(){ rows[3].classList.add('bad'); rows[3].querySelector('.mark').textContent = '✕'; }, at + 3.9);
+        tl.fromTo(rows[3], { x:-8 }, { x:0, duration:.4, ease:'elastic.out(1,.3)' }, at + 3.9);
+        tl.fromTo(r.querySelector('#c'), { opacity:0 }, { opacity:1, duration:.5 }, at + 4.5);
+      } },
+
+    /* 5 · visit the page and read it */
+    { html:
+        '<div class="panel" id="bp" style="left:40px;top:20px;width:370px;height:300px"><div class="corner">Visiting</div>' +
+          '<div class="robot" style="width:92px;margin:48px auto 14px">' + ROBOT + '</div>' +
+          '<div class="url hl" style="margin:0 20px;font-size:18px;justify-content:center">flamingoland.co.uk/zoo</div></div>' +
+        '<div class="browser" id="br" style="left:450px;top:10px;width:720px;height:700px">' +
+          '<div class="bar"><i></i><i></i><i></i><div class="addr">flamingoland.co.uk/zoo</div></div>' +
+          '<div class="fl-head"><b>Flamingo Land</b><nav><span>Rides</span><span>Zoo</span><span>Tickets</span></nav></div>' +
+          '<div class="fl-body">' +
+            '<div class="fl-pic"><svg viewBox="0 0 640 150" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%"><g fill="#ff7aa8"><ellipse cx="200" cy="88" rx="46" ry="26"/><path d="M225 76c16-10 14-40 30-48 9-4 17 2 14 10l-8 4c-6-8-12 0-14 12-3 14-6 26-18 32z"/><rect x="190" y="108" width="5" height="46"/><rect x="206" y="108" width="5" height="46"/><ellipse cx="420" cy="96" rx="40" ry="22"/><path d="M398 84c-14-10-12-36-26-43-8-4-15 2-12 9l7 3c5-7 10 0 12 11 2 12 5 22 15 28z"/><rect x="412" y="112" width="5" height="40"/><rect x="426" y="112" width="5" height="40"/></g></svg></div>' +
+            '<h2><span class="w">Meet</span> <span class="w">the</span> <span class="w">animals</span></h2>' +
+            '<p><span class="w">Watch</span> <span class="w">the</span> <span class="w">flamingos</span> <span class="w">at</span> <span class="w">feeding</span> <span class="w">time,</span> <span class="w">then</span> <span class="w">say</span> <span class="w">hello</span> <span class="w">to</span> <span class="w">the</span> <span class="w">rest</span> <span class="w">of</span> <span class="w">the</span> <span class="w">animals</span> <span class="w">in</span> <span class="w">our</span> <span class="w">zoo.</span></p>' +
+            '<div class="fl-links"><a id="l1">Feeding times &rarr;</a><a id="l2">Group tickets &rarr;</a></div>' +
+          '</div><div class="scan" id="scan"></div></div>' +
+        '<div class="panel" id="lp" style="left:1210px;top:20px;width:360px;height:420px"><div class="corner">Found</div>' +
+          '<div class="ph" style="font-size:28px;color:var(--cy)">' + LINK + '<span style="color:var(--tx)">To-visit</span></div>' +
+          '<div id="list" style="position:absolute;left:18px;right:18px;top:78px;display:flex;flex-direction:column;gap:10px">' +
+            '<div class="url" style="font-size:16px;opacity:.55">…/rides</div><div class="url" style="font-size:16px;opacity:.55">…/tickets</div>' +
+            '<div class="url hl" id="n1" style="font-size:16px">…/zoo/feeding-times</div><div class="url hl" id="n2" style="font-size:16px">…/tickets/groups</div>' +
+          '</div></div>' +
+        '<div class="cap" id="c" style="left:40px;right:40px">It reads every word. New links go back on the list, so it <b>never finishes</b>.</div>',
+      play:function(r, tl){
+        var words = r.querySelectorAll('.w'), br = r.querySelector('#br'), scan = r.querySelector('#scan');
+        tl.set([r.querySelector('#n1'), r.querySelector('#n2'), r.querySelector('#c')], { opacity:0 });
+        tl.fromTo(r.querySelector('#bp'), { opacity:0, x:-20 }, { opacity:1, x:0, duration:.45 }, .15);
+        tl.fromTo(br, { opacity:0, y:30, scale:.97 }, { opacity:1, y:0, scale:1, duration:.6, ease:'power3.out' }, '-=.1');
+        tl.fromTo(r.querySelector('#lp'), { opacity:0, x:20 }, { opacity:1, x:0, duration:.45 }, '-=.2');
+        tl.set(scan, { opacity:1, top:130 }, '+=.3');
+        tl.to(scan, { top:690, duration:2.6, ease:'none' });
+        var start = tl.duration() - 2.6;
+        [].forEach.call(words, function(w, i){
+          var key = /flamingos|feeding|animals|zoo/.test(w.textContent);
+          var t = start + (i < 3 ? .9 : 1.25 + (i - 3) * .045);
+          if(key) tl.add(function(){ w.classList.add('on'); }, t);
+        });
+        tl.to(scan, { opacity:0, duration:.2 });
+        ['#l1','#l2'].forEach(function(id, i){
+          var a = r.querySelector(id), n = r.querySelector(i ? '#n2' : '#n1');
+          tl.add(function(){}, '+=.1');
+          var at = tl.duration();
+          tl.to(a, { boxShadow:'0 0 0 4px #45cfe0', duration:.2, yoyo:true, repeat:1 }, at);
+          tl.add(function(){
+            var f = pos(a), to = pos(n), inner = gsap.timeline();
+            var d = document.createElement('div'); d.className = 'fly'; d.style.left = f.x + 'px'; d.style.top = f.y + 'px'; r.appendChild(d);
+            inner.to(d, { left:to.x, top:to.y, duration:.7, ease:'power2.inOut' }).to(d, { opacity:0, duration:.15 });
+          }, at + .1);
+          tl.to(n, { opacity:1, duration:.3 }, at + .8);
+        });
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 }, '+=.3');
+      } },
+
+    /* 6 · the indexer writes down the words */
+    { html:
+        '<div class="panel" id="p" style="left:170px;top:20px;width:1260px;height:470px"><div class="corner">Before you search</div>' +
+          '<div class="ph" style="color:var(--cy)">' + DOC + '<span style="color:var(--tx)">Indexer</span></div>' +
+          '<div class="browser" style="left:40px;top:92px;width:330px;height:330px;transform-origin:top left">' +
+            '<div class="bar" style="height:34px"><i></i><i></i><i></i></div>' +
+            '<div class="fl-head" style="padding:9px 14px"><b style="font-size:17px">Flamingo Land</b></div>' +
+            '<div class="fl-body" style="padding:14px 16px"><div class="fl-pic" style="height:70px;margin-bottom:10px"></div><h2 style="font-size:22px;margin-bottom:6px">Meet the animals</h2><p style="font-size:14px;margin:0">Watch the flamingos at feeding time, then say hello to the rest of the animals in our zoo.</p></div></div>' +
+          '<div style="position:absolute;left:420px;top:104px;right:40px">' +
+            '<div class="mono" style="color:var(--mu);font-size:20px;margin-bottom:10px">PAGE</div><div class="url hl" id="pg" style="display:inline-flex">flamingoland.co.uk/zoo</div>' +
+            '<div class="mono" style="color:var(--mu);font-size:20px;margin:22px 0 10px">TITLE</div><div class="chip cy" id="ti">Meet the animals</div>' +
+            '<div class="mono" style="color:var(--mu);font-size:20px;margin:22px 0 10px">IMPORTANT WORDS</div>' +
+            '<div id="ws" style="display:flex;gap:12px;flex-wrap:wrap">' + ['flamingo','zoo','animals','feeding','tickets'].map(function(w){ return '<span class="chip">' + w + '</span>'; }).join('') + '</div>' +
+          '</div></div>' +
+        '<div class="panel am" id="ix" style="left:170px;top:530px;width:1260px;height:120px">' +
+          '<div style="position:absolute;left:26px;top:0;bottom:0;display:flex;align-items:center;gap:12px;font-family:var(--sk);font-size:32px;color:var(--am);letter-spacing:.05em">' + DB.replace('<svg','<svg width="32" height="32"') + ' INDEX</div>' +
+          '<div id="slots" style="position:absolute;left:230px;right:26px;top:0;bottom:0;display:flex;align-items:center;gap:12px">' + ['flamingo','zoo','animals','feeding','tickets'].map(function(w){ return '<span class="chip" style="opacity:0">' + w + '</span>'; }).join('') + '</div></div>' +
+        '<div class="cap" id="c">It writes down the important words, and <b>which page</b> they came from.</div>',
+      play:function(r, tl){
+        var chips = r.querySelectorAll('#ws .chip'), slots = r.querySelectorAll('#slots .chip');
+        tl.set([r.querySelector('#c')], { opacity:0 });
+        tl.fromTo(r.querySelector('#p'), { opacity:0, y:-20 }, { opacity:1, y:0, duration:.5 }, .15);
+        tl.fromTo(r.querySelector('#ix'), { opacity:0, y:20 }, { opacity:1, y:0, duration:.5 }, '-=.2');
+        tl.fromTo(r.querySelector('#pg'), { opacity:0 }, { opacity:1, duration:.3 });
+        tl.fromTo(r.querySelector('#ti'), { opacity:0, scale:.7 }, { opacity:1, scale:1, duration:.35, ease:'back.out(2)' }, '+=.2');
+        tl.fromTo(chips, { opacity:0, scale:.6 }, { opacity:1, scale:1, duration:.3, stagger:.14, ease:'back.out(2.2)' }, '+=.2');
+        tl.add(function(){}, '+=.5');
+        var at = tl.duration();
+        [].forEach.call(chips, function(c, i){
+          tl.add(function(){
+            var a = pos(c), b = pos(slots[i]);
+            gsap.to(c, { x:b.l - a.l, y:b.t - a.t, duration:.7, ease:'power2.inOut', onComplete:function(){ slots[i].style.opacity = 1; c.style.visibility = 'hidden'; } });
+          }, at + i*.18);
+        });
+        tl.to({}, { duration:1.6 }, at);
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 });
+      } },
+
+    /* 7 · the search index */
+    { html:
+        '<div class="panel am" id="p" style="left:230px;top:10px;width:1140px;height:700px"><div class="corner">Before you search</div>' +
+          '<div class="ph" style="color:var(--am)">' + DB + '<span style="color:var(--tx)">Search index</span></div>' +
+          [['flamingo',[0,5,9]],['zoo',[0,3,8,12]],['rollercoaster',[]],['tickets',[0,7]],['yorkshire',[4]]].map(function(row, i){
+            var t = ''; for(var k=0;k<15;k++) t += '<span class="tile' + (row[1].indexOf(k) === 0 && k === 0 && row[1][0] === 0 ? ' hot' : '') + '"></span>';
+            return '<div class="irow" style="top:' + (96 + i*82) + 'px"><span class="w">' + row[0] + '</span><span class="ts">' + t + '</span></div>';
+          }).join('') +
+          '<div class="mono" id="more" style="position:absolute;left:0;right:0;top:520px;text-align:center;font-size:22px;color:var(--mu)">&hellip; and millions more words</div>' +
+          '<div id="key" style="position:absolute;left:0;right:0;top:590px;display:flex;justify-content:center;align-items:center;gap:14px;font-size:22px;color:#c3ccd8"><span class="tile hot"></span> = the zoo page the crawler just read</div>' +
+        '</div>' +
+        '<div class="cap" id="c">Each word, and every page that uses it. Like the <b>index</b> at the back of a book.</div>',
+      play:function(r, tl){
+        var rows = r.querySelectorAll('.irow');
+        tl.set([r.querySelector('#more'), r.querySelector('#key'), r.querySelector('#c')], { opacity:0 });
+        tl.fromTo(r.querySelector('#p'), { opacity:0, scale:.97 }, { opacity:1, scale:1, duration:.5 }, .15);
+        tl.fromTo(rows, { opacity:0, x:-20 }, { opacity:1, x:0, duration:.35, stagger:.12 });
+        [].forEach.call(rows, function(row, i){
+          var ts = row.querySelectorAll('.tile:not(.hot)'), hot = row.querySelector('.tile.hot');
+          tl.fromTo(ts, { opacity:0, scale:.4 }, { opacity:1, scale:1, duration:.2, stagger:.03 }, 1 + i*.2);
+          if(hot) tl.set(hot, { opacity:0 }, 0);
+        });
+        tl.to(r.querySelector('#more'), { opacity:1, duration:.4 }, '+=.2');
+        var hots = r.querySelectorAll('.tile.hot');
+        tl.fromTo(hots, { opacity:0, y:-40, scale:1.6 }, { opacity:1, y:0, scale:1, duration:.45, stagger:.25, ease:'back.out(2)' }, '+=.3');
+        tl.to(r.querySelector('#key'), { opacity:1, duration:.4 }, '-=.1');
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 }, '+=.3');
+      } },
+
+    /* 8 · your search */
+    { html:
+        '<svg class="layer" id="svg"></svg>' +
+        '<div class="panel am" style="left:230px;top:10px;width:1140px;height:62px;display:flex;align-items:center;gap:26px;padding:0 24px">' +
+          '<span style="display:flex;align-items:center;gap:10px;font-family:var(--sk);font-size:26px;color:var(--am)">' + DB.replace('<svg','<svg width="24" height="24"') + ' SEARCH INDEX</span>' +
+          '<span class="mono" style="color:#b58c3f;font-size:20px;display:flex;gap:22px"><span>flamingo</span><span>zoo</span><span>rollercoaster</span><span>tickets</span><span>yorkshire</span><span>&hellip;</span></span></div>' +
+        '<div class="panel pu" id="p" style="left:230px;top:96px;width:1140px;height:614px"><div class="corner">When you search</div>' +
+          '<div class="ph" style="color:var(--pu)">' + SEARCH + '<span style="color:var(--tx)">Your search</span></div>' +
+          '<div class="gbar" style="position:absolute;left:220px;top:88px;width:700px">' + G + '<span id="q"></span><span class="caret"></span></div>' +
+          '<div id="c1" class="chip pu" style="position:absolute;left:340px;top:190px">flamingo</div>' +
+          '<div id="c2" class="chip pu" style="position:absolute;left:660px;top:190px">zoo</div>' +
+          '<div class="irow" id="r1" style="top:300px;border-color:rgba(231,178,74,.4)"><span class="w">flamingo</span><span class="ts"><span class="tile hot" id="h1"></span>' + tiles(13) + '</span></div>' +
+          '<div class="irow" id="r2" style="top:386px;border-color:rgba(231,178,74,.4)"><span class="w">zoo</span><span class="ts"><span class="tile hot" id="h2"></span>' + tiles(13) + '</span></div>' +
+          '<div id="match" style="position:absolute;left:0;right:0;top:486px;text-align:center"><span class="chip cy" style="font-size:26px">On both lists: flamingoland.co.uk/zoo</span></div>' +
+        '</div>' +
+        '<div class="cap" id="c">It doesn&rsquo;t search the web. It looks up your words in the <b>index</b>.</div>',
+      play:function(r, tl){
+        tl.set(['#c1','#c2','#r1','#r2','#match','#c'].map(function(s){ return r.querySelector(s); }), { opacity:0 });
+        tl.fromTo(r.querySelector('#p'), { opacity:0, y:20 }, { opacity:1, y:0, duration:.5 }, .15);
+        type(tl, r.querySelector('#q'), 'flamingo zoo', '+=.2', .9);
+        tl.fromTo(r.querySelector('#c1'), { opacity:0, x:120, y:-80 }, { opacity:1, x:0, y:0, duration:.5, ease:'power2.out' }, '+=.3');
+        tl.fromTo(r.querySelector('#c2'), { opacity:0, x:-40, y:-80 }, { opacity:1, x:0, y:0, duration:.5, ease:'power2.out' }, '<.1');
+        tl.fromTo(r.querySelector('#r1'), { opacity:0, x:-20 }, { opacity:1, x:0, duration:.4 }, '+=.3');
+        tl.add(function(){ r.querySelector('#r1').classList.add('lit'); }, '<.2');
+        tl.fromTo(r.querySelector('#r2'), { opacity:0, x:-20 }, { opacity:1, x:0, duration:.4 }, '+=.2');
+        tl.add(function(){ r.querySelector('#r2').classList.add('lit'); }, '<.2');
+        tl.fromTo([r.querySelector('#h1'), r.querySelector('#h2')], { scale:1 }, { scale:1.35, duration:.25, yoyo:true, repeat:3 }, '+=.3');
+        tl.fromTo(r.querySelector('#match'), { opacity:0, y:12 }, { opacity:1, y:0, duration:.4 });
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 }, '+=.3');
+      } },
+
+    /* 9 · ranking */
+    { html:
+        '<div class="panel pu" id="p" style="left:230px;top:10px;width:1140px;height:700px"><div class="corner">When you search</div>' +
+          '<div class="ph" style="color:var(--pu)">' + BARS + '<span style="color:var(--tx)">Ranking</span></div>' +
+          '<div id="rs" style="position:absolute;left:40px;right:40px;top:88px;height:440px"></div>' +
+          '<div id="pl" style="position:absolute;left:0;right:0;top:560px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;padding:0 30px">' +
+            '<span class="pill">Matches your words</span><span class="pill">Lots of sites link to it</span><span class="pill">Up to date</span><span class="pill">Useful to people</span></div></div>' +
+        '<div class="cap" id="c">Then it puts them in order, so the <b>most useful</b> pages come first.</div>',
+      play:function(r, tl){
+        var rs = r.querySelector('#rs');
+        var items = [R_YT, R_HP, R_YD, R_FL].map(function(h, i){
+          var d = document.createElement('div');
+          d.className = 'abs';
+          d.style.cssText = 'left:0;right:0;top:' + (i*108) + 'px;background:#15181e;border:1px solid #2a2f38;border-radius:14px;padding:12px 22px;';
+          d.innerHTML = h; d.querySelector('.d').remove(); rs.appendChild(d); return d;
+        });
+        var pills = r.querySelectorAll('.pill');
+        tl.set(r.querySelector('#c'), { opacity:0 });
+        tl.fromTo(r.querySelector('#p'), { opacity:0, y:20 }, { opacity:1, y:0, duration:.5 }, .15);
+        tl.fromTo(items, { opacity:0, x:-16 }, { opacity:1, x:0, duration:.3, stagger:.1 });
+        // yt, hp, yd, fl start at 0..3 · after each rule, positions update
+        var steps = [ [1,3,2,0], [2,3,1,0], [3,2,1,0], [3,2,1,0] ];
+        steps.forEach(function(st, k){
+          tl.add(function(){ pills[k].classList.add('on'); }, '+=.55');
+          st.forEach(function(p, i){ tl.to(items[i], { top:p*108, duration:.6, ease:'power2.inOut' }, '<.05'); });
+        });
+        tl.to(items[3], { borderColor:'#9a86ff', boxShadow:'0 0 30px -6px rgba(154,134,255,.8)', duration:.4 }, '+=.2');
+        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 }, '+=.2');
+      } },
+
+    /* 10 · the big idea */
+    { html:
+        '<div class="abs gbar" style="left:90px;top:30px;width:760px">' + G + '<span>flamingo zoo</span></div>' +
+        '<div class="abs gres" id="res" style="left:90px;top:120px;width:760px">' + R_FL + R_YD + R_HP + '</div>' +
+        '<div class="abs" style="left:920px;top:110px;width:620px;display:flex;flex-direction:column;gap:40px">' +
+          '<div class="big" id="b1" style="font-size:56px">Google doesn&rsquo;t search the whole web when you search.</div>' +
+          '<div class="big" id="b2" style="font-size:68px;transform-origin:left center">It searches its <em>index</em>.</div>' +
+          '<div id="b3" style="font-size:27px;color:#c3ccd8;line-height:1.4">The crawler built that index earlier, by following links from page to page.</div></div>',
+      play:function(r, tl){
+        tl.fromTo(r.querySelectorAll('.gr'), { opacity:0, y:12 }, { opacity:1, y:0, duration:.3, stagger:.08 }, .2);
+        tl.fromTo(r.querySelector('#b1'), { opacity:0, x:30 }, { opacity:1, x:0, duration:.6 }, '+=.3');
+        tl.fromTo(r.querySelector('#b2'), { opacity:0, scale:.8 }, { opacity:1, scale:1, duration:.6, ease:'back.out(1.8)' }, '+=.5');
+        tl.fromTo(r.querySelector('#b3'), { opacity:0 }, { opacity:1, duration:.6 }, '+=.4');
+      } }
+  ];
+
+  /* ---------- deck ---------- */
+  var at = 0, tl = null;
+  var dots = document.getElementById('dots');
+  BEATS.forEach(function(_, i){
+    var d = document.createElement('button'); d.className = 'dot'; d.type = 'button';
+    d.setAttribute('aria-label', 'Go to step ' + (i + 1));
+    d.addEventListener('click', function(e){ e.stopPropagation(); go(i); });
+    dots.appendChild(d);
+  });
+
+  function go(n){
+    at = Math.max(0, Math.min(BEATS.length - 1, n));
+    if(tl) tl.kill();
+    host.innerHTML = '';
+    var r = document.createElement('div'); r.className = 'scene';
+    r.innerHTML = BEATS[at].html;
+    host.appendChild(r);
+    tl = gsap.timeline();
+    BEATS[at].play(r, tl);
+    if(reduce) tl.progress(1, false);
+    [].forEach.call(dots.children, function(d, i){ d.classList.toggle('on', i === at); });
+    document.getElementById('back').disabled = at === 0;
+    document.getElementById('next').disabled = at === BEATS.length - 1;
+  }
+  function next(){
+    if(tl && tl.progress() < 1){ tl.progress(1, false); return; }  // first press finishes the animation
+    if(at < BEATS.length - 1) go(at + 1);
+  }
+  function back(){ go(at - 1); }
+
+  document.getElementById('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  document.getElementById('back').addEventListener('click', function(e){ e.stopPropagation(); back(); });
+  host.addEventListener('click', next);
+  document.addEventListener('keydown', function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+  });
+
+  function start(){ go(0); }
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+})();
+</script>
+</body>
+</html>
