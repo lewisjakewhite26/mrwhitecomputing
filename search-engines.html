@@ -172,13 +172,16 @@
 
   /* ---- app grid + cinematic reveal ---- */
   .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:560px;margin:18px auto 0}
-  .app-card{position:relative;background:var(--paper);border:2px solid var(--paper-edge);border-radius:20px;padding:26px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .2s var(--ease),border-color .3s,box-shadow .2s;min-height:120px}
-  .app-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
-  .app-card .ic{font-size:2.4rem;line-height:1}
+  .app-card{position:relative;background:var(--paper);border:2px solid var(--paper-edge);border-radius:20px;padding:26px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:var(--shadow-sm);transition:border-color .3s,box-shadow .3s,background .3s;min-height:120px}
+  .app-card .ic{font-size:2.4rem;line-height:1;transition:filter .3s}
   .app-card b{font-size:1.02rem}
-  .app-card.done{border-color:var(--proc);background:var(--ground-2)}
+  .app-card.pending .ic{filter:grayscale(1) opacity(.55)}
+  .app-card.done{border-color:var(--proc);background:var(--ground-2);box-shadow:var(--shadow-md)}
   .app-card.done::after{content:'\2713';position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:var(--proc);color:#fff;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .mm-hint{color:var(--soft);font-size:.85rem;font-weight:700;margin-top:4px}
+  .mm-hint{color:var(--soft);font-size:.85rem;font-weight:700;margin-top:4px;max-width:460px}
+  .reveal-trigger{margin-top:22px;background:var(--proc);color:#fff;border:none;border-radius:999px;font-weight:800;font-size:.95rem;padding:14px 30px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .2s var(--ease),opacity .3s,box-shadow .2s}
+  .reveal-trigger:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .reveal-trigger.hidden{opacity:0;pointer-events:none;height:0;margin-top:0;overflow:hidden;padding:0}
   .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:18px}
   .mm-synth.on{opacity:1}
 
@@ -401,13 +404,14 @@
 <div class="screen padded" id="s7">
   <p class="kick">One more thing &middot; 5 min</p>
   <h1>What else can you search on?</h1>
-  <p class="mm-hint">Tap each one &mdash; what do you think it actually searches?</p>
-  <div class="app-grid">
-    <button type="button" class="app-card" data-node="amazon"><span class="ic">&#128230;</span><b>Amazon</b></button>
-    <button type="button" class="app-card" data-node="wikipedia"><span class="ic">&#128214;</span><b>Wikipedia</b></button>
-    <button type="button" class="app-card" data-node="youtube"><span class="ic">&#9654;&#65039;</span><b>YouTube</b></button>
-    <button type="button" class="app-card" data-node="netflix"><span class="ic">&#127916;</span><b>Netflix</b></button>
+  <p class="mm-hint">Each of these has a search box too. What do you think each one actually searches?</p>
+  <div class="app-grid" id="appGrid">
+    <div class="app-card pending" data-node="amazon"><span class="ic">&#128230;</span><b>Amazon</b></div>
+    <div class="app-card pending" data-node="wikipedia"><span class="ic">&#128214;</span><b>Wikipedia</b></div>
+    <div class="app-card pending" data-node="youtube"><span class="ic">&#9654;&#65039;</span><b>YouTube</b></div>
+    <div class="app-card pending" data-node="netflix"><span class="ic">&#127916;</span><b>Netflix</b></div>
   </div>
+  <button type="button" class="reveal-trigger" id="revealTrigger">Reveal the answers &#9654;</button>
   <p class="lead mm-synth" id="mmSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
 </div>
 
@@ -606,51 +610,51 @@
     card.addEventListener('click', function(){ card.classList.toggle('open'); });
   });
 
-  /* ---------- app grid: cinematic reveal ---------- */
+  /* ---------- app grid: teacher-paced cinematic reveal ---------- */
   var APP_DATA = {
     amazon:    { ic:'\u{1F4E6}', name:'Amazon',    ans:'Searches products for sale — not the whole internet.' },
     wikipedia: { ic:'\u{1F4D6}', name:'Wikipedia', ans:'Searches its own encyclopaedia articles only.' },
     youtube:   { ic:'▶️', name:'YouTube',  ans:'Searches videos on YouTube only.' },
     netflix:   { ic:'\u{1F3AC}', name:'Netflix',    ans:'Searches shows and films in its own library.' }
   };
-  var mmRevealed = {};
+  var revealSequence = ['amazon', 'wikipedia', 'youtube', 'netflix'];
+  var seqIndex = -1;
   var revealOverlay = document.getElementById('revealOverlay');
   var revealIcon = document.getElementById('revealIcon');
   var revealName = document.getElementById('revealName');
   var revealAnswer = document.getElementById('revealAnswer');
-  var pendingSynth = false;
+  var revealTrigger = document.getElementById('revealTrigger');
 
-  function openReveal(key, isSynth){
+  function showCard(key){
     var d = APP_DATA[key];
     revealIcon.textContent = d.ic;
     revealName.textContent = d.name;
     revealAnswer.textContent = d.ans;
-    revealOverlay.classList.add('on');
     revealOverlay.classList.remove('show');
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){ revealOverlay.classList.add('show'); });
     });
-    pendingSynth = !!isSynth;
+    var gridCard = document.querySelector('.app-card[data-node="' + key + '"]');
+    if(gridCard){ gridCard.classList.remove('pending'); gridCard.classList.add('done'); }
   }
-  function closeReveal(){
-    revealOverlay.classList.remove('on','show');
-    if(pendingSynth){
-      pendingSynth = false;
-      setTimeout(function(){ document.getElementById('mmSynth').classList.add('on'); }, 200);
-    }
-  }
-  revealOverlay.addEventListener('click', closeReveal);
 
-  [].forEach.call(document.querySelectorAll('.app-card'), function(card){
-    card.addEventListener('click', function(){
-      var key = card.getAttribute('data-node');
-      card.classList.add('done');
-      var allDone = false;
-      if(!mmRevealed[key]){
-        mmRevealed[key] = true;
-        allDone = Object.keys(mmRevealed).length === 4;
-      }
-      openReveal(key, allDone);
-    });
+  function advance(){
+    seqIndex++;
+    if(seqIndex < revealSequence.length){
+      showCard(revealSequence[seqIndex]);
+      return;
+    }
+    /* sequence finished: close overlay, show synthesis line */
+    revealOverlay.classList.remove('on', 'show');
+    setTimeout(function(){ document.getElementById('mmSynth').classList.add('on'); }, 250);
+  }
+
+  revealTrigger.addEventListener('click', function(){
+    revealTrigger.classList.add('hidden');
+    seqIndex = -1;
+    revealOverlay.classList.add('on');
+    advance();
   });
+
+  revealOverlay.addEventListener('click', advance);
 </script>
