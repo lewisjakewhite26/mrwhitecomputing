@@ -170,29 +170,29 @@
   .refine-card code{background:var(--ground-2);border-radius:6px;padding:2px 7px;font-size:1.02rem}
   .refine-card p{margin:8px 0 0;color:var(--muted);font-size:.92rem;line-height:1.4}
 
-  /* ---- mind map ---- */
-  .mindmap{position:relative;width:640px;max-width:94vw;height:460px;max-height:56vh;margin:6px auto 0;flex:none}
-  .mm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-  .mm-svg line{stroke:var(--paper-edge);stroke-width:3;stroke-dasharray:6 7;transition:stroke .3s}
-  .mm-svg line.lit{stroke:var(--proc);stroke-dasharray:none}
-  .mm-center{position:absolute;left:50%;top:50%;width:140px;height:140px;transform:translate(-50%,-50%);border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;line-height:1.25;text-align:center;padding:14px;box-shadow:var(--shadow-md)}
-  .mm-node{position:absolute;width:110px;height:110px;border-radius:50%;background:var(--paper);border:2px solid var(--paper-edge);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s,transform .25s var(--ease);padding:8px;text-align:center}
-  .mm-node:not(.revealed):hover{transform:translate(-50%,-50%) scale(1.06)}
-  .mm-node .ic{font-size:1.9rem;transition:font-size .3s,transform .5s var(--ease)}
-  .mm-node b{display:block;font-size:.92rem;margin-top:3px}
-  .mm-node span.ans{display:block;height:0;overflow:hidden;font-size:.7rem;color:#fff;font-weight:500;line-height:1.25;margin-top:0;opacity:0;transition:opacity .3s .1s}
-  .mm-node.n-top{left:50%;top:90px;transform:translate(-50%,-50%)}
-  .mm-node.n-right{left:490px;top:50%;transform:translate(-50%,-50%)}
-  .mm-node.n-bottom{left:50%;top:370px;transform:translate(-50%,-50%)}
-  .mm-node.n-left{left:150px;top:50%;transform:translate(-50%,-50%)}
-  .mm-node.revealed{width:150px;height:150px;background:var(--proc);border-color:var(--proc);animation:mmPop .4s var(--ease)}
-  .mm-node.revealed .ic{font-size:1.3rem;transform:translateY(-2px)}
-  .mm-node.revealed b{color:#fff}
-  .mm-node.revealed span.ans{height:auto;opacity:1;margin-top:3px}
-  @keyframes mmPop{0%{transform:translate(-50%,-50%) scale(.85)}55%{transform:translate(-50%,-50%) scale(1.12)}100%{transform:translate(-50%,-50%) scale(1)}}
+  /* ---- app grid + cinematic reveal ---- */
+  .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:560px;margin:18px auto 0}
+  .app-card{position:relative;background:var(--paper);border:2px solid var(--paper-edge);border-radius:20px;padding:26px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .2s var(--ease),border-color .3s,box-shadow .2s;min-height:120px}
+  .app-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+  .app-card .ic{font-size:2.4rem;line-height:1}
+  .app-card b{font-size:1.02rem}
+  .app-card.done{border-color:var(--proc);background:var(--ground-2)}
+  .app-card.done::after{content:'\2713';position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:var(--proc);color:#fff;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center}
   .mm-hint{color:var(--soft);font-size:.85rem;font-weight:700;margin-top:4px}
-  .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:10px}
+  .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:18px}
   .mm-synth.on{opacity:1}
+
+  /* cinematic full-screen reveal overlay */
+  .reveal-overlay{position:fixed;inset:0;z-index:999;background:rgba(17,17,26,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;opacity:0;pointer-events:none;transition:opacity .35s ease}
+  .reveal-overlay.on{opacity:1;pointer-events:auto}
+  .reveal-icon{font-size:4.2rem;transform:scale(.5);opacity:0;transition:transform .5s cubic-bezier(.2,.9,.3,1.4),opacity .4s}
+  .reveal-name{color:#fff;font-size:1.9rem;font-weight:800;margin-top:18px;opacity:0;transform:translateY(14px);transition:transform .5s ease .15s,opacity .5s ease .15s}
+  .reveal-answer{color:#D7D9F5;font-size:1.15rem;font-weight:600;margin-top:12px;max-width:480px;opacity:0;transform:translateY(14px);transition:transform .5s ease .32s,opacity .5s ease .32s}
+  .reveal-overlay.show .reveal-icon{transform:scale(1);opacity:1}
+  .reveal-overlay.show .reveal-name{opacity:1;transform:translateY(0)}
+  .reveal-overlay.show .reveal-answer{opacity:1;transform:translateY(0)}
+  .reveal-tap{position:absolute;bottom:34px;left:0;right:0;color:var(--soft);font-size:.82rem;font-weight:700;opacity:0;transition:opacity .5s ease .6s}
+  .reveal-overlay.show .reveal-tap{opacity:.8}
 
   /* ---- whiteflix teacher-notes screen ---- */
   .tnotes{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:20px 24px;max-width:560px;text-align:left;box-shadow:var(--shadow-sm);margin:16px auto 0}
@@ -402,20 +402,20 @@
   <p class="kick">One more thing &middot; 5 min</p>
   <h1>What else can you search on?</h1>
   <p class="mm-hint">Tap each one &mdash; what do you think it actually searches?</p>
-  <div class="mindmap">
-    <svg class="mm-svg" viewBox="0 0 640 460">
-      <line id="line-amazon" x1="320" y1="230" x2="320" y2="90"></line>
-      <line id="line-wikipedia" x1="320" y1="230" x2="490" y2="230"></line>
-      <line id="line-youtube" x1="320" y1="230" x2="320" y2="370"></line>
-      <line id="line-netflix" x1="320" y1="230" x2="150" y2="230"></line>
-    </svg>
-    <div class="mm-center">What else can<br>you search on?</div>
-    <button type="button" class="mm-node n-top" data-node="amazon"><span class="ic">&#128230;</span><b>Amazon</b><span class="ans">Searches products for sale</span></button>
-    <button type="button" class="mm-node n-right" data-node="wikipedia"><span class="ic">&#128214;</span><b>Wikipedia</b><span class="ans">Searches its own encyclopaedia articles</span></button>
-    <button type="button" class="mm-node n-bottom" data-node="youtube"><span class="ic">&#9654;&#65039;</span><b>YouTube</b><span class="ans">Searches videos on YouTube only</span></button>
-    <button type="button" class="mm-node n-left" data-node="netflix"><span class="ic">&#127916;</span><b>Netflix</b><span class="ans">Searches shows and films in its library</span></button>
+  <div class="app-grid">
+    <button type="button" class="app-card" data-node="amazon"><span class="ic">&#128230;</span><b>Amazon</b></button>
+    <button type="button" class="app-card" data-node="wikipedia"><span class="ic">&#128214;</span><b>Wikipedia</b></button>
+    <button type="button" class="app-card" data-node="youtube"><span class="ic">&#9654;&#65039;</span><b>YouTube</b></button>
+    <button type="button" class="app-card" data-node="netflix"><span class="ic">&#127916;</span><b>Netflix</b></button>
   </div>
   <p class="lead mm-synth" id="mmSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
+</div>
+
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-icon" id="revealIcon"></div>
+  <div class="reveal-name" id="revealName"></div>
+  <div class="reveal-answer" id="revealAnswer"></div>
+  <div class="reveal-tap">Tap anywhere to continue</div>
 </div>
 
 <!-- 6: Mr Whiteflix -->
@@ -606,19 +606,51 @@
     card.addEventListener('click', function(){ card.classList.toggle('open'); });
   });
 
-  /* ---------- mind map ---------- */
+  /* ---------- app grid: cinematic reveal ---------- */
+  var APP_DATA = {
+    amazon:    { ic:'\u{1F4E6}', name:'Amazon',    ans:'Searches products for sale — not the whole internet.' },
+    wikipedia: { ic:'\u{1F4D6}', name:'Wikipedia', ans:'Searches its own encyclopaedia articles only.' },
+    youtube:   { ic:'▶️', name:'YouTube',  ans:'Searches videos on YouTube only.' },
+    netflix:   { ic:'\u{1F3AC}', name:'Netflix',    ans:'Searches shows and films in its own library.' }
+  };
   var mmRevealed = {};
-  [].forEach.call(document.querySelectorAll('.mm-node'), function(node){
-    node.addEventListener('click', function(){
-      var key = node.getAttribute('data-node');
-      if(mmRevealed[key]) return;
-      mmRevealed[key] = true;
-      node.classList.add('revealed');
-      var line = document.getElementById('line-' + key);
-      if(line) line.classList.add('lit');
-      if(Object.keys(mmRevealed).length === 4){
-        setTimeout(function(){ document.getElementById('mmSynth').classList.add('on'); }, 250);
+  var revealOverlay = document.getElementById('revealOverlay');
+  var revealIcon = document.getElementById('revealIcon');
+  var revealName = document.getElementById('revealName');
+  var revealAnswer = document.getElementById('revealAnswer');
+  var pendingSynth = false;
+
+  function openReveal(key, isSynth){
+    var d = APP_DATA[key];
+    revealIcon.textContent = d.ic;
+    revealName.textContent = d.name;
+    revealAnswer.textContent = d.ans;
+    revealOverlay.classList.add('on');
+    revealOverlay.classList.remove('show');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ revealOverlay.classList.add('show'); });
+    });
+    pendingSynth = !!isSynth;
+  }
+  function closeReveal(){
+    revealOverlay.classList.remove('on','show');
+    if(pendingSynth){
+      pendingSynth = false;
+      setTimeout(function(){ document.getElementById('mmSynth').classList.add('on'); }, 200);
+    }
+  }
+  revealOverlay.addEventListener('click', closeReveal);
+
+  [].forEach.call(document.querySelectorAll('.app-card'), function(card){
+    card.addEventListener('click', function(){
+      var key = card.getAttribute('data-node');
+      card.classList.add('done');
+      var allDone = false;
+      if(!mmRevealed[key]){
+        mmRevealed[key] = true;
+        allDone = Object.keys(mmRevealed).length === 4;
       }
+      openReveal(key, allDone);
     });
   });
 </script>
