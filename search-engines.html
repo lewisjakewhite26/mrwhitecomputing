@@ -130,28 +130,29 @@
   .toolbar{position:fixed;top:16px;right:16px;z-index:50}
   .toolbar a{color:var(--soft);font-size:.85rem;text-decoration:none;font-weight:600}
 
-  /* ---- predict & sort (what else can you search on) ---- */
-  .sort-wrap{width:min(96%,820px);margin:6px auto 0}
-  .sort-bins{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
-  .bin{flex:1;min-width:220px;background:var(--paper);border:2px dashed var(--paper-edge);border-radius:16px;padding:14px;min-height:120px;transition:border-color .3s,background .3s}
-  .bin h4{margin:0 0 8px;font-size:.95rem;color:var(--muted)}
-  .bin .items{display:flex;flex-wrap:wrap;gap:8px;min-height:40px}
-  .bin.checked.correct{border-color:var(--out);background:#EEFBF3}
-  .pool{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
-  .chip{display:flex;align-items:center;gap:8px;background:var(--paper);border:2px solid var(--paper-edge);border-radius:999px;padding:8px 16px 8px 10px;cursor:pointer;font-weight:700;font-size:.95rem;transition:all .2s var(--ease);box-shadow:var(--shadow-sm)}
-  .chip .ic{font-size:1.3rem}
-  .chip.selected{border-color:var(--proc);box-shadow:0 0 0 3px rgba(108,76,224,.2)}
-  .chip.placed{cursor:default}
-  .chip .reason{display:none;font-size:.72rem;font-weight:500;color:var(--muted);max-width:16ch;line-height:1.25}
-  .chip.checked .reason{display:block}
-  .chip.checked .ic{filter:none}
-  .chip.checked.right{border-color:var(--out);background:#EEFBF3}
-  .chip.checked.wrong{border-color:var(--red);background:#FDEEED}
-  .sort-hint{color:var(--soft);font-size:.88rem;margin:0 0 14px}
-  .check-btn{border:0;background:var(--ink);color:#fff;font-weight:800;border-radius:999px;padding:12px 30px;cursor:pointer;font-size:1rem}
-  .check-btn:disabled{opacity:.35;cursor:default}
-  .sort-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:14px}
-  .sort-synth.on{opacity:1}
+  /* ---- mind map (what else can you search on) ---- */
+  .mindmap{position:relative;width:640px;max-width:94vw;height:460px;max-height:56vh;margin:6px auto 0;flex:none}
+  .mm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .mm-svg line{stroke:var(--paper-edge);stroke-width:3;stroke-dasharray:6 7;transition:stroke .3s}
+  .mm-svg line.lit{stroke:var(--proc);stroke-dasharray:none}
+  .mm-center{position:absolute;left:50%;top:50%;width:140px;height:140px;transform:translate(-50%,-50%);border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;line-height:1.25;text-align:center;padding:14px;box-shadow:var(--shadow-md)}
+  .mm-node{position:absolute;width:110px;height:110px;border-radius:50%;background:var(--paper);border:2px solid var(--paper-edge);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s,transform .25s var(--ease);padding:8px;text-align:center}
+  .mm-node:not(.revealed):hover{transform:translate(-50%,-50%) scale(1.06)}
+  .mm-node .ic{font-size:1.9rem;transition:font-size .3s,transform .5s var(--ease)}
+  .mm-node b{display:block;font-size:.92rem;margin-top:3px}
+  .mm-node span.ans{display:block;height:0;overflow:hidden;font-size:.7rem;color:#fff;font-weight:500;line-height:1.25;margin-top:0;opacity:0;transition:opacity .3s .1s}
+  .mm-node.n-top{left:50%;top:90px;transform:translate(-50%,-50%)}
+  .mm-node.n-right{left:490px;top:50%;transform:translate(-50%,-50%)}
+  .mm-node.n-bottom{left:50%;top:370px;transform:translate(-50%,-50%)}
+  .mm-node.n-left{left:150px;top:50%;transform:translate(-50%,-50%)}
+  .mm-node.revealed{width:150px;height:150px;background:var(--proc);border-color:var(--proc);animation:mmPop .4s var(--ease)}
+  .mm-node.revealed .ic{font-size:1.3rem;transform:translateY(-2px)}
+  .mm-node.revealed b{color:#fff}
+  .mm-node.revealed span.ans{height:auto;opacity:1;margin-top:3px}
+  @keyframes mmPop{0%{transform:translate(-50%,-50%) scale(.85)}55%{transform:translate(-50%,-50%) scale(1.12)}100%{transform:translate(-50%,-50%) scale(1)}}
+  .mm-hint{color:var(--soft);font-size:.85rem;font-weight:700;margin-top:4px}
+  .mm-synth{opacity:0;transition:opacity .5s;font-weight:700;margin-top:10px}
+  .mm-synth.on{opacity:1}
 
   /* ---- whiteflix teacher-notes screen ---- */
   .tnotes{background:var(--paper);border:1px solid var(--paper-edge);border-radius:18px;padding:20px 24px;max-width:560px;text-align:left;box-shadow:var(--shadow-sm);margin:16px auto 0}
@@ -268,20 +269,25 @@
   </div>
 </div>
 
-<!-- 7: predict & sort -->
+<!-- 7: mind map -->
 <div class="screen" id="s7">
   <p class="kick">One more thing &middot; 5 min</p>
   <h1>What else can you search on?</h1>
-  <div class="sort-wrap">
-    <p class="sort-hint">Tap a name, then tap the bin you think it belongs in. Some might surprise you.</p>
-    <div class="pool" id="sortPool"></div>
-    <div class="sort-bins">
-      <div class="bin" data-bin="web"><h4>Searches the WHOLE internet</h4><div class="items"></div></div>
-      <div class="bin" data-bin="own"><h4>Only searches its OWN site</h4><div class="items"></div></div>
-    </div>
-    <button type="button" class="check-btn" id="sortCheck" disabled>Check answers</button>
-    <p class="lead sort-synth" id="sortSynth">None of them search the whole web &mdash; every one only looks inside its own little world.</p>
+  <p class="mm-hint">Tap each one &mdash; what do you think it actually searches?</p>
+  <div class="mindmap">
+    <svg class="mm-svg" viewBox="0 0 640 460">
+      <line id="line-amazon" x1="320" y1="230" x2="320" y2="90"></line>
+      <line id="line-wikipedia" x1="320" y1="230" x2="490" y2="230"></line>
+      <line id="line-youtube" x1="320" y1="230" x2="320" y2="370"></line>
+      <line id="line-netflix" x1="320" y1="230" x2="150" y2="230"></line>
+    </svg>
+    <div class="mm-center">What else can<br>you search on?</div>
+    <button type="button" class="mm-node n-top" data-node="amazon"><span class="ic">📦</span><b>Amazon</b><span class="ans">Searches products for sale</span></button>
+    <button type="button" class="mm-node n-right" data-node="wikipedia"><span class="ic">📖</span><b>Wikipedia</b><span class="ans">Searches its own encyclopaedia articles</span></button>
+    <button type="button" class="mm-node n-bottom" data-node="youtube"><span class="ic">▶️</span><b>YouTube</b><span class="ans">Searches videos on YouTube only</span></button>
+    <button type="button" class="mm-node n-left" data-node="netflix"><span class="ic">🎬</span><b>Netflix</b><span class="ans">Searches shows and films in its library</span></button>
   </div>
+  <p class="lead mm-synth" id="mmSynth">They all have a search box &mdash; but they only search their own site, not the whole web.</p>
 </div>
 
 <!-- 8: Mr Whiteflix, IWB only -->
@@ -422,80 +428,19 @@
     card.addEventListener('click', function(){ card.classList.toggle('open'); });
   });
 
-  /* ---------- predict & sort ---------- */
-  var SORT_ITEMS = [
-    {id:'amazon', icon:'📦', label:'Amazon', correct:'own', reason:'Searches products for sale'},
-    {id:'wikipedia', icon:'📖', label:'Wikipedia', correct:'own', reason:'Searches its own encyclopaedia articles'},
-    {id:'youtube', icon:'▶️', label:'YouTube', correct:'own', reason:'Searches videos on YouTube only'},
-    {id:'netflix', icon:'🎬', label:'Netflix', correct:'own', reason:'Searches shows and films in its library'}
-  ];
-  var placement = {};
-  var selected = null;
-  var checked = false;
-  var poolEl = document.getElementById('sortPool');
-  var binWeb = document.querySelector('.bin[data-bin="web"] .items');
-  var binOwn = document.querySelector('.bin[data-bin="own"] .items');
-  var checkBtn = document.getElementById('sortCheck');
-
-  function chipEl(item){
-    var c = document.createElement('button');
-    c.type = 'button';
-    c.className = 'chip';
-    c.setAttribute('data-id', item.id);
-    c.innerHTML = '<span class="ic">' + item.icon + '</span><span><b>' + item.label + '</b><span class="reason">' + item.reason + '</span></span>';
-    c.addEventListener('click', function(){
-      if(checked) return;
-      // something else is picked up: tapping anywhere in a bin (even on a chip already there) drops it here
-      if(selected && selected !== item.id){
-        var bin = c.closest('.bin');
-        if(bin){ placement[selected] = bin.getAttribute('data-bin'); selected = null; renderSort(); return; }
+  /* ---------- mind map: tap a node to reveal its answer ---------- */
+  var mmRevealed = {};
+  [].forEach.call(document.querySelectorAll('.mm-node'), function(node){
+    node.addEventListener('click', function(){
+      var key = node.getAttribute('data-node');
+      if(mmRevealed[key]) return;
+      mmRevealed[key] = true;
+      node.classList.add('revealed');
+      var line = document.getElementById('line-' + key);
+      if(line) line.classList.add('lit');
+      if(Object.keys(mmRevealed).length === 4){
+        setTimeout(function(){ document.getElementById('mmSynth').classList.add('on'); }, 250);
       }
-      if(placement[item.id]){
-        // already placed, nothing else picked up: tapping it sends it back to the pool
-        delete placement[item.id];
-        renderSort();
-        return;
-      }
-      selected = (selected === item.id) ? null : item.id;
-      renderSort();
-    });
-    return c;
-  }
-  function renderSort(){
-    poolEl.innerHTML = '';
-    binWeb.innerHTML = '';
-    binOwn.innerHTML = '';
-    SORT_ITEMS.forEach(function(item){
-      var c = chipEl(item);
-      if(placement[item.id] === 'web'){ c.classList.add('placed'); binWeb.appendChild(c); }
-      else if(placement[item.id] === 'own'){ c.classList.add('placed'); binOwn.appendChild(c); }
-      else { if(selected === item.id) c.classList.add('selected'); poolEl.appendChild(c); }
-    });
-    checkBtn.disabled = Object.keys(placement).length < SORT_ITEMS.length;
-  }
-  [].forEach.call(document.querySelectorAll('.bin'), function(bin){
-    bin.addEventListener('click', function(e){
-      if(e.target.closest('.chip')) return; // a chip inside the bin handles its own click (send back to pool)
-      if(checked || !selected) return;
-      placement[selected] = bin.getAttribute('data-bin');
-      selected = null;
-      renderSort();
     });
   });
-  checkBtn.addEventListener('click', function(){
-    checked = true;
-    var allCorrect = true;
-    SORT_ITEMS.forEach(function(item){
-      var chip = document.querySelector('.chip[data-id="' + item.id + '"]');
-      if(!chip) return;
-      chip.classList.add('checked');
-      var right = placement[item.id] === item.correct;
-      chip.classList.add(right ? 'right' : 'wrong');
-      if(!right) allCorrect = false;
-    });
-    document.querySelector('.bin[data-bin="own"]').classList.add('checked', 'correct');
-    checkBtn.disabled = true;
-    document.getElementById('sortSynth').classList.add('on');
-  });
-  renderSort();
 </script>
