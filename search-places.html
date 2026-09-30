@@ -170,5 +170,14 @@
     el.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setPlace(el.getAttribute('data-k')); } });
   });
   type(term); render();
+  // inside the Extra lesson, arrow keys and clickers move the lesson on
+  if(window.parent !== window){
+    // leave room for the lesson's Back and Next buttons in the bottom corner
+    document.querySelector('.right').style.paddingBottom = '76px';
+    document.addEventListener('keydown', function(e){
+      if(['ArrowRight','PageDown'].indexOf(e.key) > -1){ e.preventDefault(); window.parent.postMessage('extra:next', '*'); }
+      else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); window.parent.postMessage('extra:back', '*'); }
+    });
+  }
 })();
 </script>

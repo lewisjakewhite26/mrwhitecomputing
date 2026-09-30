@@ -554,14 +554,16 @@
     BEATS[at].play(r, tl);
     if(reduce) tl.progress(1, false);
     [].forEach.call(dots.children, function(d, i){ d.classList.toggle('on', i === at); });
-    document.getElementById('back').disabled = at === 0;
-    document.getElementById('next').disabled = at === BEATS.length - 1;
+    document.getElementById('back').disabled = window.parent === window && at === 0;
+    document.getElementById('next').disabled = window.parent === window && at === BEATS.length - 1;
   }
+  var embedded = window.parent !== window;
+  function tellParent(m){ if(embedded) window.parent.postMessage(m, '*'); }
   function next(){
     if(tl && tl.progress() < 1){ tl.progress(1, false); return; }  // first press finishes the animation
-    if(at < BEATS.length - 1) go(at + 1);
+    if(at < BEATS.length - 1) go(at + 1); else tellParent('extra:next');
   }
-  function back(){ go(at - 1); }
+  function back(){ if(at > 0) go(at - 1); else tellParent('extra:back'); }
 
   document.getElementById('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
   document.getElementById('back').addEventListener('click', function(e){ e.stopPropagation(); back(); });
@@ -571,7 +573,7 @@
     else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
   });
 
-  function start(){ go(0); }
+  function start(){ go(location.hash === '#end' ? BEATS.length - 1 : 0); }
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
 })();
 </script>

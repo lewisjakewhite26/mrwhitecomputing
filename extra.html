@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Let's Go Searching</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  :root{
+    --bg:#080a0f; --tx:#e9eef5; --mu:#aeb8c6; --soft:#7c8798;
+    --cy:#45cfe0; --pu:#9a86ff; --am:#e7b24a; --pk:#ff6b9d; --gr:#4bd48f;
+    --sk:'Cabin Sketch',cursive; --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  body{background:radial-gradient(60vw 50vh at 50% 0%,rgba(69,207,224,.06),transparent 70%),var(--bg)}
+
+  /* parts that are their own pages fill the whole window */
+  #frame{position:fixed;inset:0;width:100%;height:100%;border:0;display:none;background:var(--bg);z-index:5}
+  #frame.on{display:block}
+  #fnav{position:fixed;bottom:16px;right:16px;z-index:10;display:none;gap:8px}
+  #fnav.on{display:flex}
+  #fnav button{font:inherit;font-size:15px;font-weight:700;padding:9px 18px;border-radius:999px;border:2px solid #cfd5df;background:#fff;color:#1c2431;cursor:pointer;box-shadow:0 6px 16px -8px rgba(0,0,0,.4)}
+  #fnav button.primary{background:#1c2431;border-color:#1c2431;color:#fff}
+
+  /* the slides made here */
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #fit.off{display:none}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;outline:none}
+  .scene{position:absolute;left:0;top:0;width:1600px;height:810px}
+  .pp{transition:opacity .45s ease,transform .45s cubic-bezier(.16,1,.3,1)}
+  .pp.hide{opacity:0;transform:translateY(14px);pointer-events:none}
+  .sk{font-family:var(--sk);font-weight:700;letter-spacing:.03em}
+  .abs{position:absolute}
+
+  .home{position:absolute;right:40px;top:26px;font-size:18px;font-weight:600;color:var(--soft);text-decoration:none;border:1.5px solid #252d39;border-radius:999px;padding:8px 18px;z-index:3}
+  .home:hover{color:var(--tx)}
+  .nav{position:absolute;left:0;right:0;bottom:0;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 44px}
+  .btn{font:inherit;font-size:22px;font-weight:600;min-height:54px;padding:0 30px;border-radius:999px;border:2px solid #3a4454;background:transparent;color:var(--tx);cursor:pointer}
+  .btn.primary{background:var(--cy);border-color:var(--cy);color:#06222a}
+  .btn:disabled{opacity:.3;cursor:default}
+  .parts{display:flex;gap:10px;align-items:center}
+  .part{width:14px;height:14px;border-radius:50%;border:2px solid #4a5566;background:transparent;padding:0;cursor:pointer}
+  .part.done{background:#4a5566}
+  .part.on{background:var(--cy);border-color:var(--cy)}
+
+  /* title */
+  .kick{font-family:var(--sk);font-size:32px;letter-spacing:.14em;text-transform:uppercase;color:var(--cy)}
+  .title{font-family:var(--sk);font-weight:700;font-size:150px;line-height:1;letter-spacing:.01em}
+  .sub{font-size:36px;color:var(--mu);font-weight:600;line-height:1.35}
+
+  /* google-style search demo (dark mode) */
+  .gtop{position:absolute;left:120px;top:36px;display:flex;align-items:center;gap:26px}
+  .gword{font-size:44px;font-weight:600;letter-spacing:-.02em}
+  .gword span:nth-child(1){color:#4285F4}.gword span:nth-child(2){color:#EA4335}.gword span:nth-child(3){color:#FBBC05}.gword span:nth-child(4){color:#4285F4}.gword span:nth-child(5){color:#34A853}.gword span:nth-child(6){color:#EA4335}
+  .gbar{display:flex;align-items:center;gap:16px;width:900px;background:#1f2229;border:1px solid #3c414b;border-radius:999px;padding:16px 28px;font-size:34px;color:#e8eaed;cursor:pointer;box-shadow:0 10px 30px -14px rgba(0,0,0,.9)}
+  .gbar svg{flex:none}
+  .gbar .op{color:var(--pk);font-weight:700}
+  .caret{display:inline-block;width:3px;height:1.05em;background:#8ab4f8;margin-left:1px;vertical-align:-.12em;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .tabs{position:absolute;left:300px;top:128px;display:flex;gap:34px;font-size:20px;color:#9aa0a6}
+  .tabs b{color:#8ab4f8;font-weight:600;border-bottom:3px solid #8ab4f8;padding-bottom:10px}
+  .q1{position:absolute;left:0;right:0;top:330px;text-align:center;font-family:var(--sk);font-size:76px;line-height:1.1;padding:0 120px}
+  .res{position:absolute;left:300px;top:186px;width:1000px}
+  .imgs{display:flex;gap:14px;height:150px;margin-bottom:26px}
+  .imgs div{flex:1;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:8px}
+  .imgs svg{height:100%;width:auto;max-width:100%}
+  .gr{margin-bottom:22px}
+  .gr .src{display:flex;align-items:center;gap:12px;font-size:18px;color:#bdc1c6}
+  .gr .src i{width:30px;height:30px;border-radius:50%;background:#303540;display:grid;place-items:center;font-style:normal;font-size:14px}
+  .gr .t{color:#8ab4f8;font-size:28px;margin:4px 0 3px}
+  .gr .d{color:#bdc1c6;font-size:20px;line-height:1.4}
+  .ask{position:absolute;left:60px;right:60px;top:720px;text-align:center;font-family:var(--sk);font-size:48px;line-height:1.1;color:var(--tx)}
+  .ask em{font-style:normal;color:var(--pk)}
+  .tries{position:absolute;left:300px;top:720px;display:flex;align-items:center;gap:14px;font-size:22px;color:var(--mu)}
+  .try{font-family:var(--mono);font-size:22px;font-weight:700;padding:10px 18px;border-radius:12px;border:2px solid #3c414b;background:#1f2229;color:#e8eaed;cursor:pointer}
+  .try.on{border-color:var(--pk);box-shadow:0 0 18px -4px rgba(255,107,157,.7)}
+
+  /* search secrets */
+  .cards{position:absolute;left:100px;right:100px;top:190px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  .card{border:2px solid #2b3340;border-radius:22px;padding:30px 30px 34px;background:linear-gradient(180deg,rgba(255,107,157,.07),rgba(14,19,26,.94) 40%);min-height:420px;display:flex;flex-direction:column;gap:18px}
+  .card .num{font-family:var(--sk);font-size:28px;color:var(--pk);letter-spacing:.1em;text-transform:uppercase}
+  .card h3{margin:0;font-size:44px;font-weight:800;letter-spacing:-.02em}
+  .card code{font-family:var(--mono);font-size:32px;font-weight:700;background:#1f2229;border:1px solid #3c414b;border-radius:14px;padding:14px 18px;color:#e8eaed;white-space:nowrap}
+  .card code b{color:var(--pk)}
+  .card p{margin:0;font-size:27px;line-height:1.4;color:var(--mu)}
+
+  /* mr whiteflix */
+  .wfbtns{display:flex;gap:20px;justify-content:center}
+  .wfbtn{font:inherit;font-size:30px;font-weight:800;padding:22px 40px;border-radius:999px;border:0;background:#e50914;color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 18px 40px -16px rgba(229,9,20,.8)}
+  .wfbtn.ghost{background:transparent;border:2px solid #4a5566;color:var(--tx);box-shadow:none}
+  .steps{display:flex;flex-direction:column;gap:18px;max-width:1000px;margin:0 auto;text-align:left}
+  .steps div{display:flex;gap:18px;align-items:flex-start;font-size:29px;line-height:1.35;color:#d3dae4}
+  .steps b.n{flex:none;width:44px;height:44px;border-radius:12px;background:rgba(229,9,20,.18);color:#ff5a61;display:grid;place-items:center;font-size:22px}
+</style>
+</head>
+<body>
+<iframe id="frame" title="Lesson part" allow="fullscreen"></iframe>
+<div id="fnav"><button type="button" id="fback">Back</button><button type="button" class="primary" id="fnext">Next</button></div>
+
+<div id="fit"><div id="stage" tabindex="-1">
+  <a class="home" href="index.html#/g/y56" id="home">&larr; Lessons</a>
+  <div id="host"></div>
+  <nav class="nav">
+    <button class="btn" id="back" type="button">Back</button>
+    <div class="parts" id="parts"></div>
+    <button class="btn primary" id="next" type="button">Next</button>
+  </nav>
+</div></div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage'), host = document.getElementById('host');
+  var frame = document.getElementById('frame'), fit = document.getElementById('fit'), fnav = document.getElementById('fnav');
+  function size(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', size); size();
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- pictures for the image strips ---------------- */
+  function BAT(deg){ return '<svg viewBox="-40 -10 120 140"><g transform="rotate(' + deg + ' 20 60)"><rect x="16" y="2" width="8" height="36" rx="3" fill="#2B3A4A"/><path d="M8 36h24v68q0 13-12 13t-12-13z" fill="#E8C98A" stroke="#B08A4A" stroke-width="2"/></g></svg>'; }
+  function PLANET(){ return '<svg viewBox="0 0 100 100"><defs><radialGradient id="mg" cx=".35" cy=".35" r=".75"><stop offset="0" stop-color="#f6a877"/><stop offset=".55" stop-color="#c9552c"/><stop offset="1" stop-color="#5e1f10"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(#mg)"/><ellipse cx="36" cy="38" rx="8" ry="5" fill="#a94526" opacity=".55"/><ellipse cx="62" cy="60" rx="11" ry="6" fill="#9b3a1f" opacity=".5"/><ellipse cx="45" cy="70" rx="5" ry="3" fill="#a94526" opacity=".5"/><ellipse cx="68" cy="34" rx="4" ry="3" fill="#b34d2b" opacity=".6"/></svg>'; }
+  function CHOC(){ return '<svg viewBox="0 0 140 80"><rect x="6" y="16" width="128" height="48" rx="8" fill="#141414"/><rect x="6" y="16" width="44" height="48" rx="8" fill="#6b3a1e"/><path d="M20 16v48M35 16v48M6 40h44" stroke="#4e2913" stroke-width="2"/><path d="M50 12l6 8-6 8 6 8-6 8 6 8-6 8 6 8" fill="none" stroke="#141414" stroke-width="4"/><text x="95" y="49" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-style="italic" font-size="24" fill="#e2231a" stroke="#f2c14e" stroke-width=".8">MARS</text></svg>'; }
+  function CAR(col){ return '<svg viewBox="0 0 150 70"><path d="M8 50 L16 36 Q30 22 54 19 L90 19 Q104 21 116 33 L134 37 Q142 39 142 47 L142 52 L8 52 Z" fill="' + col + '"/><path d="M40 34 Q50 25 62 24 L68 24 L68 35 Z M74 24 L90 24 Q100 26 106 35 L74 35 Z" fill="#cfe3f5" opacity=".85"/><circle cx="40" cy="52" r="11" fill="#15181e" stroke="#9aa3af" stroke-width="3"/><circle cx="114" cy="52" r="11" fill="#15181e" stroke="#9aa3af" stroke-width="3"/></svg>'; }
+  function CAT(){ return '<svg viewBox="0 0 100 100"><circle cx="27" cy="27" r="13" fill="#c98b32"/><circle cx="73" cy="27" r="13" fill="#c98b32"/><circle cx="27" cy="28" r="7" fill="#f3d19b"/><circle cx="73" cy="28" r="7" fill="#f3d19b"/><ellipse cx="50" cy="56" rx="38" ry="34" fill="#e3a64a"/><g fill="none" stroke="#3a2410" stroke-width="3"><ellipse cx="30" cy="40" rx="5" ry="4"/><ellipse cx="70" cy="40" rx="5" ry="4"/><ellipse cx="50" cy="31" rx="5" ry="4"/><ellipse cx="22" cy="62" rx="4" ry="5"/><ellipse cx="78" cy="62" rx="4" ry="5"/></g><ellipse cx="50" cy="72" rx="18" ry="13" fill="#f7e3bb"/><ellipse cx="36" cy="52" rx="5.5" ry="4.5" fill="#d8b23a"/><ellipse cx="64" cy="52" rx="5.5" ry="4.5" fill="#d8b23a"/><ellipse cx="36" cy="52" rx="1.8" ry="4" fill="#1b1b1b"/><ellipse cx="64" cy="52" rx="1.8" ry="4" fill="#1b1b1b"/><path d="M44 64 h12 l-6 6z" fill="#3a2410"/><path d="M50 70 v5 M50 75 q-5 4 -9 1 M50 75 q5 4 9 1" stroke="#3a2410" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'; }
+
+  var MAG = '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#9aa0a6" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>';
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  // show a search with its secret parts (minus words, quotation marks) picked out in pink
+  function markOps(q){
+    return esc(q).replace(/(&quot;|")/g, '<span class="op">"</span>').replace(/(^|\s)(-\S+)/g, '$1<span class="op">$2</span>');
+  }
+  function results(list){
+    return list.map(function(r){
+      return '<div class="gr"><div class="src"><i>' + r[3] + '</i>' + esc(r[0]) + '</div><div class="t">' + esc(r[1]) + '</div><div class="d">' + esc(r[2]) + '</div></div>';
+    }).join('');
+  }
+  function strip(pics, bgs){
+    return '<div class="imgs">' + pics.map(function(p, i){ return '<div style="background:' + bgs[i % bgs.length] + '">' + p + '</div>'; }).join('') + '</div>';
+  }
+
+  /* ---------------- a search demo slide ----------------
+     step 0: empty search bar · step 1: it types, and asks what we'll get
+     step 2: the results · step 3: the question for the class            */
+  function searchDemo(o){
+    return { steps:3, build:function(r){
+      r.innerHTML =
+        '<div class="gtop"><div class="gword"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>' +
+          '<div class="gbar" id="bar">' + MAG + '<span id="q"></span><span class="caret"></span></div></div>' +
+        '<div class="tabs pp" data-s="2"><b>All</b><span>Images</span><span>Videos</span><span>News</span><span>Shopping</span></div>' +
+        '<div class="q1 pp" data-s="1" data-only="1">' + o.q1 + '</div>' +
+        '<div class="res pp" data-s="2">' + strip(o.pics, o.bgs) + results(o.results) + '</div>' +
+        '<div class="ask pp" data-s="3">' + o.ask + '</div>';
+      r.querySelector('#bar').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+    }, step:function(r, n, fwd){
+      var q = r.querySelector('#q');
+      if(n === 0){ clearType(); q.textContent = ''; }
+      else if(n === 1 && fwd){ typeInto(q, o.query); }
+      else { clearType(); q.textContent = o.query; }
+    } };
+  }
+
+  var typing = [];
+  function clearType(){ typing.forEach(clearTimeout); typing = []; }
+  function typeInto(el, text, from, done){
+    clearType();
+    from = from || '';
+    el.innerHTML = markOps(from);
+    if(RM){ el.innerHTML = markOps(text); if(done) done(); return; }
+    for(var i = from.length; i < text.length; i++){
+      (function(k){ typing.push(setTimeout(function(){ el.innerHTML = markOps(text.slice(0, k + 1)); if(k === text.length - 1 && done) done(); }, 110 * (k - from.length) + 150)); })(i);
+    }
+  }
+
+  /* ---------------- the lesson, in order ---------------- */
+  var PARTS = [
+
+    { name:'Title', steps:0, build:function(r){
+      r.innerHTML = '<div class="abs" style="left:0;right:0;top:170px;text-align:center;display:flex;flex-direction:column;gap:34px;align-items:center">' +
+        '<div class="kick">Extra lesson &middot; Systems and searching</div>' +
+        '<div class="title">Let&rsquo;s go searching</div>' +
+        '<div class="sub" style="max-width:1100px">How does a search engine find things so fast, and how can <b style="color:var(--pk)">we</b> find the right thing first time?</div></div>';
+    } },
+
+    { name:'Meet the search engines', frame:'meet-the-engines.html' },
+
+    { name:'Searching for bat', demo:{
+      query:'bat', q1:'What results do you think we&rsquo;ll get?',
+      pics:[BAT(-24), BAT(12), BAT(-8), BAT(28)], bgs:['#EEF3E6','#F4EEE2','#E7EFF6','#F1ECE4'],
+      results:[['Cricket shop','Cricket bats: which size is right for me?','Junior bats come in sizes from 1 up to Harrow, so you can pick one that fits your height.','🏏'],
+               ['Sport facts','Why are cricket bats made of willow?','Willow is light but tough, so the ball flies off the bat.','📘'],
+               ['Cricket club','How to look after a new cricket bat','Rub in a little oil and knock it in before you play with a hard ball.','🏟']],
+      ask:'Every result is about <em>cricket</em>! What could we type to find the animal?' } },
+
+    { name:'Searching for Mars', demo:{
+      query:'mars', q1:'Chocolate bar or planet? Which will we get?',
+      pics:[PLANET(), CHOC(), PLANET(), CHOC()], bgs:['#10131c','#f3e3d3','#171a26','#efe0cf'],
+      results:[['Space facts','Mars: the red planet','Mars is the fourth planet from the Sun. Its rusty dust makes it look red.','🪐'],
+               ['Sweet shop','Mars bars: multipack of 4','Chocolate, nougat and caramel.','🍫'],
+               ['Space news','Robots exploring Mars','Rovers drive across the surface, taking photos and testing the rocks.','🚀']],
+      ask:'We got <em>both</em>! It can&rsquo;t tell which Mars we meant.' } },
+
+    { name:'A grain per website', frame:'grain-per-website.html' },
+    { name:'Web crawlers', frame:'web-crawler.html' },
+    { name:'Search from anywhere', frame:'search-places.html', floatNav:true },
+
+    { name:'Searching for jaguar', demo:{
+      query:'jaguar', q1:'What do you think we&rsquo;ll find?',
+      pics:[CAR('#2d6be0'), CAR('#c7312b'), CAR('#1d8a55'), CAR('#d9d9d9')], bgs:['#e9eef6','#f3ece6','#e7f1ec','#2a2f38'],
+      results:[['Car dealer','New Jaguar cars','Take a look at the latest models and book a test drive.','🚗'],
+               ['Car reviews','Jaguar review: is the electric model any good?','We drove it for a week. Here is what we thought.','⭐'],
+               ['Car sales','Used Jaguar cars for sale','Hundreds of used cars near you.','🔑']],
+      ask:'We wanted the <em>animal</em>! How can we tell the search engine what we mean?' } },
+
+    { name:'Search secrets', steps:4, build:function(r){
+      r.innerHTML =
+        '<div class="abs sk" style="left:0;right:0;top:50px;text-align:center;font-size:86px">Search secrets</div>' +
+        '<div class="cards">' +
+          '<div class="card pp" data-s="1"><div class="num">Secret 1</div><h3>The minus sign</h3><code>jaguar <b>-car</b></code><p>Takes a word away. No pages about cars.</p></div>' +
+          '<div class="card pp" data-s="2"><div class="num">Secret 2</div><h3>Quotation marks</h3><code><b>"</b>jaguar cub<b>"</b></code><p>Finds those exact words, together, in that order.</p></div>' +
+          '<div class="card pp" data-s="3"><div class="num">Secret 3</div><h3>More words</h3><code>jaguar <b>animal</b></code><p>The more you tell it, the better it knows what you want.</p></div>' +
+        '</div>' +
+        '<div class="ask pp" data-s="4" style="top:690px">Let&rsquo;s try them on <em>jaguar</em>!</div>';
+    } },
+
+    { name:'Jaguar again', steps:3, build:function(r){
+      var SETS = {
+        'jaguar -car':[['Animal facts','Jaguars: facts for kids','Jaguars are big cats that live in the rainforests of South and Central America.','🐾'],
+                       ['Wildlife guide','Why do jaguars have spots?','Their spotted coats help them hide in the shadows of the forest.','🌿'],
+                       ['Zoo news','Twin jaguar cubs born at the zoo','The cubs are just a few weeks old and already exploring.','🦁']],
+        '"jaguar cub"':[['Zoo news','Twin jaguar cubs born at the zoo','The cubs are just a few weeks old and already exploring.','🦁'],
+                       ['Animal facts','How long do jaguar cubs stay with their mum?','Cubs stay with their mother for up to two years while they learn to hunt.','🐾'],
+                       ['Wildlife video','Jaguar cub learns to swim','Jaguars are strong swimmers, unlike most big cats.','🎥']],
+        'jaguar animal':[['Animal facts','Jaguars: facts for kids','Jaguars are big cats that live in the rainforests of South and Central America.','🐾'],
+                       ['Wildlife guide','Where do jaguars live?','In rainforests, swamps and grasslands, often near water.','🌿'],
+                       ['Animal facts','Jaguar or leopard: how can you tell?','Jaguars have bigger, heavier heads, and spots inside their rosettes.','🔎']]
+      };
+      var pics = [CAT(), CAT(), CAT(), CAT()], bgs = ['#1d3b2a','#2a4a2c','#20372e','#304b25'];
+      r.innerHTML =
+        '<div class="gtop"><div class="gword"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>' +
+          '<div class="gbar" id="bar">' + MAG + '<span id="q">jaguar</span><span class="caret"></span></div></div>' +
+        '<div class="tabs pp" data-s="2"><b>All</b><span>Images</span><span>Videos</span><span>News</span><span>Shopping</span></div>' +
+        '<div class="q1 pp" data-s="0" data-only="1" style="top:310px">Let&rsquo;s use a secret&hellip;</div>' +
+        '<div class="q1 pp" data-s="1" data-only="1" style="top:310px">What will we get this time?</div>' +
+        '<div class="res pp" data-s="2">' + strip(pics, bgs) + '<div id="list">' + results(SETS['jaguar -car']) + '</div></div>' +
+        '<div class="tries pp" data-s="3">Try another secret:' + Object.keys(SETS).map(function(k){ return '<button type="button" class="try' + (k === 'jaguar -car' ? ' on' : '') + '" data-q="' + esc(k) + '">' + markOps(k) + '</button>'; }).join('') + '</div>';
+      r.querySelector('#bar').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+      [].forEach.call(r.querySelectorAll('.try'), function(b){
+        b.addEventListener('click', function(e){
+          e.stopPropagation();
+          var k = b.getAttribute('data-q');
+          [].forEach.call(r.querySelectorAll('.try'), function(x){ x.classList.toggle('on', x === b); });
+          var list = r.querySelector('#list');
+          list.style.opacity = 0;
+          typeInto(r.querySelector('#q'), k, '', function(){
+            list.innerHTML = results(SETS[k]);
+            list.style.transition = 'opacity .4s'; list.style.opacity = 1;
+          });
+        });
+      });
+      this._sets = SETS;
+    }, step:function(r, n, fwd){
+      var q = r.querySelector('#q');
+      if(n === 0){ clearType(); q.innerHTML = 'jaguar'; }
+      else if(n === 1 && fwd){ typeInto(q, 'jaguar -car', 'jaguar'); }
+      else if(n < 3){ clearType(); q.innerHTML = markOps('jaguar -car'); }
+    } },
+
+    { name:'Mr Whiteflix', steps:0, build:function(r){
+      r.innerHTML = '<div class="abs" style="left:0;right:0;top:80px;text-align:center;display:flex;flex-direction:column;gap:40px">' +
+        '<div class="kick" style="color:#ff5a61">One more search box</div>' +
+        '<div class="sk" style="font-size:96px;line-height:1">Mr Whiteflix</div>' +
+        '<div class="steps">' +
+          '<div><b class="n">1</b><span>Turn it on and let it start up. Pick <b>Pupil One</b> and read the rows out loud.</span></div>' +
+          '<div><b class="n">2</b><span>Open the search. Tick some boxes and watch what the search bar writes for you.</span></div>' +
+          '<div><b class="n">3</b><span>It only searches its own programmes. Just like the index, it can only find what it already knows about.</span></div>' +
+        '</div>' +
+        '<div class="wfbtns"><a class="wfbtn" href="whiteflix.html" target="_blank" rel="noopener">Turn on Mr Whiteflix</a><a class="wfbtn ghost" href="whiteflix.html#search" target="_blank" rel="noopener">Go straight to the search</a></div>' +
+        '</div>';
+      [].forEach.call(r.querySelectorAll('a'), function(a){ a.addEventListener('click', function(e){ e.stopPropagation(); }); });
+    } }
+  ];
+  PARTS.forEach(function(p){ if(p.demo){ var d = searchDemo(p.demo); p.steps = d.steps; p.build = d.build; p.step = d.step; } });
+
+  /* ---------------- moving through the lesson ---------------- */
+  var part = 0, step = 0;
+  var dots = document.getElementById('parts');
+  PARTS.forEach(function(p, i){
+    var d = document.createElement('button'); d.className = 'part'; d.type = 'button'; d.title = p.name;
+    d.setAttribute('aria-label', 'Go to ' + p.name);
+    d.addEventListener('click', function(e){ e.stopPropagation(); show(i, 0); });
+    dots.appendChild(d);
+  });
+
+  function paint(r, n, fwd){
+    [].forEach.call(r.querySelectorAll('.pp'), function(el){
+      var s = +el.getAttribute('data-s');
+      var only = el.hasAttribute('data-only');
+      var on = only ? (s === n) : (s <= n);
+      el.classList.toggle('hide', !on);
+    });
+    var p = PARTS[part];
+    if(p.step) p.step(r, n, fwd);
+  }
+
+  function show(i, at){
+    clearType();
+    part = Math.max(0, Math.min(PARTS.length - 1, i));
+    var p = PARTS[part];
+    [].forEach.call(dots.children, function(d, k){ d.classList.toggle('on', k === part); d.classList.toggle('done', k < part); });
+    if(p.frame){
+      fit.classList.add('off');
+      frame.classList.add('on');
+      fnav.classList.toggle('on', !!p.floatNav);
+      frame.onload = function(){ try{ frame.contentWindow.focus(); }catch(e){} };
+      frame.src = p.frame + (at === 'end' ? '#end' : '');
+      return;
+    }
+    frame.classList.remove('on'); frame.removeAttribute('src'); fnav.classList.remove('on');
+    fit.classList.remove('off');
+    step = at === 'end' ? p.steps : 0;
+    host.innerHTML = '';
+    var r = document.createElement('div'); r.className = 'scene';
+    host.appendChild(r);
+    p.build.call(p, r);
+    [].forEach.call(r.querySelectorAll('.pp'), function(el){ el.classList.add('hide'); });
+    r.getBoundingClientRect();
+    paint(r, step, false);
+    document.getElementById('back').disabled = part === 0 && step === 0;
+    document.getElementById('next').disabled = part === PARTS.length - 1 && step === p.steps;
+    // take the keyboard back from the embedded page, so clickers and arrow keys keep working
+    setTimeout(function(){ try{ frame.blur(); }catch(e){} stage.focus({ preventScroll:true }); }, 30);
+  }
+
+  function next(){
+    var p = PARTS[part];
+    if(!p.frame && step < p.steps){
+      step++;
+      paint(host.firstChild, step, true);
+      document.getElementById('back').disabled = false;
+      document.getElementById('next').disabled = part === PARTS.length - 1 && step === p.steps;
+      return;
+    }
+    if(part < PARTS.length - 1) show(part + 1, 0);
+  }
+  function back(){
+    var p = PARTS[part];
+    if(!p.frame && step > 0){
+      step--;
+      paint(host.firstChild, step, false);
+      document.getElementById('back').disabled = part === 0 && step === 0;
+      document.getElementById('next').disabled = false;
+      return;
+    }
+    if(part > 0) show(part - 1, 'end');
+  }
+
+  document.getElementById('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  document.getElementById('back').addEventListener('click', function(e){ e.stopPropagation(); back(); });
+  document.getElementById('fnext').addEventListener('click', next);
+  document.getElementById('fback').addEventListener('click', back);
+  document.getElementById('home').addEventListener('click', function(e){ e.stopPropagation(); });
+  host.addEventListener('click', next);
+  addEventListener('keydown', function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+  });
+  // the parts that are their own pages tell us when they have run out of steps
+  addEventListener('message', function(e){
+    if(e.data === 'extra:next') next();
+    else if(e.data === 'extra:back') back();
+  });
+
+  var start = /^#part(\d+)$/.exec(location.hash);
+  show(start ? +start[1] : 0, 0);
+})();
+</script>
+</body>
+</html>
