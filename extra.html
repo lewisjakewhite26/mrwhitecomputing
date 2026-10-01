@@ -105,6 +105,23 @@
   .crtsub{position:absolute;left:0;right:0;text-align:center;font-size:34px;font-weight:700;color:#e9eef5;line-height:1.35;padding:0 160px}
   .crtsub b{color:#39FF88}
 
+  /* what else can we search? */
+  .apps{position:absolute;left:110px;right:110px;top:190px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .app{position:relative;height:236px;perspective:900px}
+  .app .mys,.app .face{position:absolute;inset:0;border-radius:24px;display:flex;align-items:center}
+  .app .mys{border:3px dashed #3a4454;justify-content:center;font-family:var(--sk);font-size:110px;color:#3a4454;transition:opacity .3s}
+  .app .face{gap:24px;padding:0 28px;background:linear-gradient(160deg,#151b25,#0d1118);border:2px solid #2b3340;opacity:0;transform:rotateY(90deg) scale(.85)}
+  .app .face svg{width:120px;height:120px;flex:none}
+  .app .face h4{margin:0 0 8px;font-size:44px;font-weight:800;letter-spacing:-.02em}
+  .app .face p{margin:0;font-size:26px;line-height:1.3;color:var(--mu)}
+  .app.on .mys{opacity:0}
+  .app.on .face{animation:flipin .75s cubic-bezier(.2,.9,.3,1.25) forwards}
+  .app.cur .face{border-color:var(--cy);box-shadow:0 0 0 2px var(--cy),0 0 50px -10px rgba(69,207,224,.7)}
+  @keyframes flipin{0%{opacity:0;transform:rotateY(90deg) scale(.85)}60%{opacity:1;transform:rotateY(-8deg) scale(1.04)}100%{opacity:1;transform:none}}
+  .apphint{position:absolute;left:0;right:0;top:132px;text-align:center;font-size:30px;font-weight:600;color:var(--mu)}
+  .appkey{position:absolute;left:80px;right:80px;top:712px;text-align:center;font-size:34px;font-weight:700;line-height:1.3}
+  .appkey b{color:var(--cy)}
+
   /* mr whiteflix */
   .wfbtns{display:flex;gap:20px;justify-content:center}
   .wfbtn{font:inherit;font-size:30px;font-weight:800;padding:22px 40px;border-radius:999px;border:0;background:#e50914;color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 18px 40px -16px rgba(229,9,20,.8)}
@@ -311,6 +328,37 @@
       if(n === 0){ clearType(); q.innerHTML = 'jaguar'; }
       else if(n === 1 && fwd){ typeInto(q, 'jaguar -car', 'jaguar'); }
       else if(n < 3){ clearType(); q.innerHTML = markOps('jaguar -car'); }
+    } },
+
+    { name:'What else can we search?', steps:7, build:function(r){
+      var LOGO = {
+        youtube:'<svg viewBox="0 0 100 100"><rect x="4" y="20" width="92" height="62" rx="18" fill="#FF0000"/><path d="M41 36v30l26-15z" fill="#fff"/></svg>',
+        amazon:'<svg viewBox="0 0 100 100"><rect x="2" y="12" width="96" height="76" rx="16" fill="#fff"/><text x="50" y="52" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="25" fill="#111">amazon</text><path d="M24 61 Q50 77 76 61" fill="none" stroke="#FF9900" stroke-width="5" stroke-linecap="round"/><path d="M69 56 L78 60 L73 68" fill="none" stroke="#FF9900" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        spotify:'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#1DB954"/><g fill="none" stroke="#000" stroke-linecap="round"><path d="M24 38 Q52 27 78 41" stroke-width="8"/><path d="M28 53 Q51 45 73 56" stroke-width="7"/><path d="M31 67 Q50 61 69 69" stroke-width="6"/></g></svg>',
+        roblox:'<svg viewBox="0 0 100 100"><g transform="rotate(-15 50 50)"><rect x="17" y="17" width="66" height="66" rx="7" fill="#fff"/><rect x="42" y="42" width="16" height="16" fill="#111"/></g></svg>',
+        wikipedia:'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#fff"/><text x="50" y="69" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="58" fill="#111">W</text></svg>',
+        netflix:'<svg viewBox="0 0 100 100"><rect x="6" y="6" width="88" height="88" rx="18" fill="#000"/><rect x="30" y="16" width="12" height="68" fill="#B1060F"/><rect x="58" y="16" width="12" height="68" fill="#B1060F"/><polygon points="30,16 42,16 70,84 58,84" fill="#E50914"/></svg>'
+      };
+      var APPS = [
+        ['youtube','YouTube','Videos people have put on YouTube'],
+        ['amazon','Amazon','Things you can buy on Amazon'],
+        ['spotify','Spotify','Songs, albums and podcasts'],
+        ['roblox','Roblox','Games people have made on Roblox'],
+        ['wikipedia','Wikipedia','Its own encyclopaedia articles'],
+        ['netflix','Netflix','Shows and films in its library']
+      ];
+      r.innerHTML =
+        '<div class="abs sk" style="left:0;right:0;top:36px;text-align:center;font-size:84px">What else can we search?</div>' +
+        '<div class="apphint pp" data-s="0" data-only="1">They aren&rsquo;t search engines, but they all have a search box. Talk to your partner.</div>' +
+        '<div class="apps">' + APPS.map(function(a){
+          return '<div class="app"><div class="mys">?</div><div class="face">' + LOGO[a[0]] + '<div><h4>' + a[1] + '</h4><p>' + a[2] + '</p></div></div></div>';
+        }).join('') + '</div>' +
+        '<div class="appkey pp" data-s="7">None of these search the whole web. Each one only searches <b>its own stuff</b>, using <b>its own index</b>.</div>';
+    }, step:function(r, n){
+      [].forEach.call(r.querySelectorAll('.app'), function(t, i){
+        t.classList.toggle('on', i < n);
+        t.classList.toggle('cur', i === n - 1 && n <= 6);
+      });
     } },
 
     { name:'Mr Whiteflix', steps:0, build:function(r){
