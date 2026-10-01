@@ -220,7 +220,7 @@
         '<div class="abs sk" id="t" style="left:0;right:0;top:40px;text-align:center;font-size:84px">How does Google find it so fast?</div>' +
         '<div class="abs gbar" style="left:330px;top:200px;width:940px">' + G + '<span id="q"></span><span class="caret"></span></div>' +
         '<div class="abs gres" id="res" style="left:330px;top:296px;width:940px">' + R_FL + R_YD + R_HP + '</div>' +
-        '<div class="cap" id="c">Out of <b>billions</b> of pages, it picked these in less than half a second.</div>',
+        '<div class="cap" id="c">It found these in less than half a second. Now we know about crawlers, let&rsquo;s see <b>how</b>.</div>',
       play:function(r, tl){
         tl.set(['#t','#res','#c'].map(function(s){ return r.querySelector(s); }), { opacity:0 });
         type(tl, r.querySelector('#q'), 'flamingo land zoo', .4, 1.3);
@@ -230,22 +230,7 @@
         tl.to(r.querySelector('#c'), { opacity:1, duration:.6 }, '+=.5');
       } },
 
-    /* 1 · billions */
-    { html:
-        '<div class="abs" id="grid" style="left:100px;top:40px;width:1400px;height:620px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;overflow:hidden"></div>' +
-        '<div class="abs big" id="bw" style="left:360px;right:360px;top:250px;text-align:center;font-size:150px;line-height:1.15;background:rgba(8,10,15,.86);border-radius:30px;box-shadow:0 0 60px 30px rgba(8,10,15,.86)">BILLIONS</div>' +
-        '<div class="cap" id="c" style="bottom:40px">Far too many pages to look through <b>after</b> you press search.</div>',
-      play:function(r, tl){
-        var g = r.querySelector('#grid'), s = '';
-        for(var i=0;i<29*17;i++) s += '<span class="tile" style="opacity:0"></span>';
-        g.innerHTML = s;
-        tl.set([r.querySelector('#bw'), r.querySelector('#c')], { opacity:0 });
-        tl.to(g.children, { opacity:1, duration:.2, stagger:{ each:.004, from:'random' } }, .3);
-        tl.fromTo(r.querySelector('#bw'), { opacity:0, scale:.6 }, { opacity:1, scale:1, duration:.7, ease:'back.out(1.7)' }, '-=.6');
-        tl.to(r.querySelector('#c'), { opacity:1, duration:.5 }, '+=.3');
-      } },
-
-    /* 2 · two jobs */
+    /* 1 · two jobs */
     { html:
         '<svg class="layer" id="svg"></svg>' +
         '<div class="panel" id="off" style="left:310px;top:20px;width:980px;height:230px"><div class="corner">Before you search</div>' +
