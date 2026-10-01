@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Is a Crawler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{ --bg:#070910; --tx:#e9eef5; --cy:#45cfe0; --gr:#39ff88; --sk:'Cabin Sketch',cursive; --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;
+    background:radial-gradient(900px 600px at 50% 40%,#0d1422,var(--bg))}
+  #sv{position:absolute;left:0;top:0;width:1600px;height:900px}
+  .title{position:absolute;left:0;right:0;top:40px;text-align:center;font-family:var(--sk);font-weight:700;font-size:96px;letter-spacing:.02em;text-shadow:0 4px 30px rgba(0,0,0,.8)}
+  .cap{position:absolute;left:0;right:0;bottom:90px;padding:40px 120px 22px;text-align:center;font-size:40px;font-weight:700;line-height:1.3;
+    background:linear-gradient(rgba(7,9,16,0),rgba(7,9,16,.96) 32%)}
+  .cap b{color:var(--gr)}
+  .count{position:absolute;right:44px;top:30px;font-family:var(--mono);font-size:26px;color:var(--gr);text-align:right;text-shadow:0 0 12px rgba(57,255,136,.6);opacity:0}
+  .count span{display:block;font-size:52px;font-weight:700}
+  .nav{position:absolute;left:0;right:0;bottom:0;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 44px;background:var(--bg)}
+  .btn{font:inherit;font-size:22px;font-weight:600;min-height:54px;padding:0 30px;border-radius:999px;border:2px solid #3a4454;background:transparent;color:var(--tx);cursor:pointer}
+  .btn.primary{background:var(--cy);border-color:var(--cy);color:#06222a}
+  .btn:disabled{opacity:.3;cursor:default}
+  .dots{display:flex;gap:12px}
+  .dot{width:14px;height:14px;border-radius:50%;border:2px solid #4a5566;background:transparent;padding:0;cursor:pointer}
+  .dot.on{background:var(--cy);border-color:var(--cy)}
+  .kw{transition:fill .25s}
+  .kw.on{fill:#e8457f;font-weight:800}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+  <svg id="sv" viewBox="0 0 1600 900">
+    <defs>
+      <clipPath id="webclip"><circle id="wc" cx="0" cy="0" r="0"/></clipPath>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <linearGradient id="beam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#39ff88" stop-opacity=".55"/><stop offset="1" stop-color="#39ff88" stop-opacity=".05"/></linearGradient>
+      <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="rgba(0,0,0,.25)"/></pattern>
+    </defs>
+    <g id="cam">
+      <g id="web" clip-path="url(#webclip)"></g>
+      <g id="minipages"></g>
+      <g id="links"></g>
+      <g id="crowd"></g>
+      <polygon id="beamPoly" points="" fill="url(#beam)" opacity="0"/>
+      <g id="cards"></g>
+      <g id="dotsfly"></g>
+      <g id="spider"></g>
+    </g>
+  </svg>
+  <div class="title" id="title">What is a web crawler?</div>
+  <div class="count" id="count">pages crawled<span id="cnum">0</span></div>
+  <div class="cap" id="cap"></div>
+  <nav class="nav">
+    <button class="btn" id="back" type="button">Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn primary" id="next" type="button">Next</button>
+  </nav>
+</div></div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage');
+  function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', fit); fit();
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+  function $(id){ return document.getElementById(id); }
+  function el(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+
+  /* ---------------- the web ---------------- */
+  var N = 24, K = 22, R0 = 120;
+  function pt(k, j){ var a = (j % N) * 2 * Math.PI / N, r = R0 * k; return [r * Math.cos(a), r * Math.sin(a)]; }
+  (function drawWeb(){
+    var d = '';
+    for(var j = 0; j < N; j++){ var p = pt(K, j); d += 'M0 0L' + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
+    for(var k = 1; k <= K; k++){
+      var s = pt(k, 0); d += 'M' + s[0].toFixed(1) + ' ' + s[1].toFixed(1);
+      for(var j2 = 0; j2 < N; j2++){
+        var a = pt(k, j2), b = pt(k, j2 + 1);
+        var cx = (a[0] + b[0]) / 2 * .93, cy = (a[1] + b[1]) / 2 * .93;   // threads sag a little towards the middle
+        d += 'Q' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ' ' + b[0].toFixed(1) + ' ' + b[1].toFixed(1);
+      }
+    }
+    el('path', { d:d, fill:'none', stroke:'rgba(175,205,240,.32)', 'stroke-width':1.4, 'vector-effect':'non-scaling-stroke' }, $('web'));
+  })();
+
+  /* ---------------- the three websites ---------------- */
+  var SITES = [
+    { key:'fl', node:pt(3,13), color:'#ff5d95', name:'Flamingo Land', url:'flamingoland.co.uk', title:'Meet the animals',
+      lines:[['See the ',['flamingos'],' at the ',['zoo'],','],['then try the ',['rides'],'. Buy ',['tickets'],' online.']],
+      words:['flamingo','zoo','rides','tickets'] },
+    { key:'cr', node:pt(3,21), color:'#ef7a35', name:'Cool Rollercoasters', url:'coolrollercoasters.com', title:'Every ride rated',
+      lines:[['The ',['fastest'],' ',['rollercoaster'],' in'],[['Yorkshire'],'? We tried every ',['ride'],'.']],
+      words:['fastest','rollercoaster','yorkshire','ride'] },
+    { key:'yd', node:pt(3,2), color:'#2c9463', name:'Days Out Yorkshire', url:'days-out-yorkshire.co.uk', title:'Best family days out',
+      lines:[[['Family'],' days out: ',['beaches'],','],[['castles'],' and ',['farms'],' near you.']],
+      words:['family','beaches','castles','farms'] }
+  ];
+  var CARD_DX = 150, CARD_DY = -390;
+  SITES.forEach(function(s){
+    var g = el('g', { 'class':'card', transform:'translate(' + (s.node[0] + CARD_DX) + ' ' + (s.node[1] + CARD_DY) + ')' }, $('cards'));
+    el('line', { x1:-CARD_DX + 40, y1:-CARD_DY - 60, x2:-60, y2:90, stroke:'rgba(220,235,255,.25)', 'stroke-width':1.5, 'stroke-dasharray':'4 6', 'vector-effect':'non-scaling-stroke' }, g);
+    el('rect', { x:-170, y:-90, width:340, height:180, rx:16, fill:'#fff' }, g);
+    el('rect', { x:-170, y:-90, width:340, height:46, rx:16, fill:s.color }, g);
+    el('rect', { x:-170, y:-62, width:340, height:18, fill:s.color }, g);
+    var t = el('text', { x:-150, y:-60, fill:'#fff', 'font-size':21, 'font-weight':800 }, g); t.textContent = s.name;
+    t = el('text', { x:-150, y:-22, fill:'#6b7380', 'font-size':13, 'font-family':'JetBrains Mono, monospace' }, g); t.textContent = s.url;
+    t = el('text', { x:-150, y:10, fill:'#1d2330', 'font-size':23, 'font-weight':800 }, g); t.textContent = s.title;
+    s.lines.forEach(function(line, i){
+      var tx = el('text', { x:-150, y:42 + i * 24, fill:'#3a4252', 'font-size':16 }, g);
+      line.forEach(function(part){
+        var sp = el('tspan', Array.isArray(part) ? { 'class':'kw' } : {}, tx);
+        sp.textContent = Array.isArray(part) ? part[0] : part;
+      });
+    });
+    s.card = g;
+  });
+
+  // links between the sites: brighter threads the crawler walks along
+  var LINKS = [[0,1],[1,2]].map(function(p){
+    var a = SITES[p[0]].node, b = SITES[p[1]].node;
+    var len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    var l = el('line', { x1:a[0], y1:a[1], x2:b[0], y2:b[1], stroke:'rgba(230,240,255,.65)', 'stroke-width':4, 'stroke-dasharray':len + ' ' + (len * 2), 'stroke-dashoffset':len, 'stroke-linecap':'round' }, $('links'));
+    var mid = el('g', { transform:'translate(' + (a[0] + b[0]) / 2 + ' ' + (a[1] + b[1]) / 2 + ')', opacity:0 }, $('links'));
+    el('rect', { x:-34, y:-17, width:68, height:34, rx:17, fill:'#0d1422', stroke:'rgba(230,240,255,.65)', 'stroke-width':2, 'vector-effect':'non-scaling-stroke' }, mid);
+    var tt = el('text', { x:0, y:7, 'text-anchor':'middle', fill:'#e9eef5', 'font-size':19, 'font-weight':700 }, mid); tt.textContent = 'link';
+    return { line:l, tag:mid, len:len };
+  });
+
+  /* ---------------- the robot spider ---------------- */
+  // side view, facing right, feet on the thread at (0,0); a CRT monitor strapped to its back shows what it remembers
+  var LEGS = [[-78,-200,-226],[-52,-160,-180],[10,150,172],[34,190,218]];
+  function spiderSVG(g, big){
+    if(big) el('line', { id:'silk', x1:-25, y1:-5000, x2:-25, y2:-250, stroke:'rgba(220,235,255,.6)', 'stroke-width':2, 'vector-effect':'non-scaling-stroke' }, g);
+    var back = el('g', {}, g), body = el('g', {}, g), front = el('g', {}, g);
+    var legs = [];
+    LEGS.forEach(function(L, i){
+      legs.push({ p:el('path', { fill:'none', stroke:'#58657a', 'stroke-width':big ? 6 : 7, 'stroke-linecap':'round', 'stroke-linejoin':'round' }, back), L:L, i:i, side:1 });
+      legs.push({ p:el('path', { fill:'none', stroke:'#9fb0c6', 'stroke-width':big ? 7 : 8, 'stroke-linecap':'round', 'stroke-linejoin':'round' }, back), L:L, i:i, side:0 });
+    });
+    el('ellipse', { cx:-30, cy:-54, rx:68, ry:44, fill:'#26303e', stroke:'#45cfe0', 'stroke-width':3 }, body);
+    el('ellipse', { cx:52, cy:-52, rx:32, ry:27, fill:'#2e3a4b', stroke:'#45cfe0', 'stroke-width':3 }, body);
+    el('circle', { cx:68, cy:-58, r:7, fill:'#45cfe0', filter:'url(#glow)' }, body);
+    el('circle', { cx:55, cy:-63, r:5, fill:'#45cfe0', filter:'url(#glow)' }, body);
+    // the monitor
+    var mon = el('g', {}, g);
+    el('rect', { x:-42, y:-100, width:30, height:12, rx:3, fill:'#3a4454' }, mon);
+    el('rect', { x:-165, y:-250, width:280, height:160, rx:16, fill:'#1a1f27', stroke:'#4a5566', 'stroke-width':4 }, mon);
+    el('rect', { x:-154, y:-239, width:258, height:138, rx:9, fill:'#03140a' }, mon);
+    var lines = el('g', { 'font-family':'JetBrains Mono, monospace', 'font-size':15, 'font-weight':700, fill:'#39ff88' }, mon);
+    var head = el('text', { x:-143, y:-220, 'font-size':12, fill:'rgba(57,255,136,.6)', 'letter-spacing':2 }, lines); head.textContent = big ? 'MEMORY' : '';
+    el('rect', { x:-154, y:-239, width:258, height:138, rx:9, fill:'url(#scan)' }, mon);
+    el('rect', { x:-154, y:-239, width:258, height:138, rx:9, fill:'rgba(57,255,136,.06)' }, mon);
+    return { g:g, legs:legs, lines:lines, x:0, y:0, phase:0 };
+  }
+  function poseLegs(sp, phase, walking){
+    sp.legs.forEach(function(l){
+      var t = phase + l.i * Math.PI / 2 + l.side * Math.PI;
+      var lift = walking ? Math.max(0, Math.sin(t)) * 16 : 0, swing = walking ? Math.cos(t) * 10 : 0;
+      var off = l.side ? 12 : 0;
+      var ax = l.L[0] + off, kx = l.L[1] + off + swing * .5, fx = l.L[2] + off + swing;
+      l.p.setAttribute('d', 'M' + ax + ' -54L' + kx + ' ' + (-122 - lift * .4) + 'L' + fx + ' ' + (-lift));
+    });
+  }
+  var spider = spiderSVG($('spider'), true);
+  function placeSpider(sp){ sp.g.setAttribute('transform', 'translate(' + sp.x + ' ' + sp.y + ')' + (sp.s ? ' scale(' + sp.s + ')' : '')); }
+
+  // memory lines on the big spider's monitor: two columns of six
+  var memory = [];
+  function memSlot(i){ return { x:i < 6 ? -143 : -6, y:-199 + (i % 6) * 18 }; }
+  function renderMemory(){
+    [].slice.call(spider.lines.querySelectorAll('.m')).forEach(function(n){ n.remove(); });
+    memory.forEach(function(w, i){
+      var p = memSlot(i), t = el('text', { 'class':'m', x:p.x, y:p.y }, spider.lines); t.textContent = w;
+    });
+  }
+
+  /* ---------------- the camera ---------------- */
+  var cam = { x:0, y:0, s:1 };
+  var FOCUS = [800, 360];
+  function applyCam(){ $('cam').setAttribute('transform', 'translate(' + (FOCUS[0] - cam.x * cam.s) + ' ' + (FOCUS[1] - cam.y * cam.s) + ') scale(' + cam.s + ')'); }
+  function closeOn(s){ return { x:s.node[0] + 70, y:s.node[1] - 220, s:1.28 }; }
+  var VIEW = {
+    intro:{ x:SITES[0].node[0] - 20, y:SITES[0].node[1] - 140, s:1.5 },
+    overview:{ x:120, y:-290, s:.66 },
+    far:{ x:0, y:-40, s:.205 }
+  };
+
+  /* ---------------- the crowd of crawlers, for the zoom out ---------------- */
+  var crowd = [], minis = [], crowdOn = false, speed = 1, pagesCrawled = 0;
+  var NODES = [];
+  for(var k = 1; k <= K; k++) for(var j = 0; j < N; j++) NODES.push([k, j]);
+  function rnd(n){ return Math.floor(Math.random() * n); }
+  (function buildCrowd(){
+    for(var i = 0; i < 90; i++){
+      var n = NODES[rnd(NODES.length)], p = pt(n[0], n[1]);
+      var r = el('rect', { x:p[0] - 34, y:p[1] - 70, width:68, height:46, rx:6, fill:'#dfe6f0', opacity:.75 }, $('minipages'));
+      minis.push({ k:n[0], j:n[1], r:r });
+    }
+    for(var c = 0; c < 70; c++){
+      var g = el('g', {}, $('crowd'));
+      var sp = spiderSVG(g, false);
+      var n0 = NODES[rnd(NODES.length)];
+      sp.from = n0; sp.to = nextNode(n0); sp.t = Math.random(); sp.s = .55; sp.phase = Math.random() * 6;
+      crowd.push(sp);
+    }
+    $('crowd').style.opacity = 0; $('minipages').style.opacity = 0;
+  })();
+  function nextNode(n){
+    var opts = [[n[0] + 1, n[1]], [n[0] - 1, n[1]], [n[0], (n[1] + 1) % N], [n[0], (n[1] + N - 1) % N]].filter(function(m){ return m[0] >= 1 && m[0] <= K; });
+    return opts[rnd(opts.length)];
+  }
+  function tick(time, dt){
+    if(!crowdOn) return;
+    var step = Math.min(dt, 50) / 1000 * speed;
+    crowd.forEach(function(sp){
+      sp.t += step / .9;
+      while(sp.t >= 1){
+        sp.t -= 1;
+        var arrived = sp.to;
+        minis.forEach(function(m){ if(m.k === arrived[0] && m.j === arrived[1]){ m.r.setAttribute('fill', '#39ff88'); m.hot = 1; } });
+        sp.from = arrived; sp.to = nextNode(arrived);
+      }
+      var a = pt(sp.from[0], sp.from[1]), b = pt(sp.to[0], sp.to[1]);
+      sp.x = a[0] + (b[0] - a[0]) * sp.t; sp.y = a[1] + (b[1] - a[1]) * sp.t;
+      sp.phase += step * 14;
+      placeSpider(sp); poseLegs(sp, sp.phase, true);
+    });
+    minis.forEach(function(m){ if(m.hot){ m.hot -= step * 1.5; if(m.hot <= 0){ m.hot = 0; m.r.setAttribute('fill', '#dfe6f0'); } } });
+    pagesCrawled += step * 1400 * Math.max(1, speed * speed);
+    $('cnum').textContent = Math.floor(pagesCrawled).toLocaleString('en-GB');
+  }
+  gsap.ticker.add(tick);
+
+  /* ---------------- helpers for the timelines ---------------- */
+  function camTween(tl, to, dur, at, ease){
+    tl.to(cam, { x:to.x, y:to.y, s:to.s, duration:dur, ease:ease || 'power2.inOut', onUpdate:applyCam }, at);
+  }
+  function walk(tl, from, to, dur, at){
+    var o = { t:0 };
+    tl.to(o, { t:1, duration:dur, ease:'sine.inOut', onUpdate:function(){
+      spider.x = from[0] + (to[0] - from[0]) * o.t; spider.y = from[1] + (to[1] - from[1]) * o.t;
+      placeSpider(spider); poseLegs(spider, o.t * dur * 11, o.t > 0 && o.t < 1);
+    } }, at);
+  }
+  function beam(on, s){
+    var b = $('beamPoly');
+    if(on){
+      var x = spider.x, y = spider.y, cx = s.node[0] + CARD_DX, cy = s.node[1] + CARD_DY;
+      b.setAttribute('points', (x + 70) + ',' + (y - 58) + ' ' + (cx - 170) + ',' + (cy + 90) + ' ' + (cx + 170) + ',' + (cy + 90));
+    }
+    return b;
+  }
+  function read(tl, s, at){
+    var kws = s.card.querySelectorAll('.kw');
+    tl.add(function(){ beam(true, s); }, at);
+    tl.fromTo('#beamPoly', { opacity:0 }, { opacity:1, duration:.3, yoyo:true, repeat:5 }, at);
+    [].forEach.call(kws, function(k, i){
+      var t0 = at + .35 + i * .55;
+      tl.add(function(){ k.classList.add('on'); }, t0);
+      tl.add(function(){
+        var cx = s.node[0] + CARD_DX - 60 + i * 40, cy = s.node[1] + CARD_DY + 40;
+        var slot = memSlot(memory.length);
+        var d = el('circle', { cx:cx, cy:cy, r:9, fill:'#39ff88', filter:'url(#glow)' }, $('dotsfly'));
+        gsap.to(d, { attr:{ cx:spider.x + slot.x + 30, cy:spider.y + slot.y - 4 }, duration:.45, ease:'power2.in', onComplete:function(){
+          d.remove(); memory.push(s.words[i]); renderMemory();
+        } });
+      }, t0 + .05);
+    });
+    tl.set('#beamPoly', { opacity:0 }, at + .35 + kws.length * .55 + .5);
+  }
+  function caption(tl, text, at){
+    var c = $('cap');
+    tl.to(c, { opacity:0, duration:.2 }, at);
+    tl.add(function(){ c.innerHTML = text; }, (typeof at === 'number' ? at + .2 : '>'));
+    tl.to(c, { opacity:1, duration:.4 }, (typeof at === 'number' ? at + .2 : '>'));
+  }
+
+  /* ---------------- the steps ----------------
+     each step has a resting state (what the screen looks like once it is done)
+     and an animation that plays from the previous step's resting state      */
+  var CAPS = [
+    'This is a <b>web crawler</b>. It&rsquo;s a robot, but not a real one: it&rsquo;s a computer program.',
+    'Websites are joined together by <b>links</b>, like the threads of a spider&rsquo;s web.',
+    'It lands on a page and reads it. The important words go into its <b>memory</b>.',
+    'Then it follows a <b>link</b> to another page, and reads that one too.',
+    'And another. Every link takes it to a <b>new page</b>.',
+    'Everything they remember goes into one giant memory, called the <b>index</b>.'
+  ];
+  function setState(n){
+    crowdOn = n >= 5; speed = n >= 5 ? 26 : 1;
+    $('title').style.opacity = n === 0 ? 1 : 0;
+    $('silk').style.opacity = n === 0 ? 1 : 0;
+    $('wc').setAttribute('r', n >= 1 ? 3000 : 0);
+    $('cards').style.opacity = n >= 1 ? 1 : 0;
+    LINKS.forEach(function(L){ L.line.setAttribute('stroke-dashoffset', n >= 1 ? 0 : L.len); L.tag.setAttribute('opacity', n >= 1 ? 1 : 0); L.line.setAttribute('stroke', 'rgba(230,240,255,.65)'); });
+    if(n >= 3) LINKS[0].line.setAttribute('stroke', '#39ff88');
+    if(n >= 4) LINKS[1].line.setAttribute('stroke', '#39ff88');
+    SITES.forEach(function(s, i){ [].forEach.call(s.card.querySelectorAll('.kw'), function(k){ k.classList.toggle('on', n >= i + 2); }); });
+    memory = []; SITES.forEach(function(s, i){ if(n >= i + 2) memory = memory.concat(s.words); }); renderMemory();
+    var at = n >= 4 ? 2 : n >= 3 ? 1 : 0;
+    spider.x = SITES[at].node[0]; spider.y = SITES[at].node[1]; placeSpider(spider); poseLegs(spider, 0, false);
+    $('spider').style.opacity = 1;
+    $('beamPoly').style.opacity = 0; $('beamPoly').setAttribute('opacity', 0);
+    [].forEach.call($('dotsfly').children, function(d){ gsap.killTweensOf(d); });
+    $('dotsfly').innerHTML = '';
+    var v = n === 0 ? VIEW.intro : n === 1 ? VIEW.overview : n >= 5 ? VIEW.far : closeOn(SITES[n - 2]);
+    cam.x = v.x; cam.y = v.y; cam.s = v.s; applyCam();
+    $('crowd').style.opacity = n >= 5 ? 1 : 0; $('minipages').style.opacity = n >= 5 ? 1 : 0;
+    $('count').style.opacity = n >= 5 ? 1 : 0;
+    $('cap').innerHTML = CAPS[n]; $('cap').style.opacity = 1;
+  }
+
+  var PLAY = [
+    function(tl){   // 0 · a spider-bot drops in on a thread
+      setState(0);
+      spider.y = SITES[0].node[1] - 700; placeSpider(spider);
+      $('cap').style.opacity = 0;
+      tl.fromTo('#title', { opacity:0, y:-20 }, { opacity:1, y:0, duration:.7 }, .2);
+      var from = spider.y, to = SITES[0].node[1], o = { y:from };
+      tl.to(o, { y:to, duration:1.6, ease:'bounce.out', onUpdate:function(){ spider.y = o.y; placeSpider(spider); } }, .5);
+      tl.add(function(){ poseLegs(spider, 0, false); }, 2.1);
+      var p = { t:0 };
+      tl.to(p, { t:1, duration:1.2, ease:'none', onUpdate:function(){ poseLegs(spider, p.t * 18, true); }, onComplete:function(){ poseLegs(spider, 0, false); } }, 2.3);
+      tl.to('#cap', { opacity:1, duration:.5 }, 2.6);
+    },
+    function(tl){   // 1 · the web spins out from the middle, and the websites appear on it
+      setState(0); $('title').style.opacity = 1; $('cap').style.opacity = 0;
+      tl.to('#title', { opacity:0, duration:.4 }, 0);
+      tl.to('#silk', { opacity:0, duration:.4 }, 0);
+      camTween(tl, VIEW.overview, 2.2, .2);
+      tl.to('#wc', { attr:{ r:3000 }, duration:2.6, ease:'power1.in' }, .3);
+      tl.fromTo('#cards', { opacity:0 }, { opacity:1, duration:.6 }, 2.3);
+      SITES.forEach(function(s, i){ tl.fromTo(s.card, { opacity:0 }, { opacity:1, duration:.4 }, 2.3 + i * .25); });
+      LINKS.forEach(function(L, i){
+        tl.to(L.line, { attr:{ 'stroke-dashoffset':0 }, duration:.7, ease:'power2.inOut' }, 3.2 + i * .5);
+        tl.to(L.tag, { attr:{ opacity:1 }, duration:.3 }, 3.6 + i * .5);
+      });
+      tl.to('#cap', { opacity:1, duration:.5 }, 3.4);
+    },
+    function(tl){   // 2 · read Flamingo Land
+      setState(1); $('cap').style.opacity = 0;
+      camTween(tl, closeOn(SITES[0]), 1.4, 0);
+      tl.to('#cap', { opacity:1, duration:.5 }, 1.2);
+      read(tl, SITES[0], 1.6);
+    },
+    function(tl){   // 3 · follow a link to Cool Rollercoasters
+      setState(2); $('cap').style.opacity = 0;
+      var a = SITES[0], b = SITES[1];
+      tl.add(function(){ LINKS[0].line.setAttribute('stroke', '#39ff88'); }, .3);
+      camTween(tl, { x:(a.node[0] + b.node[0]) / 2 + 70, y:(a.node[1] + b.node[1]) / 2 - 220, s:.95 }, 1.2, 0);
+      walk(tl, a.node, b.node, 2.6, .5);
+      camTween(tl, closeOn(b), 1.4, 1.9);
+      tl.to('#cap', { opacity:1, duration:.5 }, .4);
+      read(tl, b, 3.3);
+    },
+    function(tl){   // 4 · and another, to Days Out Yorkshire
+      setState(3); $('cap').style.opacity = 0;
+      var a = SITES[1], b = SITES[2];
+      tl.add(function(){ LINKS[1].line.setAttribute('stroke', '#39ff88'); }, .3);
+      camTween(tl, { x:(a.node[0] + b.node[0]) / 2 + 70, y:(a.node[1] + b.node[1]) / 2 - 220, s:.95 }, 1.1, 0);
+      walk(tl, a.node, b.node, 2.2, .4);
+      camTween(tl, closeOn(b), 1.3, 1.6);
+      tl.to('#cap', { opacity:1, duration:.5 }, .4);
+      read(tl, b, 2.8);
+    },
+    function(tl){   // 5 · zoom right out: loads of crawlers on a huge web, going faster and faster
+      setState(4);
+      caption(tl, 'And it isn&rsquo;t the only one.', 0);
+      camTween(tl, VIEW.far, 3.4, .6, 'power3.inOut');
+      tl.add(function(){ crowdOn = true; speed = 1; pagesCrawled = 0; }, 1.4);
+      tl.to(['#crowd','#minipages'], { opacity:1, duration:1.2 }, 1.4);
+      tl.to('#count', { opacity:1, duration:.6 }, 3.2);
+      caption(tl, 'Google has loads of crawlers, reading <b>billions</b> of pages, day and night.', 4);
+      var sp = { v:1 };
+      tl.to(sp, { v:26, duration:6, ease:'power2.in', onUpdate:function(){ speed = sp.v; } }, 4.2);
+      caption(tl, CAPS[5], 10.6);
+    }
+  ];
+
+  /* ---------------- deck ---------------- */
+  var at = 0, tl = null, dots = $('dots');
+  var embedded = window.parent !== window;
+  function tellParent(m){ if(embedded) window.parent.postMessage(m, '*'); }
+  PLAY.forEach(function(_, i){
+    var d = document.createElement('button'); d.className = 'dot'; d.type = 'button';
+    d.setAttribute('aria-label', 'Go to step ' + (i + 1));
+    d.addEventListener('click', function(e){ e.stopPropagation(); go(i); });
+    dots.appendChild(d);
+  });
+  function go(n, still){
+    at = Math.max(0, Math.min(PLAY.length - 1, n));
+    if(tl) tl.kill();
+    tl = gsap.timeline();
+    if(still || reduce){ setState(at); }
+    else { PLAY[at](tl); if(at < 5) $('cap').innerHTML = CAPS[at]; }
+    [].forEach.call(dots.children, function(d, i){ d.classList.toggle('on', i === at); });
+    $('back').disabled = !embedded && at === 0;
+    $('next').disabled = !embedded && at === PLAY.length - 1;
+  }
+  function next(){
+    if(tl && tl.progress() < 1){ tl.kill(); tl = null; setState(at); return; }  // first press jumps to the end of the step
+    if(at < PLAY.length - 1) go(at + 1); else tellParent('extra:next');
+  }
+  function back(){ if(at > 0) go(at - 1, true); else tellParent('extra:back'); }
+  $('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  $('back').addEventListener('click', function(e){ e.stopPropagation(); back(); });
+  $('sv').addEventListener('click', next);
+  addEventListener('keydown', function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+  });
+  function start(){ if(location.hash === '#end') go(PLAY.length - 1, true); else go(0); }
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+})();
+</script>
+</body>
+</html>
