@@ -6156,7 +6156,7 @@ window.HB_GAUGE = (function(){
     ["Introduction · 2 min","Today you will…","Read the three together."],
     ["Introduction · 4 min","Ordering and ranking","Show the world's ten biggest cities two ways: alphabetically, and ranked by population. Ask which is more useful, and why."],
     ["Introduction · 2 min","Ranking search results","A search returns millions of pages. Ranking puts the most useful ones first, the same way ranking by population puts the biggest city first."],
-    ["Activity 1 · 20 min","Create your own webpage","Groups of four make a paper webpage on the same topic: a URL, a heading, subheadings, paragraphs, and pictures or diagrams. Fifteen minutes."],
+    ["Activity 1 · 20 min","Create your own webpage","Groups of four fill in the Create your own webpage template, printed from this lesson's resources. Every group writes for the same search word, rollercoaster, so the pages compete fairly later. The template has a web address, a heading, two subheadings with paragraphs (each with a sentence starter), a picture and caption, and a links box at the bottom for Activity 2. Don't tell them how pages are scored yet: if they know the search word counts, they will stuff it in. Fifteen minutes."],
     ["Activity 2 · 10 min","Linking your webpage","Show a real webpage with links at the bottom. Each group picks one other group's webpage to link to, choosing a good one, and writes down why."],
     ["Activity 3 · 4 min","How search engines score a page","Search engines use an algorithm: a set of rules that gives a page points for different things, then ranks by the total."],
     ["Activity 3 · 8 min","Score your page, live","A real interactive counter, not reveal cards: groups count occurrences on their own paper webpage and tap + for each one; the total tallies live on screen. Compare group totals to rank the pages once everyone's done."],
@@ -6206,9 +6206,9 @@ window.HB_GAUGE = (function(){
       '<p class="lead pp" data-step="1" style="color:var(--proc);font-weight:700">Ranking puts the most useful ones first, the same way ranking by population puts the biggest city first.</p>' }; },
     function(){ return { steps:0, html:
       '<h1 class="pp">Create your own webpage</h1>' +
-      '<p class="lead pp" style="max-width:34ch">In your group, design a paper webpage on the class topic. 15 minutes.</p>' +
+      '<p class="lead pp" style="max-width:36ch">In your group, make a webpage for people who search for <b>rollercoaster</b>. Fill in the template. 15 minutes.</p>' +
       '<div class="d2-reveal pp">' +
-        rc('A URL','a web address, like www.allaboutourschool.com','in-c') +
+        rc('A URL','a web address, like www.coasterfans.co.uk','in-c') +
         rc('A heading and subheadings','','pr-c') +
         rc('Paragraphs, and pictures or diagrams','','ou-c') +
       '</div>', init: revealInit }; },
@@ -6224,7 +6224,7 @@ window.HB_GAUGE = (function(){
       var ROWS = [["Paragraph mention",1],["Subheading",5],["Heading",10],["URL",20],["Inbound link",50]];
       return { steps:0, html:
         '<h1 class="pp">Score your page, live</h1>' +
-        '<p class="lead pp">Count real occurrences on your paper page, then tap + for each one you find.</p>' +
+        '<p class="lead pp">Count every <b>rollercoaster</b> on your page, then tap + for each one you find.</p>' +
         '<div class="pp" style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:480px" id="d2scorerows">' +
         ROWS.map(function(r,i){ return '<div style="display:flex;align-items:center;gap:12px;background:var(--ground-2);border-radius:12px;padding:10px 16px" data-pts="'+r[1]+'">' +
           '<span style="flex:1;font-weight:600">'+r[0]+' <span style="color:var(--muted);font-weight:500">&times;'+r[1]+'</span></span>' +
@@ -6258,7 +6258,7 @@ window.HB_GAUGE = (function(){
     wfLaunch('#search', 'Searching Mr Whiteflix', 'Tick the boxes and watch what the search bar writes for you.', 'Open the search'),
     function(){ return { steps:1, html:
       '<h1 class="pp">Would this page score well?</h1>' +
-      '<p class="lead pp" style="max-width:34ch">A page that repeats &ldquo;our school&rdquo; forty times in a row.</p>' +
+      '<p class="lead pp" style="max-width:34ch">A page that says &ldquo;rollercoaster&rdquo; forty times in a row.</p>' +
       '<div class="d2-rc pp" data-step="1" style="max-width:32ch" id="d2seo"><b>Tap for the answer</b><span class="ans">Search engines can detect keyword repeated in an unnatural way, and penalise the page instead of ranking it higher.</span></div>',
       init:function(el){ var c=el.querySelector('#d2seo'); c.addEventListener('click', function(){ c.classList.add('open'); }); } }; },
     checkSlide('orbit'),
@@ -6274,20 +6274,61 @@ window.HB_GAUGE = (function(){
     {q:"Repeating a keyword over and over in an unnatural way…", o:["always ranks a page top","can be detected and penalised by a search engine","makes no difference at all"], a:1}
   ];
   var Y56_SHEETS5 = {
+    // a group sheet laid out like a real webpage in a browser, so pupils fill
+    // in the parts a search engine reads instead of facing a blank page. Every
+    // group writes for the same search word, so the pages compete fairly when
+    // they are scored. The scoring rules are not on here on purpose: the class
+    // meets the algorithm after the pages are made.
     webpage: function(){
+      var hint = function(t){ return '<div style="font-size:11px;color:#8a92a1;margin-top:3px">' + t + '</div>'; };
+      // writing lines drawn as borders, not a background, so they print even
+      // when the browser's "background graphics" option is off
+      var line = function(n, starter){
+        var out = '';
+        for(var i = 0; i < n; i++){
+          out += '<div style="height:24px;border-bottom:1.3px solid #c3c8d4;font-size:13px;color:#8a92a1;line-height:28px">' + (i === 0 && starter ? starter : '') + '</div>';
+        }
+        return out;
+      };
+      var box = 'border:1.6px solid #c3c8d4;border-radius:8px;padding:8px 12px';
       return shell(Y56META5,'Create your own webpage',
-        'Design a paper webpage on your topic. Include a URL, a heading, subheadings, paragraphs, and pictures or diagrams.',
-        '<h2>Topic</h2><div class="lines s2"></div>' +
-        '<h2>URL</h2><div class="lines s2"></div>' +
-        '<h2>Heading</h2><div class="lines s2"></div>' +
-        '<h2>Subheadings and paragraphs</h2><div class="lines s5"></div>' +
-        '<div class="draw" data-hint="Draw a picture or diagram" style="height:180px"></div>' +
-        '<h2>Link to another group&rsquo;s page, and why</h2><div class="lines s2"></div>');
+        'Your group is making a webpage for people who search for the word below. Fill in every part of the page. Make it the most useful page you can.',
+        '<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact">' +
+        '<div style="display:flex;align-items:center;gap:12px;margin:-8px 0 10px">' +
+          '<span style="font-size:13px;font-weight:600;color:#5c6676">Search word:</span>' +
+          '<span style="font-size:22px;font-weight:800;border:2px solid #161b22;border-radius:999px;padding:3px 18px">rollercoaster</span>' +
+          '<span style="font-size:13px;color:#5c6676;margin-left:auto">Group: ____________________</span></div>' +
+        '<div style="border:2px solid #9aa1af;border-radius:12px;overflow:hidden">' +
+          // browser bar with the address
+          '<div style="background:#eceef3;border-bottom:1.6px solid #c3c8d4;padding:9px 12px;display:flex;align-items:center;gap:10px">' +
+            '<span style="display:flex;gap:5px"><i style="width:10px;height:10px;border-radius:50%;background:#c9ced6;display:block"></i><i style="width:10px;height:10px;border-radius:50%;background:#c9ced6;display:block"></i><i style="width:10px;height:10px;border-radius:50%;background:#c9ced6;display:block"></i></span>' +
+            '<div style="flex:1;background:#fff;border:1.4px solid #c3c8d4;border-radius:999px;padding:6px 14px;font-size:15px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#5c6676">www.<span style="display:inline-block;width:46%;border-bottom:1.5px solid #9aa1af">&nbsp;</span>.co.uk <span style="font-family:inherit;font-size:10px;color:#8a92a1;margin-left:8px">e.g. www.coasterfans.co.uk</span></div></div>' +
+          '<div style="padding:10px 14px 12px">' +
+            // heading
+            '<div style="' + box + ';margin-bottom:10px"><div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em">HEADING</div>' + line(1) + hint('What is your page called? For example: The Best Rollercoasters in Yorkshire') + '</div>' +
+            '<div style="display:grid;grid-template-columns:1.25fr 1fr;gap:12px">' +
+              '<div style="display:flex;flex-direction:column;gap:10px">' +
+                '<div style="' + box + '"><div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em">SUBHEADING</div>' + line(1) + hint('For example: Our favourite ride') +
+                  '<div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em;margin-top:6px">PARAGRAPH</div>' + line(3, 'Our favourite rollercoaster is') + '</div>' +
+                '<div style="' + box + '"><div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em">SUBHEADING</div>' + line(1) + hint('For example: Top tips for your first ride') +
+                  '<div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em;margin-top:6px">PARAGRAPH</div>' + line(3, 'If it is your first time,') + '</div>' +
+              '</div>' +
+              '<div style="display:flex;flex-direction:column;gap:10px">' +
+                '<div class="draw" data-hint="Draw a picture or diagram" style="flex:1;min-height:180px;height:auto"></div>' +
+                '<div style="' + box + '"><div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em">CAPTION</div>' + line(2) + '</div>' +
+              '</div>' +
+            '</div>' +
+            // links along the bottom, like the footer of a real page
+            '<div style="' + box + ';margin-top:10px;background:#f7f8fb"><div style="font-size:11px;font-weight:700;color:#5c6676;letter-spacing:.05em">LINKS</div>' +
+              '<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:14px;margin-top:4px"><div><div style="font-size:12px;color:#5c6676">We link to this group&rsquo;s page:</div>' + line(1) + '</div>' +
+              '<div><div style="font-size:12px;color:#5c6676">We chose it because</div>' + line(2) + '</div></div></div>' +
+          '</div>' +
+        '</div></div>');
     },
     score: function(){
       var row = function(rule, pts){ return '<div style="display:flex;gap:14px;padding:9px 0;border-bottom:1.5px solid #dfe2ec"><div style="flex:1">'+rule+'</div><div style="flex:none;width:70px;font-weight:700">'+pts+'</div><div style="flex:none;width:60px;border-bottom:1.5px solid #c3c8d4"></div></div>'; };
       return shell(Y56META5,'Score your page',
-        'Count how many times your search term appears in each place, and write your score.',
+        'Count how many times the word rollercoaster appears in each place on your page, and write your score.',
         '<div style="display:flex;gap:14px;font-size:12px;font-weight:700;color:#5c6676"><div style="flex:1">Where</div><div style="flex:none;width:70px">Points each</div><div style="flex:none;width:60px">Your score</div></div>' +
         row('In the paragraphs','1') + row('In a subheading','5') + row('In the heading','10') + row('In the URL','20') + row('Each inbound link','50') +
         '<h2>Total</h2><div class="lines s2"></div>');
