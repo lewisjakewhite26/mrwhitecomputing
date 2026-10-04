@@ -567,6 +567,18 @@
         });
       } },
 
+    /* 5b */ { name:'Quick check', tab:'Clue 2', steps:1,
+      note:'A one-minute check before the iPads come out. Everyone answers on a whiteboard. Up to date scores: ToyMania 3, Gran’s Toy Box 2, Old Town Museum 2, TimeTravel History 1. Anyone who says TimeTravel History is still thinking Google picks the best page, not the one its rule favours; sit with them in Round 1.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:110px;top:70px;width:1300px"><div class="kick">Quick check · whiteboards</div>' +
+            '<div class="index" style="margin-top:22px;padding:84px 44px 36px;transform:rotate(-.8deg);position:relative"><span class="pin" style="left:48%;top:-10px"></span>' +
+              '<div class="se" style="font-size:54px;line-height:1.15">Google changes its rule to <span class="red">newest first</span>. Which website is number 1 now?</div></div></div>' +
+          '<div class="abs pp" data-s="1" style="left:140px;top:430px;width:1240px;display:flex;gap:36px;align-items:center">' +
+            '<span class="stamp" style="--r:-6deg;font-size:40px;padding:12px 22px;flex:none">ToyMania Shop</span>' +
+            '<span class="body">It scores 3 for up to date, more than any of the others. Change the rule and a different website wins.</span></div>';
+      } },
+
     /* 6 */ { name:'Your mission', tab:'Briefing', steps:3,
       note:'The task flips searching round. Step 1 shows the normal way and today’s way. Step 2: the rules. Google Lens (the camera button) is banned because it would let them photograph the board. Step 3: the points. Pupils score themselves on the sheet; the fewest-words bonus is decided as a class.',
       build:function(r){
@@ -582,16 +594,16 @@
 
     /* 7 */ roundTitle({ name:'Round 1', tab:'Round 1', kick:'Round 1 of 3', title:'The Fact Hunt',
       lead:'For each fact, find a search that puts the answer at the top.',
-      rule:'You can use a website or the box Google shows at the top. If you can read the answer in the first result, it counts.',
-      side:'<span class="stamp" style="--r:-8deg;font-size:40px;padding:14px 22px">3 facts</span><div style="transform:scale(.74);transform-origin:center top">' + pointsStamps(0) + '</div>',
-      note:'About 8 minutes for all three facts. Run each fact for 2 or 3 minutes; set the tape to suit.' }),
-    /* 8 */ target({ name:'Fact A', tab:'Round 1', label:'Evidence A', text:'Queen Victoria reigned for <span class="red">63 years</span>.', ask:'Find a search that gets this answer first. Write every try.',
+      rule:'You can’t type the <b class="red">red words</b>, so ask a question whose answer is the fact. If you can read the answer in the first result, it counts.',
+      side:'<span class="stamp" style="--r:-8deg;font-size:40px;padding:14px 22px">Red words<br>banned</span><div style="transform:scale(.74);transform-origin:center top">' + pointsStamps(0) + '</div>',
+      note:'About 8 minutes for all three facts. Run each fact for 2 or 3 minutes; set the tape to suit. The red words (63, five, 93 million) are banned, otherwise a pair can type the fact itself and get it first without thinking.' }),
+    /* 8 */ target({ name:'Fact A', tab:'Round 1', label:'Evidence A', text:'Queen Victoria reigned for <span class="red">63</span> years.', ask:'Find a search that gets this answer first. <b>Don’t type the red word.</b>',
       search:'how long did queen victoria reign', words:6, beat:'Can anyone do it in fewer?', mins:3,
       note:'Try this one on a school iPad before the lesson. A shorter search that should work: victoria reign length (3 words).' }),
-    /* 9 */ target({ name:'Fact B', tab:'Round 1', label:'Evidence B', text:'Children as young as <span class="red">five</span> worked in Victorian coal mines.', size:70, ask:'Find a search that gets this answer first.',
+    /* 9 */ target({ name:'Fact B', tab:'Round 1', label:'Evidence B', text:'Children as young as <span class="red">five</span> worked in Victorian coal mines.', size:70, ask:'Find a search that gets this answer first. <b>Don’t type the red word.</b>',
       search:'how young were victorian mine workers', words:6, beat:'Can anyone do it in fewer?', mins:3,
       note:'A shorter one: victorian mine children age (4 words). Test it first.' }),
-    /* 10 */ target({ name:'Fact C', tab:'Round 1', label:'Evidence C', text:'The Sun is about <span class="red">93 million miles</span> from Earth.', ask:'Find a search that gets this answer first.',
+    /* 10 */ target({ name:'Fact C', tab:'Round 1', label:'Evidence C', text:'The Sun is about <span class="red">93 million</span> miles from Earth.', ask:'Find a search that gets this answer first. <b>Don’t type the red words.</b>',
       search:'how far away is the sun', words:6, beat:'It can be done in 2 words. Can you?', mins:3,
       note:'The 2-word search is sun distance. Ask why such a short search still works: Google fills in what you most probably meant.' }),
 
@@ -674,13 +686,14 @@
             '<div class="big" style="font-size:42px">The camera button (Google Lens) searches with a <b>picture</b> instead of words.</div></div>' +
           '<div class="pp" data-s="2" style="margin-top:50px"><span class="stamp" style="--r:-2deg;font-size:34px">Google is learning to look at pictures, as well as read</span></div></div>';
       } },
-    /* 22 */ { name:'Evidence wall', tab:'Evidence wall', steps:4,
-      note:'Type in three pairs’ best searches (tap a card, then type). Then connect: tap a search, then the rule it used, and the red string goes on. Tap a card again to take its strings off. Ask each pair which rule made their search work. The rules appear one per step.',
+    /* 22 */ { name:'Evidence wall', tab:'Evidence wall', steps:5,
+      note:'Type in three pairs’ best searches (tap a card, then type), or have pairs read theirs out and pin one or two. The four cards on the right are the algorithm’s rules from Clue 2, one per step. Connect: tap a search, then the rule that made it work, and the red string goes on; tap a card again to take its strings off. Every search ends up pinned to Words match, because that is the only rule a searcher controls. Step 5 says it: you can only change your words. The website has to earn the rest.',
       build:function(r){
-        var rules = [['Words that match', 'the same words as the answer'], ['Fewer, sharper words', 'no extra words to confuse it'], ['A special name', 'Earthrise, Brunel or Beamish'], ['Words next to the picture', 'what someone wrote beside it']];
+        var rules = [['Words match', 'your words are on the page, or next to the picture'], ['Links in', 'other websites link to it'], ['People stay', 'people read it and don’t leave straight away'], ['Up to date', 'it’s new, or changed recently']];
         r.innerHTML = '<div class="cork"></div>' +
           '<div class="abs" style="left:70px;top:46px;background:var(--paper);padding:8px 20px;transform:rotate(-1deg)"><span class="se" style="font-size:40px">Which rule cracked it?</span></div>' +
-          '<div class="abs" style="left:590px;top:640px;width:340px;background:var(--paper);padding:10px 16px;transform:rotate(1deg)"><span class="small" style="font-size:20px">Tap a search, then the rule it used. Tap a search twice to unpin it.</span></div>' +
+          '<div class="abs" style="left:640px;top:58px;width:330px;background:var(--paper);padding:10px 16px;transform:rotate(1deg)"><span class="small" style="font-size:19px">Tap a search, then the rule it used. Tap a search twice to unpin it.</span></div>' +
+          '<div class="abs pp" data-s="5" style="left:330px;top:652px;z-index:4"><span class="stamp" style="--r:-3deg;font-size:26px;background:rgba(255,253,246,.9)">You can only change your words</span></div>' +
           [0, 1, 2].map(function(i){ return '<div class="ecard EC" data-k="e' + i + '" style="left:' + (90 + (i % 2) * 30) + 'px;top:' + (160 + i * 180) + 'px;transform:rotate(' + [-2, 1.5, -1][i] + 'deg)"><span class="pin" style="left:46%;top:-10px"></span><div class="lab">BEST SEARCH ' + (i + 1) + '</div><div class="ed" contenteditable="true" spellcheck="false"></div></div>'; }).join('') +
           rules.map(function(t, i){ return '<div class="rcard RC pp" data-s="' + (i + 1) + '" data-k="r' + i + '" style="left:' + (1010 - (i % 2) * 40) + 'px;top:' + (130 + i * 145) + 'px;transform:rotate(' + [1.5, -2, 1, -1.5][i] + 'deg)"><span class="pin" style="left:46%;top:-10px"></span>' + t[0] + '<small>' + t[1] + '</small></div>'; }).join('') +
           '<svg class="abs STR" style="left:0;top:0;pointer-events:none;z-index:3" width="1520" height="744"></svg>';
