@@ -883,32 +883,77 @@
         var p = r.querySelector('.HK'); p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = 0;
       } },
 
-    /* 30 */ { name:'Get into orbit', tab:'Debrief', steps:0,
-      note:'Each pupil taps the rings: the closer to the centre, the surer they are about today’s three orders. Every tap stays as its own mark. Clear needs two taps.',
+    /* 30 */ { name:'Case status', tab:'Debrief', steps:0,
+      note:'The confidence check. Each pupil picks a stamp from the tray (Case closed: I can do this; Still investigating: getting there; Cold case: lost) and stamps each of the three cases where they tap. They can change stamp between cases. Stamps pile up like real ones, and the tally under each card keeps count once it gets messy. Undo takes back the last stamp; Clear needs two taps.',
       build:function(r){
-        var rings = [[300, '#E9DFC6'], [200, '#E2CFA2'], [100, '#D9B979']];
-        r.innerHTML = '<div class="abs" style="left:80px;top:40px"><div class="kick">Debrief</div><h2 class="h2 tw" style="margin-top:6px">Get into orbit</h2>' +
-            '<p class="body" style="margin-top:16px;width:560px">How sure are you that you can:</p>' +
-            ['explain what an algorithm is?', 'find the search that gets an answer to the top?', 'explain why a result is first, and who gains?'].map(function(t, i){ return '<p class="body" style="margin:10px 0 0;width:560px;font-size:27px"><b>' + (i + 1) + '.</b> ' + t + '</p>'; }).join('') +
-            '<div style="display:flex;gap:12px;margin-top:30px"><button type="button" class="tbtn UND">Undo</button><button type="button" class="tbtn CLR">Clear</button></div></div>' +
-          '<div class="abs orbit" style="left:760px;top:40px;width:660px;height:660px"><svg viewBox="-330 -330 660 660" width="660" height="660">' +
-            rings.map(function(g){ return '<circle r="' + g[0] + '" fill="' + g[1] + '" stroke="#8C7A5E" stroke-width="2"/>'; }).join('') +
-            '<text y="-262" text-anchor="middle" font-family="Courier Prime" font-weight="700" font-size="22" fill="#5E4E3C">Drifting</text>' +
-            '<text y="-162" text-anchor="middle" font-family="Courier Prime" font-weight="700" font-size="22" fill="#5E4E3C">In orbit</text>' +
-            '<text y="8" text-anchor="middle" font-family="Special Elite" font-size="30" fill="#2B2118">Locked on</text><g class="MK"></g></svg></div>';
-        var svg = r.querySelector('svg'), mk = r.querySelector('.MK'), clr = r.querySelector('.CLR'), armed = false;
-        svg.addEventListener('click', function(e){
-          e.stopPropagation();
-          var b = svg.getBoundingClientRect(), x = (e.clientX - b.left) / b.width * 660 - 330, y = (e.clientY - b.top) / b.height * 660 - 330;
-          if(Math.hypot(x, y) > 300) return;
-          mk.insertAdjacentHTML('beforeend', '<circle cx="' + x + '" cy="' + y + '" r="13" fill="#A3221B" stroke="#FFFDF6" stroke-width="4"/>');
-          thud();
+        var KINDS = [['closed', 'Case closed', '#2C7A4B'], ['open', 'Still investigating', '#B86E00'], ['cold', 'Cold case', '#2B5C8A']];
+        var CASES = ['I can explain what an algorithm is.', 'I can find the search that gets an answer to the top.', 'I can explain why a result is first, and who gains.'];
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:30px"><div class="kick">Debrief</div><h2 class="h2 tw" style="margin-top:6px">Case status</h2></div>' +
+          '<div class="abs" style="left:700px;top:62px;width:740px"><p class="body" style="margin:0;font-size:26px">Pick a stamp, then stamp each case to show where you are.</p></div>' +
+          CASES.map(function(t, i){
+            return '<div class="abs index CC" data-c="' + i + '" style="left:' + (80 + i * 465) + 'px;top:150px;width:430px;height:440px;transform:rotate(' + [-.8, .6, -.4][i] + 'deg)">' +
+              '<span class="stamp ink" style="--r:-4deg;position:absolute;left:22px;top:12px;font-size:20px;padding:4px 12px">Case ' + (i + 1) + '</span>' +
+              '<div class="se" style="position:absolute;left:26px;right:22px;top:74px;font-size:29px;line-height:1.2">' + t + '</div>' +
+              '<div class="STA" style="position:absolute;left:10px;right:10px;top:196px;bottom:50px;cursor:crosshair;touch-action:manipulation"></div>' +
+              '<div class="TAL small" style="position:absolute;left:22px;right:16px;bottom:10px;font-size:18px;font-weight:700;color:var(--mu)"></div>' +
+            '</div>';
+          }).join('') +
+          '<div class="abs" style="left:80px;top:620px;right:80px;display:flex;align-items:center;gap:22px">' +
+            '<span class="small" style="font-weight:700;letter-spacing:.14em;color:var(--mu)">PICK A STAMP</span>' +
+            KINDS.map(function(k){ return '<button type="button" class="PK" data-k="' + k[0] + '" style="font-family:var(--se);font-size:26px;text-transform:uppercase;color:' + k[2] + ';background:var(--paper);border:4px solid ' + k[2] + ';border-radius:10px;padding:10px 18px;cursor:pointer;transition:transform .15s,box-shadow .15s">' + k[1] + '</button>'; }).join('') +
+            '<span style="flex:1"></span><button type="button" class="tbtn UND">Undo</button><button type="button" class="tbtn CLR">Clear</button>' +
+          '</div>';
+        var picked = null, hist = [], armed = false, clr = r.querySelector('.CLR');
+        function tally(c){
+          var card = r.querySelector('.CC[data-c="' + c + '"]'), n = { closed:0, open:0, cold:0 };
+          [].forEach.call(card.querySelectorAll('.MK'), function(m){ n[m.getAttribute('data-k')]++; });
+          card.querySelector('.TAL').textContent = (n.closed + n.open + n.cold) ? 'Closed ' + n.closed + '  ·  Investigating ' + n.open + '  ·  Cold ' + n.cold : '';
+        }
+        [].forEach.call(r.querySelectorAll('.PK'), function(b){
+          b.addEventListener('click', function(e){
+            e.stopPropagation();
+            picked = b.getAttribute('data-k');
+            [].forEach.call(r.querySelectorAll('.PK'), function(o){ var on = o === b; o.style.transform = on ? 'translateY(-8px) rotate(-2deg)' : 'none'; o.style.boxShadow = on ? '0 10px 18px -8px rgba(46,34,25,.6)' : 'none'; o.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+          });
         });
-        r.querySelector('.UND').addEventListener('click', function(e){ e.stopPropagation(); if(mk.lastChild) mk.removeChild(mk.lastChild); });
+        [].forEach.call(r.querySelectorAll('.STA'), function(a){
+          a.addEventListener('click', function(e){
+            e.stopPropagation();
+            if(!picked){
+              [].forEach.call(r.querySelectorAll('.PK'), function(o){ o.animate && o.animate([{ transform:'translateY(0)' }, { transform:'translateY(-10px)' }, { transform:'translateY(0)' }], { duration:300, iterations:2 }); });
+              return;
+            }
+            var k = KINDS.filter(function(x){ return x[0] === picked; })[0];
+            var b = a.getBoundingClientRect(), sc = b.width / a.offsetWidth || 1;
+            var x = (e.clientX - b.left) / sc, y = (e.clientY - b.top) / sc;
+            // keep the whole stamp on the card, wherever they tap
+            x = Math.max(78, Math.min(a.offsetWidth - 78, x)); y = Math.max(22, Math.min(a.offsetHeight - 22, y));
+            var rot = (Math.random() * 28 - 14).toFixed(1);
+            var m = document.createElement('div');
+            m.className = 'MK'; m.setAttribute('data-k', picked);
+            m.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;transform:translate(-50%,-50%);pointer-events:none';
+            m.innerHTML = '<span class="stamp thump" style="--r:' + rot + 'deg;font-size:17px;padding:5px 10px;border-width:3px;border-color:' + k[2] + ';color:' + k[2] + ';opacity:' + (.78 + Math.random() * .18).toFixed(2) + ';white-space:nowrap;background:transparent">' + k[1] + '</span>';
+            a.appendChild(m);
+            // nudge it back inside if the stamp is wider than where they tapped allows
+            var hw = m.offsetWidth / 2 + 4, hh = m.offsetHeight / 2 + 6;
+            m.style.left = Math.max(hw, Math.min(a.offsetWidth - hw, x)) + 'px';
+            m.style.top = Math.max(hh, Math.min(a.offsetHeight - hh, y)) + 'px';
+            hist.push(m);
+            thud();
+            tally(a.parentNode.getAttribute('data-c'));
+          });
+        });
+        r.querySelector('.UND').addEventListener('click', function(e){
+          e.stopPropagation();
+          var m = hist.pop(); if(!m) return;
+          var c = m.parentNode.parentNode.getAttribute('data-c'); m.remove(); tally(c);
+        });
         clr.addEventListener('click', function(e){
           e.stopPropagation();
           if(!armed){ armed = true; clr.textContent = 'Tap again to clear'; setTimeout(function(){ armed = false; clr.textContent = 'Clear'; }, 2500); return; }
-          mk.innerHTML = ''; armed = false; clr.textContent = 'Clear';
+          [].forEach.call(r.querySelectorAll('.MK'), function(m){ m.remove(); }); hist = [];
+          [0, 1, 2].forEach(tally); armed = false; clr.textContent = 'Clear';
         });
       } }
   ];
@@ -1007,7 +1052,7 @@
   document.getElementById('fback').addEventListener('click', back);
   document.getElementById('home').addEventListener('click', function(e){ e.stopPropagation(); });
   host.addEventListener('click', function(e){
-    if(e.target.closest('a,button,input,label,[contenteditable],.ecard,.rcard,.orbit')) return;
+    if(e.target.closest('a,button,input,label,[contenteditable],.ecard,.rcard,.orbit,.CC')) return;
     next();
   });
   addEventListener('keydown', function(e){
