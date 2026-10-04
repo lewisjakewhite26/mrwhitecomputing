@@ -342,7 +342,7 @@
   }
 
   function missionIcons(){
-    var rows = [[PAIR,'Work in pairs. One types, one writes.'],[PEN,'Write down every search you try.'],[HASH,'Count the words. Fewer is better.'],[CAMX,'Google only. No camera button.']];
+    var rows = [[PAIR,'Work in pairs. One types, one writes.'],[PEN,'Write down every search you try.'],[HASH,'Count the words: fewer is better.'],[CAMX,'Google only, and no camera button.']];
     return rows.map(function(r, i){ return '<div class="pp" data-s="2" style="display:flex;gap:22px;align-items:center;transition-delay:' + i * .12 + 's">' + r[0] + '<span class="body">' + r[1] + '</span></div>'; }).join('');
   }
 
@@ -380,7 +380,7 @@
         '</div>';
       if(img){
         front = '<div class="f index" style="padding:84px 40px 30px"><span class="stamp ink" style="--r:-3deg;font-size:22px;position:absolute;left:36px;top:12px">' + esc(o.label) + '</span>' +
-          '<div class="big">Find this <b>exact</b> picture in Google Images.</div><div class="body" style="margin-top:16px;color:var(--mu)">Same photo, not just the same thing.</div></div>';
+          '<div class="big">Find this <b>exact</b> picture in Google Images.</div><div class="body" style="margin-top:16px;color:var(--mu)">Another photo of the same thing doesn’t count.</div></div>';
         r.innerHTML = photo({ x:70, y:70, w:780, h:560, src:o.src, alt:o.alt, cap:o.cap, ask:o.ask }) +
           '<div class="flip abs" style="left:910px;top:70px;width:560px;height:430px"><div class="in">' + front + back + '</div></div>' +
           '<div class="abs" style="left:950px;top:560px">' + tape(o.mins || 5) + '</div>';
@@ -520,7 +520,7 @@
           '<div class="abs" style="left:80px;top:150px;width:1360px" ><p class="big" style="margin:0">An <b>algorithm</b> is a set of rules a computer follows.</p></div>' +
           '<div class="abs pp" data-s="2" data-only="1" style="left:80px;top:232px"><span class="stamp" style="--r:-2deg;font-size:30px">Rule: most people first</span></div>' +
           '<div class="abs pp" data-s="3" data-only="1" style="left:80px;top:232px"><span class="stamp" style="--r:-2deg;font-size:30px">Rule: closest to Stockton first</span></div>' +
-          '<div class="abs pp" data-s="4" style="left:80px;top:232px"><span class="stamp ink" style="--r:-2deg;font-size:30px">Same cards. Different rules. Different order.</span></div>' +
+          '<div class="abs pp" data-s="4" style="left:80px;top:232px"><span class="stamp ink" style="--r:-2deg;font-size:30px">Same five cities, but change the rule and the order changes.</span></div>' +
           CITIES.map(function(c, i){
             return '<div class="mv index pp CT" data-s="1" data-i="' + i + '" style="width:250px;height:300px;padding:80px 22px 20px;top:340px;left:' + (90 + i * 272) + 'px">' +
               '<div class="se" style="font-size:40px;position:absolute;left:22px;top:12px">' + c.n + '</div>' +
@@ -581,7 +581,7 @@
       } },
 
     /* 7 */ roundTitle({ name:'Round 1', tab:'Round 1', kick:'Round 1 of 3', title:'The Fact Hunt',
-      lead:'Three facts. For each one, find a search that puts the answer at the top.',
+      lead:'For each fact, find a search that puts the answer at the top.',
       rule:'You can use a website or the box Google shows at the top. If you can read the answer in the first result, it counts.',
       side:'<span class="stamp" style="--r:-8deg;font-size:40px;padding:14px 22px">3 facts</span><div style="transform:scale(.74);transform-origin:center top">' + pointsStamps(0) + '</div>',
       note:'About 8 minutes for all three facts. Run each fact for 2 or 3 minutes; set the tape to suit.' }),
@@ -592,11 +592,11 @@
       search:'how young were victorian mine workers', words:6, beat:'Can anyone do it in fewer?', mins:3,
       note:'A shorter one: victorian mine children age (4 words). Test it first.' }),
     /* 10 */ target({ name:'Fact C', tab:'Round 1', label:'Evidence C', text:'The Sun is about <span class="red">93 million miles</span> from Earth.', ask:'Find a search that gets this answer first.',
-      search:'how far away is the sun', words:6, beat:'Someone did it in 2 words. Can you?', mins:3,
+      search:'how far away is the sun', words:6, beat:'It can be done in 2 words. Can you?', mins:3,
       note:'The 2-word search is sun distance. Ask why such a short search still works: Google fills in what you most probably meant.' }),
 
     /* 11 */ roundTitle({ name:'Round 2', tab:'Round 2', kick:'Round 2 of 3', title:'The Website Hunt',
-      lead:'Three websites. Get each one to number 1 <b>without typing its name</b>.',
+      lead:'Get each website to number 1 <b>without typing its name</b>.',
       rule:'No name, no web address. Describe what the website is or does.',
       side:'<span class="stamp" style="--r:6deg;font-size:40px;padding:14px 22px">No names</span><span class="stamp ink" style="--r:-5deg;font-size:30px;padding:10px 18px">Not even part of it</span>',
       note:'About 8 minutes. This round is where the algorithm’s rules show most clearly: a website that matches what you describe, and that lots of other sites link to, comes first.' }),
@@ -650,7 +650,7 @@
       } },
 
     /* 16 */ roundTitle({ name:'Round 3', tab:'Round 3', kick:'Round 3 of 3', title:'The Image Hunt',
-      lead:'Three photos. Find the <b>exact same one</b> in Google Images.',
+      lead:'Find the <b>exact photo</b> I found, in Google Images.',
       rule:'Tap Images under the search bar. Fewest words still wins the bonus.',
       side:'<span class="stamp" style="--r:-6deg;font-size:34px;padding:14px 22px">Exact photo<br>only</span>' + CAMX.replace('width="64" height="64"', 'width="150" height="150"') + '<span class="body" style="text-align:center">No camera button.</span>',
       note:'About 8 minutes. Scoring for photos: 3 if it is in the first row, 2 if it is on the screen without scrolling, 1 if they had to scroll. If a pair finds the same moment from a slightly different angle, give 2 and save 3 for the exact photo.' }),
@@ -666,18 +666,18 @@
       search:'bellingham celebration celta vigo', words:4, beat:'Spot the clues that make it different.', found:'Jude Bellingham, celebration, Real Madrid, away kit, Celta Vigo',
       note:'This photo belongs to a photo agency, so it is not stored on the site. Tap the box and load your saved copy. Clues: the dark away kit, and the light blue crowd means an away game. Check the match on an iPad first.' }),
     /* 20 */ { name:'Twist', tab:'Round 3', steps:2,
-      note:'The twist. Google Lens searches with a picture instead of words. That is why it was banned. Google is getting better at seeing, not just reading.',
+      note:'The twist. Google Lens searches with a picture instead of words. That is why it was banned. Google is learning to look at pictures, as well as read the words around them.',
       build:function(r){
         r.innerHTML =
           '<div class="abs" style="left:110px;top:100px;width:1300px"><div class="kick">One more thing</div><h2 class="h2 tw" style="margin-top:10px">Why was the camera banned?</h2>' +
           '<div class="pp" data-s="1" style="display:flex;gap:40px;align-items:center;margin-top:60px">' + CAMX.replace('<path d="M4 44 44 4" stroke="#A3221B" stroke-width="5" stroke-linecap="round"/>', '').replace('width="64" height="64"', 'width="170" height="170"') +
             '<div class="big" style="font-size:42px">The camera button (Google Lens) searches with a <b>picture</b> instead of words.</div></div>' +
-          '<div class="pp" data-s="2" style="margin-top:50px"><span class="stamp" style="--r:-2deg;font-size:34px">Google is learning to see, not just read</span></div></div>';
+          '<div class="pp" data-s="2" style="margin-top:50px"><span class="stamp" style="--r:-2deg;font-size:34px">Google is learning to look at pictures, as well as read</span></div></div>';
       } },
     /* 22 */ { name:'Evidence wall', tab:'Evidence wall', steps:4,
       note:'Type in three pairs’ best searches (tap a card, then type). Then connect: tap a search, then the rule it used, and the red string goes on. Tap a card again to take its strings off. Ask each pair which rule made their search work. The rules appear one per step.',
       build:function(r){
-        var rules = [['Words that match', 'the same words as the answer'], ['Fewer, sharper words', 'no extra words to confuse it'], ['A special name', 'Earthrise, Brunel, Beamish…'], ['Words next to the picture', 'what someone wrote beside it']];
+        var rules = [['Words that match', 'the same words as the answer'], ['Fewer, sharper words', 'no extra words to confuse it'], ['A special name', 'Earthrise, Brunel or Beamish'], ['Words next to the picture', 'what someone wrote beside it']];
         r.innerHTML = '<div class="cork"></div>' +
           '<div class="abs" style="left:70px;top:46px;background:var(--paper);padding:8px 20px;transform:rotate(-1deg)"><span class="se" style="font-size:40px">Which rule cracked it?</span></div>' +
           '<div class="abs" style="left:590px;top:640px;width:340px;background:var(--paper);padding:10px 16px;transform:rotate(1deg)"><span class="small" style="font-size:20px">Tap a search, then the rule it used. Tap a search twice to unpin it.</span></div>' +
@@ -821,11 +821,11 @@
       } },
 
     /* 25 */ { name:'Who pulls the strings?', tab:'Suspects', steps:3,
-      note:'Three people influence every search. The searcher: their words, where they are (remember the map), what they searched before. The search company: its secret rules, and who has paid. The website maker: good matching words and links, or cheating. Ask which of the three they trust most.',
+      note:'Every search has three people pushing it about. The searcher: their words, where they are (remember the map), what they searched before. The search company: its secret rules, and who has paid. The website maker: good matching words and links, or cheating. Ask which of the three they trust most.',
       build:function(r){
-        var who = [[PAIR, 'The searcher', 'Your words. Where you are. What you searched before.'],
-          [GLOBE, 'The search company', 'Its secret rules. Who has paid to be first.'],
-          [PEN, 'The website maker', 'Good words and links. Or cheating.']];
+        var who = [[PAIR, 'The searcher', 'The words you type, where you are, and what you’ve searched for before.'],
+          [GLOBE, 'The search company', 'Its secret rules, and who has paid to be first.'],
+          [PEN, 'The website maker', 'Good words and links, or cheating.']];
         r.innerHTML = '<div class="abs" style="left:80px;top:40px"><div class="kick">Three suspects</div><h2 class="h2 tw" style="margin-top:6px">Who pulls the strings?</h2></div>' +
           who.map(function(w, i){
             return '<div class="abs pp" data-s="' + (i + 1) + '" style="left:' + (80 + i * 460) + 'px;top:180px;width:420px">' +
@@ -841,7 +841,7 @@
       note:'Next opens Whiteflix HQ, with three sliders deciding the Top 10. The laminator episode is Sponsored. Challenge: get it to number 1. Then ask what they had to change, and whether that is fair on the other programmes. Use the floating Next button to come back.',
       build:function(r){
         r.innerHTML = '<div class="abs" style="left:110px;top:110px;width:1100px"><div class="kick">Exhibit W</div><h1 class="h1 tw" style="margin-top:14px">Mr Whiteflix HQ</h1>' +
-          '<p class="big" style="margin-top:34px">Three sliders decide the Top 10. <b>Mr White Explains the Laminator</b> is sponsored.</p>' +
+          '<p class="big" style="margin-top:34px">In Whiteflix HQ, three sliders decide the Top 10. <b>Mr White Explains the Laminator</b> is sponsored.</p>' +
           '<p class="big pp" data-s="1" style="margin-top:20px">Can you get it to number 1? What did you have to change?</p></div>' +
           '<span class="stamp abs" style="--r:-10deg;left:1110px;top:110px;font-size:40px;padding:12px 22px">Sponsored</span>';
       } },
@@ -854,7 +854,7 @@
     /* 29 */ { name:'Case closed', tab:'Case file 02', steps:3,
       note:'Back to the search from the start and the whiteboard guesses. Step 1: the reasons, all from today. Step 2: CASE CLOSED. Step 3: Top Agents for the pair with the fewest words; tap the line and type their names.',
       build:function(r){
-        var why = ['Its words match', 'Lots of sites link to it', 'People stay and read it', '…or someone paid'];
+        var why = ['Its words match', 'Lots of sites link to it', 'People stay and read it', 'Or someone paid'];
         r.innerHTML = hookPage(70, 70, 760) +
           '<div class="abs" style="left:900px;top:70px;width:560px"><div class="se" style="font-size:52px;line-height:1.1">Now: why is <span class="red">this</span> one first?</div>' +
             why.map(function(t, i){ return '<div class="pp" data-s="1" style="transition-delay:' + i * .15 + 's;margin-top:' + (i ? 12 : 30) + 'px;display:flex;gap:14px;align-items:center"><span class="pin" style="position:static;flex:none"></span><span class="body" style="font-size:28px">' + t + '</span></div>'; }).join('') +
