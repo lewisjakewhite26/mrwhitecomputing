@@ -6151,7 +6151,8 @@ window.HB_GAUGE = (function(){
   /* =================== YEAR 5/6 · SYSTEMS AND SEARCHING · LESSON 5 =================== */
   var Y56META5 = { eyebrow:'Systems and Searching &middot; Lesson 5', exitHash:'#/g/y56' };
   var Y56_NOTES5 = [
-    ["Introduction · 1 min","How search results are ranked","Recap Lesson 4: the crawler builds the index, and the engine selects from it. Today is the next question, which is what decides the order they come back in."],
+    ["Introduction · 1 min","How search results are ranked","Last lesson was Extra: Let's go searching. Today is the next question, which is what decides the order the results come back in."],
+    ["Reboot · 4 min","Last time","Ask each question before you reveal its answer. Take three or four answers first, or use mini whiteboards. The last line sets up today: the index finds thousands of matching pages, so what decides which one comes first?"],
     ["Introduction · 2 min","Today you will…","Read the three together."],
     ["Introduction · 4 min","Ordering and ranking","Show the world's ten biggest cities two ways: alphabetically, and ranked by population. Ask which is more useful, and why."],
     ["Introduction · 2 min","Ranking search results","A search returns millions of pages. Ranking puts the most useful ones first, the same way ranking by population puts the biggest city first."],
@@ -6170,6 +6171,23 @@ window.HB_GAUGE = (function(){
     function(){ return { steps:0, html:
       '<h1 class="pp">How search results are <em>ranked</em></h1>' +
       '<div class="pp" style="display:flex;gap:clamp(14px,4vw,32px);color:var(--proc)">' + ph('globe',52)+ph('arrow-down',52)+ph('cpu',52) + '</div>' }; },
+    // reboot: three questions from the Extra lesson, each answer revealed after
+    // the class has had a go, then the question today's lesson answers
+    function(){
+      var QA = [
+        ['What does a web crawler do?','It visits web pages by following links, and reads the words on them.'],
+        ['Where does it put the words it finds?','In the index: one giant memory of words, and the pages they are on.'],
+        ['When you search, does Google search the whole web?','No. It looks in its index, which is why it is so fast.']
+      ];
+      return { steps:QA.length + 1, html:
+        '<h1 class="pp">Last time: let&rsquo;s go searching</h1>' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,20px);text-align:left;width:min(94%,1100px)">' +
+        QA.map(function(q, i){
+          return '<div class="pp" style="background:var(--ground-2);border-radius:16px;padding:clamp(12px,1.8vw,20px) clamp(14px,2vw,22px)">' +
+            '<div style="font-size:clamp(1.05rem,2.1vw,1.4rem);font-weight:700">' + (i + 1) + '. ' + q[0] + '</div>' +
+            '<div class="pp" data-step="' + (i + 1) + '" style="font-size:clamp(.98rem,1.9vw,1.25rem);color:var(--proc);font-weight:600;margin-top:6px">' + q[1] + '</div></div>';
+        }).join('') + '</div>' +
+        '<p class="lead pp" data-step="' + (QA.length + 1) + '" style="font-weight:800">The index finds thousands of matching pages. Today: which one goes <em>first</em>?</p>' }; },
     function(){
       var items = ["Order a list by rank","Explain that a search engine follows rules called an algorithm","Give examples of what search engines score"];
       return { steps:items.length, html:
