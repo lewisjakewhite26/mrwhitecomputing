@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Record of Attempts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+  @page{size:A4 portrait;margin:7mm 10mm}
+  :root{--ink:#2B2118;--red:#A3221B;--line:#8A7F74;--se:'Special Elite','Courier New',monospace;--cp:'Courier Prime','Courier New',monospace}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#E9E4D8;color:var(--ink);font-family:var(--cp)}
+  .bar{max-width:210mm;margin:16px auto 0;display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+  .bar a,.bar button{font-family:var(--cp);font-size:16px;font-weight:700;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:999px;padding:8px 18px;text-decoration:none;cursor:pointer}
+  .bar button{background:var(--ink);color:#fff}
+  .page{width:210mm;min-height:297mm;margin:12px auto 30px;background:#fff;padding:9mm 10mm;box-shadow:0 10px 30px -12px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:2.2mm}
+  @media print{
+    html,body{background:#fff}
+    .bar{display:none}
+    .page{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}
+  }
+  .head{border:2px solid var(--ink);padding:2mm 4mm;display:flex;justify-content:space-between;align-items:center}
+  .head .k{font-size:9pt;font-weight:700;letter-spacing:.2em}
+  .head h1{font-family:var(--se);font-weight:400;font-size:18pt;margin:0;line-height:1.05}
+  .stamp{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--red);color:var(--red);font-family:var(--se);text-transform:uppercase;letter-spacing:.06em;line-height:1}
+  .secret{width:16mm;height:16mm;border-radius:50%;transform:rotate(-10deg);font-size:8pt;text-align:center;border-width:2.5px}
+  .agents{display:flex;gap:3mm;align-items:flex-end;font-size:10pt;font-weight:700;letter-spacing:.08em}
+  .agents span{flex:1;border-bottom:1.5px solid var(--ink);height:5mm}
+  h2{font-family:var(--se);font-weight:400;font-size:12pt;margin:0;border-bottom:2px solid var(--ink);padding-bottom:1mm;display:flex;justify-content:space-between;align-items:baseline}
+  h2 small{font-family:var(--cp);font-size:8.5pt;font-weight:700;letter-spacing:.04em}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm}
+  .t{border:1.5px dashed var(--ink);padding:1.6mm 3mm;display:flex;flex-direction:column;gap:1.2mm;break-inside:avoid}
+  .t .top{display:flex;gap:2mm;align-items:baseline}
+  .t .lab{font-size:7.5pt;font-weight:700;letter-spacing:.12em;color:var(--red);border:1.5px solid var(--red);padding:0 1.5mm;flex:none}
+  .t .what{font-family:var(--se);font-size:10pt;line-height:1.15}
+  .try{display:flex;gap:2mm;align-items:flex-end;font-size:7.5pt;font-weight:700}
+  .try .w{width:13mm;flex:none}
+  .try .ln{flex:1;border-bottom:1.2px solid var(--line);height:6mm}
+  .try .n{width:7mm;height:5.5mm;border:1.2px solid var(--line);flex:none}
+  .circ{display:flex;gap:1.5mm;align-items:center;font-size:7pt;font-weight:700;flex-wrap:wrap}
+  .circ i{font-style:normal;border:1.2px solid var(--red);color:var(--red);border-radius:50%;padding:.6mm 2mm}
+  .note{border:1.5px solid var(--ink);padding:2mm 3mm;font-size:8.5pt;line-height:1.35;display:flex;flex-direction:column;gap:1.5mm}
+  .note b{font-family:var(--se);font-weight:400;font-size:10.5pt}
+  .note .ln{border-bottom:1.2px solid var(--line);height:6mm}
+  .foot{display:flex;gap:3mm;margin-top:auto}
+  .foot .rep{flex:1;border:2px solid var(--ink);padding:2mm 3mm;font-size:8.5pt;font-weight:700;display:flex;flex-direction:column;gap:1mm}
+  .foot .rep .ln{border-bottom:1.2px solid var(--line);height:6mm}
+  .foot .tot{width:34mm;border:3px double var(--red);color:var(--red);padding:2mm 3mm;font-size:8pt;font-weight:700;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div class="bar"><a href="first-result.html">Back to the lesson</a><button type="button" onclick="window.print()">Print</button></div>
+<div class="page" id="page"></div>
+<script>
+(function(){
+  function tries(n, words){
+    var h = '';
+    for(var i = 1; i <= n; i++) h += '<div class="try"><span class="w">TRY ' + i + '</span><span class="ln"></span>' + (words ? '<span>WORDS</span><span class="n"></span>' : '') + '</div>';
+    return h;
+  }
+  function circ(list){ return '<div class="circ"><span>CIRCLE:</span>' + list.map(function(x){ return '<i>' + x + '</i>'; }).join('') + '</div>'; }
+  var RES = ['1st', 'Top 3', 'Lower', 'Not found'], PIC = ['First row', 'On screen', 'Scrolled', 'Not found'];
+  function t(lab, what, list){ return '<div class="t"><div class="top"><span class="lab">' + lab + '</span><span class="what">' + what + '</span></div>' + tries(2, true) + circ(list) + '</div>'; }
+
+  document.getElementById('page').innerHTML =
+    '<div class="head"><div><div class="k">CASE FILE 02 · WHY IS IT FIRST?</div><h1>Record of Attempts</h1></div><span class="stamp secret">Top<br>secret</span></div>' +
+    '<div class="agents">AGENTS <span></span> &amp; <span></span></div>' +
+
+    '<h2>Round 1. The Fact Hunt <small>Get the answer to the top.</small></h2>' +
+    '<div class="grid">' +
+      t('EVIDENCE A', 'Queen Victoria reigned for 63 years.', RES) +
+      t('EVIDENCE B', 'Children as young as five worked in coal mines.', RES) +
+      t('EVIDENCE C', 'The Sun is about 93 million miles from Earth.', RES) +
+      '<div class="note"><b>Points</b><span>3 = the 1st result<br>2 = in the top 3<br>1 = found it lower down<br>+1 bonus = fewest words in the class</span></div>' +
+    '</div>' +
+
+    '<h2>Round 2. The Website Hunt <small>Do not type its name.</small></h2>' +
+    '<div class="grid">' +
+      t('WEBSITE A', 'Beamish Museum', RES) +
+      t('WEBSITE B', 'Preston Park Museum', RES) +
+      t('WEBSITE C', 'NASA', RES) +
+      '<div class="note"><b>Banned words</b><span>Beamish · Preston · Park · NASA<br>Describe what the website is or does instead.</span></div>' +
+    '</div>' +
+
+    '<h2>Round 3. The Image Hunt <small>The exact same photo. No camera button.</small></h2>' +
+    '<div class="grid">' +
+      t('PHOTO 1', 'Look at the board.', PIC) +
+      t('PHOTO 2', 'Look at the board.', PIC) +
+      t('PHOTO 3', 'Look at the board.', PIC) +
+      '<div class="note"><b>Clue</b><span>Pick one photo. What words do you think were written next to it?</span><span class="ln"></span><span class="ln"></span></div>' +
+    '</div>' +
+
+    '<div class="foot"><div class="rep">AGENT REPORT: why did your best search work?<span class="ln"></span><span class="ln"></span></div><div class="tot">CASE TOTAL</div></div>';
+})();
+</script>
+</body>
+</html>

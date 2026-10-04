@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Case of the First Result</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+  :root{
+    --desk:#2E2219; --man:#E6D19C; --man2:#D8C185; --paper:#FFFDF6; --ink:#2B2118; --mu:#5E4E3C;
+    --red:#A3221B; --blue:#1F3E8C; --cork:#B98A5A;
+    --se:'Special Elite','Courier New',monospace; --cp:'Courier Prime','Courier New',monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--desk);color:var(--ink);font-family:var(--cp)}
+  body{background:repeating-linear-gradient(97deg,rgba(255,255,255,.018) 0 3px,transparent 3px 11px),var(--desk)}
+  button{font:inherit}
+
+  #frame{position:fixed;inset:0;width:100%;height:100%;border:0;display:none;background:#0b0d12;z-index:5}
+  #frame.on{display:block}
+  #fnav{position:fixed;bottom:16px;right:16px;z-index:10;display:none;gap:8px}
+  #fnav.on{display:flex}
+  #fnav button{font-family:var(--cp);font-size:16px;font-weight:700;padding:10px 20px;border-radius:999px;border:2px solid var(--man);background:var(--paper);color:var(--ink);cursor:pointer;box-shadow:0 6px 16px -8px rgba(0,0,0,.5)}
+  #fnav button.primary{background:var(--red);border-color:var(--red);color:#fff}
+
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #fit.off{display:none}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;outline:none}
+
+  /* the folder every slide sits in */
+  .tab{position:absolute;left:40px;top:14px;height:40px;min-width:240px;padding:0 28px;background:var(--man);border-radius:12px 12px 0 0;font-family:var(--se);font-size:22px;letter-spacing:.14em;display:flex;align-items:center;color:var(--ink);text-transform:uppercase}
+  .folder{position:absolute;left:40px;top:52px;width:1520px;height:744px;background:var(--man);border-radius:2px 12px 12px 12px;box-shadow:0 22px 50px -20px rgba(0,0,0,.7)}
+  .folder.shake{animation:shake .28s ease}
+  @keyframes shake{25%{transform:translate(2px,3px)}50%{transform:translate(-2px,-1px)}75%{transform:translate(1px,2px)}}
+  .scene{position:absolute;inset:0}
+  .scene.enter{animation:slidein .55s cubic-bezier(.16,1,.3,1)}
+  @keyframes slidein{from{opacity:0;transform:translateY(34px) rotate(-.6deg)}to{opacity:1;transform:none}}
+
+  .home{position:absolute;right:40px;top:12px;font-size:18px;font-weight:700;color:var(--man);text-decoration:none;border:2px solid rgba(230,209,156,.4);border-radius:999px;padding:7px 18px}
+  .home:hover{border-color:var(--man)}
+  .nav{position:absolute;left:0;right:0;bottom:0;height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;gap:20px}
+  .btn{font-family:var(--cp);font-size:26px;font-weight:700;min-height:62px;padding:0 34px;border-radius:999px;border:3px solid var(--man);background:transparent;color:var(--man);cursor:pointer}
+  .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+  .btn:disabled{opacity:.3;cursor:default}
+  .mid{display:flex;align-items:center;gap:22px}
+  .parts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:860px;justify-content:center}
+  .part{width:14px;height:14px;border-radius:50%;border:2px solid #8C7A5E;background:transparent;padding:0;cursor:pointer}
+  .part.done{background:#8C7A5E}
+  .part.on{background:var(--man);border-color:var(--man)}
+  .tool{font-family:var(--cp);font-size:16px;font-weight:700;color:var(--man);background:transparent;border:2px solid rgba(230,209,156,.35);border-radius:999px;padding:7px 14px;cursor:pointer}
+  .tool[aria-pressed="true"]{border-color:var(--man)}
+
+  #notes{position:absolute;left:40px;right:40px;bottom:104px;background:var(--paper);border:3px solid var(--ink);border-radius:10px;padding:16px 22px;font-size:21px;line-height:1.4;display:none;z-index:4;box-shadow:0 14px 30px -12px rgba(0,0,0,.6)}
+  #notes.on{display:block}
+  #notes b{font-family:var(--se);font-weight:400;letter-spacing:.06em;margin-right:10px}
+
+  /* reveal steps */
+  .pp{transition:opacity .45s ease,transform .45s cubic-bezier(.16,1,.3,1)}
+  .pp.hide{opacity:0;transform:translateY(14px);pointer-events:none}
+  .abs{position:absolute}
+
+  /* type */
+  .kick{font-family:var(--cp);font-weight:700;font-size:24px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu)}
+  .h1{font-family:var(--se);font-weight:400;font-size:96px;line-height:1.02;margin:0}
+  .h2{font-family:var(--se);font-weight:400;font-size:60px;line-height:1.08;margin:0}
+  .big{font-family:var(--cp);font-size:36px;line-height:1.35;font-weight:400}
+  .body{font-family:var(--cp);font-size:30px;line-height:1.38}
+  .small{font-family:var(--cp);font-size:22px;line-height:1.35}
+  .se{font-family:var(--se);font-weight:400}
+  .red{color:var(--red)}
+  .tw .cur{display:inline-block;width:.5em;border-bottom:4px solid currentColor;margin-left:2px;animation:blink .8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* paper things */
+  .paper{background:var(--paper);box-shadow:0 8px 18px -8px rgba(46,34,25,.45)}
+  .index{background:var(--paper);box-shadow:0 8px 18px -8px rgba(46,34,25,.45);background-image:linear-gradient(transparent 62px,#D96B63 62px,#D96B63 64px,transparent 64px),repeating-linear-gradient(transparent 0 46px,#C9D6EA 46px 48px);background-position:0 0,0 18px}
+  .clip{position:absolute;top:-24px;width:30px;height:64px}
+  .pin{position:absolute;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#E2574C,#8E1C16);box-shadow:0 3px 4px rgba(0,0,0,.4)}
+
+  /* stamps */
+  .stamp{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;border:5px solid var(--red);color:var(--red);font-family:var(--se);text-transform:uppercase;letter-spacing:.06em;padding:8px 20px;border-radius:10px;transform:rotate(var(--r,-6deg));mix-blend-mode:multiply;opacity:.92;line-height:1}
+  .stamp.round{border-radius:50%;padding:0}
+  .stamp.ink{border-color:var(--ink);color:var(--ink)}
+  .stamp.thump{animation:thump .4s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes thump{0%{opacity:0;transform:scale(2.4) rotate(var(--r,-6deg));filter:blur(3px)}55%{opacity:1;transform:scale(.93) rotate(var(--r,-6deg));filter:blur(0)}100%{transform:scale(1) rotate(var(--r,-6deg))}}
+
+  /* timer tape */
+  .tape{display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;background:#F3EEDF;padding:16px 30px 14px;text-align:left;transform:rotate(1.5deg);box-shadow:0 4px 10px -4px rgba(46,34,25,.4);cursor:pointer;border:0;color:var(--ink);font-family:var(--cp)}
+  .tape .lab{font-size:20px;font-weight:700;letter-spacing:.14em}
+  .tape .t{font-family:var(--se);font-size:72px;line-height:1;min-width:4.2ch}
+  .tape .hint{font-size:16px;font-weight:700;color:var(--mu)}
+  .tape.low{animation:flash 1s steps(1) infinite}
+  .tape.low .t,.tape.done .t{color:var(--red)}
+  @keyframes flash{50%{background:#F6D9D3}}
+
+  /* buttons inside slides */
+  .tbtn{font-family:var(--cp);font-size:22px;font-weight:700;padding:10px 22px;border-radius:999px;border:3px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+  .tbtn.solid{background:var(--ink);color:var(--paper)}
+
+  /* pretend search page */
+  .sp{position:absolute;padding:28px 36px;background:#fff;box-shadow:0 10px 22px -10px rgba(46,34,25,.5)}
+  .sbar{display:flex;align-items:center;gap:14px;border:2.5px solid #C9C2B4;border-radius:999px;padding:12px 24px;font-family:var(--cp);font-size:30px;font-weight:700;color:var(--ink)}
+  .res{margin-top:22px;position:relative}
+  .res .r{padding:12px 0 14px;border-bottom:1.5px dashed #DDD5C6}
+  .res .r .u{font-size:18px;color:#5C6B57}
+  .res .r .ti{font-size:28px;font-weight:700;color:var(--blue);text-decoration:underline;text-underline-offset:4px}
+  .res .r .d{font-size:20px;color:#4A4038}
+  .spon{display:inline-block;font-size:16px;font-weight:700;letter-spacing:.08em;background:var(--ink);color:#fff;padding:2px 8px;margin-right:8px;vertical-align:2px}
+
+  /* flip card */
+  .flip{perspective:1600px}
+  .flip .in{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,1.2,.5,1);transform-style:preserve-3d}
+  .flip.over .in{transform:rotateY(180deg)}
+  .flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .flip .b{transform:rotateY(180deg)}
+
+  /* photo slot */
+  .photo{position:absolute;background:#fff;padding:16px 16px 54px;box-shadow:0 12px 26px -10px rgba(46,34,25,.6)}
+  .photo .img{width:100%;height:100%;background:#E9E3D3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .photo img{width:100%;height:100%;object-fit:contain;background:#111;display:block}
+  .photo .cap{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-family:var(--se);font-size:26px}
+  .photo label{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:30px;font-size:24px;font-weight:700;cursor:pointer;color:var(--mu)}
+  .photo input{display:none}
+
+  /* rows that move */
+  .mv{position:absolute;transition:left .8s cubic-bezier(.5,0,.2,1),top .8s cubic-bezier(.5,0,.2,1),transform .8s cubic-bezier(.5,0,.2,1),opacity .5s}
+
+  /* sliders */
+  .sl{display:flex;flex-direction:column;gap:6px}
+  .sl span{font-size:20px;font-weight:700}
+  .sl input{width:100%;accent-color:var(--red);height:34px}
+
+  /* cork board */
+  .cork{position:absolute;inset:26px;background-color:var(--cork);background-image:radial-gradient(rgba(60,35,15,.25) 1.4px,transparent 1.6px),radial-gradient(rgba(255,240,210,.18) 1.2px,transparent 1.4px);background-size:22px 22px,17px 17px;background-position:0 0,8px 11px;border:14px solid #6B4A2B;border-radius:6px}
+  .ecard{position:absolute;width:420px;min-height:120px;background:var(--paper);padding:20px 22px 18px;box-shadow:0 8px 14px -6px rgba(0,0,0,.45);cursor:pointer}
+  .ecard .lab{font-size:16px;font-weight:700;letter-spacing:.14em;color:var(--mu)}
+  .ecard .ed{font-family:var(--se);font-size:30px;min-height:38px;outline:none;border-bottom:2px dashed #CDBFA6;margin-top:6px}
+  .ecard.sel{outline:5px solid var(--red);outline-offset:4px}
+  .rcard{position:absolute;width:400px;background:var(--paper);padding:18px 22px;box-shadow:0 8px 14px -6px rgba(0,0,0,.45);font-size:27px;font-weight:700;cursor:pointer}
+  .LU.out > :not(.CAUGHT){opacity:.35}
+  .rcard small{display:block;font-size:19px;font-weight:400;color:var(--mu);margin-top:4px}
+
+  /* video */
+  .screen{position:absolute;background:#0E0B08;border:12px solid #1B140E;border-radius:8px;box-shadow:0 18px 30px -12px rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .screen iframe{width:100%;height:100%;border:0}
+  .playbtn{display:flex;flex-direction:column;align-items:center;gap:18px;background:none;border:0;color:var(--man);cursor:pointer;font-family:var(--se);font-size:34px}
+  .playbtn i{width:120px;height:120px;border-radius:50%;border:5px solid var(--man);display:flex;align-items:center;justify-content:center}
+  .links{display:flex;gap:16px;justify-content:center}
+  .links a{font-family:var(--cp);font-size:21px;font-weight:700;color:var(--ink);border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;text-decoration:none;background:var(--paper)}
+
+  /* orbit */
+  .orbit svg{cursor:crosshair;touch-action:none}
+
+  @media (prefers-reduced-motion: reduce){
+    .pp,.mv,.flip .in{transition:none}
+    .scene.enter,.stamp.thump,.folder.shake,.tape.low{animation:none}
+  }
+</style>
+</head>
+<body>
+<iframe id="frame" title="Embedded page"></iframe>
+<div id="fnav"><button type="button" id="fback">Back</button><button type="button" class="primary" id="fnext">Next</button></div>
+<div id="fit">
+  <div id="stage" tabindex="-1">
+    <div class="tab" id="tab">Case file 02</div>
+    <a class="home" id="home" href="index.html#/g/y56">All lessons</a>
+    <div class="folder" id="folder"><div id="host"></div></div>
+    <div id="notes"></div>
+    <div class="nav">
+      <button class="btn" id="back" type="button">Back</button>
+      <div class="mid">
+        <button class="tool" id="snd" type="button" aria-pressed="true">Sound on</button>
+        <div class="parts" id="parts"></div>
+        <button class="tool" id="nbtn" type="button" aria-pressed="false">Notes</button>
+      </div>
+      <button class="btn primary" id="next" type="button">Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage'), host = document.getElementById('host'), folder = document.getElementById('folder');
+  var frame = document.getElementById('frame'), fit = document.getElementById('fit'), fnav = document.getElementById('fnav');
+  function size(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', size); size();
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function store(k, v){ try{ if(v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
+
+  /* ---------------- sound: a rubber stamp thud, made on the spot ---------------- */
+  var soundOn = store('fr_sound') !== 'off', AC = null, lastThud = 0;
+  function thud(){
+    if(!soundOn || Date.now() - lastThud < 90) return;
+    lastThud = Date.now();
+    try{
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      var t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(48, t + .14);
+      g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(.001, t + .2);
+      o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + .22);
+      var n = AC.createBuffer(1, AC.sampleRate * .06, AC.sampleRate), d = n.getChannelData(0);
+      for(var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      var s = AC.createBufferSource(), g2 = AC.createGain(); s.buffer = n; g2.gain.value = .25;
+      s.connect(g2); g2.connect(AC.destination); s.start(t);
+    }catch(e){}
+  }
+  var sndBtn = document.getElementById('snd');
+  function sndPaint(){ sndBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; sndBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false'); }
+  sndBtn.addEventListener('click', function(e){ e.stopPropagation(); soundOn = !soundOn; store('fr_sound', soundOn ? 'on' : 'off'); sndPaint(); stage.focus({ preventScroll:true }); });
+  sndPaint();
+
+  /* ---------------- small effects ---------------- */
+  var timers = [];
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+  function stampIn(el, delay){
+    later(function(){
+      el.classList.remove('thump'); void el.offsetWidth; el.classList.add('thump');
+      later(function(){ thud(); folder.classList.remove('shake'); void folder.offsetWidth; folder.classList.add('shake'); }, 150);
+    }, delay || 0);
+  }
+  function typeOut(el){
+    var text = el.getAttribute('data-text');
+    if(text === null){ text = el.textContent; el.setAttribute('data-text', text); }
+    if(RM){ el.textContent = text; return; }
+    el.innerHTML = '<span class="cur"></span>';
+    for(var i = 0; i < text.length; i++){
+      (function(k){ later(function(){ el.innerHTML = esc(text.slice(0, k + 1)) + (k < text.length - 1 ? '<span class="cur"></span>' : ''); }, 40 * k + 120); })(i);
+    }
+  }
+  function drawIn(path, delay){
+    var len = path.getTotalLength();
+    path.style.transition = 'none'; path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+    path.getBoundingClientRect();
+    later(function(){ path.style.transition = 'stroke-dashoffset .9s ease'; path.style.strokeDashoffset = 0; }, delay || 0);
+  }
+  function settle(el){
+    // show something in its finished state, with no animation (used going backwards)
+    [].forEach.call(el.querySelectorAll('[data-text]'), function(t){ t.textContent = t.getAttribute('data-text'); });
+    if(el.hasAttribute && el.hasAttribute('data-text')) el.textContent = el.getAttribute('data-text');
+  }
+  function effects(el){
+    if(el.classList.contains('stamp')) stampIn(el);
+    [].forEach.call(el.querySelectorAll('.stamp'), function(s, i){ stampIn(s, i * 260); });
+    if(el.classList.contains('tw')) typeOut(el);
+    [].forEach.call(el.querySelectorAll('.tw'), typeOut);
+    [].forEach.call(el.querySelectorAll('.draw'), function(p, i){ drawIn(p, i * 200); });
+  }
+
+  /* ---------------- the countdown tape ---------------- */
+  var tick = null;
+  function stopTape(){ clearInterval(tick); tick = null; }
+  function tape(mins){
+    return '<button type="button" class="tape" data-secs="' + mins * 60 + '"><span class="lab">TIME LEFT</span><span class="t">' + fmt(mins * 60) + '</span><span class="hint">tap to start</span></button>';
+  }
+  function fmt(s){ return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  function wireTape(r){
+    var b = r.querySelector('.tape'); if(!b) return;
+    var left = +b.getAttribute('data-secs'), t = b.querySelector('.t'), h = b.querySelector('.hint');
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(left <= 0){ left = +b.getAttribute('data-secs'); t.textContent = fmt(left); b.classList.remove('done', 'low'); h.textContent = 'tap to start'; return; }
+      if(tick){ stopTape(); h.textContent = 'paused'; return; }
+      h.textContent = 'tap to pause';
+      tick = setInterval(function(){
+        left--; t.textContent = fmt(Math.max(0, left));
+        b.classList.toggle('low', left > 0 && left <= 10);
+        if(left <= 0){ stopTape(); b.classList.remove('low'); b.classList.add('done'); h.textContent = 'time is up'; stampIn(b); }
+      }, 1000);
+    });
+  }
+
+  /* ---------------- pictures ---------------- */
+  var CLIP = '<svg class="clip" viewBox="0 0 30 64" fill="none" stroke="#6E7378" stroke-width="3" stroke-linecap="round"><path d="M9 20V48a6 6 0 0 0 12 0V12a9 9 0 0 0-18 0v40a12 12 0 0 0 24 0V22"/></svg>';
+  var MAG = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#5E4E3C" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>';
+  var CAMX = '<svg viewBox="0 0 48 48" width="64" height="64" fill="none" stroke="#2B2118" stroke-width="3" stroke-linejoin="round"><path d="M6 16h8l4-5h12l4 5h8v22H6z"/><circle cx="24" cy="26" r="7"/><path d="M4 44 44 4" stroke="#A3221B" stroke-width="5" stroke-linecap="round"/></svg>';
+  var PAIR = '<svg viewBox="0 0 48 48" width="64" height="64" fill="none" stroke="#2B2118" stroke-width="3" stroke-linecap="round"><circle cx="16" cy="15" r="6"/><circle cx="32" cy="15" r="6"/><path d="M5 40c0-8 5-13 11-13s11 5 11 13M21 40c0-8 5-13 11-13s11 5 11 13"/></svg>';
+  var PEN = '<svg viewBox="0 0 48 48" width="64" height="64" fill="none" stroke="#2B2118" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40l3-10L32 9l7 7-21 21z"/><path d="M28 13l7 7"/></svg>';
+  var HASH = '<svg viewBox="0 0 48 48" width="64" height="64" fill="none" stroke="#2B2118" stroke-width="3" stroke-linecap="round"><path d="M10 18h30M8 30h30M20 8l-4 32M32 8l-4 32"/></svg>';
+  var GLOBE = '<svg viewBox="0 0 48 48" width="64" height="64" fill="none" stroke="#2B2118" stroke-width="3"><circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c6 6 6 28 0 34M24 7c-6 6-6 28 0 34"/></svg>';
+  var PENNY = '<svg viewBox="0 0 300 220" width="100%" height="100%"><g fill="none" stroke="#3C3127" stroke-width="5"><circle cx="110" cy="128" r="80"/><circle cx="246" cy="190" r="22"/><path d="M110 128 L246 190 M110 48 L140 30 M120 40 l14 -6 M110 128 L72 165 M110 128 L148 165 M110 128 L110 208 M110 128 L110 48 M110 128 L40 128 M110 128 L180 128 M110 128 L55 72 M110 128 L165 72 M110 128 L55 184 M110 128 L165 184"/></g><g fill="#3C3127"><circle cx="128" cy="22" r="12"/><path d="M118 34 q10 -4 22 2 l8 40 q-6 6 -16 4z"/><path d="M134 74 l-18 46 6 2 20 -40z"/></g></svg>';
+
+  function photo(o){
+    // a real photo if it loads; otherwise a box to load one from this computer
+    var pick = '<label><svg viewBox="0 0 48 48" width="70" height="70" fill="none" stroke="#5E4E3C" stroke-width="3" stroke-linejoin="round"><rect x="5" y="9" width="38" height="30" rx="3"/><circle cx="17" cy="20" r="4"/><path d="M5 34l11-9 8 6 6-4 13 10"/></svg>' +
+      '<span>' + esc(o.ask || 'Tap to load the photo from this computer') + '</span><input type="file" accept="image/*"></label>';
+    return '<div class="photo" style="left:' + o.x + 'px;top:' + o.y + 'px;width:' + o.w + 'px;height:' + o.h + 'px;transform:rotate(' + (o.rot || -1) + 'deg)">' + CLIP.replace('class="clip"', 'class="clip" style="right:60px"') +
+      '<div class="img">' + (o.src ? '<img alt="' + esc(o.alt || '') + '" src="' + o.src + '">' : pick) + '</div>' +
+      '<div class="cap">' + esc(o.cap) + '</div><template>' + pick + '</template></div>';
+  }
+  function wirePhoto(r){
+    [].forEach.call(r.querySelectorAll('.photo'), function(p){
+      var box = p.querySelector('.img'), tpl = p.querySelector('template');
+      function asPicker(){ box.innerHTML = tpl.innerHTML; wireInput(); }
+      function wireInput(){
+        var inp = box.querySelector('input'); if(!inp) return;
+        box.querySelector('label').addEventListener('click', function(e){ e.stopPropagation(); });
+        inp.addEventListener('change', function(){
+          var f = inp.files && inp.files[0]; if(!f) return;
+          var url = URL.createObjectURL(f); PHOTOS[p.getAttribute('data-k') || 'x'] = url;
+          box.innerHTML = '<img alt="" src="' + url + '">';
+        });
+      }
+      var img = box.querySelector('img');
+      if(img) img.addEventListener('error', asPicker); else wireInput();
+    });
+  }
+  var PHOTOS = {};
+
+  /* ---------------- parts of the lesson ---------------- */
+  var CITIES = [
+    { n:'London', pop:'8.8 million', p:8800000, d:230 },
+    { n:'Leeds', pop:'810,000', p:810000, d:55 },
+    { n:'Newcastle', pop:'300,000', p:300000, d:32 },
+    { n:'York', pop:'200,000', p:200000, d:43 },
+    { n:'Durham', pop:'48,000', p:48000, d:17 }
+  ];
+  var SITES = [ // the four websites for "victorian toys": words match, links in, people stay, up to date
+    { n:'ToyMania Shop', t:'Toys and games: big sale', s:[1,1,1,3] },
+    { n:'Gran’s Toy Box', t:'My gran’s old toys (a blog)', s:[2,0,1,2] },
+    { n:'TimeTravel History', t:'Victorian toys and games', s:[3,3,3,1] },
+    { n:'Old Town Museum', t:'Victorian toys: come and play', s:[3,2,2,2] }
+  ];
+  var RULES = ['Words match', 'Links in', 'People stay', 'Up to date'];
+  var RULES_LONG = ['Do its words match the search?', 'Do other websites link to it?', 'Do people stay and read it?', 'Is it new or up to date?'];
+
+  function hookPage(x, y, w){
+    return '<div class="sp" style="left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;transform:rotate(-.8deg)">' +
+      '<div class="sbar">' + MAG + '<span>victorian toys</span></div>' +
+      '<div class="res">' +
+        '<div class="r"><div class="u">timetravelhistory</div><div class="ti">Victorian toys and games</div><div class="d">Spinning tops, dolls and marbles.</div></div>' +
+        '<div class="r"><div class="u">oldtownmuseum</div><div class="ti">Victorian toys: come and play</div><div class="d">Try real Victorian toys in our 1890s street.</div></div>' +
+        '<div class="r"><div class="u">toymaniashop</div><div class="ti">Toys and games: big sale</div><div class="d">Thousands of toys with free delivery.</div></div>' +
+        '<div class="r" style="border:0"><div class="u">grans-toy-box</div><div class="ti">My gran’s old toys (a blog)</div><div class="d">I found a box of my gran’s toys in the loft…</div></div>' +
+        '<svg class="abs" style="left:-22px;top:-12px;overflow:visible" width="' + (w - 28) + '" height="130" viewBox="0 0 ' + (w - 28) + ' 130"><path class="draw HK" d="M' + (w - 70) + ' 14 C ' + (w - 10) + ' 40, ' + (w - 40) + ' 116, ' + (w / 2) + ' 120 C 90 124, 6 96, 16 56 C 26 12, ' + (w / 2) + ' 2, ' + (w - 40) + ' 22" fill="none" stroke="#A3221B" stroke-width="6" stroke-linecap="round"/></svg>' +
+      '</div></div>';
+  }
+
+  function missionIcons(){
+    var rows = [[PAIR,'Work in pairs. One types, one writes.'],[PEN,'Write down every search you try.'],[HASH,'Count the words. Fewer is better.'],[CAMX,'Google only. No camera button.']];
+    return rows.map(function(r, i){ return '<div class="pp" data-s="2" style="display:flex;gap:22px;align-items:center;transition-delay:' + i * .12 + 's">' + r[0] + '<span class="body">' + r[1] + '</span></div>'; }).join('');
+  }
+
+  function pointsStamps(s){
+    return '<div class="pp" data-s="' + s + '" style="display:flex;gap:26px;align-items:center">' +
+      '<span class="stamp round" style="--r:-8deg;width:170px;height:170px"><span style="font-size:52px">3 pts</span><span style="font-size:17px;font-family:var(--cp);font-weight:700">first result</span></span>' +
+      '<span class="stamp round" style="--r:6deg;width:150px;height:150px"><span style="font-size:46px">2 pts</span><span style="font-size:17px;font-family:var(--cp);font-weight:700">top 3</span></span>' +
+      '<span class="stamp round ink" style="--r:-3deg;width:150px;height:150px"><span style="font-size:46px">+1</span><span style="font-size:15px;font-family:var(--cp);font-weight:700;text-align:center">fewest<br>words</span></span></div>';
+  }
+
+  function roundTitle(o){
+    return { name:o.name, tab:o.tab, steps:1, note:o.note, build:function(r){
+      r.innerHTML =
+        '<div class="abs" style="left:90px;top:90px;width:900px">' +
+          '<div class="kick">' + esc(o.kick) + '</div>' +
+          '<h1 class="h1 tw" style="margin-top:14px">' + esc(o.title) + '</h1>' +
+          '<p class="big" style="margin:30px 0 0">' + o.lead + '</p>' +
+          '<p class="body pp" data-s="1" style="margin:26px 0 0;color:var(--mu)">' + o.rule + '</p>' +
+        '</div>' +
+        '<div class="abs" style="left:1040px;top:120px;width:400px;display:flex;flex-direction:column;align-items:center;gap:30px">' + o.side + '</div>';
+    } };
+  }
+
+  function target(o){
+    // one thing to hunt for: show it, run the clock, then flip it to show a search that works
+    var img = o.kind === 'image';
+    return { name:o.name, tab:o.tab, steps:1, note:o.note, build:function(r){
+      var front, back;
+      back = '<div class="b index" style="padding:84px 40px 30px">' +
+          '<div class="small" style="font-weight:700;letter-spacing:.14em;color:var(--mu)">ONE SEARCH THAT WORKS</div>' +
+          '<div class="sbar" style="margin-top:12px;background:#fff;font-size:' + (img ? 30 : 36) + 'px">' + MAG + '<span>' + esc(o.search) + '</span></div>' +
+          '<div class="body" style="margin-top:18px">' + o.words + (o.words === 1 ? ' word' : ' words') + '. ' + esc(o.beat) + '</div>' +
+          (o.found ? '<div class="small" style="margin-top:12px"><b>Words written next to it:</b> ' + esc(o.found) + '</div>' : '') +
+          '<span class="stamp pp" data-s="1" style="--r:-9deg;position:absolute;right:30px;top:14px;font-size:40px">Solved</span>' +
+        '</div>';
+      if(img){
+        front = '<div class="f index" style="padding:84px 40px 30px"><span class="stamp ink" style="--r:-3deg;font-size:22px;position:absolute;left:36px;top:12px">' + esc(o.label) + '</span>' +
+          '<div class="big">Find this <b>exact</b> picture in Google Images.</div><div class="body" style="margin-top:16px;color:var(--mu)">Same photo, not just the same thing.</div></div>';
+        r.innerHTML = photo({ x:70, y:70, w:780, h:560, src:o.src, alt:o.alt, cap:o.cap, ask:o.ask }) +
+          '<div class="flip abs" style="left:910px;top:70px;width:560px;height:430px"><div class="in">' + front + back + '</div></div>' +
+          '<div class="abs" style="left:950px;top:560px">' + tape(o.mins || 5) + '</div>';
+        r.querySelector('.photo').setAttribute('data-k', o.k);
+        if(PHOTOS[o.k]) r.querySelector('.photo .img').innerHTML = '<img alt="" src="' + PHOTOS[o.k] + '">';
+      } else {
+        front = '<div class="f index" style="padding:84px 54px 30px">' + CLIP.replace('class="clip"', 'class="clip" style="right:70px"') +
+          '<span class="stamp" style="--r:-3deg;font-size:24px;position:absolute;left:46px;top:12px">' + esc(o.label) + '</span>' +
+          '<div class="se" style="font-size:' + (o.size || 80) + 'px;line-height:1.16;margin-top:26px">' + o.text + '</div>' +
+          (o.sub ? '<div class="body" style="margin-top:22px;color:var(--mu)">' + o.sub + '</div>' : '') + '</div>';
+        r.innerHTML = '<div class="flip abs" style="left:80px;top:90px;width:980px;height:500px;transform:rotate(-1deg)"><div class="in">' + front + back.replace('font-size:36px', 'font-size:40px') + '</div></div>' +
+          '<div class="abs" style="left:1110px;top:110px;width:340px;display:flex;flex-direction:column;gap:28px;align-items:flex-start">' + tape(o.mins || 4) +
+            '<div class="body" style="font-size:26px">' + o.ask + '</div></div>';
+      }
+      wireTape(r); wirePhoto(r);
+    }, step:function(r, n, fwd){
+      var f = r.querySelector('.flip');
+      f.classList.toggle('over', n >= 1);
+      if(n >= 1) stopTape();
+    } };
+  }
+
+  function video(o){
+    return { name:o.name, tab:o.tab, steps:0, note:o.note, build:function(r){
+      r.innerHTML =
+        '<div class="abs" style="left:90px;top:44px;right:90px;display:flex;justify-content:space-between;align-items:flex-end">' +
+          '<div><div class="kick">' + esc(o.kick) + '</div><h2 class="h2" style="margin-top:8px">' + esc(o.title) + '</h2></div>' +
+          '<div class="links"><a href="https://www.youtube.com/watch?v=' + o.id + '" target="_blank" rel="noopener">Open on YouTube</a>' + (o.alt ? '<a href="' + o.alt[1] + '" target="_blank" rel="noopener">' + esc(o.alt[0]) + '</a>' : '') + '</div>' +
+        '</div>' +
+        '<div class="screen" style="left:280px;top:170px;width:960px;height:540px"><button type="button" class="playbtn"><i><svg viewBox="0 0 24 24" width="54" height="54"><path d="M8 5l12 7-12 7z" fill="#E6D19C"/></svg></i><span>' + esc(o.play) + '</span></button></div>';
+      var sc = r.querySelector('.screen');
+      sc.querySelector('.playbtn').addEventListener('click', function(e){
+        e.stopPropagation();
+        sc.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + o.id + '?autoplay=1&rel=0' + (o.start ? '&start=' + o.start : '') + '" title="' + esc(o.title) + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      });
+    } };
+  }
+
+  var LINEUP = [ // "how to do a step-over": words match, links in, people stay, up to date
+    { id:'A', n:'Skills School FC', t:'How to do a step-over', s:[3,3,3,1] },
+    { id:'B', n:'Kick Off Magazine', t:'5 tricks to learn this season', s:[1,2,2,3] },
+    { id:'C', n:'Dad’s Football Blog', t:'My step-over tips', s:[2,0,1,2] },
+    { id:'D', n:'Coach Kel', t:'Step-over drill for beginners', s:[3,2,2,2] },
+    { id:'E', n:'Best Step Over Site', t:'STEP OVER step over STEP-OVER best step over', s:[4,0,0,3], cheat:true }
+  ];
+
+  var PARTS = [
+    /* 1 */ { name:'Title', tab:'Case file 02', steps:0,
+      note:'Year 5/6, Systems and Searching, extra lesson. Print the record sheet first (link on this page): one per pair. Pairs need an iPad with Google.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:110px;top:120px;width:1000px">' +
+            '<div class="kick">Operation: why is it first?</div>' +
+            '<h1 class="h1 tw" style="font-size:118px;margin-top:22px">The Case of the First Result</h1>' +
+            '<p class="big" style="margin-top:34px;color:var(--mu)">Year 5/6 · Systems and Searching</p>' +
+          '</div>' +
+          '<span class="stamp abs" style="--r:-12deg;left:1130px;top:110px;font-size:44px;padding:16px 26px">Top<br>secret</span>' +
+          '<a class="tbtn abs" style="left:1130px;top:560px;text-decoration:none" href="first-result-sheet.html" target="_blank" rel="noopener">Print the record sheet</a>';
+      } },
+
+    /* 2 */ { name:'The case', tab:'Case file 02', steps:3,
+      note:'Search for victorian toys and four results come back. Step 1 circles the top one. Step 2 is the question for the whole lesson. Step 3: everyone writes a guess on a mini whiteboard. Keep the whiteboards; you come back to these guesses at the end.',
+      build:function(r){
+        r.innerHTML = hookPage(70, 70, 820) +
+          '<div class="abs pp" data-s="2" style="left:960px;top:110px;width:480px">' +
+            '<div class="index" style="position:relative;padding:84px 34px 34px;transform:rotate(2deg)"><span class="pin" style="left:46%;top:-10px"></span>' +
+              '<div class="se" style="font-size:62px;line-height:1.1">Why is <span class="red">this</span> one first?</div></div></div>' +
+          '<div class="abs pp" data-s="3" style="left:960px;top:470px;width:480px"><div class="body">Write your guess on your whiteboard.</div><div class="body" style="color:var(--mu);margin-top:10px">Keep it. We’ll check it at the end.</div></div>';
+      }, step:function(r, n, fwd){
+        var p = r.querySelector('.HK');
+        if(n >= 1){ if(fwd && n === 1) drawIn(p); else { p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = 0; } }
+        else { p.style.strokeDasharray = 9999; p.style.strokeDashoffset = 9999; }
+      } },
+
+    /* 3 */ { name:'Today you will', tab:'Case file 02', steps:3,
+      note:'Read the three together.',
+      build:function(r){
+        var items = ['Explain what an algorithm is.', 'Find the search that gets an answer to the top.', 'Explain why a result is first, and who gains.'];
+        r.innerHTML = '<div class="abs" style="left:110px;top:80px;width:1300px"><div class="kick">Your orders</div><h2 class="h2 tw" style="margin-top:10px">Today you will</h2>' +
+          items.map(function(t, i){ return '<div class="pp" data-s="' + (i + 1) + '" style="display:flex;gap:30px;align-items:center;margin-top:' + (i ? 34 : 54) + 'px"><span class="stamp ink" style="--r:-4deg;font-size:40px;padding:6px 18px">' + (i + 1) + '</span><span class="big" style="font-size:42px">' + t + '</span></div>'; }).join('') + '</div>';
+      } },
+
+    /* 4 */ { name:'What is an algorithm?', tab:'Clue 1', steps:4,
+      note:'An algorithm is a set of rules a computer follows. The five cities are the same each time; only the rule changes. Step 2 sorts by how many people live there, step 3 by how close each is to Stockton (straight-line miles, rounded). Ask what order a third rule would give, such as alphabetical. Step 4 is the line to remember.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:40px;width:900px"><div class="kick">Clue 1</div><h2 class="h2 tw" style="margin-top:6px">What is an algorithm?</h2></div>' +
+          '<div class="abs" style="left:80px;top:150px;width:1360px" ><p class="big" style="margin:0">An <b>algorithm</b> is a set of rules a computer follows.</p></div>' +
+          '<div class="abs pp" data-s="2" data-only="1" style="left:80px;top:232px"><span class="stamp" style="--r:-2deg;font-size:30px">Rule: most people first</span></div>' +
+          '<div class="abs pp" data-s="3" data-only="1" style="left:80px;top:232px"><span class="stamp" style="--r:-2deg;font-size:30px">Rule: closest to Stockton first</span></div>' +
+          '<div class="abs pp" data-s="4" style="left:80px;top:232px"><span class="stamp ink" style="--r:-2deg;font-size:30px">Same cards. Different rules. Different order.</span></div>' +
+          CITIES.map(function(c, i){
+            return '<div class="mv index pp CT" data-s="1" data-i="' + i + '" style="width:250px;height:300px;padding:80px 22px 20px;top:340px;left:' + (90 + i * 272) + 'px">' +
+              '<div class="se" style="font-size:40px;position:absolute;left:22px;top:12px">' + c.n + '</div>' +
+              '<div class="small" style="margin-top:4px"><b>People</b></div><div class="body" style="font-size:30px">' + c.pop + '</div>' +
+              '<div class="small" style="margin-top:14px"><b>From Stockton</b></div><div class="body" style="font-size:30px">' + c.d + ' miles</div>' +
+              '<div class="se red RK" style="position:absolute;right:16px;bottom:8px;font-size:54px;opacity:0;transition:opacity .4s .5s"></div></div>';
+          }).join('');
+      }, step:function(r, n){
+        var order = [3, 0, 4, 1, 2], rots = [-3, 2, -1.5, 3, -2];
+        if(n === 2) order = CITIES.map(function(c, i){ return i; }).sort(function(a, b){ return CITIES[b].p - CITIES[a].p; });
+        if(n >= 3) order = CITIES.map(function(c, i){ return i; }).sort(function(a, b){ return CITIES[a].d - CITIES[b].d; });
+        [].forEach.call(r.querySelectorAll('.CT'), function(el){
+          var i = +el.getAttribute('data-i'), at = order.indexOf(i);
+          el.style.left = (90 + at * 272) + 'px';
+          el.style.transform = n <= 1 ? 'rotate(' + rots[i] + 'deg) translateY(' + (i % 2 ? 26 : -8) + 'px)' : 'none';
+          var rk = el.querySelector('.RK'); rk.textContent = at + 1; rk.style.opacity = n >= 2 ? 1 : 0;
+        });
+      } },
+
+    /* 5 */ { name:'The algorithm at work', tab:'Clue 2', steps:6,
+      note:'Back to victorian toys. Google checks every page against its rules and gives points. These are four of its real kinds of rule, simplified: the real list is secret and has hundreds. Each step stamps one rule. Ask before each: which page do you think scores best here? Step 5 adds them up and sorts; the order is the same as the search page at the start. Step 6: it does this for billions of pages in under a second.',
+      build:function(r){
+        var head = '<div class="abs" style="left:80px;top:40px;width:1360px;display:flex;justify-content:space-between;align-items:flex-end"><div><div class="kick">Clue 2 · search: victorian toys</div><h2 class="h2 tw" style="margin-top:6px">The algorithm at work</h2></div></div>';
+        var cols = '<div class="abs" style="left:640px;top:156px;display:flex;gap:14px">' + RULES.map(function(t, i){ return '<div class="pp small" data-s="' + (i + 1) + '" style="width:150px;text-align:center;font-weight:700;line-height:1.15">' + t + '</div>'; }).join('') +
+          '<div class="pp small" data-s="5" style="width:130px;text-align:center;font-weight:700">Total</div></div>';
+        var rows = SITES.map(function(s, i){
+          var tot = s.s.reduce(function(a, b){ return a + b; }, 0);
+          return '<div class="mv paper ST" data-i="' + i + '" style="left:80px;top:' + (220 + i * 112) + 'px;width:1360px;height:96px;display:flex;align-items:center;padding:0 24px">' +
+            '<div style="width:56px;font-size:46px" class="se red RK"></div>' +
+            '<div style="width:480px"><div class="small" style="color:#5C6B57">' + esc(s.n) + '</div><div style="font-size:26px;font-weight:700;color:var(--blue)">' + esc(s.t) + '</div></div>' +
+            '<div style="display:flex;gap:14px">' + s.s.map(function(v, k){ return '<div style="width:150px;display:flex;justify-content:center"><span class="stamp pp" data-s="' + (k + 1) + '" style="--r:' + (k % 2 ? 5 : -5) + 'deg;font-size:40px;padding:2px 16px">+' + v + '</span></div>'; }).join('') +
+            '<div style="width:130px;display:flex;justify-content:center"><span class="pp se" data-s="5" style="font-size:52px">' + tot + '</span></div></div></div>';
+        }).join('');
+        r.innerHTML = head + cols + rows +
+          '<div class="abs pp" data-s="6" style="left:80px;top:680px;width:1360px;text-align:center"><span class="body" style="background:var(--paper);padding:6px 18px">It does this for <b>billions</b> of pages in less than a second.</span></div>';
+      }, step:function(r, n){
+        var tots = SITES.map(function(s){ return s.s.reduce(function(a, b){ return a + b; }, 0); });
+        var order = SITES.map(function(s, i){ return i; });
+        if(n >= 5) order.sort(function(a, b){ return tots[b] - tots[a]; });
+        [].forEach.call(r.querySelectorAll('.ST'), function(el){
+          var i = +el.getAttribute('data-i'), at = order.indexOf(i);
+          el.style.top = (220 + at * 112) + 'px';
+          el.querySelector('.RK').textContent = n >= 5 ? (at + 1) : '';
+        });
+      } },
+
+    /* 6 */ { name:'Your mission', tab:'Briefing', steps:3,
+      note:'The task flips searching round. Step 1 shows the normal way and today’s way. Step 2: the rules. Google Lens (the camera button) is banned because it would let them photograph the board. Step 3: the points. Pupils score themselves on the sheet; the fewest-words bonus is decided as a class.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:40px"><div class="kick">Briefing</div><h2 class="h2 tw" style="margin-top:6px">Your mission: reverse search</h2></div>' +
+          '<div class="abs pp" data-s="1" style="left:80px;top:170px;width:620px;display:flex;flex-direction:column;gap:22px">' +
+            '<div class="paper" style="padding:22px 28px"><div class="small" style="font-weight:700;letter-spacing:.14em;color:var(--mu)">NORMALLY</div><div class="body" style="margin-top:6px">You type a search. Google finds the answer.</div></div>' +
+            '<div class="paper" style="padding:22px 28px;border:4px solid var(--red)"><div class="small red" style="font-weight:700;letter-spacing:.14em">TODAY</div><div class="body" style="margin-top:6px">I give you the answer. <b>You find the search</b> that puts it first.</div></div>' +
+          '</div>' +
+          '<div class="abs" style="left:770px;top:170px;width:680px;display:flex;flex-direction:column;gap:24px">' + missionIcons() + '</div>' +
+          '<div class="abs" style="left:800px;top:540px">' + pointsStamps(3) + '</div>';
+      } },
+
+    /* 7 */ roundTitle({ name:'Round 1', tab:'Round 1', kick:'Round 1 of 3', title:'The Fact Hunt',
+      lead:'Three facts. For each one, find a search that puts the answer at the top.',
+      rule:'You can use a website or the box Google shows at the top. If you can read the answer in the first result, it counts.',
+      side:'<span class="stamp" style="--r:-8deg;font-size:40px;padding:14px 22px">3 facts</span><div style="transform:scale(.74);transform-origin:center top">' + pointsStamps(0) + '</div>',
+      note:'About 8 minutes for all three facts. Run each fact for 2 or 3 minutes; set the tape to suit.' }),
+    /* 8 */ target({ name:'Fact A', tab:'Round 1', label:'Evidence A', text:'Queen Victoria reigned for <span class="red">63 years</span>.', ask:'Find a search that gets this answer first. Write every try.',
+      search:'how long did queen victoria reign', words:6, beat:'Can anyone do it in fewer?', mins:3,
+      note:'Try this one on a school iPad before the lesson. A shorter search that should work: victoria reign length (3 words).' }),
+    /* 9 */ target({ name:'Fact B', tab:'Round 1', label:'Evidence B', text:'Children as young as <span class="red">five</span> worked in Victorian coal mines.', size:70, ask:'Find a search that gets this answer first.',
+      search:'how young were victorian mine workers', words:6, beat:'Can anyone do it in fewer?', mins:3,
+      note:'A shorter one: victorian mine children age (4 words). Test it first.' }),
+    /* 10 */ target({ name:'Fact C', tab:'Round 1', label:'Evidence C', text:'The Sun is about <span class="red">93 million miles</span> from Earth.', ask:'Find a search that gets this answer first.',
+      search:'how far away is the sun', words:6, beat:'Someone did it in 2 words. Can you?', mins:3,
+      note:'The 2-word search is sun distance. Ask why such a short search still works: Google fills in what you most probably meant.' }),
+
+    /* 11 */ roundTitle({ name:'Round 2', tab:'Round 2', kick:'Round 2 of 3', title:'The Website Hunt',
+      lead:'Three websites. Get each one to number 1 <b>without typing its name</b>.',
+      rule:'No name, no web address. Describe what the website is or does.',
+      side:'<span class="stamp" style="--r:6deg;font-size:40px;padding:14px 22px">No names</span><span class="stamp ink" style="--r:-5deg;font-size:30px;padding:10px 18px">Not even part of it</span>',
+      note:'About 8 minutes. This round is where the algorithm’s rules show most clearly: a website that matches what you describe, and that lots of other sites link to, comes first.' }),
+    /* 12 */ target({ name:'Website A', tab:'Round 2', label:'Website A', text:'Beamish Museum', size:74, sub:'The living museum near Stanley, County Durham.', ask:'Get it to number 1 without typing <b>Beamish</b>.',
+      search:'living museum county durham', words:4, beat:'Fewer?', mins:3,
+      note:'Banned: beamish. Good searches describe it: living museum, 1900s town, north east.' }),
+    /* 13 */ target({ name:'Website B', tab:'Round 2', label:'Website B', text:'Preston Park Museum', size:68, sub:'The museum in Stockton with a Victorian street inside.', ask:'Get it to number 1 without typing <b>Preston Park</b>.',
+      search:'museum with victorian street stockton', words:5, beat:'Fewer?', mins:3,
+      note:'Banned: preston and park. This one is local, so location helps: Google knows they are searching from near Stockton.' }),
+    /* 14 */ target({ name:'Website C', tab:'Round 2', label:'Website C', text:'NASA', size:110, sub:'The space agency of the United States.', ask:'Get it to number 1 without typing <b>NASA</b>.',
+      search:'american space agency', words:3, beat:'Fewer?', mins:3,
+      note:'Banned: nasa. Ask why Wikipedia sometimes beats the real NASA website: lots of sites link to Wikipedia.' }),
+
+    /* 15 */ { name:'How Google sees a picture', tab:'Clue 3', steps:4,
+      note:'Before the image round. Step 1: Google is mostly reading, not looking. Step 2: the words around the picture light up (file name, alt text that describes it for people who cannot see it, caption, heading). Step 3: those words go into its notes. Step 4 is the tip for the round. It is getting better at looking too, which is the twist at the end of the round.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:40px"><div class="kick">Clue 3</div><h2 class="h2 tw" style="margin-top:6px">How Google sees a picture</h2></div>' +
+          '<div class="paper abs" style="left:80px;top:160px;width:780px;height:540px;padding:30px 36px;background:#fff">' +
+            '<div class="W" data-w="1" style="font-size:36px;font-weight:700;display:inline-block;padding:0 6px">Riding a penny-farthing</div>' +
+            '<div style="display:flex;gap:26px;margin-top:20px">' +
+              '<div style="flex:none;width:330px"><div class="PIC" style="height:240px;background:#F1ECE0;padding:10px;transition:filter .6s">' + PENNY + '</div>' +
+                '<div class="small" style="margin-top:8px;color:#5C6B57"><span class="W" data-w="2" style="padding:0 4px">penny-farthing-1880.jpg</span></div>' +
+                '<div class="small" style="margin-top:4px"><i class="W" data-w="3" style="padding:0 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;">A man riding a penny-farthing bicycle in 1880</i></div></div>' +
+              '<div class="small" style="font-size:24px;line-height:1.45"><span class="W" data-w="4" style="padding:0 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;">The penny-farthing was a Victorian bicycle with one huge front wheel. Riders sat right on top, high off the ground.</span></div>' +
+            '</div>' +
+            '<div class="small" style="margin-top:20px;color:var(--mu)">Hidden in the code: <span class="W" data-w="3" style="padding:0 6px;font-family:var(--cp)">alt="man riding a penny-farthing"</span></div>' +
+            '<svg class="MAGG mv" viewBox="0 0 120 120" width="170" height="170" style="left:110px;top:140px;opacity:0" fill="none" stroke="#2B2118" stroke-width="8" stroke-linecap="round"><circle cx="50" cy="50" r="36" fill="rgba(255,255,255,.25)"/><path d="m78 78 34 34"/></svg>' +
+          '</div>' +
+          '<div class="abs pp" data-s="1" style="left:920px;top:170px;width:520px"><div class="body"><b>Google mostly can’t see</b> what is in a picture. So it reads the words around it.</div></div>' +
+          '<div class="abs pp index" data-s="3" style="left:920px;top:330px;width:520px;height:270px;padding:80px 30px 20px;transform:rotate(1.5deg)">' +
+            '<div class="se" style="position:absolute;left:30px;top:14px;font-size:30px">Google’s notes</div>' +
+            '<div class="body" style="font-size:28px">penny-farthing · bicycle · Victorian · 1880 · man · riding · wheel</div></div>' +
+          '<div class="abs pp" data-s="4" style="left:920px;top:640px;width:540px"><span class="stamp" style="--r:-2deg;font-size:24px;white-space:nowrap">Tip: search the words next to it</span></div>';
+      }, step:function(r, n, fwd){
+        var mg = r.querySelector('.MAGG'), pic = r.querySelector('.PIC');
+        pic.style.filter = n >= 1 ? 'grayscale(1) blur(1.5px) opacity(.55)' : 'none';
+        mg.style.opacity = (n === 1 || n === 2) ? 1 : 0;
+        var path = [[110, 140], [420, 60], [40, 330], [420, 260]];
+        if(n === 1){ mg.style.left = '110px'; mg.style.top = '140px'; }
+        [].forEach.call(r.querySelectorAll('.W'), function(w){ w.style.transition = 'background .4s'; w.style.background = 'transparent'; });
+        if(n >= 2){
+          var ws = r.querySelectorAll('.W');
+          [].forEach.call(ws, function(w){
+            var k = +w.getAttribute('data-w');
+            var go = function(){ w.style.background = '#FFE07A'; };
+            if(fwd && n === 2){ later(function(){ var p = path[k - 1]; mg.style.left = p[0] + 'px'; mg.style.top = p[1] + 'px'; }, (k - 1) * 650); later(go, (k - 1) * 650 + 500); }
+            else go();
+          });
+        }
+      } },
+
+    /* 16 */ roundTitle({ name:'Round 3', tab:'Round 3', kick:'Round 3 of 3', title:'The Image Hunt',
+      lead:'Three photos. Find the <b>exact same one</b> in Google Images.',
+      rule:'Tap Images under the search bar. Fewest words still wins the bonus.',
+      side:'<span class="stamp" style="--r:-6deg;font-size:34px;padding:14px 22px">Exact photo<br>only</span>' + CAMX.replace('width="64" height="64"', 'width="150" height="150"') + '<span class="body" style="text-align:center">No camera button.</span>',
+      note:'About 8 minutes. Scoring for photos: 3 if it is in the first row, 2 if it is on the screen without scrolling, 1 if they had to scroll. If a pair finds the same moment from a slightly different angle, give 2 and save 3 for the exact photo.' }),
+    /* 17 */ target({ name:'Photo 1', tab:'Round 3', kind:'image', k:'earth', label:'Photo 1', cap:'Photo 1', mins:2,
+      src:'https://commons.wikimedia.org/wiki/Special:FilePath/NASA-Apollo8-Dec24-Earthrise.jpg?width=1400', alt:'The Earth rising over the Moon, photographed from Apollo 8',
+      search:'earthrise', words:1, beat:'Knowing its name is the shortcut.', found:'Earthrise, Apollo 8, 1968, Bill Anders, Earth from the Moon',
+      note:'The easy warm-up. Earth from the moon gets close but shows lots of pictures; earthrise gets the exact photo. If the photo does not load through the filter, tap the box and load it from the laptop.' }),
+    /* 18 */ target({ name:'Photo 2', tab:'Round 3', kind:'image', k:'brunel', label:'Photo 2', cap:'Photo 2', mins:3,
+      src:'https://commons.wikimedia.org/wiki/Special:FilePath/IKBrunelChains.jpg?width=1400', alt:'A Victorian engineer in a top hat standing in front of huge ship chains',
+      search:'brunel chains photo', words:3, beat:'Add what you can see.', found:'Isambard Kingdom Brunel, launching chains, Great Eastern, 1857, Robert Howlett',
+      note:'They need to know who it is (give a clue if needed: a famous Victorian engineer). Brunel alone shows lots of Brunel pictures; adding what they can see, chains, finds this one. Ask: what can you actually see in the picture?' }),
+    /* 19 */ target({ name:'Photo 3', tab:'Round 3', kind:'image', k:'jude', label:'Photo 3', cap:'Photo 3', mins:3, ask:'Tap to load the Bellingham photo from this computer',
+      search:'bellingham celebration celta vigo', words:4, beat:'Spot the clues that make it different.', found:'Jude Bellingham, celebration, Real Madrid, away kit, Celta Vigo',
+      note:'This photo belongs to a photo agency, so it is not stored on the site. Tap the box and load your saved copy. Clues: the dark away kit, and the light blue crowd means an away game. Check the match on an iPad first.' }),
+    /* 20 */ { name:'Twist', tab:'Round 3', steps:2,
+      note:'The twist. Google Lens searches with a picture instead of words. That is why it was banned. Google is getting better at seeing, not just reading. Then play the Earthrise video.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:110px;top:100px;width:1300px"><div class="kick">One more thing</div><h2 class="h2 tw" style="margin-top:10px">Why was the camera banned?</h2>' +
+          '<div class="pp" data-s="1" style="display:flex;gap:40px;align-items:center;margin-top:60px">' + CAMX.replace('<path d="M4 44 44 4" stroke="#A3221B" stroke-width="5" stroke-linecap="round"/>', '').replace('width="64" height="64"', 'width="170" height="170"') +
+            '<div class="big" style="font-size:42px">The camera button (Google Lens) searches with a <b>picture</b> instead of words.</div></div>' +
+          '<div class="pp" data-s="2" style="margin-top:50px"><span class="stamp" style="--r:-2deg;font-size:34px">Google is learning to see, not just read</span></div></div>';
+      } },
+    /* 21 */ video({ name:'Earthrise video', tab:'Exhibit E', kick:'Exhibit E · NASA', title:'Earthrise: the real moment', id:'LHbFIieK-uo', play:'Play the video (3 min)', alt:['NASA page', 'https://svs.gsfc.nasa.gov/4593/'],
+      note:'NASA rebuilt the moment Apollo 8 came round the Moon, with the crew’s real voices as they spot the Earth and scramble for colour film. About 3 minutes. If YouTube is blocked, the NASA page has the same video to download.' }),
+
+    /* 22 */ { name:'Evidence wall', tab:'Evidence wall', steps:4,
+      note:'Type in three pairs’ best searches (tap a card, then type). Then connect: tap a search, then the rule it used, and the red string goes on. Tap a card again to take its strings off. Ask each pair which rule made their search work. The rules appear one per step.',
+      build:function(r){
+        var rules = [['Words that match', 'the same words as the answer'], ['Fewer, sharper words', 'no extra words to confuse it'], ['A special name', 'Earthrise, Brunel, Beamish…'], ['Words next to the picture', 'what someone wrote beside it']];
+        r.innerHTML = '<div class="cork"></div>' +
+          '<div class="abs" style="left:70px;top:46px;background:var(--paper);padding:8px 20px;transform:rotate(-1deg)"><span class="se" style="font-size:40px">Which rule cracked it?</span></div>' +
+          '<div class="abs" style="left:590px;top:640px;width:340px;background:var(--paper);padding:10px 16px;transform:rotate(1deg)"><span class="small" style="font-size:20px">Tap a search, then the rule it used. Tap a search twice to unpin it.</span></div>' +
+          [0, 1, 2].map(function(i){ return '<div class="ecard EC" data-k="e' + i + '" style="left:' + (90 + (i % 2) * 30) + 'px;top:' + (160 + i * 180) + 'px;transform:rotate(' + [-2, 1.5, -1][i] + 'deg)"><span class="pin" style="left:46%;top:-10px"></span><div class="lab">BEST SEARCH ' + (i + 1) + '</div><div class="ed" contenteditable="true" spellcheck="false"></div></div>'; }).join('') +
+          rules.map(function(t, i){ return '<div class="rcard RC pp" data-s="' + (i + 1) + '" data-k="r' + i + '" style="left:' + (1010 - (i % 2) * 40) + 'px;top:' + (130 + i * 145) + 'px;transform:rotate(' + [1.5, -2, 1, -1.5][i] + 'deg)"><span class="pin" style="left:46%;top:-10px"></span>' + t[0] + '<small>' + t[1] + '</small></div>'; }).join('') +
+          '<svg class="abs STR" style="left:0;top:0;pointer-events:none;z-index:3" width="1520" height="744"></svg>';
+        var sel = null, links = [], svg = r.querySelector('.STR');
+        function centre(el){ var b = el.getBoundingClientRect(), s = r.getBoundingClientRect(), k = s.width / r.offsetWidth || 1; return [(b.left - s.left + b.width / 2) / k, (b.top - s.top + b.height / 2) / k]; }
+        function drawLinks(anim){
+          svg.innerHTML = links.map(function(l, i){
+            var a = centre(r.querySelector('[data-k="' + l[0] + '"] .pin')), b = centre(r.querySelector('[data-k="' + l[1] + '"] .pin'));
+            return '<path d="M' + a[0] + ' ' + a[1] + ' Q ' + (a[0] + b[0]) / 2 + ' ' + (Math.max(a[1], b[1]) + 60) + ' ' + b[0] + ' ' + b[1] + '" fill="none" stroke="#C0261D" stroke-width="5" stroke-linecap="round"' + (anim && i === links.length - 1 ? ' class="draw"' : '') + '/>';
+          }).join('');
+          if(anim){ var p = svg.querySelector('.draw'); if(p) drawIn(p); }
+        }
+        [].forEach.call(r.querySelectorAll('.pin'), function(p){
+          // a pin's centre is a few pixels below its top edge
+          p.style.marginTop = '0';
+        });
+        [].forEach.call(r.querySelectorAll('.EC'), function(c){
+          c.addEventListener('click', function(e){
+            e.stopPropagation();
+            var k = c.getAttribute('data-k');
+            if(e.target.classList.contains('ed')){ return; }
+            if(sel === c){ links = links.filter(function(l){ return l[0] !== k; }); drawLinks(); c.classList.remove('sel'); sel = null; return; }
+            if(sel) sel.classList.remove('sel');
+            sel = c; c.classList.add('sel');
+          });
+        });
+        [].forEach.call(r.querySelectorAll('.RC'), function(c){
+          c.addEventListener('click', function(e){
+            e.stopPropagation();
+            if(!sel) return;
+            var a = sel.getAttribute('data-k'), b = c.getAttribute('data-k');
+            if(!links.some(function(l){ return l[0] === a && l[1] === b; })){ links.push([a, b]); drawLinks(true); thud(); }
+            sel.classList.remove('sel'); sel = null;
+          });
+        });
+        [].forEach.call(r.querySelectorAll('.ed'), function(ed){
+          ed.addEventListener('keydown', function(e){ e.stopPropagation(); if(e.key === 'Enter'){ e.preventDefault(); ed.blur(); stage.focus({ preventScroll:true }); } });
+          ed.addEventListener('focus', function(){ if(sel){ sel.classList.remove('sel'); sel = null; } });
+        });
+      } },
+
+    /* 23 */ { name:'Be the algorithm', tab:'The line-up', steps:5,
+      note:'Search: how to do a step-over. Step 0: the suspects in a row with their scores. Everyone writes their predicted order (letters) on a whiteboard. Step 1 sorts them using all four rules equally. Step 2 brings out the sliders: hand the board over and let pupils change how much each rule counts; the line-up moves as they drag. Step 3: a cheat page full of the same words arrives, and if Google only counted matching words it would win. Step 4: Google spots the cheat and drops it to the bottom (keyword stuffing). Step 5: put the sliders back to equal.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:34px;width:1360px;display:flex;justify-content:space-between;align-items:flex-end"><div><div class="kick">Search: how to do a step-over</div><h2 class="h2 tw" style="margin-top:6px">Be the algorithm</h2></div>' +
+            '<span class="body pp" data-s="0" data-only="1" style="font-size:26px">Predict the order on your whiteboard.</span></div>' +
+          '<div class="abs" style="left:80px;top:150px;width:1000px;height:560px;background:#F2EBD9;background-image:repeating-linear-gradient(transparent 0 69px,#BFAF8E 69px 71px)"></div>' +
+          LINEUP.map(function(s, i){
+            return '<div class="mv paper LU" data-i="' + i + '" style="left:100px;top:' + (162 + i * 110) + 'px;width:960px;height:96px;display:flex;align-items:center;padding:0 22px;gap:18px' + (s.cheat ? ';opacity:0' : '') + '">' +
+              '<div class="se" style="width:58px;height:58px;border:4px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;flex:none">' + s.id + '</div>' +
+              '<div style="width:420px;flex:none"><div class="small" style="color:#5C6B57">' + esc(s.n) + '</div><div style="font-size:' + (s.cheat ? 19 : 25) + 'px;font-weight:700;color:var(--blue);line-height:1.15">' + esc(s.t) + '</div></div>' +
+              '<div style="display:flex;gap:10px">' + s.s.map(function(v, k){ return '<div style="width:74px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--mu)">' + ['WORDS', 'LINKS', 'STAY', 'NEW'][k] + '</div><div class="se" style="font-size:32px' + (s.cheat && k === 0 ? ';color:var(--red)' : '') + '">' + v + '</div></div>'; }).join('') + '</div>' +
+              '<div class="se red RK" style="font-size:46px;margin-left:auto;width:60px;text-align:right"></div>' +
+              (s.cheat ? '<span class="stamp manual CAUGHT" style="--r:-8deg;position:absolute;left:330px;top:14px;font-size:48px;display:none;background:rgba(255,253,246,.85)">Caught</span>' : '') +
+            '</div>';
+          }).join('') +
+          '<div class="abs pp" data-s="2" style="left:1120px;top:150px;width:330px;display:flex;flex-direction:column;gap:18px">' +
+            '<div class="se" style="font-size:30px">How much does each rule count?</div>' +
+            RULES_LONG.map(function(t, k){ return '<label class="sl"><span>' + t + '</span><input type="range" min="0" max="3" step="1" value="1" data-k="' + k + '"></label>'; }).join('') +
+            '<div class="pp small" data-s="3" data-only="1" style="font-weight:700;color:var(--red)">Only matching words count now.</div>' +
+          '</div>' +
+          '<div class="abs pp" data-s="4" style="left:1120px;top:636px;width:340px" ><div class="small"><b>Keyword stuffing:</b> repeating words to cheat. Google punishes it.</div></div>';
+        var self = this;
+        [].forEach.call(r.querySelectorAll('.sl input'), function(inp){
+          inp.addEventListener('input', function(){ self.order(r, self.now); });
+          inp.addEventListener('click', function(e){ e.stopPropagation(); });
+          inp.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+          inp.addEventListener('keydown', function(e){ e.stopPropagation(); });
+        });
+      },
+      order:function(r, n){
+        var w = [].map.call(r.querySelectorAll('.sl input'), function(i){ return +i.value; });
+        var live = LINEUP.map(function(s, i){ return i; }).filter(function(i){ return n >= 3 || !LINEUP[i].cheat; });
+        var score = function(i){ var s = LINEUP[i]; if(s.cheat && n >= 4) return -1; return s.s.reduce(function(a, v, k){ return a + v * w[k]; }, 0) + (s.cheat ? .5 : 0); };
+        var ranked = n >= 1 ? live.slice().sort(function(a, b){ return score(b) - score(a) || a - b; }) : live.slice();
+        [].forEach.call(r.querySelectorAll('.LU'), function(el){
+          var i = +el.getAttribute('data-i'), at = ranked.indexOf(i);
+          if(at < 0){ el.style.opacity = 0; el.style.top = '700px'; return; }
+          el.style.opacity = 1;
+          el.style.top = (162 + at * 110) + 'px';
+          el.querySelector('.RK').textContent = n >= 1 ? (at + 1) : '';
+          el.classList.toggle('out', !!(LINEUP[i].cheat && n >= 4));
+        });
+      },
+      step:function(r, n, fwd){
+        this.now = n;
+        var inps = r.querySelectorAll('.sl input'), self = this;
+        (n === 3 || n === 4 ? [3, 0, 0, 0] : [1, 1, 1, 1]).forEach(function(v, k){ inps[k].value = v; });
+        var c = r.querySelector('.CAUGHT');
+        c.style.display = n >= 4 ? 'inline-flex' : 'none';
+        if(n === 4 && fwd){ self.order(r, 3); later(function(){ stampIn(c); }, 100); later(function(){ self.order(r, 4); }, 900); }
+        else self.order(r, n);
+      } },
+
+    /* 24 */ { name:'The bribe', tab:'Exhibit P', steps:3,
+      note:'Sponsored results are adverts: a company has paid to be at the top for that search. Step 1: the envelope (payment). Step 2: it jumps to number 1 with a Sponsored label. Step 3, the Year 6 question: who gains when this is first? The shop sells more boots; the search company gets paid. Does the searcher gain? Usually not: the best answer is now further down.',
+      build:function(r){
+        var res = [['skillsschoolfc', 'How to do a step-over', 'Learn the step-over in 4 easy stages, with video.'],
+          ['coachkel', 'Step-over drill for beginners', 'A 10 minute practice you can do in the garden.'],
+          ['kickoffmagazine', '5 tricks to learn this season', 'From the step-over to the rainbow flick.'],
+          ['dadsfootballblog', 'My step-over tips', 'What I tell my son before every match.'],
+          ['bootzone', 'Boots that make step-overs easy', 'Huge range of boots. Free delivery.', true]];
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:34px"><div class="kick">Exhibit P</div><h2 class="h2 tw" style="margin-top:6px">Paid to be first</h2></div>' +
+          '<div class="sp" style="left:80px;top:150px;width:900px;height:560px;padding:22px 32px"><div class="sbar" style="font-size:26px;padding:8px 22px">' + MAG + '<span>how to do a step-over</span></div>' +
+            '<div style="position:relative;height:440px;margin-top:14px">' +
+            res.map(function(x, i){ return '<div class="mv BR" data-i="' + i + '" style="left:0;right:0;top:' + i * 88 + 'px;padding:8px 0 10px;border-bottom:1.5px dashed #DDD5C6;background:#fff"><div style="font-size:16px;color:#5C6B57">' + (x[3] ? '<span class="spon SP" style="display:none">SPONSORED</span>' : '') + x[0] + '</div><div style="font-size:25px;font-weight:700;color:var(--blue);text-decoration:underline;text-underline-offset:4px">' + x[1] + '</div><div style="font-size:18px;color:#4A4038">' + x[2] + '</div></div>'; }).join('') +
+            '</div></div>' +
+          '<div class="mv ENV" style="z-index:5;left:1500px;top:480px;width:250px;height:160px;transform:rotate(-8deg)">' +
+            '<svg viewBox="0 0 250 160" width="250" height="160"><rect x="4" y="4" width="242" height="152" fill="#F4ECD8" stroke="#8C7A5E" stroke-width="4"/><path d="M4 4 125 92 246 4" fill="none" stroke="#8C7A5E" stroke-width="4"/></svg>' +
+            '<span class="stamp manual" style="--r:10deg;position:absolute;left:66px;top:84px;font-size:30px;padding:4px 12px;background:rgba(244,236,216,.85)">Paid</span></div>' +
+          '<div class="abs pp" data-s="3" style="left:1040px;top:160px;width:420px">' +
+            '<div class="index" style="padding:80px 28px 24px;transform:rotate(1.5deg)"><span class="pin" style="left:46%;top:-10px"></span><div class="se" style="font-size:40px;line-height:1.15">Who gains when this is first?</div></div>' +
+            '<div class="body" style="margin-top:26px;font-size:26px">The shop? The search company? <b>You?</b></div></div>';
+      }, step:function(r, n, fwd){
+        var env = r.querySelector('.ENV'), sp = r.querySelector('.SP');
+        var order = n >= 2 ? [4, 0, 1, 2, 3] : [0, 1, 2, 3, 4];
+        [].forEach.call(r.querySelectorAll('.BR'), function(el){ var i = +el.getAttribute('data-i'); el.style.top = order.indexOf(i) * 88 + 'px'; el.style.zIndex = i === 4 ? 2 : 1; });
+        sp.style.display = n >= 2 ? 'inline-block' : 'none';
+        if(n === 0){ env.style.left = '1560px'; env.style.top = '480px'; env.style.opacity = 1; }
+        if(n === 1){ env.style.left = '760px'; env.style.top = '470px'; env.style.opacity = 1; if(fwd) later(function(){ thud(); }, 800); }
+        if(n >= 2){ env.style.left = '760px'; env.style.top = '120px'; env.style.opacity = 0; }
+      } },
+
+    /* 25 */ { name:'Who pulls the strings?', tab:'Suspects', steps:3,
+      note:'Three people influence every search. The searcher: their words, where they are (remember the map), what they searched before. The search company: its secret rules, and who has paid. The website maker: good matching words and links, or cheating. Ask which of the three they trust most.',
+      build:function(r){
+        var who = [[PAIR, 'The searcher', 'Your words. Where you are. What you searched before.'],
+          [GLOBE, 'The search company', 'Its secret rules. Who has paid to be first.'],
+          [PEN, 'The website maker', 'Good words and links. Or cheating.']];
+        r.innerHTML = '<div class="abs" style="left:80px;top:40px"><div class="kick">Three suspects</div><h2 class="h2 tw" style="margin-top:6px">Who pulls the strings?</h2></div>' +
+          who.map(function(w, i){
+            return '<div class="abs pp" data-s="' + (i + 1) + '" style="left:' + (80 + i * 460) + 'px;top:180px;width:420px">' +
+              '<div class="index" style="height:470px;padding:80px 30px 24px;transform:rotate(' + [-1.5, 1, -1][i] + 'deg);position:relative">' +
+                '<span class="stamp ink" style="--r:-4deg;position:absolute;left:24px;top:12px;font-size:22px">Suspect ' + (i + 1) + '</span>' +
+                '<div style="margin-top:14px">' + w[0].replace('width="64" height="64"', 'width="110" height="110"') + '</div>' +
+                '<div class="se" style="font-size:40px;margin-top:10px">' + w[1] + '</div>' +
+                '<div class="body" style="font-size:27px;margin-top:12px">' + w[2] + '</div></div></div>';
+          }).join('');
+      } },
+
+    /* 26 */ { name:'Whiteflix HQ', tab:'Exhibit W', steps:1,
+      note:'Next opens Whiteflix HQ, with three sliders deciding the Top 10. The laminator episode is Sponsored. Challenge: get it to number 1. Then ask what they had to change, and whether that is fair on the other programmes. Use the floating Next button to come back.',
+      build:function(r){
+        r.innerHTML = '<div class="abs" style="left:110px;top:110px;width:1100px"><div class="kick">Exhibit W</div><h1 class="h1 tw" style="margin-top:14px">Mr Whiteflix HQ</h1>' +
+          '<p class="big" style="margin-top:34px">Three sliders decide the Top 10. <b>Mr White Explains the Laminator</b> is sponsored.</p>' +
+          '<p class="big pp" data-s="1" style="margin-top:20px">Can you get it to number 1? What did you have to change?</p></div>' +
+          '<span class="stamp abs" style="--r:-10deg;left:1110px;top:110px;font-size:40px;padding:12px 22px">Sponsored</span>';
+      } },
+    /* 27 */ { name:'Whiteflix HQ (open)', tab:'Exhibit W', frame:'whiteflix.html#hq', floatNav:true,
+      note:'Whiteflix HQ. Use the floating Back and Next buttons in the corner.' },
+
+    /* 28 */ video({ name:'How search works (Year 6)', tab:'Exhibit Y6', kick:'Exhibit Y6 · optional', title:'How search works', id:'LVV_93mBfSU', play:'Play the video (about 6 min)',
+      note:'Optional, best for Year 6. Engineers from Google and Bing explain crawling and then ranking; the ranking part is in the second half. Skip if short of time.' }),
+
+    /* 29 */ { name:'Case closed', tab:'Case file 02', steps:3,
+      note:'Back to the search from the start and the whiteboard guesses. Step 1: the reasons, all from today. Step 2: CASE CLOSED. Step 3: Top Agents for the pair with the fewest words; tap the line and type their names.',
+      build:function(r){
+        var why = ['Its words match', 'Lots of sites link to it', 'People stay and read it', '…or someone paid'];
+        r.innerHTML = hookPage(70, 70, 760) +
+          '<div class="abs" style="left:900px;top:70px;width:560px"><div class="se" style="font-size:52px;line-height:1.1">Now: why is <span class="red">this</span> one first?</div>' +
+            why.map(function(t, i){ return '<div class="pp" data-s="1" style="transition-delay:' + i * .15 + 's;margin-top:' + (i ? 12 : 30) + 'px;display:flex;gap:14px;align-items:center"><span class="pin" style="position:static;flex:none"></span><span class="body" style="font-size:28px">' + t + '</span></div>'; }).join('') +
+          '</div>' +
+          '<span class="stamp abs pp" data-s="2" style="--r:-12deg;left:120px;top:290px;font-size:86px;padding:16px 30px;background:rgba(255,255,255,.6)">Case closed</span>' +
+          '<div class="abs pp" data-s="3" style="left:900px;top:470px;width:560px">' +
+            '<div class="paper" style="padding:22px 28px;transform:rotate(-1deg);position:relative"><span class="stamp" style="--r:-6deg;font-size:30px">Top agents</span>' +
+            '<div class="small" style="margin-top:12px;font-weight:700">Fewest words of the day:</div>' +
+            '<div class="se TA" contenteditable="true" spellcheck="false" style="font-size:38px;border-bottom:2px dashed #CDBFA6;min-height:48px;outline:none;margin-top:6px"></div></div></div>';
+        r.querySelector('.TA').addEventListener('click', function(e){ e.stopPropagation(); });
+        r.querySelector('.TA').addEventListener('keydown', function(e){ e.stopPropagation(); if(e.key === 'Enter'){ e.preventDefault(); e.target.blur(); stage.focus({ preventScroll:true }); } });
+      }, step:function(r){
+        var p = r.querySelector('.HK'); p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = 0;
+      } },
+
+    /* 30 */ { name:'Get into orbit', tab:'Debrief', steps:0,
+      note:'Each pupil taps the rings: the closer to the centre, the surer they are about today’s three orders. Every tap stays as its own mark. Clear needs two taps.',
+      build:function(r){
+        var rings = [[300, '#E9DFC6'], [200, '#E2CFA2'], [100, '#D9B979']];
+        r.innerHTML = '<div class="abs" style="left:80px;top:40px"><div class="kick">Debrief</div><h2 class="h2 tw" style="margin-top:6px">Get into orbit</h2>' +
+            '<p class="body" style="margin-top:16px;width:560px">How sure are you that you can:</p>' +
+            ['explain what an algorithm is?', 'find the search that gets an answer to the top?', 'explain why a result is first, and who gains?'].map(function(t, i){ return '<p class="body" style="margin:10px 0 0;width:560px;font-size:27px"><b>' + (i + 1) + '.</b> ' + t + '</p>'; }).join('') +
+            '<div style="display:flex;gap:12px;margin-top:30px"><button type="button" class="tbtn UND">Undo</button><button type="button" class="tbtn CLR">Clear</button></div></div>' +
+          '<div class="abs orbit" style="left:760px;top:40px;width:660px;height:660px"><svg viewBox="-330 -330 660 660" width="660" height="660">' +
+            rings.map(function(g){ return '<circle r="' + g[0] + '" fill="' + g[1] + '" stroke="#8C7A5E" stroke-width="2"/>'; }).join('') +
+            '<text y="-262" text-anchor="middle" font-family="Courier Prime" font-weight="700" font-size="22" fill="#5E4E3C">Drifting</text>' +
+            '<text y="-162" text-anchor="middle" font-family="Courier Prime" font-weight="700" font-size="22" fill="#5E4E3C">In orbit</text>' +
+            '<text y="8" text-anchor="middle" font-family="Special Elite" font-size="30" fill="#2B2118">Locked on</text><g class="MK"></g></svg></div>';
+        var svg = r.querySelector('svg'), mk = r.querySelector('.MK'), clr = r.querySelector('.CLR'), armed = false;
+        svg.addEventListener('click', function(e){
+          e.stopPropagation();
+          var b = svg.getBoundingClientRect(), x = (e.clientX - b.left) / b.width * 660 - 330, y = (e.clientY - b.top) / b.height * 660 - 330;
+          if(Math.hypot(x, y) > 300) return;
+          mk.insertAdjacentHTML('beforeend', '<circle cx="' + x + '" cy="' + y + '" r="13" fill="#A3221B" stroke="#FFFDF6" stroke-width="4"/>');
+          thud();
+        });
+        r.querySelector('.UND').addEventListener('click', function(e){ e.stopPropagation(); if(mk.lastChild) mk.removeChild(mk.lastChild); });
+        clr.addEventListener('click', function(e){
+          e.stopPropagation();
+          if(!armed){ armed = true; clr.textContent = 'Tap again to clear'; setTimeout(function(){ armed = false; clr.textContent = 'Clear'; }, 2500); return; }
+          mk.innerHTML = ''; armed = false; clr.textContent = 'Clear';
+        });
+      } }
+  ];
+
+  /* ---------------- moving through the lesson ---------------- */
+  var part = 0, step = 0;
+  var dots = document.getElementById('parts'), tab = document.getElementById('tab'), notes = document.getElementById('notes'), nbtn = document.getElementById('nbtn');
+  PARTS.forEach(function(p, i){
+    var d = document.createElement('button'); d.className = 'part'; d.type = 'button'; d.title = p.name;
+    d.setAttribute('aria-label', 'Go to ' + p.name);
+    d.addEventListener('click', function(e){ e.stopPropagation(); show(i, 0); });
+    dots.appendChild(d);
+  });
+  var notesOn = false;
+  function paintNotes(){
+    var p = PARTS[part];
+    notes.innerHTML = '<b>' + esc(p.name) + '</b>' + esc(p.note || '');
+    notes.classList.toggle('on', notesOn);
+    nbtn.setAttribute('aria-pressed', notesOn ? 'true' : 'false');
+  }
+  nbtn.addEventListener('click', function(e){ e.stopPropagation(); notesOn = !notesOn; paintNotes(); stage.focus({ preventScroll:true }); });
+
+  function paint(r, n, fwd){
+    [].forEach.call(r.querySelectorAll('.pp'), function(el){
+      var s = +el.getAttribute('data-s'), only = el.hasAttribute('data-only');
+      var on = only ? (s === n) : (s <= n), was = !el.classList.contains('hide');
+      el.classList.toggle('hide', !on);
+      if(on && !was){ if(fwd && s === n) effects(el); else settle(el); }
+    });
+    var p = PARTS[part];
+    if(p.step) p.step(r, n, fwd);
+  }
+
+  function show(i, at){
+    clearTimers(); stopTape();
+    part = Math.max(0, Math.min(PARTS.length - 1, i));
+    var p = PARTS[part];
+    [].forEach.call(dots.children, function(d, k){ d.classList.toggle('on', k === part); d.classList.toggle('done', k < part); });
+    paintNotes();
+    if(p.frame){
+      fit.classList.add('off');
+      frame.classList.add('on');
+      fnav.classList.toggle('on', !!p.floatNav);
+      frame.onload = function(){ try{ frame.contentWindow.focus(); }catch(e){} };
+      frame.src = p.frame;
+      return;
+    }
+    frame.classList.remove('on'); frame.removeAttribute('src'); fnav.classList.remove('on');
+    fit.classList.remove('off');
+    tab.textContent = p.tab || 'Case file 02';
+    step = at === 'end' ? p.steps : 0;
+    host.innerHTML = '';
+    var r = document.createElement('div'); r.className = 'scene' + (RM ? '' : ' enter');
+    host.appendChild(r);
+    p.build.call(p, r);
+    [].forEach.call(r.querySelectorAll('.pp'), function(el){ el.classList.add('hide'); });
+    r.getBoundingClientRect();
+    if(at === 'end'){ paint(r, step, false); settle(r); }
+    else {
+      [].forEach.call(r.querySelectorAll('.tw'), function(t){ if(!t.closest('.pp')) typeOut(t); });
+      [].filter.call(r.querySelectorAll('.stamp'), function(t){ return !t.closest('.pp') && !t.classList.contains('manual'); }).forEach(function(t, k){ stampIn(t, 250 + k * 260); });
+      paint(r, 0, true);
+    }
+    document.getElementById('back').disabled = part === 0 && step === 0;
+    document.getElementById('next').disabled = part === PARTS.length - 1 && step === p.steps;
+    setTimeout(function(){ try{ frame.blur(); }catch(e){} stage.focus({ preventScroll:true }); }, 30);
+  }
+
+  function next(){
+    var p = PARTS[part];
+    if(!p.frame && step < p.steps){
+      step++;
+      paint(host.firstChild, step, true);
+      document.getElementById('back').disabled = false;
+      document.getElementById('next').disabled = part === PARTS.length - 1 && step === p.steps;
+      return;
+    }
+    if(part < PARTS.length - 1) show(part + 1, 0);
+  }
+  function back(){
+    var p = PARTS[part];
+    if(!p.frame && step > 0){
+      clearTimers();
+      step--;
+      paint(host.firstChild, step, false);
+      document.getElementById('back').disabled = part === 0 && step === 0;
+      document.getElementById('next').disabled = false;
+      return;
+    }
+    if(part > 0) show(part - 1, 'end');
+  }
+
+  document.getElementById('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  document.getElementById('back').addEventListener('click', function(e){ e.stopPropagation(); back(); });
+  document.getElementById('fnext').addEventListener('click', next);
+  document.getElementById('fback').addEventListener('click', back);
+  document.getElementById('home').addEventListener('click', function(e){ e.stopPropagation(); });
+  host.addEventListener('click', function(e){
+    if(e.target.closest('a,button,input,label,[contenteditable],.ecard,.rcard,.orbit')) return;
+    next();
+  });
+  addEventListener('keydown', function(e){
+    if(e.target && e.target.isContentEditable) return;
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+    else if(e.key === 'n' || e.key === 'N'){ notesOn = !notesOn; paintNotes(); }
+  });
+
+  function fromHash(){ var m = /^#part(\d+)$/.exec(location.hash); return m ? +m[1] - 1 : 0; }
+  addEventListener('hashchange', function(){ show(fromHash(), 0); });
+  show(fromHash(), 0);
+})();
+</script>
+</body>
+</html>
