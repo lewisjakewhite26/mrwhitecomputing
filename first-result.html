@@ -419,13 +419,29 @@
     } };
   }
 
-  var LINEUP = [ // "how to do a step-over": words match, links in, people stay, up to date
-    { id:'A', n:'Skills School FC', t:'How to do a step-over', s:[3,3,3,1] },
-    { id:'B', n:'Kick Off Magazine', t:'5 tricks to learn this season', s:[1,2,2,3] },
-    { id:'C', n:'Dad’s Football Blog', t:'My step-over tips', s:[2,0,1,2] },
-    { id:'D', n:'Coach Kel', t:'Step-over drill for beginners', s:[3,2,2,2] },
-    { id:'E', n:'Best Step Over Site', t:'STEP OVER step over STEP-OVER best step over', s:[4,0,0,3], cheat:true }
+  var LINEUP = [ // "best pizza in stockton": words match, links in, people stay, up to date
+    { id:'A', n:'Tees Valley Food Guide', t:'The 10 best pizzas in Stockton', s:[3,3,2,2], pic:'top10' },
+    { id:'B', n:'Mama Rosa’s Pizzeria', t:'Stone-baked pizza in Stockton', s:[3,2,3,1], pic:'marg' },
+    { id:'C', n:'Mr White’s Pizzas', t:'Best pizza in Stockton (says Mr White)', s:[3,0,2,3], pic:'mr' },
+    { id:'D', n:'Slice Slice Baby', t:'Pizza by the slice in Middlesbrough', s:[1,2,2,2], pic:'slice' },
+    { id:'E', n:'Best Pizza Stockton Pizza', t:'BEST PIZZA best pizza STOCKTON pizza Stockton PIZZA', s:[4,0,0,3], pic:'cheat', cheat:true }
   ];
+
+  /* little pizza pictures for the websites (Mr White's gets his face) */
+  function PIZ(kind, size){
+    size = size || 80;
+    if(kind === 'mr') return '<span style="position:relative;display:inline-block;width:' + size + 'px;height:' + size + 'px;flex:none"><img src="whiteflix/img/face_smile.webp" alt="Mr White" style="width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #E0A85A;background:#ddd;box-sizing:border-box"><span style="position:absolute;right:-10px;bottom:-8px;width:' + Math.round(size * .55) + 'px;height:' + Math.round(size * .55) + 'px">' + PIZ('weird', Math.round(size * .55)) + '</span></span>';
+    var base = '<circle cx="50" cy="50" r="46" fill="#E0A85A"/><circle cx="50" cy="50" r="38" fill="#C8432B"/>';
+    var cheese = '<path d="M22 40q10-12 22-6t20-6 14 14-6 20 4 14-16 8-18 4-14-6-8-18 2-24z" fill="#F6D77A"/>';
+    var t = '';
+    if(kind === 'marg') t = cheese + '<g fill="#3E8E41"><ellipse cx="38" cy="40" rx="6" ry="3" transform="rotate(30 38 40)"/><ellipse cx="62" cy="58" rx="6" ry="3" transform="rotate(-20 62 58)"/><ellipse cx="50" cy="66" rx="5" ry="3"/></g>';
+    if(kind === 'pep') t = cheese + '<g fill="#9E2B1F"><circle cx="36" cy="38" r="7"/><circle cx="62" cy="40" r="7"/><circle cx="48" cy="60" r="7"/><circle cx="68" cy="62" r="6"/><circle cx="30" cy="60" r="6"/></g>';
+    if(kind === 'weird') t = cheese + '<g fill="#F3C623" stroke="#C99A12" stroke-width="1.5"><path d="M30 34l10 4-8 6z"/><path d="M60 64l10 4-8 6z"/></g><g fill="#E87A1E" stroke="#A9520F" stroke-width="1.5"><rect x="50" y="30" width="22" height="9" rx="3" transform="rotate(20 61 34)"/><rect x="26" y="52" width="22" height="9" rx="3" transform="rotate(-15 37 56)"/></g><g fill="#E0662A"><ellipse cx="56" cy="50" rx="3" ry="2.2"/><ellipse cx="62" cy="52" rx="3" ry="2.2"/><ellipse cx="58" cy="56" rx="3" ry="2.2"/><ellipse cx="44" cy="70" rx="3" ry="2.2"/><ellipse cx="50" cy="72" rx="3" ry="2.2"/></g>';
+    if(kind === 'cheat') t = cheese + '<g font-family="Courier Prime,monospace" font-weight="700" fill="#2B2118" text-anchor="middle"><text x="50" y="34" font-size="11">PIZZA</text><text x="50" y="50" font-size="13">PIZZA</text><text x="50" y="66" font-size="11">PIZZA</text></g>';
+    if(kind === 'slice') return '<svg viewBox="0 0 100 100" width="' + size + '" height="' + size + '" style="flex:none"><path d="M14 22 Q50 6 86 22 L50 94 Z" fill="#E0A85A"/><path d="M20 30 Q50 16 80 30 L50 86 Z" fill="#C8432B"/><path d="M26 34 Q50 24 74 34 L52 70 Q44 60 40 64 Z" fill="#F6D77A"/><g fill="#9E2B1F"><circle cx="44" cy="40" r="6"/><circle cx="60" cy="44" r="5"/><circle cx="50" cy="60" r="5"/></g></svg>';
+    if(kind === 'top10') return '<svg viewBox="0 0 100 100" width="' + size + '" height="' + size + '" style="flex:none"><g transform="translate(2 4) scale(.5)">' + base + cheese + '</g><g transform="translate(48 4) scale(.5)">' + base + cheese + '<g fill="#9E2B1F"><circle cx="36" cy="38" r="7"/><circle cx="62" cy="58" r="7"/></g></g><g transform="translate(25 46) scale(.5)">' + base + cheese + '</g><text x="86" y="96" text-anchor="middle" font-family="Special Elite,monospace" font-size="24" fill="#A3221B">10</text></svg>';
+    return '<svg viewBox="0 0 100 100" width="' + size + '" height="' + size + '" style="flex:none">' + base + t + '</svg>';
+  }
 
   var PARTS = [
     /* 1 */ { name:'Title', tab:'Case file 02', steps:0,
@@ -617,7 +633,7 @@
       search:'bellingham celebration celta vigo', words:4, beat:'Spot the clues that make it different.', found:'Jude Bellingham, celebration, Real Madrid, away kit, Celta Vigo',
       note:'This photo belongs to a photo agency, so it is not stored on the site. Tap the box and load your saved copy. Clues: the dark away kit, and the light blue crowd means an away game. Check the match on an iPad first.' }),
     /* 20 */ { name:'Twist', tab:'Round 3', steps:2,
-      note:'The twist. Google Lens searches with a picture instead of words. That is why it was banned. Google is getting better at seeing, not just reading. Then play the Earthrise video.',
+      note:'The twist. Google Lens searches with a picture instead of words. That is why it was banned. Google is getting better at seeing, not just reading.',
       build:function(r){
         r.innerHTML =
           '<div class="abs" style="left:110px;top:100px;width:1300px"><div class="kick">One more thing</div><h2 class="h2 tw" style="margin-top:10px">Why was the camera banned?</h2>' +
@@ -625,9 +641,6 @@
             '<div class="big" style="font-size:42px">The camera button (Google Lens) searches with a <b>picture</b> instead of words.</div></div>' +
           '<div class="pp" data-s="2" style="margin-top:50px"><span class="stamp" style="--r:-2deg;font-size:34px">Google is learning to see, not just read</span></div></div>';
       } },
-    /* 21 */ video({ name:'Earthrise video', tab:'Exhibit E', kick:'Exhibit E · NASA', title:'Earthrise: the real moment', id:'LHbFIieK-uo', play:'Play the video (3 min)', alt:['NASA page', 'https://svs.gsfc.nasa.gov/4593/'],
-      note:'NASA rebuilt the moment Apollo 8 came round the Moon, with the crew’s real voices as they spot the Earth and scramble for colour film. About 3 minutes. If YouTube is blocked, the NASA page has the same video to download.' }),
-
     /* 22 */ { name:'Evidence wall', tab:'Evidence wall', steps:4,
       note:'Type in three pairs’ best searches (tap a card, then type). Then connect: tap a search, then the rule it used, and the red string goes on. Tap a card again to take its strings off. Ask each pair which rule made their search work. The rules appear one per step.',
       build:function(r){
@@ -677,19 +690,19 @@
       } },
 
     /* 23 */ { name:'Be the algorithm', tab:'The line-up', steps:5,
-      note:'Search: how to do a step-over. Step 0: the suspects in a row with their scores. Everyone writes their predicted order (letters) on a whiteboard. Step 1 sorts them using all four rules equally. Step 2 brings out the sliders: hand the board over and let pupils change how much each rule counts; the line-up moves as they drag. Step 3: a cheat page full of the same words arrives, and if Google only counted matching words it would win. Step 4: Google spots the cheat and drops it to the bottom (keyword stuffing). Step 5: put the sliders back to equal.',
+      note:'Search: best pizza in Stockton. All the websites are made up, including yours. Step 0: the suspects in a row with their scores. Everyone writes their predicted order (letters) on a whiteboard. Step 1 sorts them using all four rules equally. Step 2 brings out the sliders: hand the board over and let pupils change how much each rule counts; the line-up moves as they drag. Step 3: a cheat page full of the same words arrives, and if Google only counted matching words it would win. Step 4: Google spots the cheat and drops it to the bottom (keyword stuffing). Step 5: put the sliders back to equal. Challenge for the sliders: can they get Mr White’s Pizzas to number 1? (Turn up to date right up.) Then ask whether that makes it the best pizza.',
       build:function(r){
         r.innerHTML =
-          '<div class="abs" style="left:80px;top:34px;width:1360px;display:flex;justify-content:space-between;align-items:flex-end"><div><div class="kick">Search: how to do a step-over</div><h2 class="h2 tw" style="margin-top:6px">Be the algorithm</h2></div>' +
+          '<div class="abs" style="left:80px;top:34px;width:1360px;display:flex;justify-content:space-between;align-items:flex-end"><div><div class="kick">Search: best pizza in Stockton</div><h2 class="h2 tw" style="margin-top:6px">Be the algorithm</h2></div>' +
             '<span class="body pp" data-s="0" data-only="1" style="font-size:26px">Predict the order on your whiteboard.</span></div>' +
           '<div class="abs" style="left:80px;top:150px;width:1000px;height:560px;background:#F2EBD9;background-image:repeating-linear-gradient(transparent 0 69px,#BFAF8E 69px 71px)"></div>' +
           LINEUP.map(function(s, i){
-            return '<div class="mv paper LU" data-i="' + i + '" style="left:100px;top:' + (162 + i * 110) + 'px;width:960px;height:96px;display:flex;align-items:center;padding:0 22px;gap:18px' + (s.cheat ? ';opacity:0' : '') + '">' +
-              '<div class="se" style="width:58px;height:58px;border:4px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;flex:none">' + s.id + '</div>' +
-              '<div style="width:420px;flex:none"><div class="small" style="color:#5C6B57">' + esc(s.n) + '</div><div style="font-size:' + (s.cheat ? 19 : 25) + 'px;font-weight:700;color:var(--blue);line-height:1.15">' + esc(s.t) + '</div></div>' +
-              '<div style="display:flex;gap:10px">' + s.s.map(function(v, k){ return '<div style="width:74px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--mu)">' + ['WORDS', 'LINKS', 'STAY', 'NEW'][k] + '</div><div class="se" style="font-size:32px' + (s.cheat && k === 0 ? ';color:var(--red)' : '') + '">' + v + '</div></div>'; }).join('') + '</div>' +
+            return '<div class="mv paper LU" data-i="' + i + '" style="left:100px;top:' + (162 + i * 110) + 'px;width:960px;height:96px;display:flex;align-items:center;padding:0 18px;gap:14px' + (s.cheat ? ';opacity:0' : '') + '">' +
+              '<div class="se" style="width:58px;height:58px;border:4px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;flex:none">' + s.id + '</div>' + PIZ(s.pic, 76) +
+              '<div style="width:330px;flex:none"><div class="small" style="color:#5C6B57">' + esc(s.n) + '</div><div style="font-size:' + (s.cheat ? 17 : 23) + 'px;font-weight:700;color:var(--blue);line-height:1.15">' + esc(s.t) + '</div></div>' +
+              '<div style="display:flex;gap:10px">' + s.s.map(function(v, k){ return '<div style="width:66px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--mu)">' + ['WORDS', 'LINKS', 'STAY', 'NEW'][k] + '</div><div class="se" style="font-size:32px' + (s.cheat && k === 0 ? ';color:var(--red)' : '') + '">' + v + '</div></div>'; }).join('') + '</div>' +
               '<div class="se red RK" style="font-size:46px;margin-left:auto;width:60px;text-align:right"></div>' +
-              (s.cheat ? '<span class="stamp manual CAUGHT" style="--r:-8deg;position:absolute;left:330px;top:14px;font-size:48px;display:none;background:rgba(255,253,246,.85)">Caught</span>' : '') +
+              (s.cheat ? '<span class="stamp manual CAUGHT" style="--r:-8deg;position:absolute;left:280px;top:14px;font-size:48px;display:none;background:rgba(255,253,246,.85)">Caught</span>' : '') +
             '</div>';
           }).join('') +
           '<div class="abs pp" data-s="2" style="left:1120px;top:150px;width:330px;display:flex;flex-direction:column;gap:18px">' +
@@ -731,25 +744,25 @@
       } },
 
     /* 24 */ { name:'The bribe', tab:'Exhibit P', steps:3,
-      note:'Sponsored results are adverts: a company has paid to be at the top for that search. Step 1: the envelope (payment). Step 2: it jumps to number 1 with a Sponsored label. Step 3, the Year 6 question: who gains when this is first? The shop sells more boots; the search company gets paid. Does the searcher gain? Usually not: the best answer is now further down.',
+      note:'Sponsored results are adverts: a company has paid to be at the top for that search. Step 1: the envelope (payment). Step 2: it jumps to number 1 with a Sponsored label. Step 3, the Year 6 question: who gains when this is first? Pizza Giant sells more pizza; the search company gets paid. Does the searcher gain? Usually not: the best answer is now further down. Ask them to point to the word Sponsored.',
       build:function(r){
-        var res = [['skillsschoolfc', 'How to do a step-over', 'Learn the step-over in 4 easy stages, with video.'],
-          ['coachkel', 'Step-over drill for beginners', 'A 10 minute practice you can do in the garden.'],
-          ['kickoffmagazine', '5 tricks to learn this season', 'From the step-over to the rainbow flick.'],
-          ['dadsfootballblog', 'My step-over tips', 'What I tell my son before every match.'],
-          ['bootzone', 'Boots that make step-overs easy', 'Huge range of boots. Free delivery.', true]];
+        var res = [['teesvalleyfoodguide', 'The 10 best pizzas in Stockton', 'We ate 40 pizzas so you don’t have to.', 'top10'],
+          ['mamarosas', 'Stone-baked pizza in Stockton', 'Family pizzeria since 1987. Book a table.', 'marg'],
+          ['mrwhitespizzas', 'Best pizza in Stockton (says Mr White)', 'Pineapple, fish fingers and beans. You’re welcome.', 'mr'],
+          ['sliceslicebaby', 'Pizza by the slice in Middlesbrough', 'Not Stockton, but quite close.', 'slice'],
+          ['pizzagiant', 'Pizza Giant: 2 for 1 pizzas tonight', 'Order now. Delivery in 30 minutes.', 'pep', true]];
         r.innerHTML =
           '<div class="abs" style="left:80px;top:34px"><div class="kick">Exhibit P</div><h2 class="h2 tw" style="margin-top:6px">Paid to be first</h2></div>' +
-          '<div class="sp" style="left:80px;top:150px;width:900px;height:560px;padding:22px 32px"><div class="sbar" style="font-size:26px;padding:8px 22px">' + MAG + '<span>how to do a step-over</span></div>' +
+          '<div class="sp" style="left:80px;top:150px;width:900px;height:560px;padding:22px 32px"><div class="sbar" style="font-size:26px;padding:8px 22px">' + MAG + '<span>best pizza in stockton</span></div>' +
             '<div style="position:relative;height:440px;margin-top:14px">' +
-            res.map(function(x, i){ return '<div class="mv BR" data-i="' + i + '" style="left:0;right:0;top:' + i * 88 + 'px;padding:8px 0 10px;border-bottom:1.5px dashed #DDD5C6;background:#fff"><div style="font-size:16px;color:#5C6B57">' + (x[3] ? '<span class="spon SP" style="display:none">SPONSORED</span>' : '') + x[0] + '</div><div style="font-size:25px;font-weight:700;color:var(--blue);text-decoration:underline;text-underline-offset:4px">' + x[1] + '</div><div style="font-size:18px;color:#4A4038">' + x[2] + '</div></div>'; }).join('') +
+            res.map(function(x, i){ return '<div class="mv BR" data-i="' + i + '" style="left:0;right:0;top:' + i * 88 + 'px;padding:8px 0 10px;border-bottom:1.5px dashed #DDD5C6;background:#fff;display:flex;gap:18px;align-items:center">' + PIZ(x[3], 62) + '<div><div style="font-size:16px;color:#5C6B57">' + (x[4] ? '<span class="spon SP" style="display:none">SPONSORED</span>' : '') + x[0] + '</div><div style="font-size:24px;font-weight:700;color:var(--blue);text-decoration:underline;text-underline-offset:4px">' + x[1] + '</div><div style="font-size:18px;color:#4A4038">' + x[2] + '</div></div></div>'; }).join('') +
             '</div></div>' +
           '<div class="mv ENV" style="z-index:5;left:1500px;top:480px;width:250px;height:160px;transform:rotate(-8deg)">' +
             '<svg viewBox="0 0 250 160" width="250" height="160"><rect x="4" y="4" width="242" height="152" fill="#F4ECD8" stroke="#8C7A5E" stroke-width="4"/><path d="M4 4 125 92 246 4" fill="none" stroke="#8C7A5E" stroke-width="4"/></svg>' +
             '<span class="stamp manual" style="--r:10deg;position:absolute;left:66px;top:84px;font-size:30px;padding:4px 12px;background:rgba(244,236,216,.85)">Paid</span></div>' +
           '<div class="abs pp" data-s="3" style="left:1040px;top:160px;width:420px">' +
             '<div class="index" style="padding:80px 28px 24px;transform:rotate(1.5deg)"><span class="pin" style="left:46%;top:-10px"></span><div class="se" style="font-size:40px;line-height:1.15">Who gains when this is first?</div></div>' +
-            '<div class="body" style="margin-top:26px;font-size:26px">The shop? The search company? <b>You?</b></div></div>';
+            '<div class="body" style="margin-top:26px;font-size:26px">Pizza Giant? The search company? <b>You?</b></div></div>';
       }, step:function(r, n, fwd){
         var env = r.querySelector('.ENV'), sp = r.querySelector('.SP');
         var order = n >= 2 ? [4, 0, 1, 2, 3] : [0, 1, 2, 3, 4];
