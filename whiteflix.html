@@ -2650,7 +2650,7 @@ var WF = (function(){
     var ALIAS = { despair:'sad', squint:'stare', angry:'shock', side:'blank' };
     var FACE_AT = [[0,'smile'],[15.2,'shock'],[17.6,'stare'],[20.4,'side'],[22.2,'shock'],[24,'stare'],[26.4,'blank'],[31.4,'stare'],
       [33.6,'side'],[38.2,'stare'],[44.2,'shock'],[47,'blank'],[50.4,'stare'],[52.2,'shock'],[54.2,'stare'],[57,'side'],[59.4,'sad'],
-      [61.2,'despair'],[68.4,'squint'],[71,'smile'],[78.2,'stare'],[79.6,'shock'],[81.2,'angry'],[92.6,'smile'],[102.6,'shock'],[104.6,'sad']];
+      [61.2,'despair'],[68.4,'squint'],[71,'smile'],[78.2,'stare'],[79.6,'shock'],[81.2,'angry'],[92.6,'smile'],[99.3,'stare'],[100.8,'squint'],[102.2,'shock'],[104.4,'sad']];
     var CAPS = [
       [7.2,10.4,'NARRATOR: The doors open at 8:30.'],
       [10.6,13.4,'NARRATOR: Mr White’s lanyard opens the doors.'],
@@ -2675,17 +2675,19 @@ var WF = (function(){
       [81.4,83.6,'MR WHITE: Give it back.'],
       [86.4,89.4,'[copying intensifies]'],
       [93.2,96.8,'[the crowd goes wild]'],
-      [99.2,100.4,'[happy beep]'],
-      [102.4,105,'NARRATOR: It is an INSET day.'],
-      [105.2,107.2,'[sad trombone]']
+      [99.2,100.6,'[angry beep]'],
+      [100.8,102.4,'MR WHITE: Hang on.'],
+      [103,104.2,'[burp]'],
+      [104.4,106.8,'NARRATOR: He grabbed a photocopy.'],
+      [107,108.8,'[sad trombone]']
     ];
     var QUERIES = [[17.6, 40.6, 'lanyard'], [42, 61, 'thing'], [68.4, 80, 'where did I last use it?']];
     var NC = 60;                         // the photocopies of the lanyard
     function copyT(i){ return 86 + i * .09; }
     var CUES = [[.15,'sting'],[13.8,'buzz'],[22.2,'snap'],[22.3,'boing'],[27.2,'flutter'],[31.4,'rumble'],[34.6,'rummage'],[36.6,'rummage'],
       [42.2,'ticks'],[46.2,'avalanche'],[51.8,'bubble'],[57.6,'squeak'],[58.6,'squeak'],[64.6,'flutter'],[71,'harp'],[74.2,'slurp'],
-      [78,'harp'],[79.6,'burp'],[84,'rumble'],[85.8,'whir'],[92.4,'thud'],[93.2,'cheer'],[99.2,'ding'],[100.6,'creak'],[104.3,'whoosh'],
-      [105,'trombone'],[107.6,'sting']];
+      [78,'harp'],[79.6,'burp'],[84,'rumble'],[85.8,'whir'],[92.4,'thud'],[93.2,'cheer'],[99.2,'buzz'],[101.2,'crinkle'],[103,'burp'],
+      [106.8,'trombone'],[109,'sting']];
     for(var ci = 0; ci < NC; ci += 3) CUES.push([copyT(ci), 'chk']);
     CUES.sort(function(a, b){ return a[0] - b[0]; });
 
@@ -2771,6 +2773,7 @@ var WF = (function(){
       chk: function(){ hiss(0, .05, .16, 'highpass', 1800); tone('square', 180, 0, .04, .03); },
       thud: function(){ tone('sine', 120, 0, .35, .6, 40); hiss(0, .3, .4, 'lowpass', 600); },
       cheer: function(){ hiss(0, 3.4, .32, 'bandpass', 1200, 900, .6); hiss(0, 3.4, .2, 'bandpass', 2600, 2000, .8); [0, .4, .8].forEach(function(d){ tone('triangle', 880, d, .2, .05, 990); }); },
+      crinkle: function(){ for(var i = 0; i < 8; i++) hiss(i * .06, .05, .25, 'highpass', 2500 + hs(i) * 2000); },
       ding: function(){ tone('triangle', 1318.5, 0, .25, .2); tone('triangle', 1760, .2, .7, .2); },
       creak: function(){ tone('sawtooth', 210, 0, .9, .05, 120); },
       whoosh: function(){ hiss(0, .8, .35, 'bandpass', 300, 3500, 1.5); },
@@ -2819,11 +2822,8 @@ var WF = (function(){
       s += '</g>';
       // outside the door: the empty playground and the sign
       s += '<g clip-path="url(#y-doorclip)"><rect x="150" y="380" width="240" height="520" fill="#9fd4ff"/><rect x="150" y="700" width="240" height="200" fill="#7a8a7a"/>' +
-        '<g transform="translate(270 560) rotate(-3)"><rect x="-104" y="-70" width="208" height="140" fill="#fff" stroke="#E11B22" stroke-width="7"/>' +
-        '<text x="0" y="-24" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="40" fill="#E11B22">INSET DAY</text>' +
-        '<text x="0" y="16" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="26" fill="#1b1d22">NO PUPILS</text>' +
-        '<text x="0" y="48" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="26" fill="#1b1d22">TODAY</text></g></g>';
-      // the door, which swings open at the end
+        '</g>';
+      // the door
       s += '<g id="y-door"><rect x="150" y="380" width="240" height="520" fill="#8a5a3a" stroke="#5e3b24" stroke-width="10"/><rect x="190" y="420" width="160" height="120" fill="#b9d7ee" stroke="#5e3b24" stroke-width="6"/><circle cx="360" cy="660" r="12" fill="#d4b05a"/></g>';
       s += '<g transform="translate(450 600)"><rect x="-28" y="-44" width="56" height="88" rx="8" fill="#2b2f36"/><rect x="-18" y="-30" width="36" height="22" rx="3" fill="#4a4f59"/>' +
         '<circle id="y-led" cx="0" cy="22" r="11" fill="#3a3f48"/><circle id="y-ledglow" cx="0" cy="22" r="26" fill="#2ecc71" opacity="0"/></g>';
@@ -2922,6 +2922,7 @@ var WF = (function(){
       for(i = 0; i < 40; i++) conf += '<rect class="y-cf" x="-8" y="-14" width="16" height="28" fill="' + jc[i % jc.length] + '"/>';
       s += '<g id="y-fist" opacity="0"><rect x="-10" y="-10" width="1940" height="1100" fill="#2F6BE0"/><g transform="translate(960 600)"><g id="y-frays">' + rays + '</g></g>' +
         '<g id="y-fpic"><image href="img/mr-white-fist.webp" x="600" y="250" width="672" height="761" preserveAspectRatio="xMidYMid meet"/>' +
+          '<g transform="translate(600 250) scale(1.05)"><path d="M298 266 L228 278 L158 290 L112 340 L114 456 L166 456 L150 520 L118 725 L540 725 L504 560 L572 552 L560 428 L530 318 L484 280 L410 254 Q352 300 298 266 Z" fill="#f3f6fb" stroke="#cfd6e2" stroke-width="5" stroke-linejoin="round"/><path d="M166 456 L176 380 M504 560 L522 420" stroke="#d7dde8" stroke-width="5" fill="none"/><path d="M298 270 L326 330 L352 300 L378 330 L404 266" fill="#ffffff" stroke="#cfd6e2" stroke-width="5" stroke-linejoin="round"/><path d="M340 300 L364 300 L372 318 L360 330 L344 330 L332 318 Z" fill="#b8352f"/><path d="M344 328 L360 328 L376 520 L352 548 L328 520 Z" fill="#D8443C"/><g fill="#cfd6e2"><circle cx="352" cy="580" r="6"/><circle cx="352" cy="640" r="6"/><circle cx="352" cy="700" r="6"/></g></g>' +
           '<path d="M720 318 C700 380 740 420 742 470 M776 318 C800 380 760 420 748 470" stroke="#2F6BE0" stroke-width="12" fill="none" stroke-linecap="round"/><g transform="translate(745 466) rotate(4) scale(1.3)">' + badge() + '</g></g>' +
         '<g id="y-conf">' + conf + '</g>' +
         '<text x="960" y="170" text-anchor="middle" font-family="Luckiest Guy,Anton,sans-serif" font-size="120" fill="#FFD23F" stroke="#1b1d22" stroke-width="10" paint-order="stroke">GOT IT</text>' +
@@ -2972,7 +2973,7 @@ var WF = (function(){
     var CAMK = [[0,'wide'],[13,'wide'],[13.6,'door'],[17.6,'door'],[19.6,'desk'],[25,'desk'],[26,'coat'],[31,'coat'],[33.6,'bin'],
       [40,'bin'],[40.8,'wide'],[42.6,'wide'],[44,'lp'],[50.2,'lp'],[51.4,'fish'],[56,'fish'],[57,'hutch'],[61,'hutch'],[61.8,'slump'],
       [70.8,'slump'],[70.81,'copier'],[77.9,'copier'],[77.91,'slump'],[79,'slump'],[80,'strap'],[81.2,'strap'],[82.4,'copier'],
-      [92.9,'copier'],[96.9,'copier'],[96.91,'door'],[100.4,'door'],[101.6,'doorz'],[200,'doorz']];
+      [92.9,'copier'],[96.9,'copier'],[96.91,'door'],[100.6,'door'],[101.4,'doorz'],[102.39,'doorz'],[102.4,'strap'],[104.39,'strap'],[104.4,'doorz'],[200,'doorz']];
     function camAt(t){
       var a = CAMK[0], b = CAMK[CAMK.length - 1];
       for(var i = 1; i < CAMK.length; i++){ if(t <= CAMK[i][0]){ a = CAMK[i - 1]; b = CAMK[i]; break; } }
@@ -3045,7 +3046,7 @@ var WF = (function(){
       if(inR(t, 83.6, 91.6)) aimF(MOUTH[0] - 4, MOUTH[1] + 60, kf(t, [[83.6,0],[84,1]]));   // hold of the strap
       if(inR(t, 84, 91.6)) aB = 30 + Math.sin(t * 5) * 10;
       if(inR(t, 98.4, 99.6)) aimF(450, 600, kf(t, [[98.4,0],[98.8,1],[99.2,1],[99.6,0]]));   // the swipe that works
-      if(inR(t, 100, 101)) aimF(360, 660, kf(t, [[100,0],[100.4,1],[100.7,1],[101,0]]));   // the push
+      if(inR(t, 100.6, 108)) aimF(x + 150, FLOOR + y - 690 * K, kf(t, [[100.6,0],[101.2,1]]));   // holds it up to look at it
       tr(E.armF, 'translate(112 -540) rotate(' + f1(aF) + ') scale(1 ' + sF.toFixed(3) + ')');
       tr(E.armB, 'translate(-112 -540) rotate(' + f1(aB) + ')');
       tr(E.held, 'translate(0 262) scale(1 ' + (1 / sF).toFixed(3) + ') rotate(' + f1(-aF - lean) + ')');
@@ -3059,10 +3060,11 @@ var WF = (function(){
       var hk = '';
       if(inR(t, 58.6, 61.2)) hk = 'lace';
       if(inR(t, 72, 77.4)) hk = 'phone';
-      if(t >= 92.6 && t < 200) hk = 'badge';
+      if(t >= 92.6 && t < 200) hk = t >= 101.2 ? 'pcopy' : 'badge';
       if(hk !== E.heldK){
         E.held.innerHTML = hk === 'phone' ? '<rect x="-22" y="-46" width="44" height="80" rx="8" fill="#1b1d22"/><rect x="-17" y="-38" width="34" height="62" rx="3" fill="#7fb6ff"/>' :
           hk === 'lace' ? '<path d="M0 0 C20 20 -20 40 10 60 C30 74 0 90 14 104" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>' :
+          hk === 'pcopy' ? '<g transform="translate(0 40) rotate(-6) scale(2.3)">' + copySheet() + '<text x="0" y="36" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="13" fill="#E11B22">COPY</text></g>' :
           hk === 'badge' ? '<g transform="translate(-6 -10)"><path d="M0 0 C-30 30 -30 60 0 80 M0 0 C30 30 30 60 0 80" stroke="#2F6BE0" stroke-width="9" fill="none"/><g transform="translate(0 76)">' + badge() + '</g></g>' : '';
         E.heldK = hk;
       }
@@ -3098,7 +3100,7 @@ var WF = (function(){
       vis(E.peel, inR(t, 37.6, 44));
       vis(E.note, t >= 64.8 && t < 71);
       if(t >= 64.8 && t < 71) tr(E.note, 'translate(' + f1(Math.sin(t * 3) * 40 * (1 - seg(t, 64.8, 66.2))) + ' ' + f1(kf(t, [[64.8,-900],[66.2,-300]], out)) + ') rotate(' + f1(Math.sin(t * 4) * 20 * (1 - seg(t, 64.8, 66.2)) - 6) + ')');
-      vis(E.paper, t >= 104.6 && t < 200);
+      vis(E.paper, false);
       if(t >= 104.6) tr(E.paper, 'translate(' + f1(kf(t, [[104.4,900],[105.4,0]])) + ' ' + f1(kf(t, [[104.4,-500],[105.4,-150]])) + ') rotate(' + f1(kf(t, [[104.4,180],[105.4,-8]])) + ')');
       op(E.excl, inR(t, 15.2, 17.4) ? 1 : 0);
       tr(E.excl, 'translate(130 -880) scale(' + f1(kf(t, [[15.2,.2],[15.4,1.2],[15.6,1]])) + ') translate(-130 880)');
@@ -3113,7 +3115,7 @@ var WF = (function(){
 
       // the strap hanging out of the photocopier: there in every shot,
       // except when it is round his neck (flashback) or in his hand (the end)
-      var strapOn = !(flash && t < 75) && t < 92.4;
+      var strapOn = (!(flash && t < 75) && t < 92.4) || inR(t, 102.4, 104.4);
       vis(E.strapw, strapOn);
       if(strapOn){
         var ex, ey;
@@ -3129,10 +3131,10 @@ var WF = (function(){
       }
 
       // the photocopier: shakes in the tug, its little screen
-      var lcd = inR(t, 84, 85.8) ? 'NO' : inR(t, 85.8, 92.4) ? 'COPYING' : inR(t, 92.4, 96.9) ? 'OUT OF PAPER' : 'READY';
+      var lcd = inR(t, 102.4, 104.4) ? 'HA HA' : inR(t, 84, 85.8) ? 'NO' : inR(t, 85.8, 92.4) ? 'COPYING' : inR(t, 92.4, 96.9) ? 'OUT OF PAPER' : 'READY';
       if(lcd !== E.lcdK){ E.lcd.textContent = lcd; E.lcdK = lcd; }
       var fr = Math.floor(t * 30), cs0 = 0;
-      if(inR(t, 31.4, 33.4) || inR(t, 79.6, 80.4)) cs0 = 4;
+      if(inR(t, 31.4, 33.4) || inR(t, 79.6, 80.4) || inR(t, 103, 104)) cs0 = 4;
       if(inR(t, 84, 92.4)) cs0 = 9;
       tr(E.cop, 'translate(' + f1((hs(fr) - .5) * cs0) + ' ' + f1((hs(fr + 99) - .5) * cs0) + ')');
 
@@ -3194,10 +3196,9 @@ var WF = (function(){
       E.cnum.textContent = Math.round(kf(t, [[86,0],[92.2,250]], function(q){ return q; }));
 
       // the door: red with no lanyard, green with it, then it swings open
-      var ok = t >= 99.1;
-      E.led.setAttribute('fill', inR(t, 13.8, 15) ? '#ff3b30' : ok ? '#2ecc71' : '#3a3f48');
-      op(E.ledglow, ok ? .35 : 0);
-      tr(E.door, 'translate(150 0) scale(' + kf(t, [[100.6,1],[101.6,.12]]).toFixed(3) + ' 1) translate(-150 0)');
+      var red = inR(t, 13.8, 15) || inR(t, 99.1, 100.8);
+      E.led.setAttribute('fill', red ? '#ff3b30' : '#3a3f48');
+      E.ledglow.setAttribute('fill', '#ff3b30'); op(E.ledglow, red ? .35 : 0);
 
       // the clock on the wall
       var mAng = 150 + t * 1.2, hAng = 240 + mAng / 12;
@@ -3223,7 +3224,7 @@ var WF = (function(){
         op(E.sbar, kf(t, [[qn[0],0],[qn[0] + .3,1],[qn[1] - .3,1],[qn[1],0]]));
         tr(E.sbar, 'translate(0 ' + f1(kf(t, [[qn[0],-160],[qn[0] + .35,0]], out)) + ')');
       } else op(E.sbar, 0);
-      op(E.hud, t >= 6.5 && t < 107 && !flash ? 1 : 0);
+      op(E.hud, t >= 6.5 && t < 109 && !flash ? 1 : 0);
       var ht = hudText(t);
       if(E.hudt.textContent !== ht) E.hudt.textContent = ht;
       E.hudt.setAttribute('fill', t > 61 && t < 93 && (t * 2) % 1 < .5 ? '#ffd23f' : '#ff5a4f');
@@ -3244,10 +3245,10 @@ var WF = (function(){
         op(E.t2, seg(t, .8, 1.6));
         tr(E.t2, 'translate(960 610) scale(' + kf(t, [[.8,1.15],[2,1]], out).toFixed(3) + ') translate(-960 -610)');
       }
-      op(E.end, t < 107.4 ? 0 : kf(t, [[107.4,0],[107.8,1],[118.4,1],[119,0]]));
-      if(t >= 107.4){
-        op(E.e2, seg(t, 108.3, 109.2)); op(E.e3, seg(t, 110, 110.8));
-        tr(E.e2, 'translate(960 570) scale(' + kf(t, [[108.3,1.15],[109.5,1]], out).toFixed(3) + ') translate(-960 -570)');
+      op(E.end, t < 109.4 ? 0 : kf(t, [[109.4,0],[109.8,1],[118.4,1],[119,0]]));
+      if(t >= 109.4){
+        op(E.e2, seg(t, 110.3, 111.2)); op(E.e3, seg(t, 112, 112.8));
+        tr(E.e2, 'translate(960 570) scale(' + kf(t, [[110.3,1.15],[111.5,1]], out).toFixed(3) + ') translate(-960 -570)');
       }
       op(E.black, Math.max(inR(t, 70.6, 71.4) ? Math.sin(seg(t, 70.6, 71.4) * Math.PI) : 0, inR(t, 77.6, 78.4) ? Math.sin(seg(t, 77.6, 78.4) * Math.PI) : 0, t >= 119 ? seg(t, 119, 119.8) : 0));
     }
