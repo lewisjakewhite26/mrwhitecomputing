@@ -253,7 +253,7 @@
       caption: 'About 200,000 people live in Stockton. If each has about 4 devices, that’s 800,000.' },
     { scene: 'room', year: 'The whole world', value: 33000000000, unit: 'devices',
       line: 'That’s 660 tonnes of rice. As heavy as 55 double-decker buses.', note: 'Checking one every second, day and night: over 1,000 years.',
-      caption: 'It fills this house to the ceiling. And about 8 more houses just like it.' },
+      caption: 'Poured into houses, it fills 9 of them right up to the ceiling.' },
     { scene: 'search', question: 'Out of all that rice…',
       line: 'Your message still finds the one grain it is meant for, in under a second.',
       caption: 'Because every device has an address, and switches send each message the right way.' }
@@ -557,26 +557,48 @@
     return h;
   }
 
-  const FILL = 9;
+  // one house fills, the camera pulls back, and eight more fill beside it
+  const FILL = 4, ZOOM = 1.4, EACH = 0.55, HOUSES = 9;
   const smooth = x => { x = clamp01(x); return x * x * (3 - 2 * x); };
+  function cell(k){ const c = k % 3, r = Math.floor(k / 3); return [W / 3 * (c + 0.5), H / 3 * (r + 0.5) + H * 0.02]; }
   function drawHouseScene(t) {
-    const p = reduce ? 1 : smooth(t / FILL);
-    const full = p >= 1;
+    if (reduce) t = 100;
+    const sc = 0.31, z = smooth((t - FILL) / ZOOM);
+    const tEnd = FILL + ZOOM + (HOUSES - 1) * EACH;
+    // the first house, shrinking from full size into the top-left of the street
+    const c0 = cell(0);
     ctx.save();
-    if (!reduce && t > FILL && t < FILL + 0.5) {
-      const k = (1 - (t - FILL) / 0.5) * 6;
-      ctx.translate((Math.random() - 0.5) * k, (Math.random() - 0.5) * k);
-    }
-    const h = drawHouse(RH * p, t, !reduce && !full && t > 0);
-    if (full) {
-      const a = reduce ? 1 : clamp01((t - FILL) / 0.5);
-      const fs = Math.max(18, Math.round(h.s * 0.34));
-      ctx.globalAlpha = a;
-      ctx.font = `800 ${fs}px Lexend, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#FFE9A8';
-      ctx.fillText('Full to the ceiling!', W / 2, h.yC - 0.85 * h.s);
-    }
+    const k0 = 1 + (sc - 1) * z, x0 = W / 2 + (c0[0] - W / 2) * z, y0 = H / 2 + (c0[1] - H / 2) * z;
+    ctx.translate(x0, y0); ctx.scale(k0, k0); ctx.translate(-W / 2, -H / 2);
+    const p0 = smooth(t / FILL);
+    drawHouse(RH * p0, t, t > 0 && p0 < 1);
     ctx.restore();
+    // the other eight
+    for (let k = 1; k < HOUSES; k++) {
+      if (z <= 0) break;
+      const c = cell(k), start = FILL + ZOOM + (k - 1) * EACH;
+      const p = smooth((t - start) / EACH);
+      ctx.save(); ctx.globalAlpha = z;
+      ctx.translate(c[0], c[1]); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2);
+      drawHouse(RH * p, t, p > 0 && p < 1);
+      ctx.restore();
+    }
+    // the count, and the line at the end
+    const filled = t < FILL ? 0 : Math.min(HOUSES, 1 + Math.max(0, Math.floor((t - FILL - ZOOM) / EACH) + (t >= FILL + ZOOM ? 1 : 0)));
+    const fs = Math.max(18, Math.round(Math.min(W, H) * 0.06));
+    ctx.font = `800 ${fs}px Lexend, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (t >= FILL && t < tEnd + 0.3) {
+      ctx.fillStyle = 'rgba(14,31,58,0.75)'; const bw = fs * 6; ctx.fillRect(W - bw - fs * 0.4, fs * 0.3, bw, fs * 1.5);
+      ctx.fillStyle = '#FFE9A8'; ctx.fillText(Math.min(filled, HOUSES) + (filled === 1 ? ' house full' : ' houses full'), W - bw / 2 - fs * 0.4, fs * 1.05);
+    }
+    if (t >= tEnd + 0.3) {
+      const a = clamp01((t - tEnd - 0.3) / 0.5);
+      if (!reduce && t < tEnd + 0.8) { ctx.save(); ctx.translate((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6); ctx.restore(); }
+      ctx.globalAlpha = a;
+      ctx.fillStyle = 'rgba(14,31,58,0.82)'; ctx.fillRect(W * 0.12, H / 2 - fs * 1.1, W * 0.76, fs * 2.2);
+      ctx.fillStyle = '#FFE9A8'; ctx.fillText('9 houses, full to the ceiling!', W / 2, H / 2);
+      ctx.globalAlpha = 1;
+    }
   }
 
   function drawSearch(t) {
