@@ -2768,7 +2768,32 @@ var WF = (function(){
       squeak: function(){ tone('sine', 1500, 0, .14, .1, 2300); tone('sine', 1900, .1, .1, .07, 1300); },
       harp: function(){ [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568].forEach(function(f, i){ tone('triangle', f, i * .06, .5, .08); }); },
       slurp: function(){ hiss(0, .6, .45, 'bandpass', 2400, 280, 6); tone('sine', 700, 0, .5, .08, 180); },
-      burp: function(){ tone('sawtooth', 105, 0, .55, .16, 68); hiss(0, .5, .12, 'lowpass', 400); },
+      // a long, wet, juddering burp: a buzzy low voice that wobbles in pitch,
+      // stutters in volume, and is shaped by two throat-like filters
+      burp: function(){
+        var c = busOn(); if(!c) return;
+        var t = c.currentTime, dur = 1.15, n = 60, i;
+        var pitch = new Float32Array(n), amp = new Float32Array(n);
+        for(i = 0; i < n; i++){
+          var q = i / (n - 1);
+          pitch[i] = 118 - q * 52 + (hs(i * 3.1) - .5) * 26;            // falls, with a rattle
+          amp[i] = (q < .06 ? q / .06 : 1 - Math.pow(q, 2.2)) * (.55 + hs(i * 7.7) * .45) * .9;   // judders
+        }
+        var o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), f1 = c.createBiquadFilter(), f2 = c.createBiquadFilter(), lp = c.createBiquadFilter(), mix = c.createGain();
+        o.type = 'sawtooth'; o2.type = 'square';
+        o.frequency.setValueCurveAtTime(pitch, t, dur);
+        o2.frequency.setValueCurveAtTime(pitch.map(function(v){ return v * .5; }), t, dur);
+        f1.type = 'bandpass'; f1.frequency.setValueAtTime(420, t); f1.frequency.linearRampToValueAtTime(300, t + dur); f1.Q.value = 3;
+        f2.type = 'bandpass'; f2.frequency.setValueAtTime(950, t); f2.frequency.linearRampToValueAtTime(650, t + dur); f2.Q.value = 4;
+        lp.type = 'lowpass'; lp.frequency.value = 1400;
+        g.gain.setValueAtTime(.0001, t); g.gain.setValueCurveAtTime(amp, t + .01, dur - .02);
+        var o2g = c.createGain(); o2g.gain.value = .35;
+        o.connect(f1); o.connect(f2); o2.connect(o2g); o2g.connect(f1);
+        f1.connect(mix); f2.connect(mix); mix.gain.value = 1.6; mix.connect(lp); lp.connect(g); g.connect(bus);
+        o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
+        hiss(0, .25, .2, 'bandpass', 600, 300, 2);        // the wet start
+        hiss(dur - .2, .2, .12, 'lowpass', 500, 200);       // the little gurgle at the end
+      },
       whir: function(){ hiss(0, 6, .14, 'bandpass', 260, 420, 3); tone('sawtooth', 58, 0, 6, .05, 64); },
       chk: function(){ hiss(0, .05, .16, 'highpass', 1800); tone('square', 180, 0, .04, .03); },
       thud: function(){ tone('sine', 120, 0, .35, .6, 40); hiss(0, .3, .4, 'lowpass', 600); },
