@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Grain Per Device</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0E1F3A;
+    --panel: #16305A;
+    --panel-edge: #24477D;
+    --accent: #9CC7EA;
+    --text: #FFFFFF;
+    --muted: #C9D9EC;
+    --note: #FFE9A8;
+    --rice: #F4ECD8;
+    --font: "Lexend", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 18px;
+    line-height: 1.35;
+    overflow: hidden;
+  }
+  .stage {
+    height: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: clamp(16px, 2vw, 32px);
+    padding-inline: clamp(16px, 3vw, 56px);
+    padding-block: clamp(16px, 3vh, 40px);
+  }
+  .copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(8px, 1.4vh, 18px);
+    min-width: 0;
+  }
+  .eyebrow {
+    margin: 0;
+    font-size: clamp(15px, 1.5vw, 24px);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .year {
+    margin: 0;
+    font-size: clamp(24px, 2.6vw, 44px);
+    font-weight: 600;
+    color: var(--accent);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(40px, 4.1vw, 82px);
+    font-weight: 800;
+    line-height: 1.02;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  h1.question { font-size: clamp(40px, 4.4vw, 84px); line-height: 1.08; }
+  .unit {
+    margin: 0;
+    font-size: clamp(22px, 2.4vw, 40px);
+    color: var(--muted);
+  }
+  .line, .note {
+    margin: 0;
+    font-size: clamp(22px, 2.3vw, 40px);
+    line-height: 1.3;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .line { margin-top: clamp(8px, 2vh, 24px); }
+  .note { color: var(--note); font-weight: 600; }
+  .fade-in { animation: fade 0.6s ease-out both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .visual {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border: 2px solid var(--panel-edge);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .visual canvas {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+  }
+  .caption {
+    margin: 0;
+    padding: 14px 22px 18px;
+    font-size: clamp(16px, 1.6vw, 26px);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .controls {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .dots { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: transparent;
+    padding: 0; cursor: pointer;
+  }
+  .dot[aria-current="step"] { background: var(--accent); }
+  .btn {
+    font-family: var(--font);
+    font-size: clamp(18px, 1.6vw, 26px);
+    font-weight: 600;
+    min-height: 56px;
+    padding: 0 26px;
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .btn.primary { background: var(--accent); color: var(--bg); }
+  .btn:disabled { opacity: 0.35; cursor: default; }
+  .btn:focus-visible, .dot:focus-visible, .link:focus-visible, canvas:focus-visible {
+    outline: 3px solid var(--note);
+    outline-offset: 3px;
+  }
+  .right { display: flex; align-items: center; gap: 14px; }
+  .link {
+    font-family: var(--font);
+    font-size: 16px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .notes {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 18, 36, 0.8);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    z-index: 10;
+  }
+  .notes-card {
+    background: var(--panel);
+    border: 2px solid var(--panel-edge);
+    border-radius: 16px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90%;
+    overflow: auto;
+    padding: 24px 28px;
+    box-sizing: border-box;
+  }
+  .notes-card h2 { margin: 0 0 12px; font-size: 24px; }
+  .notes-card ul { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .notes-card strong { color: var(--text); font-weight: 600; }
+  .notes-card .btn { margin-top: 20px; }
+
+  @media (max-width: 760px) {
+    html, body { height: auto; }
+    body { overflow: auto; }
+    .stage { height: auto; grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+    .visual canvas { flex: none; height: max(260px, 62vw); }
+    .line, .note { max-width: none; }
+    .controls { flex-wrap: wrap; }
+    .btn { padding: 0 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="stage">
+  <section class="copy" aria-live="polite">
+    <p class="eyebrow" id="eyebrow">1 grain of rice = 1 device</p>
+    <p class="year" id="year"></p>
+    <h1 id="big"></h1>
+    <p class="unit" id="unit"></p>
+    <p class="line" id="line"></p>
+    <p class="note" id="note" hidden></p>
+  </section>
+
+  <div class="visual">
+    <canvas id="cv" tabindex="0" aria-label="Animated picture of rice grains. Click to go to the next step."></canvas>
+    <p class="caption" id="caption"></p>
+  </div>
+
+  <nav class="controls" aria-label="Slide controls">
+    <button class="btn" id="back" type="button">Back</button>
+    <div class="dots" id="dots"></div>
+    <div class="right">
+      <button class="link" id="openNotes" type="button">How we worked it out</button>
+      <button class="btn primary" id="next" type="button">Next</button>
+    </div>
+  </nav>
+</main>
+
+<aside class="notes" id="notes" hidden>
+  <div class="notes-card" role="dialog" aria-modal="true" aria-labelledby="notesTitle">
+    <h2 id="notesTitle">How we worked it out</h2>
+    <ul>
+      <li><strong>33 billion connected devices:</strong> Statista's figures for October 2025 add up to about 33.4 billion: 17.4 billion short-range smart devices (speakers, watches, trackers), 8.6 billion mobile phones, 4.9 billion wide-area devices, 1.7 billion computers and 0.8 billion landlines.</li>
+      <li><strong>About 4 each:</strong> 33 billion ÷ about 8.2 billion people is about 4 devices per person, on average around the world.</li>
+      <li><strong>Stockton:</strong> the borough has about 200,000 people (2021 Census: 196,600). Using the world average of about 4 each gives roughly 800,000 devices. It's an estimate, not a count.</li>
+      <li><strong>One grain of long-grain rice weighs about 0.02 g</strong>, so a 1 kg bag holds roughly 50,000 grains. 800,000 ÷ 50,000 = 16 bags.</li>
+      <li><strong>33 billion grains</strong> ÷ 50,000 = 660,000 kg, or 660 tonnes. An empty double-decker bus weighs about 12 tonnes, so that is about 55 buses.</li>
+      <li><strong>Rice packs at about 800 kg per cubic metre</strong>, so 660 tonnes takes up about 825 m³. A small house with four 3 m × 3 m rooms holds about 90 m³, so that is about 9 houses.</li>
+      <li><strong>Checking one per second, non-stop:</strong> 800,000 seconds is about 9 days. 33 billion seconds is about 1,046 years.</li>
+    </ul>
+    <button class="btn primary" id="closeNotes" type="button">Close</button>
+  </div>
+</aside>
+
+<script>
+(() => {
+  const scenes = [
+    { scene: 'intro', eyebrow: 'Computing · Connecting computers', question: 'How big is 33 billion?',
+      line: 'Let’s turn every connected device into one grain of rice.', caption: '1 grain of rice = 1 phone, tablet, computer, watch or smart speaker' },
+    { scene: 'one', year: 'One iPad', value: 1, unit: 'device',
+      line: 'One grain of rice.', note: 'Our whole class of iPads: 27 grains. Just a pinch.',
+      caption: 'Every device on a network has its own address.' },
+    { scene: 'bags', year: 'Stockton-on-Tees', value: 800000, unit: 'devices',
+      line: 'That’s 16 big bags of rice.', note: 'Checking one every second, day and night: about 9 days.',
+      caption: 'About 200,000 people live in Stockton. If each has about 4 devices, that’s 800,000.' },
+    { scene: 'room', year: 'The whole world', value: 33000000000, unit: 'devices',
+      line: 'That’s 660 tonnes of rice. As heavy as 55 double-decker buses.', note: 'Checking one every second, day and night: over 1,000 years.',
+      caption: 'It fills this house to the ceiling. And about 8 more houses just like it.' },
+    { scene: 'search', question: 'Out of all that rice…',
+      line: 'Your message still finds the one grain it is meant for, in under a second.',
+      caption: 'Because every device has an address, and switches send each message the right way.' }
+  ];
+  const steps = [];
+  scenes.forEach((s, i) => { steps.push({ s: i, r: false }); if (s.note) steps.push({ s: i, r: true }); });
+
+  const $ = id => document.getElementById(id);
+  const els = { eyebrow: $('eyebrow'), year: $('year'), big: $('big'), unit: $('unit'), line: $('line'), note: $('note'), caption: $('caption') };
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const DELAY = 0.7; // seconds of stillness before each animation starts
+  let step = 0, sceneIdx = -1, sceneStart = 0;
+  const embedded = window.parent !== window;
+  const tellParent = m => { if (embedded) window.parent.postMessage(m, '*'); };
+  const nextStep = () => { if (step >= steps.length - 1) tellParent('extra:next'); else go(step + 1); };
+  const prevStep = () => { if (step <= 0) tellParent('extra:back'); else go(step - 1); };
+  let shown = 0, countFrom = 0, countTo = 0, countStart = 0;
+  const fmt = n => Math.round(n).toLocaleString('en-GB');
+
+  const dots = $('dots');
+  steps.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot'; d.type = 'button';
+    d.setAttribute('aria-label', 'Go to step ' + (i + 1));
+    d.addEventListener('click', () => go(i));
+    dots.appendChild(d);
+  });
+
+  function setScene(i) {
+    const s = scenes[i];
+    sceneIdx = i; sceneStart = performance.now();
+    els.eyebrow.textContent = s.eyebrow || '1 grain of rice = 1 device';
+    els.year.textContent = s.year || ''; els.year.hidden = !s.year;
+    els.unit.textContent = s.unit || ''; els.unit.hidden = !s.unit;
+    if (s.question) {
+      els.big.className = 'question'; els.big.textContent = s.question;
+    } else {
+      els.big.className = '';
+      countFrom = s.value > 1 ? shown : s.value; countTo = s.value; countStart = performance.now() + DELAY * 1000;
+      els.big.textContent = fmt(reduce ? countTo : countFrom);
+      if (reduce) shown = countTo;
+    }
+    els.line.textContent = s.line;
+    els.caption.textContent = s.caption;
+    [els.year, els.big, els.unit, els.line].forEach(e => { e.classList.remove('fade-in'); void e.offsetWidth; e.classList.add('fade-in'); });
+  }
+
+  function go(n) {
+    step = Math.max(0, Math.min(steps.length - 1, n));
+    const st = steps[step];
+    if (st.s !== sceneIdx) { if (st.s < sceneIdx) shown = 0; setScene(st.s); }
+    const s = scenes[st.s];
+    if (st.r && s.note) {
+      els.note.textContent = s.note; els.note.hidden = false;
+      els.note.classList.remove('fade-in'); void els.note.offsetWidth; els.note.classList.add('fade-in');
+    } else { els.note.hidden = true; }
+    [...dots.children].forEach((d, i) => { if (i === step) d.setAttribute('aria-current', 'step'); else d.removeAttribute('aria-current'); });
+    $('back').disabled = !embedded && step === 0;
+    $('next').disabled = !embedded && step === steps.length - 1;
+  }
+
+  $('next').addEventListener('click', nextStep);
+  $('back').addEventListener('click', prevStep);
+  const notes = $('notes');
+  $('openNotes').addEventListener('click', () => { notes.hidden = false; $('closeNotes').focus(); });
+  $('closeNotes').addEventListener('click', () => { notes.hidden = true; });
+  notes.addEventListener('click', e => { if (e.target === notes) notes.hidden = true; });
+  document.addEventListener('keydown', e => {
+    if (!notes.hidden) { if (e.key === 'Escape') notes.hidden = true; return; }
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key) && !(e.target instanceof HTMLButtonElement)) { e.preventDefault(); nextStep(); }
+    else if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); nextStep(); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prevStep(); }
+  });
+
+  // ---------- Canvas ----------
+  const cv = $('cv');
+  const ctx = cv.getContext('2d');
+  cv.addEventListener('click', nextStep);
+  let W = 0, H = 0, dpr = 1, pat = null, bigPat = null;
+
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const riceCols = ['#F7F0DF', '#EFE4CB', '#E6D9B9', '#FBF6EA', '#EADFC4'];
+
+  function makePattern(scale) {
+    const size = Math.round(140 * scale * dpr);
+    const c = document.createElement('canvas'); c.width = c.height = size;
+    const g = c.getContext('2d');
+    g.fillStyle = '#CDBE98'; g.fillRect(0, 0, size, size);
+    const r = rng(7);
+    for (let i = 0; i < 430; i++) {
+      const x = r() * size, y = r() * size, len = (9 + r() * 3) * scale * dpr, a = r() * Math.PI, col = riceCols[Math.floor(r() * riceCols.length)];
+      for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+        g.save(); g.translate(x + ox * size, y + oy * size); g.rotate(a);
+        g.beginPath(); g.ellipse(0, 0, len / 2, len * 0.2, 0, 0, Math.PI * 2);
+        g.fillStyle = col; g.fill();
+        g.strokeStyle = 'rgba(90,70,30,0.18)'; g.lineWidth = Math.max(0.5, 0.6 * dpr * scale); g.stroke();
+        g.restore();
+      }
+    }
+    const p = ctx.createPattern(c, 'repeat');
+    p.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, 0, 0]));
+    return p;
+  }
+
+  function resize() {
+    const r = cv.getBoundingClientRect();
+    const nd = window.devicePixelRatio || 1;
+    W = r.width; H = r.height;
+    cv.width = Math.max(1, Math.round(W * nd)); cv.height = Math.max(1, Math.round(H * nd));
+    ctx.setTransform(nd, 0, 0, nd, 0, 0);
+    if (nd !== dpr || !pat) { dpr = nd; pat = makePattern(1); bigPat = makePattern(3.2); }
+  }
+  new ResizeObserver(resize).observe(cv);
+
+  const clamp01 = x => Math.max(0, Math.min(1, x));
+  const easeOut = x => 1 - Math.pow(1 - clamp01(x), 3);
+  const easeInOut = x => { x = clamp01(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+  function bounce(x) {
+    x = clamp01(x); const n = 7.5625, d = 2.75;
+    if (x < 1 / d) return n * x * x;
+    if (x < 2 / d) return n * (x -= 1.5 / d) * x + 0.75;
+    if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + 0.9375;
+    return n * (x -= 2.625 / d) * x + 0.984375;
+  }
+
+  function grain(x, y, len, ang, fill, glow) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+    if (glow) { ctx.shadowColor = glow; ctx.shadowBlur = len * 0.35; }
+    ctx.beginPath(); ctx.ellipse(0, 0, len / 2, len * 0.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill || '#F4ECD8'; ctx.fill();
+    ctx.shadowBlur = 0;
+    if (len > 30) {
+      ctx.beginPath(); ctx.ellipse(-len * 0.06, -len * 0.06, len * 0.34, len * 0.07, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(90,70,30,0.35)'; ctx.lineWidth = Math.max(1, len * 0.012);
+    ctx.beginPath(); ctx.ellipse(0, 0, len / 2, len * 0.2, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawIntro(t) {
+    const len = Math.min(W * 0.55, H * 0.8);
+    const y = H / 2 + Math.sin(t * 1.2) * H * 0.02;
+    grain(W / 2, y, len, -0.45 + Math.sin(t * 0.6) * 0.12, '#F4ECD8', 'rgba(156,199,234,0.9)');
+  }
+
+  function drawOne(t) {
+    const floorY = H * 0.72, len = Math.min(W * 0.34, H * 0.5);
+    ctx.strokeStyle = '#9CC7EA'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(W * 0.15, floorY); ctx.lineTo(W * 0.85, floorY); ctx.stroke();
+    const p = bounce(t / 1.8);
+    const restY = floorY - len * 0.2 - 2;
+    const y = -len + (restY + len) * p;
+    grain(W / 2, y, len, -0.08 + (1 - clamp01(t / 1.8)) * 0.8, '#F4ECD8', t > 1.8 ? 'rgba(156,199,234,0.6)' : null);
+  }
+
+  function bagPath(x, y, w, h) {
+    const neck = h * 0.16, r = w * 0.22;
+    ctx.beginPath();
+    ctx.moveTo(x + w * 0.5 - w * 0.14, y + neck);
+    ctx.lineTo(x + r, y + neck);
+    ctx.quadraticCurveTo(x, y + neck, x, y + neck + r);
+    ctx.lineTo(x, y + h - r);
+    ctx.quadraticCurveTo(x, y + h, x + r, y + h);
+    ctx.lineTo(x + w - r, y + h);
+    ctx.quadraticCurveTo(x + w, y + h, x + w, y + h - r);
+    ctx.lineTo(x + w, y + neck + r);
+    ctx.quadraticCurveTo(x + w, y + neck, x + w - r, y + neck);
+    ctx.lineTo(x + w * 0.5 + w * 0.14, y + neck);
+    ctx.closePath();
+  }
+
+  const BAGS = 16;
+  function drawBags(t) {
+    const cols = 8, rows = 2, pad = Math.min(W, H) * 0.05;
+    const cw = (W - pad * 2) / cols, ch = (H - pad * 2) / rows;
+    const bw = Math.min(cw * 0.72, ch * 0.62), bh = bw * 1.2;
+    for (let i = 0; i < BAGS; i++) {
+      const c = i % cols, r = Math.floor(i / cols);
+      const x = pad + c * cw + (cw - bw) / 2, y = pad + r * ch + (ch - bh) / 2;
+      const start = i * 0.11, level = reduce ? 1 : easeOut((t - start) / 0.8);
+      ctx.save(); bagPath(x, y, bw, bh); ctx.clip();
+      ctx.fillStyle = 'rgba(156,199,234,0.08)'; ctx.fillRect(x, y, bw, bh);
+      if (level > 0) { ctx.fillStyle = pat; const top = y + bh - bh * 0.84 * level; ctx.fillRect(x, top, bw, y + bh - top); }
+      ctx.restore();
+      // tie at the top
+      ctx.strokeStyle = '#9CC7EA'; ctx.lineWidth = Math.max(1.5, bw * 0.04);
+      bagPath(x, y, bw, bh); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + bw * 0.36, y + bh * 0.16); ctx.lineTo(x + bw * 0.42, y + bh * 0.06);
+      ctx.moveTo(x + bw * 0.64, y + bh * 0.16); ctx.lineTo(x + bw * 0.58, y + bh * 0.06);
+      ctx.stroke();
+      if (level > 0 && level < 1) {
+        for (let k = 0; k < 5; k++) {
+          const fy = y - bh * 0.3 + ((t * 220 + k * 17) % (bh * 0.9));
+          grain(x + bw / 2 + Math.sin(k * 7.1) * bw * 0.08, fy, Math.max(4, bw * 0.12), 1.2 + k, '#F4ECD8');
+        }
+      }
+      if (level >= 1 && bw > 34) {
+        ctx.fillStyle = '#0E1F3A'; ctx.font = `600 ${Math.round(bw * 0.2)}px Lexend, sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('1 kg', x + bw / 2, y + bh * 0.62);
+      }
+    }
+  }
+
+  function person(cx, floorY, hm, s, col) {
+    const h = hm * s, r = h * 0.1;
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(cx, floorY - h + r, r, 0, Math.PI * 2); ctx.fill();
+    const bw = h * 0.3, top = floorY - h + r * 2.2, hip = floorY - h * 0.48;
+    ctx.beginPath(); ctx.roundRect(cx - bw / 2, top, bw, hip - top + h * 0.02, bw * 0.3); ctx.fill();
+    const lw = h * 0.11;
+    ctx.beginPath(); ctx.roundRect(cx - bw / 2 + h * 0.02, hip - 2, lw, floorY - hip + 2, lw * 0.4); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(cx + bw / 2 - h * 0.02 - lw, hip - 2, lw, floorY - hip + 2, lw * 0.4); ctx.fill();
+  }
+
+  // A small house: two bedrooms side by side, 3 m x 3 m, 2.5 m high
+  const RM = 3.0, RH = 2.5, WALL = 0.2, MID = 0.15, HW = WALL * 2 + RM * 2 + MID;
+  function house() {
+    const m = Math.min(W, H) * 0.06;
+    const s = Math.min((W - m * 2) / (HW + 0.8), (H - m * 2) / 4.6);
+    const xL = (W - HW * s) / 2;
+    const yG = H / 2 + 2.3 * s - 0.1 * s;
+    const rooms = [xL + WALL * s, xL + (WALL + RM + MID) * s];
+    return { s, xL, yG, yC: yG - RH * s, rooms };
+  }
+
+  function drawHouse(level, t, pouring) {
+    const h = house();
+    const { s, xL, yG, yC, rooms } = h;
+    // ground
+    ctx.strokeStyle = 'rgba(156,199,234,0.5)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(xL - 0.6 * s, yG); ctx.lineTo(xL + (HW + 0.6) * s, yG); ctx.stroke();
+    // roof and chimney
+    const roofBase = yC - WALL * s, apex = roofBase - 1.6 * s;
+    ctx.fillStyle = '#24477D';
+    ctx.fillRect(xL + 4.6 * s, apex + 0.25 * s, 0.45 * s, 0.9 * s);
+    ctx.beginPath(); ctx.moveTo(xL - 0.35 * s, roofBase); ctx.lineTo(xL + HW / 2 * s, apex); ctx.lineTo(xL + (HW + 0.35) * s, roofBase); ctx.closePath();
+    ctx.fillStyle = '#1C3A68'; ctx.fill();
+    ctx.strokeStyle = '#9CC7EA'; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.stroke();
+    // walls
+    ctx.fillStyle = '#24477D'; ctx.fillRect(xL, roofBase, HW * s, yG - roofBase);
+    rooms.forEach((rx, i) => {
+      ctx.fillStyle = '#16305A'; ctx.fillRect(rx, yC, RM * s, RH * s);
+      // window
+      ctx.fillStyle = 'rgba(156,199,234,0.2)'; ctx.fillRect(rx + 0.9 * s, yG - 2.0 * s, 1.2 * s, 0.9 * s);
+      ctx.strokeStyle = 'rgba(156,199,234,0.6)'; ctx.lineWidth = 2;
+      ctx.strokeRect(rx + 0.9 * s, yG - 2.0 * s, 1.2 * s, 0.9 * s);
+      ctx.beginPath(); ctx.moveTo(rx + 1.5 * s, yG - 2.0 * s); ctx.lineTo(rx + 1.5 * s, yG - 1.1 * s); ctx.stroke();
+      ctx.fillStyle = 'rgba(201,217,236,0.9)';
+      if (i === 0) {
+        // bed
+        ctx.beginPath(); ctx.roundRect(rx + 0.15 * s, yG - 0.5 * s, 1.9 * s, 0.35 * s, 0.06 * s); ctx.fill();
+        ctx.fillRect(rx + 0.15 * s, yG - 0.95 * s, 0.1 * s, 0.95 * s);
+        ctx.fillRect(rx + 0.3 * s, yG - 0.15 * s, 0.08 * s, 0.15 * s);
+        ctx.fillRect(rx + 1.9 * s, yG - 0.15 * s, 0.08 * s, 0.15 * s);
+        ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.roundRect(rx + 0.3 * s, yG - 0.66 * s, 0.45 * s, 0.18 * s, 0.07 * s); ctx.fill();
+      } else {
+        // wardrobe and a child
+        ctx.beginPath(); ctx.roundRect(rx + 2.2 * s, yG - 1.9 * s, 0.7 * s, 1.9 * s, 0.05 * s); ctx.fill();
+        ctx.strokeStyle = '#16305A'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(rx + 2.55 * s, yG - 1.8 * s); ctx.lineTo(rx + 2.55 * s, yG - 0.1 * s); ctx.stroke();
+        person(rx + 0.8 * s, yG, 1.4, s, 'rgba(156,199,234,0.95)');
+      }
+    });
+
+    // rice
+    if (level > 0) {
+      const gl = Math.max(4, s * 0.07);
+      rooms.forEach((rx, i) => {
+        ctx.save(); ctx.beginPath(); ctx.rect(rx, yC, RM * s, RH * s); ctx.clip();
+        const streams = [0.9, 2.1];
+        const surf = xm => {
+          if (level >= RH) return yC - 10;
+          let b = Math.sin(xm * 2.1 + i + t * (pouring ? 1.5 : 0)) * 0.03 * s;
+          if (pouring) streams.forEach(sx => { b += 0.12 * s * Math.exp(-Math.pow((xm - sx) / 0.45, 2)); });
+          return yG - level * s - b;
+        };
+        ctx.beginPath(); ctx.moveTo(rx, yG);
+        for (let px = 0; px <= RM * s + 6; px += 6) ctx.lineTo(rx + Math.min(px, RM * s), surf(Math.min(px, RM * s) / s));
+        ctx.lineTo(rx + RM * s, yG); ctx.closePath();
+        ctx.fillStyle = pat; ctx.fill();
+        if (level < RH) { ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 2; ctx.stroke(); }
+        if (pouring) {
+          streams.forEach((sx, j) => {
+            const fall = Math.max(1, surf(sx) - yC);
+            for (let k = 0; k < 22; k++) {
+              const fy = yC + ((t * 340 + k * 31 + j * 13 + i * 7) % fall);
+              grain(rx + sx * s + Math.sin(k * 12.9 + j) * 0.06 * s, fy, gl, 1.3 + Math.sin(k), '#F4ECD8');
+            }
+          });
+        }
+        ctx.restore();
+      });
+    }
+    // outline
+    ctx.strokeStyle = '#9CC7EA'; ctx.lineWidth = 4; ctx.lineJoin = 'round';
+    ctx.strokeRect(xL, roofBase, HW * s, yG - roofBase);
+    return h;
+  }
+
+  const FILL = 9;
+  const smooth = x => { x = clamp01(x); return x * x * (3 - 2 * x); };
+  function drawHouseScene(t) {
+    const p = reduce ? 1 : smooth(t / FILL);
+    const full = p >= 1;
+    ctx.save();
+    if (!reduce && t > FILL && t < FILL + 0.5) {
+      const k = (1 - (t - FILL) / 0.5) * 6;
+      ctx.translate((Math.random() - 0.5) * k, (Math.random() - 0.5) * k);
+    }
+    const h = drawHouse(RH * p, t, !reduce && !full && t > 0);
+    if (full) {
+      const a = reduce ? 1 : clamp01((t - FILL) / 0.5);
+      const fs = Math.max(18, Math.round(h.s * 0.34));
+      ctx.globalAlpha = a;
+      ctx.font = `800 ${fs}px Lexend, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#FFE9A8';
+      ctx.fillText('Full to the ceiling!', W / 2, h.yC - 0.85 * h.s);
+    }
+    ctx.restore();
+  }
+
+  function drawSearch(t) {
+    const h = drawHouse(RH, t, false);
+    const { s, rooms, yG } = h;
+    const p = reduce ? 1 : easeOut(t / 1.8);
+    const R = Math.min(0.85 * s, H * 0.22);
+    const tx = rooms[0] + 1.5 * s, cx = W + R * 2 - (W + R * 2 - tx) * p, cy = yG - 1.25 * s;
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+    ctx.fillStyle = bigPat; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    const pulse = reduce ? 0.8 : 0.6 + 0.4 * Math.sin(t * 3);
+    if (p > 0.9) grain(cx, cy, R * 0.5, -0.4, '#9CC7EA', `rgba(255,233,168,${pulse})`);
+    ctx.restore();
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = R * 0.12;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineCap = 'round'; ctx.lineWidth = R * 0.22;
+    const a = Math.PI / 4;
+    ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * R * 1.08, cy - Math.sin(a) * R * 1.08);
+    ctx.lineTo(cx + Math.cos(a) * R * 1.9, cy - Math.sin(a) * R * 1.9); ctx.stroke();
+  }
+
+  function frame(now) {
+    if (W > 0 && H > 0 && pat) {
+      ctx.clearRect(0, 0, W, H);
+      const t = reduce ? 100 : (now - sceneStart) / 1000 - DELAY;
+      const sc = scenes[sceneIdx];
+      if (sc) {
+        ({ intro: drawIntro, one: drawOne, bags: drawBags, room: drawHouseScene, search: drawSearch })[sc.scene](t);
+        if (!sc.question && !reduce && shown !== countTo) {
+          const dur = countTo > 1e8 ? FILL : 6;
+          const k = easeInOut((now - countStart) / 1000 / dur);
+          shown = countFrom + (countTo - countFrom) * k;
+          if (k >= 1) shown = countTo;
+          els.big.textContent = fmt(shown);
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  go(location.hash === '#end' ? steps.length - 1 : 0);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

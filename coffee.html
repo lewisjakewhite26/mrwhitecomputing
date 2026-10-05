@@ -105,6 +105,7 @@
     <svg id="grain" width="1680" height="980"><filter id="gr"><feTurbulence id="grt" type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="1"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .22 0"/></filter><rect width="1680" height="980" filter="url(#gr)"/></svg>
     <a class="home" id="home" href="index.html#/g/y34">All lessons</a>
     <div id="host"></div>
+    <iframe id="frame" title="Embedded part" style="position:absolute;inset:0;width:1600px;height:900px;border:0;display:none;z-index:8;background:#0E1F3A"></iframe>
     <div id="notes"></div>
     <div class="nav">
       <button class="btn" id="back" type="button">Back</button>
@@ -554,42 +555,9 @@
       place(); wiresPaint(); setBtns();
     } });
 
-  /* ---------------- 33 billion ---------------- */
-  PARTS.push({ name:'33 billion', steps:5,
-    note:'The scale. About 33 billion devices are connected around the world (Statista, October 2025: phones, computers, smart speakers, watches, cameras and more). That is about 4 for every person on Earth. Counting them at one a second would take over 1,000 years. Cabling every one to every other one, like Level 3, would need more cables than there are grains of sand on every beach on Earth, which is why the world uses switches and routers: lots of small networks joined together. That is the internet.',
-    build:function(r){
-      r.innerHTML = '<div class="abs" style="left:60px;top:30px;width:1480px"><div class="kick">How many devices are connected?</div><h2 class="h2" style="margin-top:6px">Around the world</h2></div>' +
-        '<canvas id="dots" class="abs" width="1480" height="520" style="left:60px;top:150px"></canvas>' +
-        '<div class="abs" style="left:60px;top:150px;width:1480px;height:520px;display:flex;align-items:center;justify-content:center;pointer-events:none"><div id="bign" class="card" style="padding:20px 40px;text-align:center;display:none"><div class="counter" id="bnum" style="font-size:110px">0</div><div class="body" id="blab"></div></div></div>' +
-        '<div class="abs" id="cap" style="left:60px;top:690px;width:1480px"></div>';
-    },
-    step:function(r, n, fwd){
-      var cv = r.querySelector('#dots'), cx = cv.getContext('2d'), big = r.querySelector('#bign'), bn = r.querySelector('#bnum'), bl = r.querySelector('#blab'), cap = r.querySelector('#cap');
-      function caption(h){ cap.innerHTML = '<span class="tear build" style="font-size:34px">' + h + '</span>'; }
-      function dots(count, size){
-        cx.clearRect(0, 0, 1480, 520);
-        if(count === 1){ cx.fillStyle = '#D9622B'; cx.beginPath(); cx.arc(740, 260, size, 0, 7); cx.fill(); return; }
-        var cols = Math.ceil(Math.sqrt(count * 1480 / 520)), gap = 1480 / cols;
-        for(var i = 0; i < count; i++){ var x = (i % cols) * gap + gap / 2, y = Math.floor(i / cols) * gap + gap / 2; cx.fillStyle = ['#D9622B','#2C6FB7','#2E8A57','#1E1B18'][i % 4]; cx.beginPath(); cx.arc(x, y, size || Math.max(1, gap * .32), 0, 7); cx.fill(); }
-      }
-      function roll(to, label, fmt){
-        big.style.display = 'block'; bl.textContent = label;
-        play(RM ? .01 : 2.4, function(t){ var e = 1 - Math.pow(1 - t, 3); bn.textContent = fmt(to * e); if(Math.floor(t * 28) % 2) sfx('tick'); }, function(){ bn.textContent = fmt(to); sfx('ping'); });
-      }
-      var B = function(v){ return v >= 1e9 ? (v / 1e9).toFixed(v >= 3e10 ? 0 : 1) + ' billion' : Math.round(v).toLocaleString('en-GB'); };
-      big.style.display = 'none';
-      if(n === 0){ dots(1, 22); caption('One iPad.'); }
-      if(n === 1){ dots(27, 18); caption('Our class: 27 iPads.'); }
-      if(n === 2){ dots(1200); caption('One dot is one device. This is 1,200.'); }
-      if(n === 3){
-        cx.clearRect(0, 0, 1480, 520);
-        if(fwd){ var k = 0; play(3, function(t){ var c = Math.floor(200 + t * 22000); if(c !== k){ k = c; dots(c, 1.2); } }); } else dots(22000, 1.2);
-        later(function(){ roll(33e9, 'connected devices in the world', B); }, fwd ? 1600 : 0);
-        caption('The whole world: about 33 billion.');
-      }
-      if(n === 4){ dots(22000, 1.2); big.style.display = 'block'; bn.textContent = '4 each'; bl.textContent = 'about 4 devices for every person on Earth'; caption('Counting them at one a second would take over 1,000 years.'); }
-      if(n === 5){ dots(22000, 1.2); big.style.display = 'block'; bn.textContent = 'Switches'; bl.textContent = 'Lots of small networks, joined together: the internet'; caption('Cabling them all to each other? More cables than grains of sand on every beach.'); }
-    } });
+  /* ---------------- 33 billion: the rice ---------------- */
+  PARTS.push({ name:'33 billion', frame:'devices-rice.html',
+    note:'One grain of rice is one connected device. One iPad, then the class (a pinch), then Stockton (16 bags), then the whole world: about 33 billion, 660 tonnes of rice. Use its own Next and Back buttons; it hands back to the lesson at either end. How we worked it out is behind the link at the bottom.' });
 
   PARTS.push({ name:'Map your network', steps:2,
     note:'The map sheet. Middle box: the class name. Around it, draw and label six devices in school that are connected. Straight line for a cable, wavy line for wireless. Quick finishers turn over and pick a place: home, a café, a hospital, a football stadium, a spaceship.',
@@ -664,6 +632,16 @@
     var p = PARTS[part];
     [].forEach.call(dotsEl.children, function(d, k){ d.classList.toggle('on', k === part); d.classList.toggle('done', k < part); });
     paintNotes();
+    var fr = document.getElementById('frame');
+    if(p.frame){
+      host.innerHTML = '';
+      fr.style.display = 'block';
+      fr.onload = function(){ try{ fr.contentWindow.focus(); }catch(e){} };
+      fr.src = p.frame + (at === 'end' ? '#end' : '');
+      step = 0;
+      return;
+    }
+    fr.style.display = 'none'; fr.removeAttribute('src');
     step = at === 'end' ? p.steps : 0;
     host.innerHTML = '';
     var r = document.createElement('div'); r.className = 'scene' + (RM ? '' : ' enter'); host.appendChild(r);
@@ -677,11 +655,13 @@
   }
   function next(){
     var p = PARTS[part];
+    if(p.frame){ if(part < PARTS.length - 1) show(part + 1, 0); return; }
     if(step < p.steps){ step++; paint(host.firstChild, step, true); document.getElementById('back').disabled = false; document.getElementById('next').disabled = part === PARTS.length - 1 && step === p.steps; return; }
     if(part < PARTS.length - 1) show(part + 1, 0);
   }
   function back(){
     var p = PARTS[part];
+    if(p.frame){ if(part > 0) show(part - 1, 'end'); return; }
     if(step > 0){ stopAll(); step--; paint(host.firstChild, step, false); document.getElementById('back').disabled = part === 0 && step === 0; document.getElementById('next').disabled = false; return; }
     if(part > 0) show(part - 1, 'end');
   }
@@ -694,6 +674,7 @@
     else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
     else if(e.key === 'n' || e.key === 'N'){ notesOn = !notesOn; paintNotes(); }
   });
+  addEventListener('message', function(e){ if(e.data === 'extra:next') next(); else if(e.data === 'extra:back') back(); });
   function fromHash(){ var m = /^#part(\d+)$/.exec(location.hash); return m ? +m[1] - 1 : 0; }
   addEventListener('hashchange', function(){ show(fromHash(), 0); });
   show(fromHash(), 0);
