@@ -20,6 +20,7 @@
     whiteflix.html#search     straight to the search page
     whiteflix.html#hq         Whiteflix HQ, the three ranking sliders
     whiteflix.html#compare    HQ, two accounts side by side
+    whiteflix.html#photocopier, #laminator, #lanyard   straight to that cartoon
 
   Photos are CC0 from StockSnap, found through Openverse with the licence
   filtered to CC0, so none needs a credit. They live next to this file in
@@ -703,13 +704,13 @@ var WF = (function(){
     ['clickb','You Won’t BELIEVE What This Rocket Does','space',12,1.2,'PG',2026,70,35,96,'You won’t believe it. Seriously. Watch to the end. (It goes up.)','It Goes Up',['Space']],
     ['deep2','Deep Blue 2','nature',58,7.1,'U',2026,55,97,0,'The penguin is back, and ruder than ever. Nothing much else happens.','The Penguin Returns',['Nature','Documentary']],
     // more from Mr White, with drawn posters rather than photos
-    ['lany','Mr White Searches for His Lanyard','school',40,1.9,'U',2026,20,3,76,'He checks every pocket, then every room. It is round his neck.','Have You Seen It?',['School','Mystery']],
+    ['lany','Mr White Searches for His Lanyard','school',40,1.9,'U',2026,18,2,60,'The doors open at 8:30. His lanyard is somewhere. The photocopier knows where.','Have You Seen It?',['School','Mystery']],
     ['wifi','Mr White vs the School Wi-Fi','technology',52,2.4,'U',2026,22,4,70,'One bar. Then no bars. Then one bar again.','Reconnecting',['Technology','School']],
     ['hwork','Mr White Reacts to Your Homework','school',30,2.2,'U',2026,18,5,80,'He reads every word. He makes a noise at page three.','Page Three',['School','Comedy']],
     ['pwpw','The Password Is Password','technology',25,1.7,'U',2026,24,2,66,'Mr White explains online safety. His own password is on a sticky note behind him.','Sticky Note',['Technology','Online Safety']],
     ['coffee','Mr White Loses His Coffee Cup','mystery',45,2.0,'U',2026,16,4,72,'It was here a minute ago. It is still warm. The hunt begins.','Still Warm',['Mystery','School']],
     ['monday','How to Survive a Monday Morning, by Mr White','school',60,1.5,'U',2026,14,3,74,'Step one: find coffee. Step two: see Mr White Loses His Coffee Cup.','Step One',['School','Self Help']],
-    ['lamin','Mr White Explains the Laminator','school',2,2.3,'U',2026,18,2,60,'Step one: switch it on. Step two: wait. Step twelve: never laminate your lunch.','Still Warming Up',['School','Technology']]
+    ['lamin','Mr White Explains the Laminator','school',2,2.3,'U',2026,20,3,10,'Step one: switch it on. Step two: wait. Step twelve: never laminate your lunch.','Still Warming Up',['School','Technology']]
   ];
   // Not out yet: shows up in rows and searches, never in a ranking.
   var SOON = {};
@@ -2634,9 +2635,633 @@ var WF = (function(){
   })();
   window.WF_LAMI = LAMI;
 
+  /* =================== the lanyard cartoon =================== */
+  // Mr White Searches for His Lanyard, the sequel to the photocopier episode
+  // (which ate the lanyard at the end). Built the same way as the other two:
+  // every frame comes from the time alone, sounds are cues fired as playback
+  // passes them. The joke is a pantomime: the strap hangs out of the
+  // photocopier in every wide shot and he never looks.
+  var LANY = (function(){
+    var DUR = 120, FLOOR = 900, K = .85;
+    var MOUTH = [1315, 690];            // where the photocopier's tray swallows things
+    // faces: the five real ones, plus four more that fall back to the
+    // nearest real one until their photos are added to WF_IMG
+    var FACES = ['smile','stare','blank','shock','sad','despair','squint','angry','side'];
+    var ALIAS = { despair:'sad', squint:'stare', angry:'shock', side:'blank' };
+    var FACE_AT = [[0,'smile'],[15.2,'shock'],[17.6,'stare'],[20.4,'side'],[22.2,'shock'],[24,'stare'],[26.4,'blank'],[31.4,'stare'],
+      [33.6,'side'],[38.2,'stare'],[44.2,'shock'],[47,'blank'],[50.4,'stare'],[52.2,'shock'],[54.2,'stare'],[57,'side'],[59.4,'sad'],
+      [61.2,'despair'],[68.4,'squint'],[71,'smile'],[78.2,'stare'],[79.6,'shock'],[81.2,'angry'],[92.6,'smile'],[102.6,'shock'],[104.6,'sad']];
+    var CAPS = [
+      [7.2,10.4,'NARRATOR: The doors open at 8:30.'],
+      [10.6,13.4,'NARRATOR: Mr White’s lanyard opens the doors.'],
+      [13.9,15.4,'[angry beep]'],
+      [15.8,18,'MR WHITE: Where’s my lanyard?'],
+      [22.2,23.8,'[SNAP]'],
+      [27.4,30.4,'[a moth flies out]'],
+      [31.6,33.4,'[photocopier rumbles]'],
+      [35,37.8,'[rummaging]'],
+      [38.4,40.4,'MR WHITE: Not in there.'],
+      [42.4,45.2,'NARRATOR: So he searches for: thing.'],
+      [46.6,49.4,'[jumper avalanche]'],
+      [52.4,55.6,'MR WHITE: Are those my glasses?'],
+      [57.8,59.4,'[squeak]'],
+      [59.6,61.2,'MR WHITE: That is a shoelace.'],
+      [61.8,64.4,'NARRATOR: Has anyone seen it?'],
+      [65.2,68.2,'NARRATOR: Good searchers ask better questions.'],
+      [71.2,73.8,'[8:00 this morning]'],
+      [74.2,75.6,'[slurp]'],
+      [75.8,78,'NARRATOR: He was busy looking at his phone.'],
+      [79.6,81,'[burp]'],
+      [81.4,83.6,'MR WHITE: Give it back.'],
+      [86.4,89.4,'[copying intensifies]'],
+      [93.2,96.8,'[the crowd goes wild]'],
+      [99.2,100.4,'[happy beep]'],
+      [102.4,105,'NARRATOR: It is an INSET day.'],
+      [105.2,107.2,'[sad trombone]']
+    ];
+    var QUERIES = [[17.6, 40.6, 'lanyard'], [42, 61, 'thing'], [68.4, 80, 'where did I last use it?']];
+    var NC = 60;                         // the photocopies of the lanyard
+    function copyT(i){ return 86 + i * .09; }
+    var CUES = [[.15,'sting'],[13.8,'buzz'],[22.2,'snap'],[22.3,'boing'],[27.2,'flutter'],[31.4,'rumble'],[34.6,'rummage'],[36.6,'rummage'],
+      [42.2,'ticks'],[46.2,'avalanche'],[51.8,'bubble'],[57.6,'squeak'],[58.6,'squeak'],[64.6,'flutter'],[71,'harp'],[74.2,'slurp'],
+      [78,'harp'],[79.6,'burp'],[84,'rumble'],[85.8,'whir'],[92.4,'thud'],[93.2,'cheer'],[99.2,'ding'],[100.6,'creak'],[104.3,'whoosh'],
+      [105,'trombone'],[107.6,'sting']];
+    for(var ci = 0; ci < NC; ci += 3) CUES.push([copyT(ci), 'chk']);
+    CUES.sort(function(a, b){ return a[0] - b[0]; });
+
+    /* ---------- maths ---------- */
+    function cl(v, a, b){ return v < a ? a : v > b ? b : v; }
+    function seg(t, a, b){ return cl((t - a) / (b - a), 0, 1); }
+    function io(x){ return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+    function out(x){ return 1 - Math.pow(1 - x, 3); }
+    function bounce(x){
+      var n = 7.5625, d = 2.75;
+      if(x < 1 / d) return n * x * x;
+      if(x < 2 / d){ x -= 1.5 / d; return n * x * x + .75; }
+      if(x < 2.5 / d){ x -= 2.25 / d; return n * x * x + .9375; }
+      x -= 2.625 / d; return n * x * x + .984375;
+    }
+    function kf(t, k, e){
+      e = e || io;
+      if(t <= k[0][0]) return k[0][1];
+      for(var i = 1; i < k.length; i++){
+        if(t <= k[i][0]){ var p = (t - k[i - 1][0]) / (k[i][0] - k[i - 1][0]); return k[i - 1][1] + (k[i][1] - k[i - 1][1]) * e(p); }
+      }
+      return k[k.length - 1][1];
+    }
+    function hs(n){ var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+    function inR(t, a, b){ return t >= a && t < b; }
+    function burst(r1, r2, n){
+      var p = [];
+      for(var i = 0; i < n * 2; i++){ var a = i / (n * 2) * Math.PI * 2, r = i % 2 ? r2 : r1; p.push((Math.cos(a) * r * 1.4).toFixed(0) + ',' + (Math.sin(a) * r).toFixed(0)); }
+      return p.join(' ');
+    }
+
+    /* ---------- sound ---------- */
+    var bus = null;
+    function busOn(){
+      var c = ac(); if(!c) return null;
+      if(!bus){
+        bus = c.createGain(); bus.gain.value = .9;
+        var soft = c.createBiquadFilter(); soft.type = 'lowpass'; soft.frequency.value = 5200;
+        bus.connect(soft); soft.connect(c.destination);
+      }
+      return c;
+    }
+    function hush(){ if(bus){ try { bus.gain.setValueAtTime(0, AC.currentTime); bus.disconnect(); } catch(e){} bus = null; } }
+    function tone(type, f, at, dur, vol, f2){
+      var c = busOn(); if(!c) return;
+      var t = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g); g.connect(bus); o.start(t); o.stop(t + dur + .05);
+    }
+    function hiss(at, dur, vol, type, f1, f2, q){
+      var c = busOn(); if(!c) return;
+      var t = c.currentTime + at, n = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      n.buffer = noiseBuf(c, dur + .1); f.type = type || 'lowpass'; f.Q.value = q || 1;
+      f.frequency.setValueAtTime(f1, t); if(f2) f.frequency.exponentialRampToValueAtTime(f2, t + dur);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      n.connect(f); f.connect(g); g.connect(bus); n.start(t); n.stop(t + dur + .1);
+    }
+    var SFX = {
+      sting: function(){ sting(); },
+      buzz: function(){ tone('square', 196, 0, .22, .09); tone('square', 185, .26, .32, .09); },
+      snap: function(){ hiss(0, .08, .7, 'highpass', 2200); tone('square', 300, 0, .06, .1, 120); },
+      boing: function(){
+        var c = busOn(); if(!c) return;
+        var t = c.currentTime, o = c.createOscillator(), g = c.createGain(), curve = new Float32Array(40);
+        for(var i = 0; i < 40; i++) curve[i] = 260 + Math.sin(i * .9) * 180 * (1 - i / 40);
+        o.type = 'sine'; o.frequency.setValueCurveAtTime(curve, t, .7);
+        g.gain.setValueAtTime(.3, t); g.gain.exponentialRampToValueAtTime(.0001, t + .75);
+        o.connect(g); g.connect(bus); o.start(t); o.stop(t + .8);
+      },
+      flutter: function(){ for(var i = 0; i < 10; i++) hiss(i * .11, .06, .12, 'bandpass', 1400, 900, 4); },
+      rumble: function(){ tone('sawtooth', 44, 0, 2, .09, 52); hiss(0, 2, .18, 'lowpass', 180); },
+      rummage: function(){ for(var i = 0; i < 7; i++) hiss(i * .17, .12, .3, 'bandpass', 900 + hs(i) * 1800, 500, 2); },
+      ticks: function(){ for(var i = 0; i < 70; i++) tone('square', i % 2 ? 2400 : 2000, i * .27, .03, .045); },
+      avalanche: function(){ hiss(0, 2.2, .5, 'lowpass', 900, 200); tone('sine', 80, 0, 1.6, .4, 40); },
+      bubble: function(){ [0, .25, .5].forEach(function(d, i){ tone('sine', 500 + i * 200, d, .12, .12, 1100 + i * 200); }); },
+      squeak: function(){ tone('sine', 1500, 0, .14, .1, 2300); tone('sine', 1900, .1, .1, .07, 1300); },
+      harp: function(){ [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568].forEach(function(f, i){ tone('triangle', f, i * .06, .5, .08); }); },
+      slurp: function(){ hiss(0, .6, .45, 'bandpass', 2400, 280, 6); tone('sine', 700, 0, .5, .08, 180); },
+      burp: function(){ tone('sawtooth', 105, 0, .55, .16, 68); hiss(0, .5, .12, 'lowpass', 400); },
+      whir: function(){ hiss(0, 6, .14, 'bandpass', 260, 420, 3); tone('sawtooth', 58, 0, 6, .05, 64); },
+      chk: function(){ hiss(0, .05, .16, 'highpass', 1800); tone('square', 180, 0, .04, .03); },
+      thud: function(){ tone('sine', 120, 0, .35, .6, 40); hiss(0, .3, .4, 'lowpass', 600); },
+      cheer: function(){ hiss(0, 3.4, .32, 'bandpass', 1200, 900, .6); hiss(0, 3.4, .2, 'bandpass', 2600, 2000, .8); [0, .4, .8].forEach(function(d){ tone('triangle', 880, d, .2, .05, 990); }); },
+      ding: function(){ tone('triangle', 1318.5, 0, .25, .2); tone('triangle', 1760, .2, .7, .2); },
+      creak: function(){ tone('sawtooth', 210, 0, .9, .05, 120); },
+      whoosh: function(){ hiss(0, .8, .35, 'bandpass', 300, 3500, 1.5); },
+      trombone: function(){
+        [311.13, 293.66, 277.18].forEach(function(f, i){ tone('sawtooth', f, i * .55, .5, .1); });
+        var c = busOn(); if(!c) return;
+        var t = c.currentTime + 1.65, o = c.createOscillator(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+        o.type = 'sawtooth'; o.frequency.value = 261.63; lfo.frequency.value = 6; lg.gain.value = 7;
+        lfo.connect(lg); lg.connect(o.frequency);
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.1, t + .03); g.gain.setValueAtTime(.1, t + 1.1); g.gain.exponentialRampToValueAtTime(.0001, t + 1.6);
+        o.connect(g); g.connect(bus); o.start(t); lfo.start(t); o.stop(t + 1.7); lfo.stop(t + 1.7);
+      }
+    };
+    function cues(a, b){ CUES.forEach(function(c){ if(c[0] > a && c[0] <= b && SFX[c[1]]) SFX[c[1]](); }); }
+
+    /* ---------- pieces ---------- */
+    // the badge and strap, drawn hanging from (0,0)
+    function badge(){
+      return '<rect x="-34" y="0" width="68" height="88" rx="6" fill="#fff" stroke="#999" stroke-width="2"/><rect x="-34" y="0" width="68" height="20" rx="6" fill="#E11B22"/>' +
+        '<rect x="-18" y="27" width="36" height="34" fill="#cfd6e2"/><rect x="-24" y="67" width="48" height="6" fill="#999"/>';
+    }
+    // a photocopy of the lanyard: a sheet with a grey picture of it on
+    function copySheet(){
+      return '<rect x="-34" y="-44" width="68" height="88" fill="#fff" stroke="#c9c9bd" stroke-width="2"/>' +
+        '<path d="M-14 -34 L0 -8 L14 -34" stroke="#888" stroke-width="4" fill="none"/><rect x="-11" y="-8" width="22" height="28" rx="3" fill="none" stroke="#888" stroke-width="3"/><rect x="-11" y="-8" width="22" height="7" fill="#888"/>';
+    }
+    function jumper(c){
+      return '<path d="M-40 -26 L-16 -34 Q0 -24 16 -34 L40 -26 L52 6 L34 12 L32 34 L-32 34 L-34 12 L-52 6 Z" fill="' + c + '" stroke="rgba(0,0,0,.25)" stroke-width="3"/>';
+    }
+
+    /* ---------- the drawing ---------- */
+    function svg(){
+      var i, s = '<svg class="cart" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block">';
+      s += '<defs><linearGradient id="y-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe9d6"/><stop offset="1" stop-color="#c7d6bd"/></linearGradient>' +
+        '<radialGradient id="y-vig" cx=".5" cy=".5" r=".75"><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient>' +
+        '<filter id="y-sepia"><feColorMatrix type="matrix" values=".39 .77 .19 0 0  .35 .69 .17 0 0  .27 .53 .13 0 0  0 0 0 1 0"/></filter>' +
+        '<clipPath id="y-tankclip"><rect x="2794" y="164" width="232" height="212" rx="6"/></clipPath>' +
+        '<clipPath id="y-doorclip"><rect x="150" y="380" width="240" height="520"/></clipPath></defs>';
+      s += '<g id="y-cam">';
+      // the classroom
+      s += '<rect x="-1200" y="-900" width="5600" height="1800" fill="url(#y-wall)"/><rect x="-1200" y="900" width="5600" height="900" fill="#a2774d"/><rect x="-1200" y="894" width="5600" height="16" fill="#c49a6c"/>';
+      for(i = 0; i < 30; i++) s += '<rect x="' + (i * 150 - 1200) + '" y="910" width="146" height="700" fill="' + (i % 2 ? '#a87d52' : '#9c7248') + '"/>';
+      // a display board, so the wall is not empty
+      s += '<g transform="translate(860 230)"><rect width="420" height="230" rx="6" fill="#2F6BE0" stroke="#1d4aa8" stroke-width="10"/><text x="210" y="62" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="40" fill="#FFD23F">OUR LEARNING</text>';
+      for(i = 0; i < 4; i++) s += '<rect x="' + (28 + i * 98) + '" y="92" width="80" height="104" fill="' + ['#fff','#ffb3c7','#b8f2c8','#fff3a8'][i] + '" transform="rotate(' + ((hs(i + 30) - .5) * 10).toFixed(1) + ' ' + (68 + i * 98) + ' 144)"/>';
+      s += '</g>';
+      // outside the door: the empty playground and the sign
+      s += '<g clip-path="url(#y-doorclip)"><rect x="150" y="380" width="240" height="520" fill="#9fd4ff"/><rect x="150" y="700" width="240" height="200" fill="#7a8a7a"/>' +
+        '<g transform="translate(270 560) rotate(-3)"><rect x="-104" y="-70" width="208" height="140" fill="#fff" stroke="#E11B22" stroke-width="7"/>' +
+        '<text x="0" y="-24" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="40" fill="#E11B22">INSET DAY</text>' +
+        '<text x="0" y="16" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="26" fill="#1b1d22">NO PUPILS</text>' +
+        '<text x="0" y="48" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="26" fill="#1b1d22">TODAY</text></g></g>';
+      // the door, which swings open at the end
+      s += '<g id="y-door"><rect x="150" y="380" width="240" height="520" fill="#8a5a3a" stroke="#5e3b24" stroke-width="10"/><rect x="190" y="420" width="160" height="120" fill="#b9d7ee" stroke="#5e3b24" stroke-width="6"/><circle cx="360" cy="660" r="12" fill="#d4b05a"/></g>';
+      s += '<g transform="translate(450 600)"><rect x="-28" y="-44" width="56" height="88" rx="8" fill="#2b2f36"/><rect x="-18" y="-30" width="36" height="22" rx="3" fill="#4a4f59"/>' +
+        '<circle id="y-led" cx="0" cy="22" r="11" fill="#3a3f48"/><circle id="y-ledglow" cx="0" cy="22" r="26" fill="#2ecc71" opacity="0"/></g>';
+      // the clock
+      s += '<g transform="translate(640 210)"><circle r="66" fill="#fff" stroke="#2b2f36" stroke-width="8"/>';
+      for(i = 0; i < 12; i++) s += '<rect x="-3" y="-58" width="6" height="12" fill="#2b2f36" transform="rotate(' + i * 30 + ')"/>';
+      s += '<line id="y-hh" x1="0" y1="0" x2="0" y2="-32" stroke="#2b2f36" stroke-width="8" stroke-linecap="round"/><line id="y-mh" x1="0" y1="0" x2="0" y2="-50" stroke="#2b2f36" stroke-width="5" stroke-linecap="round"/><circle r="6" fill="#D8443C"/></g>';
+      // the desk and its drawer
+      s += '<g><rect x="740" y="690" width="380" height="26" rx="4" fill="#8a6a4a"/><rect x="760" y="716" width="22" height="184" fill="#5e4630"/><rect x="1078" y="716" width="22" height="184" fill="#5e4630"/>' +
+        '<rect x="850" y="716" width="180" height="70" fill="#7a5b3d"/><g id="y-drawer"><rect x="850" y="716" width="180" height="70" fill="#9a7552" stroke="#5e4630" stroke-width="4"/><rect x="920" y="744" width="40" height="10" rx="5" fill="#d4b05a"/></g>' +
+        '<rect x="770" y="640" width="90" height="50" rx="4" fill="#E11B22"/><rect x="900" y="660" width="70" height="30" fill="#fff" stroke="#ccc"/></g>';
+      // the coat on its hook, and the moth that lives in the pocket
+      s += '<g><rect x="1200" y="420" width="40" height="14" rx="6" fill="#555"/><g id="y-coat"><path d="M1220 430 L1170 470 L1150 700 L1290 700 L1270 470 Z" fill="#3b5d8f" stroke="#2a4570" stroke-width="5"/><rect id="y-pocket" x="1168" y="610" width="44" height="40" fill="#2a4570"/></g></g>';
+      s += '<g id="y-moth" opacity="0"><ellipse rx="6" ry="14" fill="#8a7a62"/><path class="y-wing" d="M0 -4 C-30 -34 -44 4 -4 6 Z M0 -4 C30 -34 44 4 4 6 Z" fill="#c9b99a" stroke="#8a7a62" stroke-width="2"/></g>';
+      // the photocopier, with the lanyard strap hanging out of its tray
+      s += '<g id="y-cop"><ellipse cx="1640" cy="906" rx="300" ry="20" fill="#000" opacity=".22"/>' +
+        '<rect x="1380" y="560" width="520" height="340" rx="16" fill="#e3e5ea" stroke="#b3b8c2" stroke-width="4"/>' +
+        '<rect x="1380" y="878" width="520" height="22" rx="6" fill="#9aa0ab"/>' +
+        '<rect x="1420" y="660" width="420" height="200" rx="8" fill="#d2d5dc" stroke="#aab0ba" stroke-width="3"/><rect x="1445" y="740" width="16" height="48" rx="7" fill="#8b919c"/>' +
+        '<rect x="1690" y="684" width="120" height="30" rx="4" fill="#bfc3cb"/><text x="1750" y="706" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-weight="700" font-size="18" fill="#555">TRAY 2</text>' +
+        '<path d="M1382 698 L1315 688 L1315 704 L1382 718 Z" fill="#c9ccd3" stroke="#a3a9b3" stroke-width="3"/>' +
+        '<rect x="1400" y="572" width="300" height="70" rx="10" fill="#3a3f4a"/><rect x="1455" y="584" width="230" height="46" rx="4" fill="#9fd39a"/>' +
+        '<text id="y-lcd" x="1570" y="616" text-anchor="middle" font-family="Orbitron,monospace" font-weight="800" font-size="21" fill="#1d3a1b">READY</text>' +
+        '<circle cx="1428" cy="607" r="17" fill="#2ecc71" stroke="#1e8e4f" stroke-width="3"/><rect x="1390" y="548" width="500" height="12" fill="#a9d3ee"/>' +
+        '<rect x="1370" y="520" width="540" height="32" rx="10" fill="#c7cbd3" stroke="#a3a9b3" stroke-width="3"/>' +
+        '<g transform="translate(1800 440) rotate(3)"><rect width="200" height="70" fill="#FFD23F" stroke="#1b1d22" stroke-width="4"/><text x="100" y="47" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="30" fill="#1b1d22">DO NOT FEED</text></g></g>';
+      s += '<g id="y-strapw"><path id="y-strap" d="M0 0" stroke="#2F6BE0" stroke-width="9" fill="none" stroke-linecap="round"/><g id="y-sbadge">' + badge() + '</g></g>';
+      // the bin (back half here, front half after Mr White so he can go in it)
+      s += '<g><path d="M2120 660 L2300 660 L2280 900 L2140 900 Z" fill="#4a5568"/><ellipse cx="2210" cy="660" rx="92" ry="16" fill="#2d3440"/></g>';
+      // the lost property box, which tips over
+      s += '<g id="y-lpbox"><rect x="2500" y="760" width="160" height="140" fill="#c49a6c" stroke="#8a6a4a" stroke-width="5"/><text x="2580" y="822" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="22" fill="#5e4630">LOST</text><text x="2580" y="850" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="22" fill="#5e4630">PROPERTY</text></g>';
+      // the fish tank on its cupboard, and the fish wearing his glasses
+      s += '<g><rect x="2780" y="380" width="260" height="520" fill="#9a7b56" stroke="#7d6142" stroke-width="5"/><rect x="2790" y="160" width="240" height="220" rx="10" fill="#8fd0e8" stroke="#5aa9c4" stroke-width="6" opacity=".9"/>' +
+        '<g clip-path="url(#y-tankclip)"><rect x="2794" y="340" width="232" height="40" fill="#d8c48a"/><path d="M2830 380 C2820 330 2850 300 2840 260 M2990 380 C3000 320 2980 300 2990 250" stroke="#3fae5a" stroke-width="10" fill="none"/>' +
+        '<g id="y-fish"><path d="M-40 0 C-20 -26 26 -26 40 0 C26 26 -20 26 -40 0 Z" fill="#ff9d1a" stroke="#c46f00" stroke-width="3"/><path d="M-40 0 L-64 -20 L-64 20 Z" fill="#ff9d1a" stroke="#c46f00" stroke-width="3"/>' +
+          '<circle cx="18" cy="-6" r="11" fill="none" stroke="#1b1d22" stroke-width="4"/><circle cx="-6" cy="-6" r="11" fill="none" stroke="#1b1d22" stroke-width="4"/><line x1="5" y1="-6" x2="7" y2="-6" stroke="#1b1d22" stroke-width="4"/><circle cx="18" cy="-6" r="4" fill="#1b1d22"/></g></g></g>';
+      // the guinea pig's hutch
+      s += '<g><rect x="3140" y="640" width="240" height="260" fill="#b7895a" stroke="#7d5b36" stroke-width="6"/><rect x="3160" y="670" width="200" height="200" fill="#5e4630"/>' +
+        '<g id="y-gp"><ellipse cx="0" cy="0" rx="56" ry="38" fill="#e8b47a"/><ellipse cx="-20" cy="-6" rx="26" ry="22" fill="#fff"/><circle cx="34" cy="-12" r="6" fill="#1b1d22"/><ellipse cx="50" cy="0" rx="8" ry="6" fill="#d98a7a"/><ellipse cx="22" cy="-34" rx="10" ry="8" fill="#d39a66"/></g>';
+      for(i = 0; i < 9; i++) s += '<line x1="' + (3160 + i * 25) + '" y1="670" x2="' + (3160 + i * 25) + '" y2="870" stroke="#9aa0ab" stroke-width="3"/>';
+      s += '<path id="y-lace" d="M0 0" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/></g>';
+      // the drift of photocopies (under him) and the copies flying out
+      s += '<g id="y-sheets">';
+      for(i = 0; i < NC; i++) s += '<g class="y-cp" display="none">' + copySheet() + '</g>';
+      s += '</g>';
+      // Mr White. Local units: feet at 0, head at about -900, drawn at 85%.
+      var skin = '#eab18f', shirt = '#f3f6fb', trou = '#2b3448';
+      function leg(id, hx){ return '<g id="' + id + '" transform="translate(' + hx + ' -300)"><rect x="-24" y="0" width="48" height="285" rx="18" fill="' + trou + '"/><ellipse cx="14" cy="288" rx="46" ry="18" fill="#141518"/></g>'; }
+      function arm(id, sx, held){
+        return '<g id="' + id + '" transform="translate(' + sx + ' -540)"><g><rect x="-21" y="-10" width="42" height="225" rx="21" fill="' + shirt + '" stroke="#cfd6e2" stroke-width="3"/><circle cx="0" cy="228" r="27" fill="' + skin + '"/>' +
+          (held ? '<g id="y-held" transform="translate(0 262)"></g>' : '') + '</g></g>';
+      }
+      function faceImg(k){
+        var src = window.WF_IMG && (WF_IMG['face_' + k] || WF_IMG['face_' + ALIAS[k]]);
+        return src ? '<image id="y-f-' + k + '" href="' + src + '" x="-115" y="-310" width="230" height="310" preserveAspectRatio="xMidYMax meet" display="none"/>' : '';
+      }
+      s += '<g id="y-mw">' +
+        leg('y-legB', -36) + arm('y-armB', -112, false) + leg('y-legF', 36) +
+        '<rect x="-112" y="-590" width="224" height="305" rx="46" fill="' + shirt + '" stroke="#cfd6e2" stroke-width="3"/>' +
+        '<rect x="-112" y="-305" width="224" height="22" rx="6" fill="#23252b"/><rect x="-14" y="-306" width="28" height="24" rx="4" fill="#c9a24a"/>' +
+        '<path d="M-44 -590 L0 -548 L44 -590 Z" fill="#dfe5ee"/>' +
+        '<g id="y-lan" display="none"><line id="y-lr1" x1="-40" y1="-585" x2="0" y2="-455" stroke="#2F6BE0" stroke-width="9"/><line id="y-lr2" x1="40" y1="-585" x2="0" y2="-455" stroke="#2F6BE0" stroke-width="9"/><g id="y-badge" transform="translate(0 -455)">' + badge() + '</g></g>' +
+        '<path id="y-tie" d="M0 -560 L0 -395" stroke="#D8443C" stroke-width="30" fill="none"/><path d="M-16 -578 L16 -578 L10 -550 L-10 -550 Z" fill="#b8352f"/>' +
+        '<rect x="-24" y="-615" width="48" height="42" rx="10" fill="' + skin + '"/>' +
+        '<g id="y-head" transform="translate(0 -598)">' + FACES.map(faceImg).join('') +
+          '<g id="y-nose" display="none" transform="translate(0 -128)"><rect x="-6" y="-22" width="70" height="20" rx="6" fill="#E11B22"/><rect x="-6" y="0" width="70" height="14" rx="5" fill="#9aa0ab"/><circle cx="-2" cy="-4" r="7" fill="#555"/></g>' +
+          '<g id="y-peel" display="none" transform="translate(0 -300)"><path d="M0 0 C-30 -10 -70 10 -80 50 C-50 24 -24 22 0 16 C24 22 50 24 80 50 C70 10 30 -10 0 0 Z" fill="#FFD23F" stroke="#c49a0a" stroke-width="4"/><path d="M0 4 C-6 30 6 50 0 70" stroke="#FFD23F" stroke-width="18" stroke-linecap="round" fill="none"/></g>' +
+          '<g id="y-note" display="none" transform="translate(0 -300)"><rect x="-80" y="-70" width="160" height="140" fill="#fff36b" stroke="#d6c43a" stroke-width="3"/><text x="0" y="-18" text-anchor="middle" font-family="Luckiest Guy,Anton,sans-serif" font-size="30" fill="#1b1d22">BE MORE</text><text x="0" y="24" text-anchor="middle" font-family="Luckiest Guy,Anton,sans-serif" font-size="30" fill="#1b1d22">SPECIFIC</text></g>' +
+          '<g id="y-paper" display="none" transform="translate(0 -300) rotate(-8)">' + copySheet() + '</g>' +
+        '</g>' +
+        arm('y-armF', 112, true) +
+        '<text id="y-excl" x="130" y="-880" font-family="Anton,Impact,sans-serif" font-size="170" fill="#E11B22" opacity="0">!</text>' +
+        '<text id="y-q" x="130" y="-880" font-family="Anton,Impact,sans-serif" font-size="170" fill="#2F6BE0" opacity="0">?</text>' +
+      '</g>';
+      // in front of him: the bin's front, the jumper pile, the paper drift
+      s += '<g><path d="M2120 668 L2300 668 L2280 900 L2140 900 Z" fill="#5a6578" stroke="#3a4250" stroke-width="5"/><rect x="2150" y="720" width="120" height="10" fill="#3a4250"/><rect x="2150" y="780" width="120" height="10" fill="#3a4250"/></g>';
+      var jc = ['#E11B22','#2F6BE0','#FFD23F','#3fae5a','#9b59b6','#ff9d1a','#1b1d22','#e84393'];
+      s += '<g id="y-jumpers">';
+      for(i = 0; i < 42; i++) s += '<g class="y-jm" display="none">' + jumper(jc[i % jc.length]) + '</g>';
+      s += '</g>';
+      s += '<path id="y-drift" d="M0 0" fill="#fbfbf5" stroke="#d6d6c8" stroke-width="3"/>';
+      s += '<g id="y-snap" opacity="0"><polygon points="' + burst(120, 70, 12) + '" fill="#FFD23F" stroke="#E11B22" stroke-width="7"/><text x="0" y="24" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="70" fill="#E11B22">SNAP</text></g>';
+      s += '</g>';
+      // screen-sized things on top of the camera
+      s += '<rect width="1920" height="1080" fill="url(#y-vig)" pointer-events="none"/>';
+      s += '<g id="y-sbar" opacity="0"><rect x="460" y="40" width="1000" height="100" rx="50" fill="#fff" stroke="#1b1d22" stroke-width="5"/>' +
+        '<circle cx="530" cy="86" r="22" fill="none" stroke="#1b1d22" stroke-width="7"/><line x1="546" y1="102" x2="566" y2="122" stroke="#1b1d22" stroke-width="8" stroke-linecap="round"/>' +
+        '<text id="y-sq" x="596" y="110" font-family="Segoe UI,Arial,sans-serif" font-weight="700" font-size="54" fill="#1b1d22"></text></g>';
+      s += '<g id="y-hud" opacity="0"><rect x="1600" y="40" width="280" height="100" rx="18" fill="#1b1d22" opacity=".88"/><text id="y-hudt" x="1740" y="114" text-anchor="middle" font-family="Orbitron,monospace" font-weight="800" font-size="58" fill="#ff5a4f">8:25</text></g>';
+      s += '<g id="y-ccount" opacity="0"><rect x="40" y="40" width="380" height="100" rx="18" fill="#1b1d22" opacity=".88"/><text x="70" y="82" font-family="Segoe UI,Arial,sans-serif" font-weight="700" font-size="24" fill="#9fb0c6" letter-spacing="3">COPIES</text><text id="y-cnum" x="390" y="122" text-anchor="end" font-family="Anton,Impact,sans-serif" font-size="64" fill="#FFD23F">0</text></g>';
+      s += '<g id="y-fb" opacity="0"><rect x="660" y="930" width="600" height="96" rx="12" fill="#3b2a1e" opacity=".85"/><text x="960" y="994" text-anchor="middle" font-family="Special Elite,Courier New,monospace" font-size="48" fill="#f3e3c3">8:00 THIS MORNING</text></g>';
+      // the slow-motion fist pump, from his football photo
+      var rays = '';
+      for(i = 0; i < 16; i++) rays += '<path d="M0 0 L' + (Math.cos(i / 8 * Math.PI) * 1600).toFixed(0) + ' ' + (Math.sin(i / 8 * Math.PI) * 1600).toFixed(0) + ' L' + (Math.cos((i + .5) / 8 * Math.PI) * 1600).toFixed(0) + ' ' + (Math.sin((i + .5) / 8 * Math.PI) * 1600).toFixed(0) + ' Z" fill="#4b82f0"/>';
+      var conf = '';
+      for(i = 0; i < 40; i++) conf += '<rect class="y-cf" x="-8" y="-14" width="16" height="28" fill="' + jc[i % jc.length] + '"/>';
+      s += '<g id="y-fist" opacity="0"><rect x="-10" y="-10" width="1940" height="1100" fill="#2F6BE0"/><g transform="translate(960 600)"><g id="y-frays">' + rays + '</g></g>' +
+        '<g id="y-fpic"><image href="img/mr-white-fist.webp" x="600" y="250" width="672" height="761" preserveAspectRatio="xMidYMid meet"/>' +
+          '<path d="M720 318 C700 380 740 420 742 470 M776 318 C800 380 760 420 748 470" stroke="#2F6BE0" stroke-width="12" fill="none" stroke-linecap="round"/><g transform="translate(745 466) rotate(4) scale(1.3)">' + badge() + '</g></g>' +
+        '<g id="y-conf">' + conf + '</g>' +
+        '<text x="960" y="170" text-anchor="middle" font-family="Luckiest Guy,Anton,sans-serif" font-size="120" fill="#FFD23F" stroke="#1b1d22" stroke-width="10" paint-order="stroke">GOT IT</text>' +
+        '<g transform="translate(1590 980)"><rect x="-210" y="-62" width="420" height="96" rx="16" fill="#1b1d22" opacity=".88"/><text x="0" y="14" text-anchor="middle" font-family="Orbitron,monospace" font-weight="800" font-size="56" fill="#ff5a4f">8:29:58</text></g></g>';
+      s += '<g id="y-title"><rect x="-10" y="-10" width="1940" height="1100" fill="#000"/>' +
+        '<text id="y-t1" x="960" y="370" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="48" letter-spacing="14" fill="#E11B22">A MR WHITEFLIX ORIGINAL</text>' +
+        '<g id="y-t2"><text x="960" y="540" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="116" fill="#fff">MR WHITE SEARCHES</text><text x="960" y="680" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="116" fill="#fff">FOR HIS LANYARD</text></g>' +
+        '<text id="y-t3" x="960" y="790" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="40" fill="#b3b3b3">Episode 1: Have You Seen It?</text></g>';
+      s += '<g id="y-end" opacity="0"><rect x="-10" y="-10" width="1940" height="1100" fill="#000"/>' +
+        '<text x="960" y="330" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="48" letter-spacing="14" fill="#E11B22">COMING SOON</text>' +
+        '<g id="y-e2"><text x="960" y="500" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="116" fill="#fff">MR WHITE VS</text><text x="960" y="636" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="116" fill="#fff">THE SCHOOL WI-FI</text></g>' +
+        '<text id="y-e3" x="960" y="760" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="40" fill="#b3b3b3">One bar. Then no bars.</text></g>';
+      s += '<rect id="y-black" x="-10" y="-10" width="1940" height="1100" fill="#000" opacity="0"/></svg>';
+      return s;
+    }
+
+    /* ---------- playback ---------- */
+    var E = {};
+    function mount(root){
+      E = {};
+      ['cam','door','led','ledglow','hh','mh','drawer','coat','pocket','moth','cop','lcd','strapw','strap','sbadge','lpbox','fish','gp','lace',
+       'sheets','mw','legB','legF','armB','armF','held','lan','lr1','lr2','badge','tie','head','nose','peel','note','paper','excl','q',
+       'drift','snap','sbar','sq','hud','hudt','ccount','cnum','fb','fist','frays','fpic','title','t1','t2','t3','end','e2','e3','black'].forEach(function(k){ E[k] = root.querySelector('#y-' + k); });
+      E.faces = {};
+      FACES.forEach(function(k){ E.faces[k] = root.querySelector('#y-f-' + k); });
+      E.copies = [].slice.call(root.querySelectorAll('.y-cp'));
+      E.jm = [].slice.call(root.querySelectorAll('.y-jm'));
+      E.cf = [].slice.call(root.querySelectorAll('.y-cf'));
+      E.wings = root.querySelector('.y-wing');
+      E.face = null; E.heldK = null; E.sqK = null; E.lcdK = null;
+    }
+    function tr(el, v){ if(el) el.setAttribute('transform', v); }
+    function op(el, v){ if(el) el.setAttribute('opacity', (+v).toFixed(3)); }
+    function vis(el, on){ if(el) el.setAttribute('display', on ? 'inline' : 'none'); }
+    function f1(n){ return n.toFixed(1); }
+
+    // where he stands
+    function xAt(t){
+      return kf(t, [[6.5,-260],[11,520],[17.8,520],[19.8,940],[25,940],[26.2,1150],[31.2,1150],[33.6,1990],[42.4,1990],[44,2420],
+        [50.2,2420],[51.4,2560],[56.2,2560],[57.2,3060],[61.2,3060],[62.4,2860],[71,2860],[71.01,1180],[78,1180],[78.01,2860],[81,2860],[83.6,1180],[93,1180],
+        [96.9,1180],[96.91,820],[98.4,640],[200,640]]);
+    }
+    // the camera: a list of shots, eased between
+    var SHOTS = {
+      wide:[.6,1720,600], door:[1.2,440,500], desk:[1.25,960,520], coat:[1.15,1250,500], bin:[1.1,2080,560], lp:[1.1,2450,500],
+      fish:[1.25,2720,400], hutch:[1.2,3160,560], copier:[1.15,1450,520], strap:[2,1330,720], doorz:[1.3,360,520], slump:[.72,2260,500]
+    };
+    var CAMK = [[0,'wide'],[13,'wide'],[13.6,'door'],[17.6,'door'],[19.6,'desk'],[25,'desk'],[26,'coat'],[31,'coat'],[33.6,'bin'],
+      [40,'bin'],[40.8,'wide'],[42.6,'wide'],[44,'lp'],[50.2,'lp'],[51.4,'fish'],[56,'fish'],[57,'hutch'],[61,'hutch'],[61.8,'slump'],
+      [70.8,'slump'],[70.81,'copier'],[77.9,'copier'],[77.91,'slump'],[79,'slump'],[80,'strap'],[81.2,'strap'],[82.4,'copier'],
+      [92.9,'copier'],[96.9,'copier'],[96.91,'door'],[100.4,'door'],[101.6,'doorz'],[200,'doorz']];
+    function camAt(t){
+      var a = CAMK[0], b = CAMK[CAMK.length - 1];
+      for(var i = 1; i < CAMK.length; i++){ if(t <= CAMK[i][0]){ a = CAMK[i - 1]; b = CAMK[i]; break; } }
+      var p = b[0] > a[0] ? io(cl((t - a[0]) / (b[0] - a[0]), 0, 1)) : 1, A = SHOTS[a[1]], B = SHOTS[b[1]];
+      return [A[0] + (B[0] - A[0]) * p, A[1] + (B[1] - A[1]) * p, A[2] + (B[2] - A[2]) * p];
+    }
+    // the clock in the corner of the screen
+    function hudText(t){
+      if(t >= 92.6) return '8:29';
+      var m = t < 20 ? 25 : t < 33 ? 26 : t < 50 ? 27 : t < 70 ? 28 : 29;
+      return '8:' + m;
+    }
+    function copySpot(i){ return [880 + hs(i + 3) * 560, 850 - hs(i + 7) * 40, (hs(i + 11) - .5) * 70]; }
+
+    function render(t){
+      if(!E.cam) return;
+      t = cl(t, 0, DUR);
+      var flash = inR(t, 71, 78);
+      var x = xAt(t), v = (xAt(t + .05) - xAt(t - .05)) / .1;
+      if(Math.abs(v) > 3000) v = 0;     // the cuts are jumps, not walks
+      var amp = cl(Math.abs(v) / 150, 0, 1);
+      var ph = t * 11, sw = Math.sin(ph) * 30 * amp;
+      var y = -Math.abs(Math.sin(ph)) * 10 * amp;
+
+      // poses: crouching, leaning, sitting, falling in the paper
+      var lean = 0, crouch = 0, sit = 0;
+      if(inR(t, 20.2, 24.6)) { crouch = kf(t, [[20.2,0],[20.8,140],[24,140],[24.6,0]]); lean = kf(t, [[20.2,0],[20.8,14],[24,14],[24.6,0]]); }
+      var dive = inR(t, 34, 37.8);
+      if(inR(t, 33.6, 34)) y -= Math.sin(seg(t, 33.6, 34) * Math.PI) * 140;   // the hop before the dive
+      if(inR(t, 51.4, 56)) lean = kf(t, [[51.4,0],[52,9],[55.4,9],[56,0]]) + (inR(t, 53.6, 55.4) ? Math.sin(seg(t, 53.6, 55.4) * Math.PI) * 5 : 0);
+      if(inR(t, 57.2, 61.2)){ crouch = kf(t, [[57.2,0],[57.8,220],[60.6,220],[61.2,0]]); lean = kf(t, [[57.2,0],[57.8,18],[58.4,10],[58.8,22],[59.2,8],[60.6,8],[61.2,0]]); }
+      if(t >= 61.2 && t < 71) sit = kf(t, [[61.2,0],[62.2,1]]);
+      if(t >= 78 && t < 81.2) sit = kf(t, [[78,1],[80.6,1],[81.2,0]]);
+      if(inR(t, 84, 91.6)) lean = -10 - Math.abs(Math.sin(t * 5)) * 12 - (inR(t, 89, 91.6) ? 8 : 0);
+      if(inR(t, 91.6, 92.6)) { lean = kf(t, [[91.6,-20],[92,30]]); crouch = kf(t, [[91.6,0],[92.2,700]]); }
+      if(inR(t, 92.6, 93)) crouch = kf(t, [[92.6,700],[93,0]], out);
+      y += crouch * .55 + sit * 250;
+      lean += sit * -6;
+      var rad = lean * Math.PI / 180;
+
+      // legs
+      var legF = sw, legB = -sw;
+      if(sit > 0){ legF = legF * (1 - sit) - 86 * sit; legB = legB * (1 - sit) - 80 * sit; }
+      if(inR(t, 84, 91.6)){ legF = -18; legB = 22; }
+      // crouching bends the knees so the feet stay on the floor
+      var drop = crouch * .55;
+      if(crouch > 0 && drop < 238 && !inR(t, 91.6, 93)){ var th = Math.acos(cl(1 - drop / (285 * K), -1, 1)) * 180 / Math.PI; legF = -th; legB = -th + 12; }
+      if(dive){ legF = Math.sin(t * 15) * 32; legB = -Math.sin(t * 13) * 32; }
+      tr(E.legF, 'translate(36 -300) rotate(' + f1(legF) + ')');
+      tr(E.legB, 'translate(-36 -300) rotate(' + f1(legB) + ')');
+
+      // arms
+      var aF = -6 - sw * .5, aB = 6 - sw * .5, sF = 1;
+      function aimF(tx, ty, p){
+        var ax = x + 112 * K, ay = FLOOR + y - 540 * K, dx = tx - ax, dy = ty - ay;
+        var ang = Math.atan2(-dx, dy) * 180 / Math.PI - lean, len = Math.sqrt(dx * dx + dy * dy) / (238 * K);
+        aF += (ang - aF) * p; sF += (cl(len, .6, 2.2) - 1) * p;
+      }
+      if(inR(t, 13.4, 14.6)) aimF(450, 600, kf(t, [[13.4,0],[13.8,1],[14.2,1],[14.6,0]]));   // swipe, nothing to swipe with
+      if(inR(t, 14.6, 16.4)){ var pat = kf(t, [[14.6,0],[14.9,1],[16,1],[16.4,0]]); aF += (30 + Math.sin(t * 22) * 12 - aF) * pat; aB += (-30 - Math.sin(t * 20) * 12 - aB) * pat; }   // patting pockets
+      if(inR(t, 20.8, 24)) aimF(940, 750, kf(t, [[20.8,0],[21.4,1],[23.6,1],[24,0]]));   // the drawer
+      if(inR(t, 26.4, 30.8)) aimF(1190, 630, kf(t, [[26.4,0],[27,1],[30.2,1],[30.8,0]]));   // the coat pocket
+      if(inR(t, 31.4, 33.4)){ var tie = kf(t, [[31.4,0],[31.8,1],[33,1],[33.4,0]]); aF += (48 - aF) * tie; sF += (.78 - 1) * tie; }   // guarding his tie
+      if(inR(t, 34.4, 37.6)){ aF += (Math.sin(t * 14) * 30 - 40 - aF); aB += (Math.sin(t * 13) * 30 + 40 - aB); }   // rummaging
+      if(inR(t, 38.6, 40.6)) aF = kf(t, [[38.6,-6],[39,-160],[40.2,-160],[40.6,-6]]) + Math.sin(t * 16) * 8 * seg(t, 39, 40.2);   // scratching his head
+      if(inR(t, 44.4, 46)) aimF(2560, 780, kf(t, [[44.4,0],[45,1],[45.6,1],[46,0]]));   // tipping the box
+      if(inR(t, 46.2, 49.6)){ aF = -150 + Math.sin(t * 10) * 20; aB = 150 - Math.sin(t * 9) * 20; }   // arms up in the jumpers
+      if(inR(t, 58, 60.6)) aimF(3220 - Math.sin(t * 6) * 30, 790, kf(t, [[58,0],[58.4,1],[60.2,1],[60.6,0]]));   // tug with the guinea pig
+      if(inR(t, 72, 77.4)) aimF(x + 60, FLOOR + y - 720 * K, kf(t, [[72,0],[72.6,1],[77,1],[77.4,0]]));   // phone up to his face
+      if(inR(t, 83.6, 91.6)) aimF(MOUTH[0] - 4, MOUTH[1] + 60, kf(t, [[83.6,0],[84,1]]));   // hold of the strap
+      if(inR(t, 84, 91.6)) aB = 30 + Math.sin(t * 5) * 10;
+      if(inR(t, 98.4, 99.6)) aimF(450, 600, kf(t, [[98.4,0],[98.8,1],[99.2,1],[99.6,0]]));   // the swipe that works
+      if(inR(t, 100, 101)) aimF(360, 660, kf(t, [[100,0],[100.4,1],[100.7,1],[101,0]]));   // the push
+      tr(E.armF, 'translate(112 -540) rotate(' + f1(aF) + ') scale(1 ' + sF.toFixed(3) + ')');
+      tr(E.armB, 'translate(-112 -540) rotate(' + f1(aB) + ')');
+      tr(E.held, 'translate(0 262) scale(1 ' + (1 / sF).toFixed(3) + ') rotate(' + f1(-aF - lean) + ')');
+      // where the front hand really is in the room
+      function hand(){
+        var a = aF * Math.PI / 180, lx = 112 - 228 * sF * Math.sin(a), ly = -540 + 228 * sF * Math.cos(a);
+        return [x + K * (lx * Math.cos(rad) - ly * Math.sin(rad)), FLOOR + y + K * (lx * Math.sin(rad) + ly * Math.cos(rad))];
+      }
+
+      // what is in his hand
+      var hk = '';
+      if(inR(t, 58.6, 61.2)) hk = 'lace';
+      if(inR(t, 72, 77.4)) hk = 'phone';
+      if(t >= 92.6 && t < 200) hk = 'badge';
+      if(hk !== E.heldK){
+        E.held.innerHTML = hk === 'phone' ? '<rect x="-22" y="-46" width="44" height="80" rx="8" fill="#1b1d22"/><rect x="-17" y="-38" width="34" height="62" rx="3" fill="#7fb6ff"/>' :
+          hk === 'lace' ? '<path d="M0 0 C20 20 -20 40 10 60 C30 74 0 90 14 104" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>' :
+          hk === 'badge' ? '<g transform="translate(-6 -10)"><path d="M0 0 C-30 30 -30 60 0 80 M0 0 C30 30 30 60 0 80" stroke="#2F6BE0" stroke-width="9" fill="none"/><g transform="translate(0 76)">' + badge() + '</g></g>' : '';
+        E.heldK = hk;
+      }
+
+      // the lanyard round his neck, only in the flashback, until it is eaten
+      vis(E.lan, flash && t < 75);
+      if(flash){
+        var bx = 0, by = 0;
+        if(inR(t, 74, 75)){
+          var pb = kf(t, [[74,0],[74.9,1]]), dx = MOUTH[0] - x, dy = MOUTH[1] - (FLOOR + y);
+          bx = (dx * Math.cos(rad) + dy * Math.sin(rad)) / K * pb; by = ((-dx * Math.sin(rad) + dy * Math.cos(rad)) / K + 455) * pb;
+        }
+        tr(E.badge, 'translate(' + f1(bx) + ' ' + f1(-455 + by) + ')');
+        E.lr1.setAttribute('x2', f1(bx)); E.lr1.setAttribute('y2', f1(-455 + by));
+        E.lr2.setAttribute('x2', f1(bx)); E.lr2.setAttribute('y2', f1(-455 + by));
+      }
+
+      // head and face
+      var hy = 0, hr = Math.sin(t * 1.3) * 2;
+      if(inR(t, 15.2, 15.6)) hy -= Math.sin(seg(t, 15.2, 15.6) * Math.PI) * 60;   // the jump when he realises
+      if(inR(t, 26.8, 30.4)) hr += Math.sin(t * 6) * 16;   // following the moth
+      if(inR(t, 72, 77.4)) { hr += 10; hy += 10; }        // looking down at his phone
+      if(t >= 61.2 && t < 71){ hr -= kf(t, [[61.2,0],[62.2,10]]); }
+      if(inR(t, 78.4, 80)) hr += kf(t, [[78.4,0],[79.4,-14],[80,0]]);
+      if(t >= 104.6){ hy += kf(t, [[104.6,0],[105.4,14]]); hr += kf(t, [[104.6,0],[105.4,8]]); }
+      tr(E.head, 'translate(0 ' + f1(-598 + hy) + ') rotate(' + f1(hr) + ')');
+      var fk = 'smile';
+      FACE_AT.forEach(function(f){ if(t >= f[0]) fk = f[1]; });
+      if(fk !== E.face){ FACES.forEach(function(k){ vis(E.faces[k], k === fk); }); E.face = fk; }
+      // the side-on face looks right, into whatever he is searching
+      vis(E.nose, inR(t, 22.2, 24.6));
+      if(inR(t, 22.2, 24.6)) tr(E.nose, 'translate(0 -128) scale(' + kf(t, [[22.2,.3],[22.4,1.2],[22.6,1]]).toFixed(3) + ')');
+      vis(E.peel, inR(t, 37.6, 44));
+      vis(E.note, t >= 64.8 && t < 71);
+      if(t >= 64.8 && t < 71) tr(E.note, 'translate(' + f1(Math.sin(t * 3) * 40 * (1 - seg(t, 64.8, 66.2))) + ' ' + f1(kf(t, [[64.8,-900],[66.2,-300]], out)) + ') rotate(' + f1(Math.sin(t * 4) * 20 * (1 - seg(t, 64.8, 66.2)) - 6) + ')');
+      vis(E.paper, t >= 104.6 && t < 200);
+      if(t >= 104.6) tr(E.paper, 'translate(' + f1(kf(t, [[104.4,900],[105.4,0]])) + ' ' + f1(kf(t, [[104.4,-500],[105.4,-150]])) + ') rotate(' + f1(kf(t, [[104.4,180],[105.4,-8]])) + ')');
+      op(E.excl, inR(t, 15.2, 17.4) ? 1 : 0);
+      tr(E.excl, 'translate(130 -880) scale(' + f1(kf(t, [[15.2,.2],[15.4,1.2],[15.6,1]])) + ') translate(-130 880)');
+      op(E.q, inR(t, 38.6, 40.6) || inR(t, 68.4, 70.8) ? 1 : 0);
+      E.tie.setAttribute('d', 'M0 -560 L' + f1(Math.sin(t * 2) * 4) + ' -395');
+
+      // the whole of Mr White, hidden while he is in the paper
+      vis(E.mw, !(inR(t, 92.2, 92.6)));
+      vis(E.head, !dive);
+      if(dive) tr(E.mw, 'translate(2210 ' + f1(735 + Math.sin(t * 7) * 8) + ') rotate(' + f1(168 + Math.sin(t * 5) * 5) + ') scale(' + K + ') translate(0 470)');
+      else tr(E.mw, 'translate(' + f1(x) + ' ' + f1(FLOOR + y) + ') rotate(' + f1(lean) + ') scale(' + K + ')');
+
+      // the strap hanging out of the photocopier: there in every shot,
+      // except when it is round his neck (flashback) or in his hand (the end)
+      var strapOn = !(flash && t < 75) && t < 92.4;
+      vis(E.strapw, strapOn);
+      if(strapOn){
+        var ex, ey;
+        if(inR(t, 83.6, 92.4)){
+          var hp = hand(); ex = hp[0]; ey = hp[1];   // the end is in his hand
+        } else {
+          var swing = Math.sin(t * 2.2) * 10 + (inR(t, 31.4, 33.4) ? Math.sin(t * 14) * 14 : 0) + (inR(t, 78.6, 81) ? Math.sin(t * 18) * 18 : 0);
+          ex = MOUTH[0] - 22 + swing; ey = MOUTH[1] + 96;
+        }
+        E.strap.setAttribute('d', 'M' + MOUTH[0] + ' ' + MOUTH[1] + ' Q' + f1((MOUTH[0] + ex) / 2 - 20) + ' ' + f1(Math.max(MOUTH[1], ey) + 30) + ' ' + f1(ex) + ' ' + f1(ey));
+        tr(E.sbadge, 'translate(' + f1(ex) + ' ' + f1(ey) + ') rotate(' + f1((ex - MOUTH[0] + 22) * .4) + ')');
+        vis(E.sbadge, !inR(t, 83.6, 92.4));
+      }
+
+      // the photocopier: shakes in the tug, its little screen
+      var lcd = inR(t, 84, 85.8) ? 'NO' : inR(t, 85.8, 92.4) ? 'COPYING' : inR(t, 92.4, 96.9) ? 'OUT OF PAPER' : 'READY';
+      if(lcd !== E.lcdK){ E.lcd.textContent = lcd; E.lcdK = lcd; }
+      var fr = Math.floor(t * 30), cs0 = 0;
+      if(inR(t, 31.4, 33.4) || inR(t, 79.6, 80.4)) cs0 = 4;
+      if(inR(t, 84, 92.4)) cs0 = 9;
+      tr(E.cop, 'translate(' + f1((hs(fr) - .5) * cs0) + ' ' + f1((hs(fr + 99) - .5) * cs0) + ')');
+
+      // the drawer, the coat and the moth
+      tr(E.drawer, 'translate(' + f1(inR(t, 21, 24.4) ? kf(t, [[21,0],[21.6,90],[24,90],[24.4,0]]) : 0) + ' 0)');
+      tr(E.coat, 'rotate(' + f1(inR(t, 26.8, 30.6) ? Math.sin(t * 9) * 4 : 0) + ' 1220 430)');
+      var moth = inR(t, 27.2, 31.4);
+      op(E.moth, moth ? 1 : 0);
+      if(moth){
+        var mq = seg(t, 27.2, 31.4), ma = t * 4.2, hx = x + 10, hyW = FLOOR + y - 700 * K;
+        var mx = mq < .15 ? 1190 + (hx - 1190) * mq / .15 : hx + Math.cos(ma) * 150, my = mq < .15 ? 630 + (hyW - 630) * mq / .15 : hyW + Math.sin(ma) * 60;
+        if(mq > .85){ mx += (mq - .85) * 4000; my -= (mq - .85) * 2000; }
+        tr(E.moth, 'translate(' + f1(mx) + ' ' + f1(my) + ')');
+        tr(E.wings, 'scale(1 ' + (Math.abs(Math.sin(t * 40)) * .8 + .2).toFixed(2) + ')');
+      }
+
+      // the lost property box tips, and the jumpers pour out on top of him
+      tr(E.lpbox, 'rotate(' + f1(inR(t, 45, 200) ? -kf(t, [[45,0],[45.8,-70]], out) : 0) + ' 2660 900)');
+      E.jm.forEach(function(j, i){
+        var t0 = 45.6 + i * .065;
+        if(t < t0){ vis(j, false); return; }
+        vis(j, true);
+        var row = Math.floor(i / 6), col = i % 6;
+        var land = [2255 + col * 66 + (hs(i + 1) - .5) * 30 + (row % 2) * 30, 872 - row * 68 + (hs(i + 2) - .5) * 20, (hs(i + 4) - .5) * 120];
+        if(t >= 49.8 && row >= 3) land = [2300 + hs(i + 6) * 260, 880 - hs(i + 2) * 90, land[2]];   // he climbs out and the pile slumps
+        var p = seg(t, t0, t0 + .6);
+        var jx = 2600 + (land[0] - 2600) * p, jy = 700 + (land[1] - 700) * bounce(p) - Math.sin(p * Math.PI) * 160;
+        tr(j, 'translate(' + f1(jx) + ' ' + f1(jy) + ') rotate(' + f1(land[2] * p) + ')');
+      });
+
+      // the fish, wearing his glasses, comes to look back at him
+      var fx = 2910 + Math.sin(t * .9) * 70, fy = 270 + Math.sin(t * 1.7) * 14, fdir = Math.cos(t * .9) > 0 ? 1 : -1;
+      if(inR(t, 52.4, 56)){ fx = kf(t, [[52.4,2980],[53.4,2845],[55.6,2845],[56,2900]]); fy = 250; fdir = -1; }
+      tr(E.fish, 'translate(' + f1(fx) + ' ' + f1(fy) + ') scale(' + fdir + ' 1)');
+
+      // the guinea pig, pulling the other end of the shoelace
+      var gx = 3270, gy = 830;
+      if(inR(t, 58.4, 61)) gx += Math.sin(t * 6) * 18 + 12;
+      tr(E.gp, 'translate(' + f1(gx) + ' ' + f1(gy) + ') scale(-1 1)');
+      if(inR(t, 58.6, 61.2)){
+        var hpL = hand(), hxL = hpL[0], hyL = hpL[1];
+        E.lace.setAttribute('d', 'M' + f1(gx - 50) + ' ' + f1(gy) + ' Q' + f1((gx + hxL) / 2) + ' ' + f1(gy + 30) + ' ' + f1(hxL) + ' ' + f1(hyL));
+      } else E.lace.setAttribute('d', 'M0 0');
+
+      // the photocopies of the lanyard, and the drift they make
+      var made = 0;
+      E.copies.forEach(function(c, i){
+        var t0 = copyT(i);
+        if(t < t0 || t >= 96.9){ vis(c, false); return; }
+        vis(c, true); made++;
+        var sp = copySpot(i), p = seg(t, t0, t0 + .9);
+        var cx = MOUTH[0] + (sp[0] - MOUTH[0]) * p, cy = MOUTH[1] + (sp[1] - drift(t) * (sp[0] > 1000 && sp[0] < 1360 ? 1 : .6) - MOUTH[1]) * p - Math.sin(p * Math.PI) * 320;
+        tr(c, 'translate(' + f1(cx) + ' ' + f1(cy) + ') rotate(' + f1(sp[2] + (1 - p) * 540) + ')');
+      });
+      function drift(tt){ return tt < 86.6 ? 0 : tt < 96.9 ? kf(tt, [[86.6,0],[91.6,230]]) : 0; }
+      var dh = drift(t);
+      E.drift.setAttribute('d', dh > 0 ? 'M760 902 C820 ' + f1(902 - dh * .4) + ' 960 ' + f1(902 - dh) + ' 1180 ' + f1(902 - dh) + ' C1330 ' + f1(902 - dh) + ' 1360 ' + f1(902 - dh * .5) + ' 1420 902 Z' : 'M0 0');
+      op(E.ccount, inR(t, 86, 92.6) ? 1 : 0);
+      E.cnum.textContent = Math.round(kf(t, [[86,0],[92.2,250]], function(q){ return q; }));
+
+      // the door: red with no lanyard, green with it, then it swings open
+      var ok = t >= 99.1;
+      E.led.setAttribute('fill', inR(t, 13.8, 15) ? '#ff3b30' : ok ? '#2ecc71' : '#3a3f48');
+      op(E.ledglow, ok ? .35 : 0);
+      tr(E.door, 'translate(150 0) scale(' + kf(t, [[100.6,1],[101.6,.12]]).toFixed(3) + ' 1) translate(-150 0)');
+
+      // the clock on the wall
+      var mAng = 150 + t * 1.2, hAng = 240 + mAng / 12;
+      tr(E.mh, 'rotate(' + f1(mAng) + ')'); tr(E.hh, 'rotate(' + f1(hAng) + ')');
+
+      // SNAP
+      op(E.snap, inR(t, 22.2, 23.4) ? 1 : 0);
+      tr(E.snap, 'translate(' + f1(x + 250) + ' ' + f1(FLOOR + y - 760 * K) + ') rotate(-8) scale(' + kf(t, [[22.2,0],[22.35,1.1],[22.5,.9]]).toFixed(3) + ')');
+
+      // camera, with a shake in the tug and the fall
+      var c3 = camAt(t), shk = inR(t, 84, 92.4) ? 7 : inR(t, 46, 47.2) ? 10 * (1 - seg(t, 46, 47.2)) : 0;
+      tr(E.cam, 'translate(' + f1(960 + (hs(fr + 7) - .5) * shk) + ' ' + f1(540 + (hs(fr + 17) - .5) * shk) + ') scale(' + c3[0].toFixed(3) + ') translate(' + f1(-c3[1]) + ' ' + f1(-c3[2]) + ')');
+      if(flash) E.cam.setAttribute('filter', 'url(#y-sepia)'); else E.cam.removeAttribute('filter');
+      op(E.fb, flash ? kf(t, [[71,0],[71.4,1],[77.6,1],[78,0]]) : 0);
+
+      // the search box and the clock in the corner
+      var qn = null;
+      QUERIES.forEach(function(q){ if(inR(t, q[0], q[1])) qn = q; });
+      if(qn){
+        var full = qn[2], typed = full.slice(0, Math.floor(cl((t - qn[0] - .5) * 11, 0, full.length)));
+        var caret = (t * 2) % 1 < .5 && typed.length < full.length ? '|' : '';
+        if(E.sqK !== typed + caret){ E.sq.textContent = typed + caret; E.sqK = typed + caret; }
+        op(E.sbar, kf(t, [[qn[0],0],[qn[0] + .3,1],[qn[1] - .3,1],[qn[1],0]]));
+        tr(E.sbar, 'translate(0 ' + f1(kf(t, [[qn[0],-160],[qn[0] + .35,0]], out)) + ')');
+      } else op(E.sbar, 0);
+      op(E.hud, t >= 6.5 && t < 107 && !flash ? 1 : 0);
+      var ht = hudText(t);
+      if(E.hudt.textContent !== ht) E.hudt.textContent = ht;
+      E.hudt.setAttribute('fill', t > 61 && t < 93 && (t * 2) % 1 < .5 ? '#ffd23f' : '#ff5a4f');
+
+      // the slow-motion fist pump
+      var fistOn = inR(t, 92.9, 97);
+      op(E.fist, fistOn ? kf(t, [[92.9,0],[93.1,1],[96.6,1],[97,0]]) : 0);
+      if(fistOn){
+        tr(E.frays, 'rotate(' + f1(t * 12) + ')');
+        tr(E.fpic, 'translate(936 630) scale(' + (1 + seg(t, 93, 97) * .08).toFixed(3) + ') translate(-936 -630)');
+        E.cf.forEach(function(c, i){ var q = ((t - 93) * (.28 + hs(i) * .2) + hs(i + 50)) % 1; tr(c, 'translate(' + f1(hs(i + 3) * 1920) + ' ' + f1(-40 + q * 1160) + ') rotate(' + f1(t * (120 + hs(i) * 200)) + ')'); });
+      }
+
+      // title and end cards
+      op(E.title, t < 6.4 ? kf(t, [[0,1],[5.4,1],[6.4,0]]) : 0);
+      if(t < 6.4){
+        op(E.t1, seg(t, .3, 1)); op(E.t3, seg(t, 2.2, 3));
+        op(E.t2, seg(t, .8, 1.6));
+        tr(E.t2, 'translate(960 610) scale(' + kf(t, [[.8,1.15],[2,1]], out).toFixed(3) + ') translate(-960 -610)');
+      }
+      op(E.end, t < 107.4 ? 0 : kf(t, [[107.4,0],[107.8,1],[118.4,1],[119,0]]));
+      if(t >= 107.4){
+        op(E.e2, seg(t, 108.3, 109.2)); op(E.e3, seg(t, 110, 110.8));
+        tr(E.e2, 'translate(960 570) scale(' + kf(t, [[108.3,1.15],[109.5,1]], out).toFixed(3) + ') translate(-960 -570)');
+      }
+      op(E.black, Math.max(inR(t, 70.6, 71.4) ? Math.sin(seg(t, 70.6, 71.4) * Math.PI) : 0, inR(t, 77.6, 78.4) ? Math.sin(seg(t, 77.6, 78.4) * Math.PI) : 0, t >= 119 ? seg(t, 119, 119.8) : 0));
+    }
+    function caption(t){
+      for(var i = 0; i < CAPS.length; i++){ if(t >= CAPS[i][0] && t < CAPS[i][1]) return CAPS[i][2]; }
+      return '';
+    }
+    return { DUR:DUR, svg:svg, mount:mount, render:render, caption:caption, cues:cues, hush:hush };
+  })();
+  window.WF_LANY = LANY;
+
   // the episodes that are real cartoons rather than a still
-  var CARTOONS = { photo:CART, lamin:LAMI };
-  function hushCartoons(){ CART.hush(); LAMI.hush(); }
+  var CARTOONS = { photo:CART, lamin:LAMI, lany:LANY };
+  function hushCartoons(){ CART.hush(); LAMI.hush(); LANY.hush(); }
 
   /* =================== player =================== */
   var PL = { p:null, t:0, dur:0, playing:false, tick:null, hide:null, from:'app' };
@@ -2961,6 +3586,7 @@ var WF = (function(){
     else if(['new','list','sport','nature'].indexOf(h) > -1){ S.page = h; enterApp(false); }
     else if(h === 'photocopier'){ direct = 'photo'; standby(); $('#standby p').textContent = 'Press to watch'; }
     else if(h === 'laminator'){ direct = 'lamin'; standby(); $('#standby p').textContent = 'Press to watch'; }
+    else if(h === 'lanyard'){ direct = 'lany'; standby(); $('#standby p').textContent = 'Press to watch'; }
     else standby();
   }
 
