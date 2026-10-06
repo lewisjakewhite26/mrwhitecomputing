@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mr White-bot's Rules</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap">
+<style>
+  @page{size:A4 portrait;margin:10mm}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#1C5394;color:#0D2340;font-family:'Fredoka','Trebuchet MS',Arial,sans-serif}
+  .bar{max-width:210mm;margin:16px auto 0;display:flex;justify-content:space-between;padding:0 4px}
+  .bar a,.bar button{font:inherit;font-weight:600;font-size:16px;color:#0D2340;background:#fff;border:3px solid #0D2340;border-radius:999px;padding:8px 18px;text-decoration:none;cursor:pointer}
+  .bar button{background:#FFC93C}
+  .page{width:210mm;height:297mm;margin:12px auto 30px;background:#fff;padding:12mm;box-shadow:0 10px 30px -12px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:8mm;break-after:page}
+  @media print{ html,body{background:#fff} .bar{display:none} .page{margin:0;box-shadow:none;width:auto;height:277mm;padding:0} }
+  /* faint blueprint grid, light enough to print */
+  .grid{background-image:linear-gradient(#E3EDF9 1px,transparent 1px),linear-gradient(90deg,#E3EDF9 1px,transparent 1px);background-size:5mm 5mm}
+  .card{flex:1;border:1.4mm solid #0D2340;border-radius:7mm;padding:6mm 7mm;display:flex;flex-direction:column;gap:4mm;position:relative}
+  .card::before,.card::after{content:"";position:absolute;top:3mm;width:3mm;height:3mm;border-radius:50%;background:#9AA6B8}
+  .card::before{left:3mm}.card::after{right:3mm}
+  .rule{display:flex;align-items:center;gap:4mm;border:1mm solid #0D2340;border-radius:999px;padding:2.5mm 6mm 2.5mm 3mm;font-weight:600;font-size:19pt;line-height:1.1}
+  .rule .led{width:8mm;height:8mm;flex:none;border-radius:50%;border:1mm solid #0D2340;background:#4df89b}
+  .rule .ic{width:11mm;height:11mm;flex:none;border-radius:50%;border:.8mm solid #0D2340;display:flex;align-items:center;justify-content:center}
+  .rule .ic svg{width:7mm;height:7mm}
+  .draw{flex:1;border:.8mm dashed #7F8BA0;border-radius:5mm;position:relative}
+  .draw span{position:absolute;left:4mm;top:3mm;font-size:11pt;font-weight:500;color:#7F8BA0}
+  .lines{display:flex;flex-direction:column;gap:7mm;padding-top:2mm}
+  .lines i{display:block;border-bottom:.5mm solid #0D2340;height:1px}
+  .name{display:flex;gap:3mm;align-items:flex-end;font-weight:600;font-size:13pt}
+  .name i{flex:1;border-bottom:.5mm solid #0D2340}
+  .poster{flex:1;border:2mm solid #0D2340;border-radius:9mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12mm;position:relative}
+  .poster .k{font-weight:600;font-size:16pt;letter-spacing:.2em;text-transform:uppercase;color:#FF7A2F}
+  .poster h1{font-weight:700;font-size:66pt;line-height:.95;margin:6mm 0 0}
+  .poster .cls{margin-top:12mm;display:flex;gap:4mm;align-items:flex-end;font-weight:600;font-size:22pt;width:130mm}
+  .poster .cls i{flex:1;border-bottom:.8mm solid #0D2340;height:12mm}
+  .lights{display:flex;gap:4mm;margin-top:10mm}
+  .lights b{width:9mm;height:9mm;border-radius:50%;border:1mm solid #0D2340;background:#4df89b}
+</style>
+</head>
+<body>
+<div class="bar"><a href="whitebot-returns.html#part9">Back to the lesson</a><button type="button" onclick="window.print()">Print</button></div>
+<div id="pages"></div>
+<script>
+(function(){
+  // the same five rules as the lesson, plus a blank one for a rule of their own
+  var RULES = ['Hold it with two hands', 'Keep drinks away', 'Only open what your teacher asks', 'Take turns', 'Tell a grown-up if something worries you', ''];
+  function robot(){
+    return '<svg width="300" height="330" viewBox="0 0 300 330" fill="none" stroke="#0D2340" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">' +
+      '<line x1="150" y1="10" x2="150" y2="44"/><circle cx="150" cy="12" r="9" fill="#FFC93C"/>' +
+      '<rect x="80" y="44" width="140" height="112" rx="18" fill="#fff"/><rect x="96" y="60" width="108" height="80" rx="10" fill="#0D2340"/>' +
+      '<circle cx="128" cy="92" r="7" fill="#4df89b" stroke="none"/><circle cx="172" cy="92" r="7" fill="#4df89b" stroke="none"/><path d="M124 116 Q150 134 176 116" stroke="#4df89b" stroke-width="6"/>' +
+      '<rect x="138" y="156" width="24" height="16" fill="#fff"/><rect x="70" y="172" width="160" height="110" rx="26" fill="#fff"/><circle cx="150" cy="212" r="22" fill="#8EC5FF"/>' +
+      '<path d="M70 196 L36 250"/><circle cx="34" cy="256" r="12" fill="#fff"/><path d="M230 196 L264 250"/><circle cx="266" cy="256" r="12" fill="#fff"/>' +
+      '<rect x="104" y="282" width="30" height="36" rx="8" fill="#fff"/><rect x="166" y="282" width="30" height="36" rx="8" fill="#fff"/></svg>';
+  }
+  function card(t){
+    return '<div class="card grid">' +
+      (t ? '<div class="rule"><span class="led"></span>' + t + '</div>' : '<div class="rule"><span class="led"></span>Our own rule:</div>') +
+      '<div class="draw"><span>Draw Mr White-bot doing it the right way</span></div>' +
+      '<div class="lines"><i></i><i></i></div>' +
+      '<div class="name">Name <i></i></div></div>';
+  }
+  var html = '<div class="page"><div class="poster grid"><div class="k">Made by our class</div><h1>Mr White-bot\'s Rules</h1><div style="margin-top:12mm">' + robot() + '</div>' +
+    '<div class="lights"><b></b><b></b><b></b><b></b><b></b></div><div class="cls">Class <i></i></div></div></div>';
+  for(var i = 0; i < RULES.length; i += 2) html += '<div class="page">' + card(RULES[i]) + card(RULES[i + 1]) + '</div>';
+  document.getElementById('pages').innerHTML = html;
+})();
+</script>
+</body>
+</html>

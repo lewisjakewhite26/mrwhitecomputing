@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mr White-bot Returns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bp:#1C5394; --bp2:#174579; --navy:#0D2340; --ink:#0D2340; --white:#FFFFFF; --cloud:#EEF5FF; --sky:#8EC5FF;
+    --yel:#FFC93C; --org:#FF7A2F; --grn:#2FB86E; --red:#E8475A; --steel:#9AA6B8;
+    --g0:#E8475A; --g1:#FF9A4D; --g2:#FFC93C; --g3:#9BD36B; --g4:#2FB86E;
+    --phosphor:#4df89b; --crt-bg:#06140c;
+    --f:'Fredoka','Trebuchet MS',Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#0A1A30;color:var(--navy);font-family:var(--f)}
+  button{font:inherit}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  /* the blueprint: a fine grid with a heavier line every fifth square */
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;outline:none;overflow:hidden;
+    background:
+      linear-gradient(rgba(255,255,255,.13) 2px,transparent 2px) 0 0/100px 100px,
+      linear-gradient(90deg,rgba(255,255,255,.13) 2px,transparent 2px) 0 0/100px 100px,
+      linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px) 0 0/20px 20px,
+      linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px) 0 0/20px 20px,
+      radial-gradient(ellipse at 50% 40%,#2463AA,var(--bp) 60%,var(--bp2));}
+  .spec{position:absolute;left:36px;top:22px;z-index:6;font-weight:600;font-size:17px;letter-spacing:.14em;color:rgba(255,255,255,.55);text-transform:uppercase}
+  #host{position:absolute;left:0;top:0;width:1600px;height:804px;z-index:2}
+  .scene{position:absolute;inset:0}
+  .scene.enter{animation:boot .45s cubic-bezier(.3,1.3,.5,1) both}
+  @keyframes boot{from{opacity:0;transform:scale(.97) translateY(14px)}to{opacity:1;transform:none}}
+
+  .nav{position:absolute;left:0;right:0;bottom:0;height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 36px;gap:16px;z-index:5}
+  .btn{font-family:var(--f);font-weight:700;font-size:28px;min-height:66px;padding:0 38px;border-radius:999px;border:5px solid var(--navy);background:var(--white);color:var(--navy);cursor:pointer;box-shadow:0 6px 0 var(--navy)}
+  .btn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--navy)}
+  .btn.primary{background:var(--yel)}
+  .btn:disabled{opacity:.35;cursor:default}
+  .mid{display:flex;align-items:center;gap:18px}
+  .parts{display:flex;gap:9px;flex-wrap:wrap;max-width:760px;justify-content:center}
+  .part{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.7);background:#33465f;padding:0;cursor:pointer}
+  .part.done{background:var(--phosphor);border-color:var(--phosphor)}
+  .part.on{background:var(--yel);border-color:var(--white);box-shadow:0 0 12px var(--yel)}
+  .tool{font-family:var(--f);font-weight:600;font-size:17px;color:#fff;background:transparent;border:3px solid rgba(255,255,255,.6);border-radius:999px;padding:6px 16px;cursor:pointer}
+  .home{position:absolute;right:30px;top:18px;z-index:6;font-weight:600;font-size:17px;color:#fff;text-decoration:none;border:3px solid rgba(255,255,255,.6);border-radius:999px;padding:6px 16px}
+  #notes{position:absolute;left:36px;right:36px;bottom:104px;background:var(--white);border:5px solid var(--navy);border-radius:22px;padding:16px 24px;font-size:22px;line-height:1.4;display:none;z-index:7;box-shadow:0 6px 0 var(--navy)}
+  #notes.on{display:block}
+  #notes b{font-weight:700;margin-right:10px;color:var(--org)}
+
+  .pp{transition:opacity .35s ease,transform .45s cubic-bezier(.3,1.5,.5,1)}
+  .pp.hide{opacity:0;transform:translateY(18px) scale(.96);pointer-events:none}
+  .abs{position:absolute}
+
+  /* type */
+  .kick{font-weight:600;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--yel)}
+  .h1{font-weight:700;font-size:112px;line-height:.95;margin:0;color:#fff;text-shadow:0 8px 0 var(--navy)}
+  .h2{font-weight:700;font-size:64px;line-height:1.02;margin:0;color:#fff;text-shadow:0 6px 0 var(--navy)}
+  .lead{font-weight:500;font-size:36px;line-height:1.3;color:#fff}
+  .ink{color:var(--navy);text-shadow:none}
+
+  /* a bolted steel plate: the panel every bit of content sits on */
+  .plate{position:absolute;background:
+      radial-gradient(circle at 20px 20px,#B8C2D1 6px,#7F8BA0 7px,transparent 8px),
+      radial-gradient(circle at calc(100% - 20px) 20px,#B8C2D1 6px,#7F8BA0 7px,transparent 8px),
+      radial-gradient(circle at 20px calc(100% - 20px),#B8C2D1 6px,#7F8BA0 7px,transparent 8px),
+      radial-gradient(circle at calc(100% - 20px) calc(100% - 20px),#B8C2D1 6px,#7F8BA0 7px,transparent 8px),
+      #fff;
+    border:5px solid var(--navy);border-radius:28px;box-shadow:0 9px 0 var(--navy)}
+  .plate.cloud{background-color:var(--cloud)}
+
+  /* rule chips with a status light */
+  .chip{display:flex;align-items:center;gap:18px;background:#fff;border:5px solid var(--navy);border-radius:999px;padding:12px 30px 12px 14px;font-weight:600;font-size:34px;line-height:1.1;box-shadow:0 6px 0 var(--navy);transition:background .3s}
+  .chip .led{width:34px;height:34px;flex:none;border-radius:50%;background:#4F5B6C;border:4px solid var(--navy);transition:background .3s,box-shadow .3s}
+  .chip .ic{width:52px;height:52px;flex:none;border-radius:50%;background:var(--cloud);border:4px solid var(--navy);display:flex;align-items:center;justify-content:center}
+  .chip .ic svg{width:32px;height:32px}
+  .chip.lit{background:#E5FFF0}
+  .chip.lit .led{background:var(--phosphor);box-shadow:0 0 16px 3px var(--phosphor)}
+  .chip.dim{opacity:.45}
+
+  .say{position:absolute;background:#fff;border:5px solid var(--navy);border-radius:30px;padding:18px 28px;font-weight:600;font-size:36px;line-height:1.2;color:var(--navy);box-shadow:0 7px 0 var(--navy);z-index:4}
+  .say::after{content:"";position:absolute;width:30px;height:30px;background:#fff;border:5px solid var(--navy);border-top:0;border-left:0;transform:rotate(45deg);bottom:-19px;left:56px}
+  .say.r::after{left:auto;right:56px}
+  .say.lt::after{bottom:auto;top:40%;left:-19px;transform:rotate(135deg)}
+  .say .cur{display:inline-block;width:.5em;height:.9em;background:var(--org);vertical-align:-.1em;margin-left:3px;animation:blinkc .7s steps(2) infinite}
+  @keyframes blinkc{50%{opacity:0}}
+
+  .tag{display:inline-flex;align-items:center;gap:10px;background:var(--yel);border:4px solid var(--navy);border-radius:999px;padding:6px 20px;font-weight:700;font-size:24px;color:var(--navy)}
+  .act{font-family:var(--f);font-weight:700;font-size:28px;padding:14px 30px;border-radius:999px;border:5px solid var(--navy);background:var(--yel);color:var(--navy);cursor:pointer;box-shadow:0 6px 0 var(--navy)}
+  .act:active{transform:translateY(5px);box-shadow:0 1px 0 var(--navy)}
+  .act.w{background:#fff}
+  .stamp{position:absolute;border:7px solid var(--grn);color:var(--grn);border-radius:18px;padding:8px 26px;font-weight:700;font-size:44px;letter-spacing:.06em;transform:rotate(-8deg);background:rgba(255,255,255,.92);z-index:6}
+  .stamp.go{animation:stampin .5s cubic-bezier(.3,1.6,.5,1) both}
+  @keyframes stampin{from{transform:rotate(-8deg) scale(2.2);opacity:0}to{transform:rotate(-8deg) scale(1);opacity:1}}
+
+  /* ============ Mr White-bot (ported from the Mr White-bot clips) ============ */
+  .wbx{position:absolute;width:340px;height:640px;transform-origin:0 0;--al:8deg;--ar:-8deg}
+  .wbx.slide{transition:left 2.6s cubic-bezier(.42,0,.58,1)}
+  .wbx .bot{position:absolute;left:0;top:130px;width:340px;height:490px;transform-origin:50% 100%;filter:grayscale(1) brightness(.45);transform:rotate(4deg) translateY(4px);transition:filter .6s ease,transform .6s cubic-bezier(.34,1.56,.64,1)}
+  .wbx .bot.on{filter:none;transform:none}
+  .wbx .leg{position:absolute;bottom:0;width:64px;height:110px;background:linear-gradient(180deg,#e8ebf3,#c0c5d2);border:3px solid #888e9c;border-radius:18px 18px 24px 24px;box-shadow:inset 0 -8px 14px rgba(0,0,0,.12);transform-origin:50% 0}
+  .wbx .leg.l{left:70px}.wbx .leg.r{right:70px}
+  .wbx .foot{position:absolute;bottom:-14px;width:84px;height:34px;background:linear-gradient(180deg,#d4d8e2,#a6abb8);border:3px solid #828795;border-radius:16px}
+  .wbx .foot.l{left:60px}.wbx .foot.r{right:60px}
+  .wbx .torso{position:absolute;left:38px;bottom:96px;width:264px;height:220px;background:linear-gradient(160deg,#f7f9fd,#cbd0dc);border:4px solid #848a98;border-radius:40px;box-shadow:inset 0 10px 18px rgba(255,255,255,.7),inset 0 -18px 26px rgba(0,0,0,.14)}
+  .wbx .chest{position:absolute;left:50%;top:26px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#8ce5ff,#1c7ec4 70%,#0d528f);border:5px solid #373e4b}
+  .wbx .chest::after{content:"";position:absolute;inset:13px;border-radius:50%;border:2px solid rgba(255,255,255,.5)}
+  .wbx .bot.on .chest{box-shadow:0 0 20px 4px rgba(70,190,255,.65)}
+  .wbx .leds{position:absolute;left:50%;top:140px;transform:translateX(-50%);display:flex;gap:9px;padding:6px 9px;background:#2a303b;border-radius:12px;border:3px solid #848a98}
+  .wbx .leds i{width:18px;height:18px;border-radius:50%;background:#46505f;transition:background .3s,box-shadow .3s}
+  .wbx .leds i.on{background:var(--phosphor);box-shadow:0 0 10px 2px var(--phosphor)}
+  .wbx .vent{position:absolute;width:38px;height:6px;background:#8e94a2;border-radius:3px}
+  .wbx .vent.a{left:30px;bottom:34px}.wbx .vent.b{left:30px;bottom:22px}.wbx .vent.c{right:30px;bottom:34px}.wbx .vent.d{right:30px;bottom:22px}
+  .wbx .arm{position:absolute;top:250px;width:34px;height:154px;background:linear-gradient(180deg,#eef1f7,#c2c7d4);border:3px solid #8a909e;border-radius:17px;transform-origin:50% 14px;transition:transform .5s cubic-bezier(.3,1.4,.5,1);z-index:3}
+  .wbx .arm.l{left:6px;transform:rotate(var(--al))}
+  .wbx .arm.r{right:6px;transform:rotate(var(--ar))}
+  .wbx .hand{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:46px;height:46px;border-radius:50%;background:linear-gradient(160deg,#e5e8f0,#b5b9c5);border:3px solid #848a98}
+  .wbx .neck{position:absolute;left:50%;bottom:308px;transform:translateX(-50%);width:52px;height:34px;background:linear-gradient(180deg,#d5d9e3,#8a909e);border:3px solid #848a98;border-radius:8px}
+  .wbx .ant-stem{position:absolute;left:50%;bottom:558px;transform:translateX(-50%);width:6px;height:46px;background:#848a98;border-radius:3px}
+  .wbx .ant-dot{position:absolute;left:50%;bottom:598px;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe27c,#dc9f00)}
+  .wbx .bot.on .ant-dot{box-shadow:0 0 14px 4px rgba(255,205,60,.75)}
+  .wbx.alert .ant-dot{background:radial-gradient(circle at 35% 30%,#ff9aa5,#d8243a);animation:antPulse .5s steps(2) infinite}
+  @keyframes antPulse{50%{opacity:.3}}
+  .wbx .head{position:absolute;left:50%;bottom:332px;transform:translateX(-50%);width:224px;height:198px;background:linear-gradient(160deg,#f5f7fc,#ccd1dc);border:5px solid #757b88;border-radius:28px;box-shadow:inset 0 8px 14px rgba(255,255,255,.6),inset 0 -14px 20px rgba(0,0,0,.14),0 10px 22px rgba(0,0,0,.16);transform-origin:50% 90%;transition:transform .5s cubic-bezier(.34,1.56,.64,1);z-index:2}
+  .wbx .bolt{position:absolute;width:10px;height:10px;border-radius:50%;background:#7c828e}
+  .wbx .bolt.tl{left:9px;top:9px}.wbx .bolt.tr{right:9px;top:9px}.wbx .bolt.bl{left:9px;bottom:9px}.wbx .bolt.br{right:9px;bottom:9px}
+  .wbx .screen{position:absolute;left:19px;top:19px;width:176px;height:150px;border-radius:12px;overflow:hidden;background:var(--crt-bg);border:4px solid #171a20;box-shadow:inset 0 0 24px 6px rgba(0,0,0,.9)}
+  .wbx .screen .face{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:150%;height:150%;object-fit:contain;filter:grayscale(1) brightness(1.2) contrast(1.6) sepia(1) hue-rotate(78deg) saturate(5);mix-blend-mode:screen;opacity:0;transition:opacity .25s ease}
+  .wbx .bot.on .screen .face.smile{opacity:.95}
+  .wbx.shock .bot.on .screen .face.smile,.wbx.sad .bot.on .screen .face.smile{opacity:0}
+  .wbx.shock .bot.on .screen .face.shock{opacity:.95}
+  .wbx.sad .bot.on .screen .face.sad{opacity:.95}
+  .wbx.shock .screen .face{filter:grayscale(1) brightness(1.2) contrast(1.6) sepia(1) hue-rotate(-40deg) saturate(6)}
+  .wbx .screen .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(70,255,140,.32),transparent 70%)}
+  .wbx.shock .screen .glow{background:radial-gradient(circle at 50% 42%,rgba(255,85,101,.35),transparent 70%)}
+  .wbx .screen .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.4) 0 1px,transparent 1px 3px)}
+  .wbx .screen .vignette{position:absolute;inset:0;box-shadow:inset 0 0 32px 14px rgba(0,0,0,.8);border-radius:8px}
+  .wbx .prop{position:absolute;z-index:2}
+  .wbx .prop.front{z-index:4}
+
+  /* moves */
+  .wbx .bot.bob{animation:idleBob 2.8s ease-in-out infinite}
+  @keyframes idleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .wbx .bot.jolt{animation:wakeJolt .7s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes wakeJolt{0%{transform:translateY(8px) scaleY(.9)}35%{transform:translateY(-22px) scaleY(1.08)}65%{transform:translateY(4px) scaleY(.97)}100%{transform:none}}
+  .wbx .bot.walk{animation:walkBounce .48s ease-in-out infinite}
+  .wbx .bot.walk .leg.l{animation:legStepL .48s ease-in-out infinite}
+  .wbx .bot.walk .leg.r{animation:legStepR .48s ease-in-out infinite}
+  .wbx .bot.walk .arm.l{animation:armSwingL .48s ease-in-out infinite}
+  .wbx .bot.walk:not(.holdr) .arm.r{animation:armSwingR .48s ease-in-out infinite}
+  @keyframes walkBounce{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-10px) rotate(-1deg)}}
+  @keyframes legStepL{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(16deg)}}
+  @keyframes legStepR{0%,100%{transform:rotate(16deg)}50%{transform:rotate(-14deg)}}
+  @keyframes armSwingL{0%,100%{transform:rotate(18deg)}50%{transform:rotate(-12deg)}}
+  @keyframes armSwingR{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(12deg)}}
+  .wbx .bot.shake{animation:shake .12s linear infinite}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px) rotate(-.6deg)}75%{transform:translateX(4px) rotate(.6deg)}}
+  .wbx .bot.wave .arm.l{animation:waveArm .5s ease-in-out infinite alternate}
+  @keyframes waveArm{from{transform:rotate(140deg)}to{transform:rotate(175deg)}}
+  .wbx .bot.typing .arm.l{animation:typeL .26s ease-in-out infinite alternate}
+  .wbx .bot.typing .arm.r{animation:typeR .26s ease-in-out infinite alternate .13s}
+  @keyframes typeL{from{transform:rotate(-38deg)}to{transform:rotate(-30deg)}}
+  @keyframes typeR{from{transform:rotate(-82deg)}to{transform:rotate(-74deg)}}
+  .wbx .bot.dance{animation:danceTorso .56s ease-in-out infinite}
+  .wbx .bot.dance .head{animation:danceHead .56s ease-in-out infinite}
+  .wbx .bot.dance .leg.l{animation:legStepL .56s ease-in-out infinite}
+  .wbx .bot.dance .leg.r{animation:legStepR .56s ease-in-out infinite}
+  .wbx .bot.dance .arm.l{animation:danceArmL .56s ease-in-out infinite}
+  .wbx .bot.dance .arm.r{animation:danceArmR .56s ease-in-out infinite}
+  @keyframes danceTorso{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+  @keyframes danceHead{0%,100%{transform:translateX(-50%) rotate(6deg)}50%{transform:translateX(-50%) rotate(-6deg)}}
+  @keyframes danceArmL{0%,100%{transform:rotate(12deg)}50%{transform:rotate(150deg)}}
+  @keyframes danceArmR{0%,100%{transform:rotate(-150deg)}50%{transform:rotate(-12deg)}}
+  .swing{transform-origin:6px 6px;animation:swing 1.6s ease-in-out infinite alternate}
+  @keyframes swing{from{transform:rotate(18deg)}to{transform:rotate(44deg)}}
+
+  /* pictures on the cards */
+  .pic{position:absolute;left:10px;top:10px;width:640px;height:500px;border-radius:18px;overflow:hidden;
+    background:linear-gradient(rgba(28,83,148,.08) 1px,transparent 1px) 0 0/20px 20px,linear-gradient(90deg,rgba(28,83,148,.08) 1px,transparent 1px) 0 0/20px 20px,#F4F9FF}
+  .pic .floor{position:absolute;left:0;right:0;bottom:0;height:46px;background:#D8E6F7;border-top:4px solid var(--navy)}
+  .pic.enter{animation:boot .4s cubic-bezier(.3,1.3,.5,1) both}
+  .bub{animation:bubble 2.4s ease-in infinite}
+  @keyframes bubble{from{transform:translateY(0);opacity:1}to{transform:translateY(-120px);opacity:0}}
+  .crumb{animation:crumb 1.2s ease-in infinite}
+  @keyframes crumb{from{transform:translateY(0);opacity:1}to{transform:translateY(70px);opacity:0}}
+  .floaty{animation:floaty 2.2s ease-in-out infinite alternate}
+  @keyframes floaty{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+  .glowring{animation:glowring 1s ease-in-out infinite alternate}
+  @keyframes glowring{from{opacity:.25}to{opacity:1}}
+
+  /* the How OK line */
+  .gauge{position:absolute;display:flex;gap:10px}
+  .seg{position:relative;width:144px;height:118px;border:5px solid var(--navy);border-radius:22px;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:0 6px 10px;font-weight:700;font-size:22px;line-height:1.05;text-align:center;color:var(--navy);box-shadow:0 6px 0 var(--navy);font-family:var(--f)}
+  .seg:active{transform:translateY(4px);box-shadow:0 2px 0 var(--navy)}
+  .seg .num{position:absolute;top:8px;left:0;right:0;font-size:38px}
+  .seg.off{filter:saturate(.25) brightness(1.05);opacity:.55}
+  .pin{position:absolute;top:-78px;left:50%;width:64px;height:70px;margin-left:-32px;animation:pindrop .45s cubic-bezier(.3,1.6,.5,1) both}
+  @keyframes pindrop{from{transform:translateY(-60px);opacity:0}to{transform:none;opacity:1}}
+  .band{position:absolute;height:20px;border-radius:10px;background:var(--navy);transition:left .4s,width .4s}
+  .band span{position:absolute;top:28px;left:0;right:0;text-align:center;font-weight:700;font-size:26px;color:#fff;white-space:nowrap}
+  .tally{display:flex;gap:16px;align-items:center}
+  .tbtn{font-family:var(--f);font-weight:700;font-size:26px;padding:12px 22px;border-radius:20px;border:5px solid var(--navy);background:#fff;cursor:pointer;box-shadow:0 5px 0 var(--navy);display:flex;align-items:center;gap:12px}
+  .tbtn b{display:inline-block;min-width:48px;padding:2px 8px;border-radius:12px;background:var(--navy);color:#fff;font-size:30px}
+
+  /* option buttons */
+  .opt{position:absolute;display:flex;align-items:center;gap:20px;font-family:var(--f);font-weight:600;font-size:34px;text-align:left;padding:18px 28px;border-radius:26px;border:5px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer;box-shadow:0 7px 0 var(--navy)}
+  .opt .mk{width:56px;height:56px;flex:none;border-radius:50%;border:5px solid var(--navy);background:var(--cloud);display:flex;align-items:center;justify-content:center}
+  .opt.no{background:#FFE7EA}.opt.no .mk{background:var(--red)}
+  .opt.yes{background:#E3FFEF}.opt.yes .mk{background:var(--grn)}
+  .opt.no{animation:nope .4s}
+  @keyframes nope{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+
+  .adult{position:absolute;width:440px;height:470px;text-align:center}
+  .adult .num{position:absolute;top:-38px;left:50%;margin-left:-38px;width:76px;height:76px;border-radius:50%;background:var(--yel);border:5px solid var(--navy);font-weight:700;font-size:44px;line-height:66px;box-shadow:0 5px 0 var(--navy)}
+  .adult .big{width:150px;height:150px;margin:58px auto 10px;border-radius:50%;background:var(--cloud);border:5px solid var(--navy);display:flex;align-items:center;justify-content:center}
+  .adult .big svg{width:92px;height:92px}
+  .adult h3{margin:0;font-size:50px;line-height:1.05;font-weight:700}
+  .adult p{margin:14px 26px 0;font-size:27px;line-height:1.3;font-weight:500;color:#33476A}
+
+  .face3{position:absolute;width:300px;height:320px;cursor:pointer;font-family:var(--f);border:5px solid var(--navy);border-radius:30px;background:#fff;box-shadow:0 8px 0 var(--navy);padding:0}
+  .face3:active{transform:translateY(5px);box-shadow:0 3px 0 var(--navy)}
+  .face3 .scr{position:absolute;left:30px;top:26px;width:230px;height:170px;border-radius:18px;background:var(--crt-bg);border:5px solid #171a20;overflow:hidden}
+  .face3 .scr::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,transparent 1px 3px)}
+  .face3 .lab{position:absolute;left:0;right:0;top:212px;font-weight:700;font-size:30px;line-height:1.1;color:var(--navy)}
+  .face3 .cnt{position:absolute;right:-18px;top:-18px;min-width:64px;height:64px;border-radius:32px;background:var(--yel);border:5px solid var(--navy);font-weight:700;font-size:34px;line-height:54px;padding:0 10px}
+
+  @media (prefers-reduced-motion: reduce){
+    .scene.enter,.pic.enter,.stamp.go,.pin{animation:none}
+    .pp{transition:none}
+    .wbx .bot,.wbx .bot *,.bub,.crumb,.floaty,.swing,.glowring{animation:none !important}
+  }
+</style>
+</head>
+<body>
+<div id="fit">
+  <div id="stage" tabindex="-1">
+    <div class="spec">Mr White-bot &middot; Model WB-2 &middot; Rules update</div>
+    <a class="home" id="home" href="index.html#/g/y12">All lessons</a>
+    <div id="host"></div>
+    <div id="notes"></div>
+    <div class="nav">
+      <button class="btn" id="back" type="button">Back</button>
+      <div class="mid">
+        <button class="tool" id="snd" type="button">Sound on</button>
+        <div class="parts" id="parts"></div>
+        <button class="tool" id="nbtn" type="button">Notes</button>
+      </div>
+      <button class="btn primary" id="next" type="button">Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage'), host = document.getElementById('host');
+  function size(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', size); size();
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function store(k, v){ try{ if(v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
+
+  /* Phosphor icons (regular weight, 256 grid) */
+  var PH = {
+    'house':'M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z',
+    'game-controller':'M176,112H152a8,8,0,0,1,0-16h24a8,8,0,0,1,0,16ZM104,96H96V88a8,8,0,0,0-16,0v8H72a8,8,0,0,0,0,16h8v8a8,8,0,0,0,16,0v-8h8a8,8,0,0,0,0-16ZM241.48,200.65a36,36,0,0,1-54.94,4.81c-.12-.12-.24-.24-.35-.37L146.48,160h-37L69.81,205.09l-.35.37A36.08,36.08,0,0,1,44,216,36,36,0,0,1,8.56,173.75a.68.68,0,0,1,0-.14L24.93,89.52A59.88,59.88,0,0,1,83.89,40H172a60.08,60.08,0,0,1,59,49.25c0,.06,0,.12,0,.18l16.37,84.17a.68.68,0,0,1,0,.14A35.74,35.74,0,0,1,241.48,200.65ZM172,144a44,44,0,0,0,0-88H83.89A43.9,43.9,0,0,0,40.68,92.37l0,.13L24.3,176.59A20,20,0,0,0,58,194.3l41.92-47.59a8,8,0,0,1,6-2.71Zm59.7,32.59-8.74-45A60,60,0,0,1,172,160h-4.2L198,194.31a20.09,20.09,0,0,0,17.46,5.39,20,20,0,0,0,16.23-23.11Z',
+    'monitor':'M208,40H48A24,24,0,0,0,24,64V176a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V64A24,24,0,0,0,208,40Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V64a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Zm-48,48a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,224Z',
+    'hand-pointing':'M196,88a27.86,27.86,0,0,0-13.35,3.39A28,28,0,0,0,144,74.7V44a28,28,0,0,0-56,0v80l-3.82-6.13A28,28,0,0,0,35.73,146l4.67,8.23C74.81,214.89,89.05,240,136,240a88.1,88.1,0,0,0,88-88V116A28,28,0,0,0,196,88Zm12,64a72.08,72.08,0,0,1-72,72c-37.63,0-47.84-18-81.68-77.68l-4.69-8.27,0-.05A12,12,0,0,1,54,121.61a11.88,11.88,0,0,1,6-1.6,12,12,0,0,1,10.41,6,1.76,1.76,0,0,0,.14.23l18.67,30A8,8,0,0,0,104,152V44a12,12,0,0,1,24,0v68a8,8,0,0,0,16,0V100a12,12,0,0,1,24,0v20a8,8,0,0,0,16,0v-4a12,12,0,0,1,24,0Z',
+    'pencil-simple':'M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z',
+    'printer':'M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z',
+    'book-open':'M232,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H24a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a8,8,0,0,0,8-8V56A8,8,0,0,0,232,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z',
+    'users-three':'M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z',
+    'keyboard':'M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm0,144H32V64H224V192Zm-16-64a8,8,0,0,1-8,8H56a8,8,0,0,1,0-16H200A8,8,0,0,1,208,128Zm0-32a8,8,0,0,1-8,8H56a8,8,0,0,1,0-16H200A8,8,0,0,1,208,96ZM72,160a8,8,0,0,1-8,8H56a8,8,0,0,1,0-16h8A8,8,0,0,1,72,160Zm96,0a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,160Zm40,0a8,8,0,0,1-8,8h-8a8,8,0,0,1,0-16h8A8,8,0,0,1,208,160Z',
+    'lightbulb':'M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.65,71.65,0,0,0,27.64,56.3A32,32,0,0,1,96,186v6h64v-6a32.15,32.15,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Zm-16.11-9.34a57.6,57.6,0,0,0-46.56-46.55,8,8,0,0,0-2.66,15.78c16.57,2.79,30.63,16.85,33.44,33.45A8,8,0,0,0,176,104a9,9,0,0,0,1.35-.11A8,8,0,0,0,183.89,94.66Z',
+    'coffee':'M80,56V24a8,8,0,0,1,16,0V56a8,8,0,0,1-16,0Zm40,8a8,8,0,0,0,8-8V24a8,8,0,0,0-16,0V56A8,8,0,0,0,120,64Zm32,0a8,8,0,0,0,8-8V24a8,8,0,0,0-16,0V56A8,8,0,0,0,152,64Zm96,56v8a40,40,0,0,1-37.51,39.91,96.59,96.59,0,0,1-27,40.09H208a8,8,0,0,1,0,16H32a8,8,0,0,1,0-16H56.54A96.3,96.3,0,0,1,24,136V88a8,8,0,0,1,8-8H208A40,40,0,0,1,248,120ZM200,96H40v40a80.27,80.27,0,0,0,45.12,72h69.76A80.27,80.27,0,0,0,200,136Zm32,24a24,24,0,0,0-16-22.62V136a95.78,95.78,0,0,1-1.2,15A24,24,0,0,0,232,128Z',
+    'squares-four':'M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z',
+    'arrows-clockwise':'M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z',
+    'camera':'M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z'
+  };
+  function ph(k, col){ return '<svg viewBox="0 0 256 256" fill="' + (col || 'currentColor') + '"><path d="' + PH[k] + '"/></svg>'; }
+
+  /* ---------------- sound ---------------- */
+  var soundOn = store('wb_sound') !== 'off', AC = null;
+  function ac(){ if(!soundOn) return null; try{ AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if(AC.state === 'suspended') AC.resume(); return AC; }catch(e){ return null; } }
+  function tone(type, f, at, dur, vol, f2){
+    var c = ac(); if(!c) return;
+    var t = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + .05);
+  }
+  function noise(at, dur, vol, type, f1, f2, q){
+    var c = ac(); if(!c) return;
+    var t = c.currentTime + at, n = c.createBufferSource(), b = c.createBuffer(1, Math.max(1, c.sampleRate * dur), c.sampleRate), d = b.getChannelData(0);
+    for(var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    var f = c.createBiquadFilter(), g = c.createGain();
+    n.buffer = b; f.type = type || 'lowpass'; f.Q.value = q || 1; f.frequency.setValueAtTime(f1, t); if(f2) f.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    n.connect(f); f.connect(g); g.connect(c.destination); n.start(t); n.stop(t + dur + .05);
+  }
+  var SFX = {
+    blip: function(){ tone('square', 600 + Math.random() * 500, 0, .045, .04); },
+    boot: function(){ tone('sawtooth', 90, 0, .9, .1, 520); tone('sine', 523.3, .9, .12, .15); tone('sine', 784, 1.02, .2, .15); },
+    ding: function(){ tone('triangle', 1046.5, 0, .2, .18); tone('triangle', 1568, .08, .35, .14); },
+    thud: function(){ tone('sine', 160, 0, .2, .4, 60); noise(0, .08, .15, 'lowpass', 800); },
+    pop: function(){ tone('sine', 520, 0, .12, .2, 900); },
+    alarm: function(){ for(var i = 0; i < 3; i++){ tone('square', 880, i * .3, .14, .08); tone('square', 660, i * .3 + .15, .14, .08); } },
+    fail: function(){ tone('square', 220, 0, .2, .1); tone('square', 170, .22, .35, .1); },
+    yay: function(){ [523.3, 659.3, 784, 1046.5].forEach(function(f, i){ tone('triangle', f, i * .09, .3, .14); }); },
+    whir: function(){ tone('sawtooth', 200, 0, .5, .06, 900); noise(0, .5, .08, 'bandpass', 600, 2400, 3); },
+    splash: function(){ noise(0, .7, .3, 'lowpass', 2500, 300); },
+    crunch: function(){ for(var i = 0; i < 4; i++) noise(i * .11, .07, .25, 'highpass', 1800); },
+    step: function(){ tone('sine', 120, 0, .08, .25, 70); }
+  };
+  function sfx(k){ try{ SFX[k] && SFX[k](); }catch(e){} }
+  var sndBtn = document.getElementById('snd');
+  function sndPaint(){ sndBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; }
+  sndBtn.addEventListener('click', function(e){ e.stopPropagation(); soundOn = !soundOn; store('wb_sound', soundOn ? 'on' : 'off'); sndPaint(); stage.focus({ preventScroll:true }); });
+  sndPaint();
+
+  var timers = [];
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function stopAll(){ timers.forEach(clearTimeout); timers = []; }
+
+  /* robot speech: types itself out with a blip per letter */
+  function say(el, text, then){
+    if(!el) return;
+    if(RM){ el.innerHTML = esc(text); if(then) then(); return; }
+    el.innerHTML = '<span class="t"></span><span class="cur"></span>';
+    var t = el.querySelector('.t'), i = 0;
+    (function tick(){
+      if(i >= text.length){ var c = el.querySelector('.cur'); if(c) c.remove(); if(then) then(); return; }
+      t.textContent += text.charAt(i);
+      if(/\w/.test(text.charAt(i)) && i % 2 === 0) sfx('blip');
+      i++; later(tick, 38);
+    })();
+  }
+
+  /* ---------------- Mr White-bot ---------------- */
+  // o: x, y, s (scale), al/ar (arm angles), face (smile|shock|sad), cls (bot moves),
+  // mid (props behind the arms), front (props in front of everything), off (powered down)
+  function bot(o){
+    o = o || {};
+    var st = 'left:' + (o.x || 0) + 'px;top:' + (o.y || 0) + 'px;transform:scale(' + (o.s || 1) + ');--al:' + (o.al == null ? 8 : o.al) + 'deg;--ar:' + (o.ar == null ? -8 : o.ar) + 'deg';
+    var leds = ''; for(var i = 0; i < 5; i++) leds += '<i' + (i < (o.leds || 0) ? ' class="on"' : '') + '></i>';
+    return '<div class="wbx ' + (o.face && o.face !== 'smile' ? o.face + ' ' : '') + (o.wcls || '') + '"' + (o.id ? ' id="' + o.id + '"' : '') + ' style="' + st + '">' +
+      '<div class="bot' + (o.off ? '' : ' on') + (o.cls ? ' ' + o.cls : '') + '">' +
+        '<div class="leg l"></div><div class="leg r"></div><div class="foot l"></div><div class="foot r"></div>' +
+        '<div class="torso"><div class="chest"></div><div class="leds">' + leds + '</div><div class="vent a"></div><div class="vent b"></div><div class="vent c"></div><div class="vent d"></div></div>' +
+        (o.mid || '') +
+        '<div class="arm l"><div class="hand"></div></div><div class="arm r"><div class="hand"></div></div>' +
+        '<div class="neck"></div><div class="ant-stem"></div><div class="ant-dot"></div>' +
+        '<div class="head"><div class="bolt tl"></div><div class="bolt tr"></div><div class="bolt bl"></div><div class="bolt br"></div>' +
+          '<div class="screen"><img class="face smile" src="whiteflix/img/face_smile.webp" alt=""><img class="face shock" src="whiteflix/img/face_shock.webp" alt=""><img class="face sad" src="whiteflix/img/face_sad.webp" alt=""><div class="glow"></div><div class="scan"></div><div class="vignette"></div></div></div>' +
+        (o.front || '') +
+      '</div></div>';
+  }
+  function setFace(w, f){ if(!w) return; w.classList.remove('shock', 'sad'); if(f && f !== 'smile') w.classList.add(f); }
+  function move(w, cls, ms){ if(!w) return; var b = w.querySelector('.bot'); b.classList.remove(cls); void b.offsetWidth; b.classList.add(cls); if(ms) later(function(){ b.classList.remove(cls); }, ms); }
+
+  /* props, drawn in the robot's own coordinates so they move with him */
+  function ipadSVG(w, h, inner){
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '"><rect x="3" y="3" width="' + (w - 6) + '" height="' + (h - 6) + '" rx="18" fill="#2F3440" stroke="#0D2340" stroke-width="5"/><rect x="16" y="14" width="' + (w - 32) + '" height="' + (h - 28) + '" rx="6" fill="#8EC5FF"/>' + (inner || '') + '</svg>';
+  }
+  var P = {
+    carry: function(icon){ return '<div class="prop" style="left:60px;top:312px">' + ipadSVG(220, 140, icon || '') + '</div>'; },
+    dangle: function(){ return '<div class="prop" style="left:432px;top:290px"><div class="swing">' + ipadSVG(200, 130) + '</div></div>'; },
+    keyboardHat: function(){
+      var keys = ''; for(var r = 0; r < 3; r++) for(var c = 0; c < 9; c++) keys += '<rect x="' + (14 + c * 26) + '" y="' + (12 + r * 18) + '" width="20" height="13" rx="3" fill="#E8EDF5"/>';
+      return '<div class="prop front" style="left:28px;top:-92px;transform:rotate(-7deg)"><svg width="270" height="78" viewBox="0 0 270 78"><rect x="3" y="3" width="264" height="72" rx="12" fill="#3A4252" stroke="#0D2340" stroke-width="5"/>' + keys + '</svg></div>';
+    },
+    crisps: function(){ return '<div class="prop front" style="left:405px;top:225px;transform:rotate(18deg)"><svg width="90" height="120" viewBox="0 0 90 120"><path d="M8 10 L82 10 L76 112 L14 112 Z" fill="#FFC93C" stroke="#0D2340" stroke-width="5" stroke-linejoin="round"/><rect x="12" y="48" width="66" height="26" fill="#E8475A"/><path d="M8 10 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l10 8" fill="none" stroke="#0D2340" stroke-width="4"/></svg></div>'; },
+    sponge: function(){ return '<div class="prop front" style="left:412px;top:300px;transform:rotate(-10deg)"><svg width="70" height="46" viewBox="0 0 70 46"><rect x="3" y="3" width="64" height="40" rx="9" fill="#FFE070" stroke="#0D2340" stroke-width="5"/><circle cx="20" cy="18" r="4" fill="#E0B83C"/><circle cx="44" cy="26" r="5" fill="#E0B83C"/></svg></div>'; }
+  };
+  var GAME = function(w, h){ return '<g transform="translate(' + (w / 2 - 34) + ' ' + (h / 2 - 34) + ') scale(.27)"><path fill="#0D2340" d="' + PH['game-controller'] + '"/></g>'; };
+
+  function monitorSVG(inner, w, h){
+    w = w || 230; h = h || 190;
+    return '<svg width="' + w + '" height="' + (h + 60) + '" viewBox="0 0 ' + w + ' ' + (h + 60) + '"><rect x="' + (w / 2 - 18) + '" y="' + (h - 4) + '" width="36" height="40" fill="#8A93A6" stroke="#0D2340" stroke-width="5"/><rect x="' + (w / 2 - 60) + '" y="' + (h + 32) + '" width="120" height="20" rx="8" fill="#B5BECC" stroke="#0D2340" stroke-width="5"/><rect x="3" y="3" width="' + (w - 6) + '" height="' + (h - 6) + '" rx="16" fill="#2F3440" stroke="#0D2340" stroke-width="5"/><rect x="16" y="15" width="' + (w - 32) + '" height="' + (h - 34) + '" rx="6" fill="#8EC5FF"/>' + (inner || '') + '</svg>';
+  }
+  function deskSVG(w){ return '<svg width="' + w + '" height="130" viewBox="0 0 ' + w + ' 130"><rect x="3" y="3" width="' + (w - 6) + '" height="26" rx="8" fill="#E2A766" stroke="#0D2340" stroke-width="5"/><rect x="22" y="27" width="20" height="100" fill="#C98B4B" stroke="#0D2340" stroke-width="5"/><rect x="' + (w - 42) + '" y="27" width="20" height="100" fill="#C98B4B" stroke="#0D2340" stroke-width="5"/></svg>'; }
+  var POPUP = '<g><rect x="34" y="34" width="162" height="110" rx="8" fill="#fff" stroke="#E8475A" stroke-width="6"/><rect x="34" y="34" width="162" height="22" fill="#E8475A"/><path d="M115 70 L142 122 L88 122 Z" fill="#FFC93C" stroke="#0D2340" stroke-width="5" stroke-linejoin="round"/><rect x="111" y="86" width="8" height="20" rx="3" fill="#0D2340"/><circle cx="115" cy="114" r="4.5" fill="#0D2340"/></g>';
+
+  /* one scene per How OK card, drawn in a 640 x 500 picture */
+  var BOTY = 12, S = .72;
+  function SCENE(kind, line){
+    var h = '<div class="floor"></div>';
+    switch(kind){
+      case 'carry':
+        h += bot({ x:198, y:BOTY, s:S, al:-27, ar:27, cls:'bob', mid:P.carry() }); break;
+      case 'dangle':
+        h += bot({ x:150, y:BOTY, s:S, ar:-75, mid:P.dangle() }); break;
+      case 'bath':
+        h += '<div class="abs" style="left:330px;top:250px;transform:rotate(-14deg)"><svg width="170" height="120" viewBox="0 0 170 120"><rect x="10" y="4" width="150" height="92" rx="10" fill="#2F3440" stroke="#0D2340" stroke-width="5"/><rect x="22" y="15" width="126" height="70" rx="4" fill="#8EC5FF"/></svg></div>';
+        h += '<div class="abs" style="left:250px;top:300px"><svg width="390" height="170" viewBox="0 0 390 170"><path d="M10 40 H380 V70 Q380 150 300 150 H90 Q10 150 10 70 Z" fill="#fff" stroke="#0D2340" stroke-width="6" stroke-linejoin="round"/><rect x="4" y="30" width="382" height="20" rx="10" fill="#fff" stroke="#0D2340" stroke-width="6"/><rect x="70" y="146" width="22" height="20" rx="6" fill="#B5BECC" stroke="#0D2340" stroke-width="5"/><rect x="300" y="146" width="22" height="20" rx="6" fill="#B5BECC" stroke="#0D2340" stroke-width="5"/></svg></div>';
+        [[270,290,30],[320,280,26],[380,288,34],[440,276,28],[500,286,32],[560,280,26],[600,292,22],[350,300,22],[470,300,24]].forEach(function(b){ h += '<div class="abs" style="left:' + b[0] + 'px;top:' + b[1] + 'px;width:' + b[2] * 2 + 'px;height:' + b[2] * 2 + 'px;margin:-' + b[2] + 'px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#DDEBFF);border:4px solid #0D2340"></div>'; });
+        [[300,230,14,0],[420,210,10,.8],[540,236,12,1.6],[600,200,9,.4]].forEach(function(b){ h += '<div class="abs bub" style="left:' + b[0] + 'px;top:' + b[1] + 'px;width:' + b[2] * 2 + 'px;height:' + b[2] * 2 + 'px;border-radius:50%;border:3px solid #6C9AD8;background:rgba(255,255,255,.6);animation-delay:' + b[3] + 's"></div>'; });
+        h += '<div class="abs" style="left:540px;top:236px"><svg width="70" height="56" viewBox="0 0 70 56"><path d="M8 34 Q10 52 34 52 Q62 52 62 34 Q62 24 50 24 L44 24 Q50 4 32 4 Q16 4 20 22 Q6 22 8 34 Z" fill="#FFC93C" stroke="#0D2340" stroke-width="4" stroke-linejoin="round"/><circle cx="30" cy="14" r="3" fill="#0D2340"/><path d="M14 14 L4 17 L14 20 Z" fill="#FF7A2F" stroke="#0D2340" stroke-width="2"/></svg></div>';
+        h += bot({ x:20, y:BOTY, s:S, ar:-75, front:P.sponge() });
+        break;
+      case 'queue':
+        h += '<div class="abs" style="left:360px;top:330px">' + deskSVG(260) + '</div>';
+        h += '<div class="abs" style="left:375px;top:100px">' + monitorSVG('<g transform="translate(83 52) scale(.25)"><path fill="#0D2340" d="' + PH['pencil-simple'] + '"/></g>') + '</div>';
+        h += '<div class="abs" style="left:20px;top:440px;width:300px;height:30px;border-radius:8px;border:4px solid #0D2340;background:repeating-linear-gradient(-45deg,#FFC93C 0 18px,#0D2340 18px 30px)"></div>';
+        h += '<div class="abs tag" style="left:330px;top:432px;font-size:24px">Wait here</div>';
+        h += bot({ x:50, y:BOTY - 18, s:S, cls:'bob' });
+        break;
+      case 'app':
+        var tiles = [['pencil-simple','#8EC5FF'],['book-open','#9BD36B'],['lightbulb','#FFC93C'],['game-controller','#FF9A4D'],['keyboard','#C9B8FF'],['camera','#FFB3C1']], tl = '';
+        tiles.forEach(function(t, i){ var cx = 26 + (i % 3) * 92, cy = 70 + Math.floor(i / 3) * 104;
+          tl += (t[0] === 'game-controller' ? '<rect class="glowring" x="' + (cx - 8) + '" y="' + (cy - 8) + '" width="92" height="92" rx="22" fill="none" stroke="#E8475A" stroke-width="6"/>' : '') +
+            '<rect x="' + cx + '" y="' + cy + '" width="76" height="76" rx="16" fill="' + t[1] + '" stroke="#0D2340" stroke-width="4"/><g transform="translate(' + (cx + 14) + ' ' + (cy + 14) + ') scale(.1875)"><path fill="#0D2340" d="' + PH[t[0]] + '"/></g>'; });
+        h += '<div class="abs" style="left:300px;top:70px">' + ipadSVG(320, 330, tl) + '</div>';
+        h += '<div class="abs" style="left:420px;top:26px;transform:rotate(4deg);background:#FFF27A;border:4px solid #0D2340;padding:8px 16px;font-weight:600;font-size:24px;line-height:1.1;box-shadow:0 4px 0 #0D2340;display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;display:inline-block">' + ph('pencil-simple', '#0D2340') + '</span>Today: drawing</div>';
+        h += bot({ x:40, y:BOTY, s:S, ar:-95 });
+        break;
+      case 'thanks':
+        h += '<div class="abs" style="left:360px;top:330px">' + deskSVG(260) + '</div>';
+        h += '<div class="abs" style="left:375px;top:100px">' + monitorSVG('<circle cx="88" cy="70" r="9" fill="#0D2340"/><circle cx="142" cy="70" r="9" fill="#0D2340"/><path d="M80 104 Q115 136 150 104" fill="none" stroke="#0D2340" stroke-width="8" stroke-linecap="round"/>') + '</div>';
+        h += bot({ x:40, y:BOTY, s:S, ar:-60, cls:'bob' });
+        h += '<div class="say" style="left:250px;top:14px;font-size:30px;padding:12px 22px">Thank you, computer.</div>';
+        [[530,90,0],[600,140,.7]].forEach(function(b){ h += '<div class="abs floaty" style="left:' + b[0] + 'px;top:' + b[1] + 'px;animation-delay:' + b[2] + 's"><svg width="36" height="32" viewBox="0 0 36 32"><path d="M18 30 C6 21 2 15 2 9 A8 8 0 0 1 18 6 A8 8 0 0 1 34 9 C34 15 30 21 18 30 Z" fill="#E8475A" stroke="#0D2340" stroke-width="3"/></svg></div>'; });
+        break;
+      case 'crisps':
+        h += '<div class="abs" style="left:330px;top:380px">' + deskSVG(300) + '</div>';
+        h += '<div class="abs" style="left:380px;top:330px"><svg width="220" height="60" viewBox="0 0 220 60"><path d="M30 6 H210 L190 54 H10 Z" fill="#2F3440" stroke="#0D2340" stroke-width="5" stroke-linejoin="round"/><path d="M40 14 H196 L180 46 H24 Z" fill="#8EC5FF"/></svg></div>';
+        [[318,345,0],[338,350,.3],[352,342,.6],[328,348,.9]].forEach(function(b){ h += '<div class="abs crumb" style="left:' + (b[0] + 120) + 'px;top:' + (b[1] - 60) + 'px;width:12px;height:9px;border-radius:3px;background:#E0A93C;border:2px solid #0D2340;animation-delay:' + b[2] + 's"></div>'; });
+        h += bot({ x:20, y:BOTY, s:S, ar:-75, front:P.crisps() });
+        break;
+      case 'hat':
+        h += bot({ x:198, y:BOTY + 6, s:S, al:130, ar:-130, front:P.keyboardHat() }); break;
+      case 'game':
+        h += '<div class="abs" style="left:400px;top:150px;transform:rotate(5deg)"><svg width="190" height="250" viewBox="0 0 190 250"><rect x="4" y="4" width="182" height="242" rx="8" fill="#fff" stroke="#0D2340" stroke-width="5"/>' +
+          [40,70,100,130].map(function(y){ return '<line x1="24" y1="' + y + '" x2="166" y2="' + y + '" stroke="#B5BECC" stroke-width="5" stroke-linecap="round"/>'; }).join('') +
+          '<circle cx="128" cy="190" r="38" fill="#2FB86E" stroke="#0D2340" stroke-width="5"/><path d="M108 190 L122 205 L148 176" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+        h += bot({ x:60, y:BOTY, s:S, al:-27, ar:27, cls:'bob', mid:P.carry(GAME(220, 140)) });
+        break;
+      case 'tell':
+        h += '<div class="abs" style="left:360px;top:330px">' + deskSVG(260) + '</div>';
+        h += '<div class="abs" style="left:375px;top:100px">' + monitorSVG(POPUP) + '</div>';
+        h += bot({ x:20, y:BOTY, s:S, al:165, face:'shock', wcls:'alert' });
+        h += '<div class="say" style="left:220px;top:14px;font-size:28px;padding:12px 22px">' + esc(line || 'Can a grown-up help me?') + '</div>';
+        break;
+      case 'secret':
+        h += '<div class="abs" style="left:360px;top:330px">' + deskSVG(260) + '</div>';
+        h += '<div class="abs" style="left:375px;top:100px">' + monitorSVG(POPUP) + '</div>';
+        h += bot({ x:40, y:BOTY, s:S, face:'shock', ar:-95 });
+        h += '<div class="say" style="left:220px;top:14px;font-size:28px;padding:12px 22px">' + esc(line || 'Shh. I will keep it a secret.') + '</div>';
+        break;
+    }
+    return h;
+  }
+
+  /* ---------------- the lesson ---------------- */
+  var RULES = [
+    ['hand-pointing', 'Hold it with two hands'],
+    ['coffee', 'Keep drinks away'],
+    ['squares-four', 'Only open what your teacher asks'],
+    ['arrows-clockwise', 'Take turns'],
+    ['users-three', 'Tell a grown-up if something worries you']
+  ];
+  function chip(i, cls){ return '<div class="chip ' + (cls || '') + '"><span class="led"></span><span class="ic">' + ph(RULES[i][0], '#0D2340') + '</span><span>' + esc(RULES[i][1]) + '</span></div>'; }
+
+  var GAUGE = [['Never OK','--g0'],['Not OK','--g1'],['It depends','--g2'],['Usually fine','--g3'],['Always fine','--g4']];
+  var CARDS = [
+    { t:'Carrying the iPad with two hands', pic:'carry', min:3, max:4 },
+    { t:'Giving the laptop a bath', pic:'bath', min:0, max:0, ask:'Keep water away from computers. If it is sticky, a grown-up wipes it with a dry cloth.', sfx:'splash' },
+    { t:'Waiting for your turn on the computer', pic:'queue', min:3, max:4 },
+    { t:'Opening an app you were not asked to open', pic:'app', min:0, max:1, ask:'Open the app your teacher asks for. Then ask before you open anything else.' },
+    { t:'Saying thank you to the computer', pic:'thanks', min:3, max:4, aside:'The computer cannot hear you. Being kind is still fine.' },
+    { t:'Eating crisps next to the iPad', pic:'crisps', vote:true, sfx:'crunch' },
+    { t:'Wearing the keyboard as a hat', pic:'hat', min:0, max:1, ask:'Keep the keyboard on the desk and type with your fingers.' },
+    { t:'Playing a game when you have finished your work', pic:'game', vote:true },
+    { t:'Telling your teacher when something on the screen scares you', pic:'tell', min:4, max:4 }
+  ];
+  var QUIZ = [
+    { pic:'dangle', q:'I carry the iPad by one corner.', a:false, why:'Two hands, held flat.' },
+    { pic:'queue', q:'I wait for my turn on the computer.', a:true, why:'Taking turns is fair.' },
+    { pic:'bath', q:'I give the laptop a bath.', a:false, why:'Water and computers do not mix.' },
+    { pic:'tell', q:'Something on the screen scared me, so I told a grown-up.', a:true, why:'Telling a grown-up you trust is always right.', line:'I will tell a grown-up.' },
+    { pic:'app', q:'My teacher said draw, so I opened a game.', a:false, why:'Only open what your teacher asks.' },
+    { pic:'secret', q:'Something on the screen worried me, so I kept it a secret.', a:false, why:'Tell a grown-up. You will not be in trouble.' }
+  ];
+
+  function thumb(up, col){
+    return '<svg viewBox="0 0 100 100" width="100%" height="100%"><g transform="' + (up ? '' : 'rotate(180 50 50)') + '"><path d="M30 44 L46 12 Q50 6 56 10 Q62 14 60 24 L56 40 H82 Q92 40 90 52 L84 82 Q82 90 72 90 H30 Z" fill="' + col + '" stroke="#0D2340" stroke-width="6" stroke-linejoin="round"/><rect x="10" y="42" width="20" height="50" rx="5" fill="' + col + '" stroke="#0D2340" stroke-width="6"/></g></svg>';
+  }
+  function tick(col){ return '<svg viewBox="0 0 40 40" width="34" height="34"><path d="M9 21 L17 29 L32 12" fill="none" stroke="' + (col || '#fff') + '" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+  function cross(col){ return '<svg viewBox="0 0 40 40" width="30" height="30"><path d="M11 11 L29 29 M29 11 L11 29" stroke="' + (col || '#fff') + '" stroke-width="7" stroke-linecap="round"/></svg>'; }
+
+  var PARTS = [
+    { name:'Mr White-bot Returns', steps:0,
+      note:'Last lesson of the unit, taught as an extra in place of Lesson 6. Mr White-bot powers up on his own. Ask who remembers him and what he got wrong last time before you press Next.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:110px;top:150px;width:900px">' +
+            '<div class="kick">Year 1/2 &middot; Extra lesson</div>' +
+            '<h1 class="h1" style="margin-top:18px">Mr White-bot<br>Returns</h1>' +
+            '<div class="lead" style="margin-top:34px;max-width:720px">Using a computer responsibly</div>' +
+            '<div style="margin-top:40px;display:flex;gap:16px;flex-wrap:wrap"><span class="tag">rules</span><span class="tag">responsible</span><span class="tag">safe</span><span class="tag">trusted adult</span></div>' +
+          '</div>' +
+          bot({ id:'tb', x:1080, y:110, s:1, off:true });
+        var w = r.querySelector('#tb');
+        later(function(){ sfx('boot'); w.querySelector('.bot').classList.add('on'); move(w, 'jolt', 800); }, 700);
+        later(function(){ w.querySelector('.bot').classList.add('bob'); }, 1600);
+      } },
+
+    { name:'Hello again', steps:2,
+      note:'He walks in holding the iPad by one corner. Let the class react. Step 2 asks whether this is how you carry an iPad: take answers, and ask what rules we already have in school for computers. Keep a note; they come back in the charter.',
+      build:function(r){
+        r.innerHTML = bot({ id:'hb', x:-420, y:110, s:.95, ar:-75, cls:'walk holdr', mid:P.dangle(), wcls:'slide' }) +
+          '<div class="say pp" data-s="0" id="hs" style="left:640px;top:120px;max-width:760px;min-height:96px"></div>' +
+          '<div class="abs pp" data-s="2" style="left:800px;top:330px;width:720px"><div class="h2">Is this how you carry an iPad?</div></div>';
+        var w = r.querySelector('#hb');
+        later(function(){ w.style.left = '170px'; }, 60);
+        for(var i = 0; i < 6; i++) later(function(){ sfx('step'); }, 300 + i * 440);
+        later(function(){ w.querySelector('.bot').classList.remove('walk'); w.querySelector('.bot').classList.add('bob'); say(r.querySelector('#hs'), 'Hello, Class. I am back.'); }, 2700);
+      },
+      step:function(r, n, fwd){
+        var s = r.querySelector('#hs');
+        if(n === 1){ stopAll(); var w = r.querySelector('#hb'); w.style.transition = 'none'; w.style.left = '170px'; w.querySelector('.bot').classList.remove('walk'); w.querySelector('.bot').classList.add('bob'); say(s, 'I am ready to use the computers.'); }
+        if(n === 2){ stopAll(); s.textContent = 'I am ready to use the computers.'; sfx('pop'); }
+      } },
+
+    { name:'Today you will', steps:3,
+      note:'Read the three together. Mr White-bot is the one who needs teaching today, so the class are the experts.',
+      build:function(r){
+        r.innerHTML = '<div class="abs" style="left:110px;top:90px"><div class="kick">Today you will</div><h2 class="h2" style="margin-top:14px">Teach Mr White-bot</h2></div>' +
+          ['Decide how OK some things are', 'Find out who to tell if something worries you', 'Make our class rules'].map(function(t, i){
+            return '<div class="abs pp" data-s="' + (i + 1) + '" style="left:110px;top:' + (290 + i * 130) + 'px"><div class="chip lit" style="font-size:40px;padding:16px 40px 16px 18px"><span class="led"></span>' + esc(t) + '</div></div>'; }).join('') +
+          bot({ id:'ty', x:1150, y:140, s:.85, cls:'bob' });
+      },
+      step:function(r, n, fwd){ if(fwd) sfx('ding'); var l = r.querySelectorAll('.wbx .leds i'); [].forEach.call(l, function(x, i){ x.classList.toggle('on', i < n); }); } },
+
+    { name:'How OK is it?', steps:CARDS.length - 1,
+      note:'Nine cards. Read the card, let them talk to a partner, then tap the line where the class thinks it goes: a pin drops there. Press Show the answer. The crisps card and the finished-your-work card have no right answer on purpose, so count hands for OK and not OK and let them argue it out. When a card lands in the red, ask what he should do instead before you show it: that answer is a rule, and it goes on the charter later. Next moves to the next card.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs kick" style="left:60px;top:58px">How OK is it?</div>' +
+          '<div class="abs kick" id="cnum" style="left:1300px;top:58px;width:240px;text-align:right;color:#fff"></div>' +
+          '<div class="plate cloud" style="left:60px;top:110px;width:670px;height:530px"><div class="pic" id="pic"></div></div>' +
+          '<div class="abs" style="left:790px;top:110px;width:760px"><div class="h2" id="ct" style="font-size:56px"></div></div>' +
+          '<div class="gauge" id="gauge" style="left:790px;top:400px"></div>' +
+          '<div class="band" id="band" style="left:790px;top:540px;width:0;opacity:0"><span>Most people say</span></div>' +
+          '<div class="abs" id="ctrl" style="left:790px;top:610px;width:760px;display:flex;gap:18px;align-items:center;flex-wrap:wrap"></div>';
+        var g = r.querySelector('#gauge');
+        g.innerHTML = GAUGE.map(function(x, i){ return '<button class="seg" type="button" data-i="' + i + '" style="background:var(' + x[1] + ')"><span class="num">' + (i + 1) + '</span>' + x[0] + '</button>'; }).join('');
+        r._st = CARDS.map(function(){ return { pin:null, shown:false, ok:0, no:0, inst:false }; });
+        [].forEach.call(g.children, function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); var st = r._st[r._n]; st.pin = +b.getAttribute('data-i'); sfx('thud'); paintCard(r, false); }); });
+      },
+      step:function(r, n){ r._n = n; paintCard(r, true); } },
+
+    { name:'Mr White-bot learns the rules', steps:5,
+      note:'Each press installs a rule and lights a light on his chest. Before each one, ask which card from How OK it came from. Taking turns and asking before opening an app come from the green and red cards; drinks come from the bath. Rule 5 is the one for the rest of the lesson.',
+      build:function(r){
+        r.innerHTML = '<div class="abs" style="left:80px;top:60px"><div class="kick">Installing rules</div><h2 class="h2" style="margin-top:12px">Mr White-bot learns the rules</h2></div>' +
+          RULES.map(function(x, i){ return '<div class="abs" id="rc' + i + '" style="left:80px;top:' + (214 + i * 108) + 'px">' + chip(i, 'dim') + '</div>'; }).join('') +
+          '<div class="abs tag" id="rcount" style="left:1090px;top:70px;font-size:28px">Rules installed: 0 of 5</div>' +
+          bot({ id:'rb', x:1110, y:150, s:.9, cls:'bob' }) +
+          '<div class="stamp" id="rstamp" style="left:1060px;top:380px;display:none">RULES INSTALLED</div>';
+      },
+      step:function(r, n, fwd){
+        for(var i = 0; i < 5; i++){ var c = r.querySelector('#rc' + i + ' .chip'); c.classList.toggle('lit', i < n); c.classList.toggle('dim', i >= n); }
+        var w = r.querySelector('#rb'), l = w.querySelectorAll('.leds i');
+        [].forEach.call(l, function(x, i){ x.classList.toggle('on', i < n); });
+        r.querySelector('#rcount').textContent = 'Rules installed: ' + n + ' of 5';
+        var st = r.querySelector('#rstamp'), b = w.querySelector('.bot');
+        b.classList.remove('dance');
+        st.style.display = 'none'; st.classList.remove('go');
+        if(fwd && n > 0){ sfx('whir'); later(function(){ sfx('ding'); move(w, 'jolt', 750); }, 450); }
+        if(n === 5){ later(function(){ st.style.display = 'block'; st.classList.add('go'); sfx('yay'); b.classList.add('dance'); }, fwd ? 900 : 0); later(function(){ b.classList.remove('dance'); }, 4200); }
+      } },
+
+    { name:'Jessie and Friends', steps:1,
+      note:'Play Episode 1, Watching Videos, and stop there. It opens on the CEOP Education page, which has all three episodes on one page with no separate link for each, so scroll to the first one. Episodes 2 and 3 cover sharing pictures and online gaming, which are for another time. Press Next after the video for the questions.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:80px;top:60px"><div class="kick">Watch</div><h2 class="h2" style="margin-top:12px">Jessie and Friends</h2></div>' +
+          '<div class="plate pp" data-s="0" style="left:80px;top:200px;width:820px;height:440px">' +
+            '<a href="https://www.ceopeducation.co.uk/parents/jessie-and-friends-videos/" target="_blank" rel="noopener" style="position:absolute;left:60px;top:70px;width:200px;height:200px;border-radius:50%;background:var(--yel);border:6px solid var(--navy);box-shadow:0 9px 0 var(--navy);display:flex;align-items:center;justify-content:center" aria-label="Open Jessie and Friends on CEOP Education"><svg width="90" height="90" viewBox="0 0 90 90"><path d="M28 14 L76 45 L28 76 Z" fill="#0D2340" stroke="#0D2340" stroke-width="8" stroke-linejoin="round"/></svg></a>' +
+            '<div style="position:absolute;left:310px;top:66px;right:40px"><div style="font-weight:700;font-size:44px;line-height:1.05">Episode 1</div><div style="font-weight:600;font-size:38px;margin-top:6px;color:#33476A">Watching Videos</div>' +
+            '<div style="font-size:24px;line-height:1.35;margin-top:22px;color:#33476A">Opens on CEOP Education. Scroll down to the first episode.</div></div>' +
+            '<div style="position:absolute;left:60px;bottom:40px;right:40px;font-weight:600;font-size:30px">Watch for: how does Jessie feel, and what does she do?</div>' +
+          '</div>' +
+          '<div class="plate pp" data-s="1" data-only style="left:80px;top:200px;width:820px;height:440px;padding:46px 54px">' +
+            '<div style="font-weight:700;font-size:40px;margin-bottom:20px">After the video</div>' +
+            ['How did Jessie feel?', 'Who could she talk to?', 'What else could she do?'].map(function(q, i){ return '<div style="display:flex;align-items:center;gap:20px;font-weight:600;font-size:38px;margin-top:22px"><span style="width:58px;height:58px;border-radius:50%;background:var(--yel);border:5px solid var(--navy);display:inline-flex;align-items:center;justify-content:center;font-size:30px">' + (i + 1) + '</span>' + q + '</div>'; }).join('') +
+          '</div>' +
+          bot({ id:'jb', x:1100, y:130, s:.9, cls:'bob' });
+        [].forEach.call(r.querySelectorAll('a'), function(a){ a.addEventListener('click', function(e){ e.stopPropagation(); }); });
+      },
+      step:function(r, n){
+        var b = r.querySelector('#jb .bot');
+        // he holds up his chest lights as a reminder of rule 5 on the questions slide
+        [].forEach.call(r.querySelectorAll('#jb .leds i'), function(x){ x.classList.toggle('on', n === 1); });
+        if(n === 1) sfx('pop');
+      } },
+
+    { name:'Uh oh', steps:3,
+      note:'He is on the computer and something pops up that scares him. Ask what he should do before you show the choices. Tap each choice to check it. Step 3 is the message from the video: stop, and tell a grown-up you trust. Say clearly that nobody is ever in trouble for telling.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="abs" style="left:520px;top:400px">' + deskSVG(420) + '</div>' +
+          '<div class="abs" style="left:560px;top:110px" id="mon">' + monitorSVG('<g id="popg" style="opacity:0">' + POPUP + '</g>', 340, 300) + '</div>' +
+          bot({ id:'ub', x:150, y:120, s:.9, cls:'typing', al:-34, ar:-78 }) +
+          '<div class="abs pp" data-s="1" style="left:80px;top:40px"><h2 class="h2">What should he do?</h2></div>' +
+          '<button class="opt pp" data-s="1" type="button" data-k="no" style="left:960px;top:150px;width:580px"><span class="mk"></span>Keep it a secret</button>' +
+          '<button class="opt pp" data-s="1" type="button" data-k="no" style="left:960px;top:310px;width:580px"><span class="mk"></span>Click it to see more</button>' +
+          '<button class="opt pp" data-s="1" type="button" data-k="yes" style="left:960px;top:470px;width:580px"><span class="mk"></span>Stop, and tell a grown-up he trusts</button>' +
+          '<div class="plate pp" data-s="3" style="left:960px;top:140px;width:580px;height:470px;padding:44px 46px;z-index:5">' +
+            '<div style="font-weight:700;font-size:60px;line-height:1">Stop.</div><div style="font-weight:700;font-size:52px;line-height:1.1;margin-top:20px">Tell a grown-up you trust.</div>' +
+            '<div style="font-weight:600;font-size:36px;line-height:1.25;margin-top:30px;color:#33476A">You will not be in trouble for telling.</div></div>';
+        // the bigger monitor: scale the pop-up to fit its screen
+        var pg = r.querySelector('#popg'); pg.setAttribute('transform', 'translate(10 10) scale(1.38)');
+        [].forEach.call(r.querySelectorAll('.opt'), function(o){ o.addEventListener('click', function(e){
+          e.stopPropagation(); var yes = o.getAttribute('data-k') === 'yes';
+          o.classList.remove('no', 'yes'); void o.offsetWidth; o.classList.add(yes ? 'yes' : 'no');
+          o.querySelector('.mk').innerHTML = yes ? tick() : cross();
+          sfx(yes ? 'yay' : 'fail');
+          if(yes){ var w = r.querySelector('#ub'); w.style.setProperty('--al', '165deg'); }
+        }); });
+        later(function(){ var w = r.querySelector('#ub'); if(r._n) return; pop(r); }, 1800);
+      },
+      step:function(r, n, fwd){
+        r._n = n;
+        var w = r.querySelector('#ub'), b = w.querySelector('.bot');
+        if(n === 0){ r.querySelector('#popg').style.opacity = 0; setFace(w, 'smile'); w.classList.remove('alert'); b.className = 'bot on typing'; w.style.setProperty('--al', '-34deg'); w.style.setProperty('--ar', '-78deg'); return; }
+        pop(r, true);
+        if(n >= 2){ var y = r.querySelector('.opt[data-k="yes"]'); if(!y.classList.contains('yes')) y.click(); }
+        if(n === 3){ w.style.setProperty('--al', '165deg'); b.classList.remove('shake'); setFace(w, 'smile'); w.classList.remove('alert'); if(fwd) sfx('ding'); }
+      } },
+
+    { name:'Three grown-ups', steps:4,
+      note:'Three is enough for this age: one at home, one at school, and one more. Hold up a finger for each. At home might be Mum, Dad, a grandparent or a carer. At school is you, Mr White, or any adult in school. The third is anyone else they trust, such as an aunt, a neighbour or a coach. Step 4: everyone thinks of their own three and tells a partner. Watch for anyone who cannot name one at home, and follow it up quietly afterwards.',
+      build:function(r){
+        var A = [['house','At home','Mum, Dad, Nana, Grandad or a carer'], ['book-open','At school','Your teacher, Mr White or a teaching assistant'], ['users-three','One more','An aunt, an uncle, a neighbour or a coach']];
+        r.innerHTML = '<div class="abs" style="left:80px;top:50px"><div class="kick">Who can you tell?</div><h2 class="h2" style="margin-top:12px">Three grown-ups you trust</h2></div>' +
+          A.map(function(a, i){ return '<div class="plate adult pp" data-s="' + (i + 1) + '" style="left:' + (80 + i * 490) + 'px;top:250px"><div class="num">' + (i + 1) + '</div><div class="big">' + ph(a[0], '#0D2340') + '</div><h3>' + a[1] + '</h3><p>' + a[2] + '</p></div>'; }).join('') +
+          '<div class="say pp" data-s="4" data-only style="left:300px;top:210px;font-size:46px;padding:28px 40px;max-width:1000px;z-index:6;text-align:center">Think of your three.<br>Tell your partner who they are.</div>';
+      },
+      step:function(r, n, fwd){ if(fwd) sfx(n === 4 ? 'pop' : 'ding'); [].forEach.call(r.querySelectorAll('.adult'), function(a){ a.style.opacity = n === 4 ? .35 : ''; }); } },
+
+    { name:'Our class rules', steps:1,
+      note:'The poster is Mr White-bot\'s rules, made by the class. Give every child one rule card from the sheet; share the five rules round the tables, and give the blank card to anyone with a rule of their own from How OK. They draw Mr White-bot doing it the right way and write the rule if they can. Put the cards round the poster header by the computers.',
+      build:function(r){
+        r.innerHTML =
+          '<div class="plate" style="left:80px;top:40px;width:900px;height:680px;padding:30px 46px">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:5px solid var(--navy);padding-bottom:16px"><div style="font-weight:700;font-size:54px;line-height:1">Mr White-bot\'s Rules</div><div style="font-weight:600;font-size:26px;color:#33476A">made by our class</div></div>' +
+            RULES.map(function(x, i){ return '<div style="margin-top:20px">' + chip(i, 'lit') + '</div>'; }).join('') +
+          '</div>' +
+          bot({ id:'cb', x:1130, y:120, s:.85, cls:'bob', leds:5 }) +
+          '<div class="plate pp" data-s="1" style="left:1010px;top:120px;width:540px;height:580px;padding:40px 44px;z-index:5">' +
+            '<div style="font-weight:700;font-size:44px;line-height:1.05">Your job</div>' +
+            '<div style="font-size:31px;line-height:1.35;margin-top:20px;font-weight:500">Draw Mr White-bot doing your rule <b>the right way</b>.</div>' +
+            '<div style="font-size:31px;line-height:1.35;margin-top:16px;font-weight:500">Write the rule underneath if you can.</div>' +
+            '<a class="act w" href="whitebot-sheet.html" target="_blank" style="position:absolute;left:44px;bottom:40px;text-decoration:none;display:inline-flex;align-items:center;gap:12px"><span style="width:34px;height:34px;display:inline-block">' + ph('printer', '#0D2340') + '</span>Rule cards</a>' +
+          '</div>';
+        [].forEach.call(r.querySelectorAll('a'), function(a){ a.addEventListener('click', function(e){ e.stopPropagation(); }); });
+      } },
+
+    { name:'Thumbs up, thumbs down', steps:QUIZ.length - 1,
+      note:'Mr White-bot tells them what he did. Thumbs up if it was right, thumbs down if not, then press Show the answer. Next moves to the next one.',
+      build:function(r){
+        r.innerHTML = '<div class="abs kick" style="left:60px;top:58px">Thumbs up or thumbs down?</div><div class="abs kick" id="qnum" style="left:1300px;top:58px;width:240px;text-align:right;color:#fff"></div>' +
+          '<div class="plate cloud" style="left:60px;top:110px;width:670px;height:530px"><div class="pic" id="qpic"></div></div>' +
+          '<div class="say lt" id="qs" style="left:800px;top:130px;width:740px;font-size:44px"></div>' +
+          '<button class="act" id="qshow" type="button" style="position:absolute;left:800px;top:560px">Show the answer</button>' +
+          '<div class="abs" id="qans" style="left:800px;top:380px;width:740px;display:none;align-items:center;gap:30px"><div id="qth" style="width:150px;height:150px;flex:none"></div><div id="qwhy" style="font-weight:700;font-size:40px;line-height:1.15;color:#fff;text-shadow:0 4px 0 var(--navy)"></div></div>';
+        r.querySelector('#qshow').addEventListener('click', function(e){ e.stopPropagation(); showQ(r); });
+      },
+      step:function(r, n){
+        stopAll(); r._q = n; var Q = QUIZ[n];
+        r.querySelector('#qnum').textContent = (n + 1) + ' of ' + QUIZ.length;
+        var p = r.querySelector('#qpic'); p.className = 'pic' + (RM ? '' : ' enter'); p.innerHTML = SCENE(Q.pic, Q.line);
+        r.querySelector('#qans').style.display = 'none'; r.querySelector('#qshow').style.display = '';
+        say(r.querySelector('#qs'), Q.q);
+      } },
+
+    { name:'How sure are you?', steps:0,
+      note:'Ask the question, and tap a screen for each hand that goes up. Anyone on the first screen: go back to the rules poster with them at the end.',
+      build:function(r){
+        var F = [['I am not sure yet', 'M70 120 Q115 104 160 120'], ['I think I know', 'M70 116 H160'], ['I know the rules', 'M70 106 Q115 146 160 106']];
+        r.innerHTML = '<div class="abs" style="left:80px;top:50px"><div class="kick">How sure are you?</div><h2 class="h2" style="margin-top:12px;max-width:1100px">Could you teach Mr White-bot the rules?</h2></div>' +
+          F.map(function(f, i){ return '<button class="face3" type="button" data-i="' + i + '" style="left:' + (180 + i * 440) + 'px;top:300px"><div class="scr"><svg viewBox="0 0 230 170" width="100%" height="100%"><circle cx="80" cy="68" r="12" fill="#4df89b"/><circle cx="150" cy="68" r="12" fill="#4df89b"/><path d="' + f[1] + '" fill="none" stroke="#4df89b" stroke-width="10" stroke-linecap="round"/></svg></div><div class="lab">' + f[0] + '</div><div class="cnt">0</div></button>'; }).join('');
+        [].forEach.call(r.querySelectorAll('.face3'), function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); var c = b.querySelector('.cnt'); c.textContent = +c.textContent + 1; sfx('pop'); }); });
+      } },
+
+    { name:'Goodbye', steps:0,
+      note:'That is the whole unit done. Put the rule cards up with the poster by the computers this week.',
+      build:function(r){
+        r.innerHTML = bot({ id:'gb', x:200, y:110, s:.95, cls:'wave', leds:5 }) +
+          '<div class="say" id="gs" style="left:650px;top:150px;max-width:860px;min-height:96px"></div>' +
+          '<div class="abs" style="left:650px;top:470px"><div class="h2">Rules installed.</div><div class="lead" style="margin-top:16px">Thank you for teaching me, Class.</div></div>';
+        later(function(){ say(r.querySelector('#gs'), 'Now I know how to use the computers. Goodbye.'); }, 500);
+      } }
+  ];
+
+  /* the pop-up arrives on Mr White-bot's monitor */
+  function pop(r, quiet){
+    var w = r.querySelector('#ub'), b = w.querySelector('.bot');
+    r.querySelector('#popg').style.opacity = 1;
+    b.classList.remove('typing'); w.style.setProperty('--al', '30deg'); w.style.setProperty('--ar', '-30deg');
+    setFace(w, 'shock'); w.classList.add('alert');
+    if(!quiet){ sfx('alarm'); move(w, 'jolt', 700); later(function(){ b.classList.add('shake'); }, 700); }
+    else b.classList.add('shake');
+  }
+
+  /* How OK: paint the current card */
+  function paintCard(r, fresh){
+    var n = r._n, C = CARDS[n], st = r._st[n];
+    r.querySelector('#cnum').textContent = 'Card ' + (n + 1) + ' of ' + CARDS.length;
+    if(fresh){
+      stopAll();
+      r.querySelector('#ct').textContent = C.t;
+      var p = r.querySelector('#pic'); p.className = 'pic' + (RM ? '' : ' enter'); p.innerHTML = SCENE(C.pic);
+      if(C.sfx) later(function(){ sfx(C.sfx); }, 400);
+    }
+    var segs = r.querySelectorAll('.seg');
+    [].forEach.call(segs, function(s, i){
+      var old = s.querySelector('.pin'); if(old) old.remove();
+      if(st.pin === i) s.insertAdjacentHTML('beforeend', '<svg class="pin" viewBox="0 0 64 70"><path d="M32 66 L14 36 A20 20 0 1 1 50 36 Z" fill="#fff" stroke="#0D2340" stroke-width="5" stroke-linejoin="round"/><circle cx="32" cy="24" r="9" fill="#FF7A2F" stroke="#0D2340" stroke-width="4"/></svg>');
+      s.classList.toggle('off', st.shown && !C.vote && (i < C.min || i > C.max));
+    });
+    var band = r.querySelector('#band');
+    if(st.shown && !C.vote){ band.style.left = (790 + C.min * 154) + 'px'; band.style.width = ((C.max - C.min + 1) * 154 - 10) + 'px'; band.style.opacity = 1; }
+    else { band.style.opacity = 0; }
+    var ctrl = r.querySelector('#ctrl');
+    if(!st.shown){
+      ctrl.innerHTML = '<button class="act" type="button" id="cshow">Show the answer</button>';
+      ctrl.querySelector('#cshow').addEventListener('click', function(e){ e.stopPropagation(); st.shown = true; sfx(C.vote ? 'pop' : 'ding'); paintCard(r, false); });
+      return;
+    }
+    if(C.vote){
+      ctrl.innerHTML = '<div style="width:760px;font-weight:700;font-size:36px;color:#fff;text-shadow:0 4px 0 var(--navy);margin:-80px 0 14px">No right answer. What do you think?</div>' +
+        '<div class="tally"><button class="tbtn" type="button" id="tok"><span style="width:44px;height:44px;display:inline-block">' + thumb(true, '#2FB86E') + '</span>OK <b>' + st.ok + '</b></button>' +
+        '<button class="tbtn" type="button" id="tno"><span style="width:44px;height:44px;display:inline-block">' + thumb(false, '#E8475A') + '</span>Not OK <b>' + st.no + '</b></button></div>';
+      ctrl.querySelector('#tok').addEventListener('click', function(e){ e.stopPropagation(); st.ok++; sfx('pop'); paintCard(r, false); });
+      ctrl.querySelector('#tno').addEventListener('click', function(e){ e.stopPropagation(); st.no++; sfx('pop'); paintCard(r, false); });
+      return;
+    }
+    if(C.ask){
+      ctrl.innerHTML = st.inst
+        ? '<div class="plate" style="position:relative;width:760px;padding:22px 30px 24px;font-weight:600;font-size:29px;line-height:1.3"><div style="font-weight:700;color:var(--org);font-size:24px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Instead</div>' + esc(C.ask) + '</div>'
+        : '<button class="act w" type="button" id="cins">What should he do instead?</button>';
+      var ci = ctrl.querySelector('#cins'); if(ci) ci.addEventListener('click', function(e){ e.stopPropagation(); st.inst = true; sfx('pop'); paintCard(r, false); });
+      return;
+    }
+    ctrl.innerHTML = C.aside ? '<div style="font-weight:600;font-size:30px;color:#fff;text-shadow:0 3px 0 var(--navy)">' + esc(C.aside) + '</div>' : '';
+  }
+
+  function showQ(r){
+    var Q = QUIZ[r._q], a = r.querySelector('#qans');
+    r.querySelector('#qth').innerHTML = thumb(Q.a, Q.a ? '#2FB86E' : '#E8475A');
+    r.querySelector('#qwhy').textContent = (Q.a ? 'Thumbs up. ' : 'Thumbs down. ') + Q.why;
+    a.style.display = 'flex'; r.querySelector('#qshow').style.display = 'none';
+    sfx(Q.a ? 'yay' : 'fail');
+    var w = r.querySelector('#qpic .wbx'); if(w && !Q.a) setFace(w, 'sad');
+  }
+
+  /* ---------------- moving through ---------------- */
+  var part = 0, step = 0, dotsEl = document.getElementById('parts'), notes = document.getElementById('notes'), nbtn = document.getElementById('nbtn'), notesOn = false;
+  PARTS.forEach(function(p, i){
+    var d = document.createElement('button'); d.className = 'part'; d.type = 'button'; d.title = p.name; d.setAttribute('aria-label', 'Go to ' + p.name);
+    d.addEventListener('click', function(e){ e.stopPropagation(); show(i, 0); }); dotsEl.appendChild(d);
+  });
+  function paintNotes(){ var p = PARTS[part]; notes.innerHTML = '<b>' + esc(p.name) + '</b>' + esc(p.note || ''); notes.classList.toggle('on', notesOn); }
+  nbtn.addEventListener('click', function(e){ e.stopPropagation(); notesOn = !notesOn; paintNotes(); stage.focus({ preventScroll:true }); });
+  function paint(r, n, fwd){
+    [].forEach.call(r.querySelectorAll('.pp'), function(el){ var s = +el.getAttribute('data-s'), only = el.hasAttribute('data-only'); el.classList.toggle('hide', !(only ? s === n : s <= n)); });
+    var p = PARTS[part]; if(p.step) p.step(r, n, fwd);
+  }
+  function navPaint(){ var p = PARTS[part]; document.getElementById('back').disabled = part === 0 && step === 0; document.getElementById('next').disabled = part === PARTS.length - 1 && step === p.steps; }
+  function show(i, at){
+    stopAll();
+    part = Math.max(0, Math.min(PARTS.length - 1, i));
+    var p = PARTS[part];
+    [].forEach.call(dotsEl.children, function(d, k){ d.classList.toggle('on', k === part); d.classList.toggle('done', k < part); });
+    paintNotes();
+    step = at === 'end' ? p.steps : 0;
+    host.innerHTML = '';
+    var r = document.createElement('div'); r.className = 'scene' + (RM ? '' : ' enter'); host.appendChild(r);
+    p.build(r);
+    [].forEach.call(r.querySelectorAll('.pp'), function(el){ el.classList.add('hide'); });
+    r.getBoundingClientRect();
+    paint(r, step, false);
+    navPaint();
+    setTimeout(function(){ stage.focus({ preventScroll:true }); }, 30);
+  }
+  function next(){
+    var p = PARTS[part];
+    if(step < p.steps){ step++; paint(host.firstChild, step, true); navPaint(); return; }
+    if(part < PARTS.length - 1) show(part + 1, 0);
+  }
+  function back(){
+    if(step > 0){ step--; paint(host.firstChild, step, false); navPaint(); return; }
+    if(part > 0) show(part - 1, 'end');
+  }
+  document.getElementById('next').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  document.getElementById('back').addEventListener('click', function(e){ e.stopPropagation(); back(); });
+  document.getElementById('home').addEventListener('click', function(e){ e.stopPropagation(); });
+  addEventListener('keydown', function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+    else if(e.key === 'n' || e.key === 'N'){ notesOn = !notesOn; paintNotes(); }
+  });
+  function fromHash(){ var m = /^#part(\d+)$/.exec(location.hash); return m ? +m[1] - 1 : 0; }
+  addEventListener('hashchange', function(){ show(fromHash(), 0); });
+  show(fromHash(), 0);
+})();
+</script>
+</body>
+</html>
