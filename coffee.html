@@ -68,6 +68,17 @@
   .pop{animation:pop .45s steps(5) both}
   @keyframes pop{0%{transform:scale(.2) rotate(-12deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0)}}
 
+  /* the café dog */
+  .dogin{transform-box:fill-box;transform-origin:50% 100%}
+  .dogin.in{animation:dogpop .5s steps(5) both}
+  .dogin.chomp{animation:chomp .22s steps(2) 8}
+  .dogin .wag{transform-box:fill-box;transform-origin:0 100%;animation:wag .3s steps(2) infinite alternate}
+  @keyframes dogpop{0%{transform:translateY(70px) scale(.4)}70%{transform:translateY(-14px) scale(1.1)}100%{transform:none}}
+  @keyframes chomp{50%{transform:translateY(5px) scale(1.05,.93)}}
+  @keyframes wag{to{transform:rotate(-18deg)}}
+  #nom{animation:nomwob .3s steps(2) infinite alternate}
+  @keyframes nomwob{to{transform:translateY(-6px)}}
+
   /* ranking */
   .tabs{display:flex;gap:12px}
   .tabbtn{font-family:var(--hd);font-size:26px;padding:12px 24px;border-radius:12px;border:4px solid var(--ink);background:var(--cream);cursor:pointer}
@@ -120,7 +131,7 @@
   .cnt b{display:block;font-family:var(--hd);font-weight:400;font-size:34px;line-height:1}
   .cnt span{font-size:15px;font-weight:700;color:var(--mu)}
 
-  @media (prefers-reduced-motion: reduce){ .scene.enter,.pop,.tear.build,.rk.wob,.scol .dots i.new,.sigico.bump{animation:none} .pp,.sigico,.sigico path,.sigico circle{transition:none} }
+  @media (prefers-reduced-motion: reduce){ .scene.enter,.pop,.tear.build,.rk.wob,.scol .dots i.new,.sigico.bump,.dogin.in,.dogin.chomp,.dogin .wag,#nom{animation:none} .pp,.sigico,.sigico path,.sigico circle{transition:none} }
 </style>
 </head>
 <body>
@@ -190,6 +201,7 @@
     ping: function(){ tone('triangle', 1318.5, 0, .25, .2); tone('triangle', 1760, .12, .5, .2); },
     fail: function(){ tone('square', 220, 0, .2, .1); tone('square', 180, .22, .35, .1); },
     sad: function(){ [392, 349.2, 311.1].forEach(function(f, i){ tone('triangle', f, i * .4, .38, .14); }); },
+    chomp: function(){ for(var i = 0; i < 5; i++){ noise(i * .13, .07, .22, 'lowpass', 1100, 300); tone('square', 160, i * .13, .05, .06); } },
     yay: function(){ [523.3, 659.3, 784, 1046.5].forEach(function(f, i){ tone('triangle', f, i * .09, .3, .14); }); }
   };
   function sfx(k){ try{ SFX[k] && SFX[k](); }catch(e){} }
@@ -224,6 +236,17 @@
     ipad:'<svg viewBox="0 0 80 80"><rect x="18" y="8" width="44" height="64" rx="7" fill="#2f3440" stroke="#1E1B18" stroke-width="3"/><rect x="23" y="14" width="34" height="48" rx="3" fill="#7fb6ff"/><rect x="28" y="22" width="22" height="8" rx="4" fill="#fff"/><rect x="32" y="36" width="20" height="8" rx="4" fill="#2E8A57"/></svg>',
     coffee:'<svg viewBox="0 0 80 80"><path d="M16 26 L64 26 L58 70 L22 70 Z" fill="#FFF9EE" stroke="#1E1B18" stroke-width="4"/><path d="M12 20 L68 20 L66 28 L14 28 Z" fill="#D9622B" stroke="#1E1B18" stroke-width="4"/><path d="M26 44 C32 36 46 36 52 44 C46 54 32 54 26 44 Z" fill="#C8402B"/><path d="M34 12 C30 6 38 4 34 0 M46 12 C42 6 50 4 46 0" stroke="#5F574D" stroke-width="3" fill="none"/></svg>'
   };
+  // a scruffy brown café dog (the one that eats the letter in race 3)
+  var DOG = '<svg viewBox="0 0 120 110" width="120" height="110" x="0" y="0">' +
+    '<path class="wag" d="M92 82 Q114 66 108 46" stroke="#B9854F" stroke-width="10" fill="none" stroke-linecap="round"/>' +
+    '<ellipse cx="62" cy="88" rx="36" ry="20" fill="#B9854F" stroke="#1E1B18" stroke-width="3"/>' +
+    '<rect x="38" y="98" width="10" height="12" rx="4" fill="#B9854F" stroke="#1E1B18" stroke-width="3"/><rect x="74" y="98" width="10" height="12" rx="4" fill="#B9854F" stroke="#1E1B18" stroke-width="3"/>' +
+    '<circle cx="50" cy="50" r="29" fill="#C99A63" stroke="#1E1B18" stroke-width="3"/>' +
+    '<ellipse cx="24" cy="54" rx="11" ry="21" fill="#7A5230" stroke="#1E1B18" stroke-width="3" transform="rotate(14 24 54)"/><ellipse cx="76" cy="54" rx="11" ry="21" fill="#7A5230" stroke="#1E1B18" stroke-width="3" transform="rotate(-14 76 54)"/>' +
+    '<circle cx="39" cy="42" r="8" fill="#fff" stroke="#1E1B18" stroke-width="2"/><circle cx="61" cy="42" r="8" fill="#fff" stroke="#1E1B18" stroke-width="2"/><circle cx="41" cy="43" r="3.5" fill="#1E1B18"/><circle cx="63" cy="43" r="3.5" fill="#1E1B18"/>' +
+    '<ellipse cx="50" cy="62" rx="17" ry="12" fill="#EBCFA6" stroke="#1E1B18" stroke-width="3"/><ellipse cx="50" cy="55" rx="6.5" ry="4.5" fill="#1E1B18"/>' +
+    '<path d="M38 68 Q50 80 62 68" fill="#8a2f2f" stroke="#1E1B18" stroke-width="3"/><path d="M46 72 Q50 84 56 72 Z" fill="#E8758A" stroke="#1E1B18" stroke-width="2"/>' +
+    '<g transform="rotate(-14 66 70)"><rect x="56" y="62" width="26" height="17" fill="#FFF9EE" stroke="#1E1B18" stroke-width="2.5"/><path d="M56 63 L69 72 L82 63" fill="none" stroke="#1E1B18" stroke-width="2.5"/></g></svg>';
   function ic(k, s){ return '<span style="display:inline-block;width:' + s + 'px;height:' + s + 'px">' + ICON[k] + '</span>'; }
 
   // the Northumberland coast, sea to the east: Holy Island at the top, Bamburgh at the bottom
@@ -281,9 +304,9 @@
       arrive:ORDER, note:'Riders could only cross the causeway at low tide. The order arrives exactly right, but by the time the coffee has come back on the horse it is stone cold. Accurate, but slow.' },
     { k:'letter', name:'Letter in the post', era:'Since 1840 with a stamp', lead:'The rider got every word right, but the coffee came back cold.', ask:'Is the post any quicker? And will it reach the right person?',
       route:[HI, [1030,215], [880,300], SORT, [880,560], [960,610], BAM], sorting:true,
-      time:'About 1 day', got:'Nothing. The café dog ate it.', face:'blank', snd:'slot', end:'woof',
+      time:'About 1 day', dog:true, got:'Nothing. The café dog ate it.', face:'blank', snd:'slot', end:'woof',
       why:'It reached the café, but it never reached the person making the coffee.',
-      arrive:ORDER, note:'First class post usually arrives the next day. It goes off to a sorting office first, then back out. The letter reaches the café doormat and the dog eats it: the message arrived, but not to the right person. That is the idea of an address, which comes up later.' },
+      arrive:ORDER, note:'First class post usually arrives the next day. It goes off to a sorting office first, then back out. The letter reaches the café doormat and a dog pops up and eats it (it chomps for a couple of seconds, let them enjoy it): the message arrived, but not to the right person. That is the idea of an address, which comes up later.' },
     { k:'pigeon', name:'Carrier pigeon', era:'Used for over 2,000 years', lead:'The letter arrived, but a dog got to it first. We will find out why later.', ask:'Can a pigeon fly the order straight over the sea?',
       route:[HI, [1250,420], BAM],
       time:'About 10 minutes', got:'The smallest espresso in the world.', face:'stare', snd:'coo', end:'coo',
@@ -309,7 +332,7 @@
         var extra = '<path id="trail" d="M0 0" fill="none" stroke="#D9622B" stroke-width="8" stroke-linecap="round" stroke-dasharray="' + (m.beam ? '2 18' : '18 12') + '"/>';
         if(m.sorting) extra += '<g transform="translate(' + (SORT[0] - 70) + ' ' + (SORT[1] - 34) + ')"><rect width="140" height="68" rx="8" fill="#FFF9EE" stroke="#1E1B18" stroke-width="3"/><text x="70" y="30" text-anchor="middle" font-family="Archivo Black" font-size="17">SORTING</text><text x="70" y="52" text-anchor="middle" font-family="Archivo Black" font-size="17">OFFICE</text></g>';
         if(m.stops) extra += m.stops.map(function(p, n){ return '<g class="bc" data-n="' + n + '" transform="translate(' + (p[0] - 30) + ' ' + (p[1] - 60) + ')" opacity=".35"><foreignObject width="60" height="60"><div xmlns="http://www.w3.org/1999/xhtml" style="width:60px;height:60px">' + ICON.beacon + '</div></foreignObject></g>'; }).join('');
-        r.innerHTML = mapSVG(extra + startIcon) +
+        r.innerHTML = mapSVG(extra + startIcon + (m.dog ? '<g id="dog" style="display:none" transform="translate(1000 548)"><g class="dogin">' + DOG + '</g><g id="nom" style="display:none"><text x="60" y="-6" text-anchor="middle" font-family="Archivo Black" font-size="30" fill="#C8402B" stroke="#FFF9EE" stroke-width="6" paint-order="stroke">NOM NOM</text></g></g>' : '')) +
           '<div class="abs" style="left:60px;top:40px;width:760px"><div class="kick">Race ' + (i + 1) + ' of 6 · ' + esc(m.era) + '</div>' +
             '<h2 class="h2" style="margin-top:8px;font-size:52px;white-space:nowrap">' + ic(m.k, 64) + ' ' + esc(m.name) + '</h2></div>' +
           '<div class="abs card" style="left:60px;top:200px;width:560px;padding:22px 26px">' +
@@ -329,6 +352,10 @@
       step:function(r, n, fwd){
         var trail = r.querySelector('#trail'), mover = r.querySelector('#mover'), watch = r.querySelector('#watch'), wt = r.querySelector('#wt'), arr = r.querySelector('#arrive');
         var bcs = r.querySelectorAll('.bc');
+        var dog = r.querySelector('#dog'), dg = r.querySelector('.dogin'), nom = r.querySelector('#nom');
+        function restart(el, cls){ el.classList.remove('in'); el.classList.remove('chomp'); void el.getBoundingClientRect(); el.classList.add(cls); }
+        function dogOff(){ if(!dog) return; dog.style.display = 'none'; nom.style.display = 'none'; mover.style.display = ''; }
+        function dogDone(){ if(!dog) return; dog.style.display = 'block'; nom.style.display = 'block'; mover.style.display = 'none'; dg.classList.remove('in'); dg.classList.remove('chomp'); }
         function draw(t){
           var pts = m.route;
           if(m.string){
@@ -340,18 +367,22 @@
           mover.setAttribute('transform', 'translate(' + at[0].toFixed(0) + ' ' + at[1].toFixed(0) + ')');
           [].forEach.call(bcs, function(b, k){ b.setAttribute('opacity', t > (k + 1) / (bcs.length + 1) ? 1 : .35); });
         }
-        if(n === 0){ watch.style.display = 'none'; arr.style.display = 'none'; draw(0); return; }
+        if(n === 0){ watch.style.display = 'none'; arr.style.display = 'none'; dogOff(); draw(0); return; }
         watch.style.display = n === 1 ? 'block' : 'none';
         if(n === 1 && fwd){
-          arr.style.display = 'none';
+          arr.style.display = 'none'; dogOff();
           sfx(m.snd);
           var dur = m.beam ? 1 : 4.5;
           play(dur, function(t){
             draw(t);
             wt.textContent = t >= 1 ? m.time : (m.beam ? '0.' + Math.floor(t * 9) + ' s' : ['Lighting…','Travelling…','Still going…','Nearly…'][Math.min(3, Math.floor(t * 4))]);
             if(Math.floor(t * 12 * dur) % 3 === 0) sfx('tick');
-          }, function(){ arr.style.display = 'block'; sfx(m.end); });
-        } else if(n >= 1){ draw(1); wt.textContent = m.time; arr.style.display = 'block'; }
+          }, function(){
+            arr.style.display = 'block'; sfx(m.end);
+            if(dog){ dog.style.display = 'block'; nom.style.display = 'none'; restart(dg, 'in');
+              later(function(){ sfx('chomp'); mover.style.display = 'none'; nom.style.display = 'block'; restart(dg, 'chomp'); }, 700); }
+          });
+        } else if(n >= 1){ draw(1); wt.textContent = m.time; arr.style.display = 'block'; dogDone(); }
       } };
   }
 
