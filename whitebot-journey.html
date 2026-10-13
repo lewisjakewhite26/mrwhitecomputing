@@ -314,6 +314,24 @@
   #rain{pointer-events:none}
   .kb.k4 .key{min-width:88px;height:80px;font-size:38px}
   .kb.k4 .key.space{min-width:560px}
+  #flash.f3{transition:opacity 1.3s ease-in}
+  .dcard{position:relative;display:flex;align-items:center;gap:10px;background:var(--cloud);border:4px solid var(--navy);border-radius:18px;padding:8px 14px;font-family:var(--f);font-weight:600;font-size:26px;line-height:1.1;color:var(--navy);box-shadow:0 5px 0 var(--navy);user-select:none;-webkit-user-select:none;touch-action:none;cursor:grab;min-height:76px}
+  .dcard svg{width:46px;height:46px;flex:none}
+  .dcard.drag{cursor:grabbing;box-shadow:0 16px 26px rgba(0,0,0,.45)}
+  .dcard.big{font-size:36px;justify-content:center;min-height:96px}
+  .dcard.placed{cursor:default;box-shadow:none;background:#E3FFEF;font-size:22px;padding:4px 12px;min-height:0;border-width:3px;border-radius:14px}
+  .dcard.placed svg{width:30px;height:30px}
+  .bin,.dz{border:5px dashed rgba(77,248,155,.75);border-radius:26px;background:rgba(0,0,0,.32);padding:12px 16px}
+  .bin h4{margin:0 0 8px;font-weight:700;font-size:36px;color:#fff;text-shadow:0 0 14px rgba(77,248,155,.6)}
+  .binlist{display:flex;flex-wrap:wrap;gap:8px}
+  .tray{position:absolute;left:0;width:1260px;display:grid;gap:12px}
+  .tray.small .dcard{font-size:21px;padding:6px 10px;gap:8px}
+  .tray.small .dcard svg{width:38px;height:38px}
+  .dz{height:200px}
+  .dz .kk{display:inline-block;background:#fff;border:4px solid var(--navy);border-radius:14px;box-shadow:0 6px 0 var(--navy);font-weight:700;font-size:38px;color:var(--navy);padding:6px 22px;margin-bottom:10px}
+  #labs{pointer-events:none}
+  .tray.lg .dcard{font-size:30px;min-height:104px;padding:10px 16px}
+  .tray.lg .dcard svg{width:56px;height:56px}
 
   .part-hit.shk{animation:nope .45s}
   .part-hit.okp{filter:drop-shadow(0 0 14px rgba(47,184,110,.95))}
@@ -412,11 +430,11 @@ var SFX = {
   boot: function(){ tone('sawtooth', 90, 0, .9, .1, 520); tone('sine', 523.3, .9, .12, .15); tone('sine', 784, 1.02, .2, .15); },
   hum: function(){ tone('sawtooth', 55, 0, 3.2, .05, 140); },
   zap: function(){ noise(0, .09, .14, 'highpass', 1200, 4000); tone('square', 180 + rnd() * 600, 0, .05, .04); },
-  sob: function(){ tone('sine', 640, 0, .5, .12, 330); tone('sine', 600, .7, .5, .12, 300); tone('sine', 560, 1.4, .6, .12, 260); },
-  hiss: function(){ noise(0, 2.2, .1, 'highpass', 2500, 6000); },
-  down: function(){ tone('sawtooth', 700, 0, 1.4, .12, 38); tone('square', 300, .1, 1.1, .05, 40); },
-  spark: function(){ noise(0, .25, .3, 'highpass', 2000, 9000); tone('square', 1500, 0, .12, .1, 200); },
-  whoosh: function(){ noise(0, 4.5, .22, 'bandpass', 200, 3200, 2); tone('sawtooth', 70, 0, 4.5, .08, 600); },
+  sob: function(){ tone('sine', 520, 0, .8, .06, 300); tone('sine', 480, 1.6, .8, .06, 280); },
+  hiss: function(){ noise(0, 2.5, .04, 'highpass', 2500, 6000); },
+  down: function(){ tone('sawtooth', 500, 0, 2.2, .06, 40); },
+  spark: function(){ noise(0, .25, .12, 'highpass', 2000, 9000); },
+  whoosh: function(){ noise(0, 8, .1, 'bandpass', 200, 2200, 2); tone('sawtooth', 70, 0, 8, .04, 400); },
   boom: function(){ tone('sine', 140, 0, .5, .4, 40); noise(0, .4, .2, 'lowpass', 2000, 200); },
   chip: function(){ tone('triangle', 880, 0, .12, .15); tone('triangle', 1320, .1, .15, .15); tone('triangle', 1760, .2, .3, .12); }
 };
@@ -551,12 +569,12 @@ function mkClones(){
   }
 }
 function gtick(){
-  var L = GL; if(!L) return;
-  deckwrap.style.transform = 'translate(' + (rnd() < .5 ? (rnd() * 2 - 1) * 9 * L : 0) + 'px,' + ((rnd() * 2 - 1) * 2 * L) + 'px)' + (L >= 2 && rnd() < .3 ? ' skewX(' + ((rnd() * 2 - 1) * 5) + 'deg)' : '');
-  deckwrap.style.filter = (L >= 2 && rnd() < .16 * L) ? 'invert(1) hue-rotate(' + (rnd() * 360 | 0) + 'deg)' : (L >= 2 && rnd() < .18 ? 'hue-rotate(' + (rnd() * 360 | 0) + 'deg) saturate(3)' : 'none');
+  var L = GL * .75; if(!GL) return;
+  deckwrap.style.transform = 'translate(' + (rnd() < .5 ? (rnd() * 2 - 1) * 9 * L : 0) + 'px,' + ((rnd() * 2 - 1) * 2 * L) + 'px)' + (L >= 2 && rnd() < .3 ? ' skewX(' + ((rnd() * 2 - 1) * 2) + 'deg)' : '');
+  deckwrap.style.filter = 'none';
   clones.forEach(function(c, i){
     if(i < 2){
-      if(rnd() < .25 + .2 * L){ c.style.opacity = .8; c.style.mixBlendMode = 'multiply'; c.style.filter = 'url(#' + (i ? 'fC' : 'fR') + ')'; c.style.transform = 'translate(' + ((i ? 1 : -1) * (6 + rnd() * 16 * L)) + 'px,' + ((rnd() * 2 - 1) * 5) + 'px)'; }
+      if(rnd() < .25 + .2 * L){ c.style.opacity = .3; c.style.mixBlendMode = 'multiply'; c.style.filter = 'url(#' + (i ? 'fC' : 'fR') + ')'; c.style.transform = 'translate(' + ((i ? 1 : -1) * (6 + rnd() * 16 * L)) + 'px,' + ((rnd() * 2 - 1) * 5) + 'px)'; }
       else c.style.opacity = 0;
     } else {
       if(rnd() < .38 * L){ var t = rnd() * 92, h = 3 + rnd() * 22; c.style.clipPath = 'inset(' + t + '% 0 ' + Math.max(0, 100 - t - h) + '% 0)'; c.style.opacity = 1; c.style.transform = 'translateX(' + ((rnd() * 2 - 1) * (60 + 90 * L)) + 'px)'; }
@@ -569,14 +587,13 @@ function gtick(){
     for(var p = 0; p < d.length; p += 4){ var v = rnd() < .5 ? 0 : 200 + rnd() * 55; d[p] = v * .2; d[p + 1] = v; d[p + 2] = v * .4; d[p + 3] = 255; }
     nctx.putImageData(nimg, 0, 0);
   }
-  if(rnd() < .35) sfx('zap');
-  if(L >= 3 && rnd() < .12) blipFlash(.3, 60);
+  if(rnd() < .12) sfx('zap');
 }
 function glevel(n){
   GL = n;
   if(RM) return;
   if(n && !gtimer) gtimer = setInterval(gtick, 83);
-  noiseC.style.opacity = n >= 3 ? .38 : n === 2 ? .16 : 0;
+  noiseC.style.opacity = n >= 3 ? .22 : n === 2 ? .1 : 0;
   if(!n){
     clearInterval(gtimer); gtimer = null; shake.style.transform = 'none'; deckwrap.style.transform = 'none'; deckwrap.style.filter = 'none';
     clones.forEach(function(c){ c.style.opacity = 0; });
@@ -636,55 +653,53 @@ function ramp(to, ms){ var from = tSpeed, t0 = Date.now(); (function s(){ var k 
 /* ---------------- the cinematic ---------------- */
 var running = null; // 'in' or 'home'
 function flashTo(then){
-  flash.className = 'f1'; flash.style.opacity = 1; sfx('boom');
-  later(function(){ then(); flash.className = 'f2'; flash.style.opacity = 0; }, 320);
+  flash.className = 'f3'; flash.style.opacity = 1;
+  later(function(){ then(); flash.className = 'f2'; flash.style.opacity = 0; }, 1300);
 }
 function runCine(){
   running = 'in'; stopAll();
-  deckwrap.style.transition = 'none';
+  deckwrap.style.transition = 'none'; rain.style.transition = 'opacity 3s ease';
   $('dbtn').style.display = 'none'; $('dkprev').disabled = true; $('dknext').disabled = true;
   if(!RM) mkClones();
-  var T = 0;
   function at(ms, fn){ later(fn, ms); }
-  bsayAt("Brilliant. Hold on tight. I'm opening the gateway.", { cls: 'dsay', l: 700, t: 110, w: 800 });
+  var DL = { cls: 'dsay', l: 700, t: 110, w: 800 }, CL = { cls: 'csay', l: 1000, t: 170, w: 540 };
+  bsayAt("Brilliant. Hold on tight. I'm opening the gateway.", DL);
   sfx('hum');
-  at(2400, function(){ glevel(1); sfx('zap'); wbot.classList.remove('bob'); });
-  at(3700, function(){ glevel(2); wb.classList.add('glitchy'); bsayAt("Whoa. What's happening to the screen?", { cls: 'dsay', l: 700, t: 110, w: 800 }); });
-  at(5200, function(){ glevel(3); scan.classList.add('on'); blipFlash(.5, 100); });
-  at(6900, function(){ rainOn(); });
-  at(8400, function(){
-    glevel(0); noiseC.style.opacity = .1; deckwrap.style.display = 'none'; gl.innerHTML = ''; wb.classList.remove('glitchy');
-    botTo(630, 150, 1);
+  at(5500, function(){ glevel(1); wbot.classList.remove('bob'); });
+  at(9500, function(){ glevel(2); wb.classList.add('glitchy'); bsayAt("Whoa. What's happening to the screen?", DL); });
+  at(14500, function(){ glevel(3); scan.classList.add('on'); });
+  at(18500, function(){ rainOn(); });
+  at(23500, function(){ glevel(0); noiseC.style.opacity = 0; deckwrap.style.display = 'none'; gl.innerHTML = ''; wb.classList.remove('glitchy'); botTo(630, 150, 1); bhide(); });
+  at(27500, function(){
+    face('shock'); wb.classList.add('alert');
+    bsayAt("Oh. Something is not right. I can't find my files.", CL);
   });
-  at(9300, function(){
-    noiseC.style.opacity = 0; face('shock'); wbot.classList.add('shake'); wb.classList.add('alert'); sfx('alarm');
-    bsayAt("Wait. Where are my files? Where is my memory?", { cls: 'csay', l: 1000, t: 170, w: 540 });
+  at(34000, function(){ bsayAt("Where did my memory go?", CL); });
+  at(39500, function(){
+    face('sad'); wb.classList.remove('alert'); wb.classList.add('cry'); sfx('sob');
+    bsayAt("I can't remember anything. Not one thing.", CL);
   });
-  at(13600, function(){
-    face('sad'); wbot.classList.remove('shake'); wb.classList.remove('alert'); wb.classList.add('cry'); sfx('sob');
-    bsayAt("I can't remember anything. Not one thing.", { cls: 'csay', l: 1000, t: 170, w: 540 });
-  });
-  at(17600, function(){
+  at(47000, function(){
     wb.classList.add('steam', 'hot'); sfx('hiss');
-    bsayAt("My head is so hot. Everything I know is floating away.", { cls: 'csay', l: 1000, t: 170, w: 540 });
+    bsayAt("I feel very hot. All my knowledge is floating away.", CL);
     var icons = ['television', 'keyboard', 'mouse-simple', 'cursor-click', 'laptop', 'backspace', 'shield-check', 'lightbulb', 'desktop-tower', 'lock-key'];
-    for(var k = 0; k < 12; k++) (function(k){ at(17800 + k * 380, function(){ drift(760 + rnd() * 90, 250, icons[k % icons.length]); }); })(k);
-    for(var l = 4; l >= 0; l--) (function(l){ at(18400 + (4 - l) * 800, function(){ leds(l); }); })(l);
+    for(var k = 0; k < 8; k++) (function(k){ at(47500 + k * 900, function(){ drift(760 + rnd() * 90, 250, icons[k % icons.length]); }); })(k);
+    for(var l = 4; l >= 0; l--) (function(l){ at(49000 + (4 - l) * 1500, function(){ leds(l); }); })(l);
   });
-  at(22300, function(){ bsayAt("Please help me.", { cls: 'csay', l: 1000, t: 170, w: 540 }); });
-  at(23600, function(){
+  at(56500, function(){ bsayAt("Please help me, Year 2. I know you can.", CL); });
+  at(62500, function(){
     wb.classList.add('crtoff'); sfx('down'); bhide();
-    at(250, function(){ sparks(800, 330, 22); blipFlash(.55, 120); });
-    at(700, function(){ sparks(790, 300, 14); });
-    at(950, function(){ wb.classList.remove('cry', 'steam', 'hot'); wb.classList.add('crtdead', 'slump'); wbot.classList.remove('on'); leds(0); });
+    at(500, function(){ sparks(800, 330, 9); });
+    at(1700, function(){ wb.classList.remove('cry', 'steam', 'hot'); wb.classList.add('crtdead', 'slump'); wbot.classList.remove('on'); leds(0); });
   });
-  at(26000, function(){ cap.textContent = 'Entering the digital world'; cap.classList.add('on'); tunOn(135); ramp(3, 3200); sfx('whoosh'); scan.classList.remove('on');
-    setTimeout(function(){ if(running === 'in') rainOff(); }, 700);
+  at(67500, function(){ bsayAt("Don't worry. Mr White-bot is only switched off. Let's go and find his memory.", { cls: 'csay', l: 400, t: 90, w: 800, tail: false }); });
+  at(76000, function(){ bhide(); cap.textContent = 'Entering the digital world'; cap.classList.add('on'); tunOn(135); ramp(2, 5000); sfx('whoosh'); scan.classList.remove('on');
+    setTimeout(function(){ if(running === 'in') rainOff(); }, 900);
     botTo(800 - 170 * .55, 450 - 375 * .55, .55);
     wbot.style.transformOrigin = '50% 50%';
-    if(wbot.animate) wbot.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(380deg)' }, { transform: 'rotate(740deg)' }], { duration: 5200, easing: 'ease-in-out', iterations: 1 });
+    if(wbot.animate) wbot.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(200deg)' }, { transform: 'rotate(380deg)' }], { duration: 8000, easing: 'ease-in-out', iterations: 1 });
   });
-  at(30600, function(){ flashTo(function(){ enterWorld(); }); });
+  at(84500, function(){ flashTo(function(){ enterWorld(); }); });
 }
 function enterWorld(){
   running = null; stopAll();
@@ -789,7 +804,7 @@ function award(z){
 function solve(z){
   if(busy) return; busy = true; sfx('yay');
   var sc = host.querySelector('.scene'), tg = $('tg'); if(tg) tg.style.display = 'none';
-  var st = document.createElement('div'); st.className = 'stamp go'; st.textContent = 'CHIP FOUND'; st.style.left = '1090px'; st.style.top = '22px'; st.style.pointerEvents = 'none'; sc.appendChild(st);
+  var st = document.createElement('div'); st.className = 'stamp go'; st.textContent = 'CHIP FOUND'; st.style.left = '1040px'; st.style.top = '22px'; st.style.pointerEvents = 'none'; sc.appendChild(st);
   later(function(){ award(z); }, 700);
 }
 function frame(z, name, inner, tag){
@@ -806,98 +821,184 @@ function sArrive(){
     '<div class="plate" style="left:620px;top:350px;width:920px;padding:26px 34px"><div class="tag">Mission</div><p style="margin:14px 0 0;font-weight:600;font-size:38px;line-height:1.25;color:#1E2330">Mr White-bot has lost his memory. Find the 6 memory chips hidden in this world to switch him back on.</p></div></div>';
   bsayAt("He has run out of power. Only Year 2 can bring him back.", { cls: 'csay', l: 620, t: 660, w: 920, tail: false });
 }
-function sZ1(){
-  var items = [['tree', 'Tree', 0, 'A tree is a living thing. People did not make it.'], ['television', 'Television', 1], ['umbrella', 'Umbrella', 1], ['dog', 'Dog', 0, 'A dog is a living thing. People did not make it.'], ['laptop', 'Laptop', 1], ['cloud', 'Cloud', 0, 'The weather makes clouds, not people.'], ['pencil-simple', 'Pencil', 1], ['flower', 'Flower', 0, 'A flower is a living thing.']];
-  var h = '<div style="display:grid;grid-template-columns:repeat(4,295px);gap:26px">';
-  items.forEach(function(it, i){ h += '<button class="pcard" type="button" data-i="' + i + '" style="width:295px;height:240px">' + ph(it[0]) + '<span>' + it[1] + '</span><span class="mk">' + ph('check', '#fff') + '</span></button>'; });
-  frame(1, 'Tech Town', h + '</div>', '<span class="tag cnt2" id="tg">Found 0 of 4</span>');
-  botTo(30, 200, .72);
-  ask("Chip 1 is in Tech Town. People make technology on purpose, to help us. It does not have to plug in. Tap the 4 pieces of technology.", true);
-  var found = 0;
-  [].forEach.call(host.querySelectorAll('.pcard'), function(c){
-    c.addEventListener('click', function(){
-      var it = items[+c.getAttribute('data-i')];
-      if(busy || c.classList.contains('ok')) return;
-      if(it[2]){ c.classList.add('ok'); found++; sfx('ding'); setTag('Found ' + found + ' of 4'); if(found === 4) solve(1); }
-      else { c.classList.add('bad'); sfx('fail'); setTimeout(function(){ c.classList.remove('bad'); }, 480); ask("Not that one. " + it[3] + " Keep looking for technology.", true); }
+/* ---------- drag and drop engine (pointer events, so mouse, touch and the board all work) ---------- */
+function enableDrag(el, getTargets, onDrop){
+  el.style.touchAction = 'none';
+  el.addEventListener('pointerdown', function(e){
+    if(busy || el.classList.contains('placed')) return;
+    e.preventDefault(); try{ el.setPointerCapture(e.pointerId); }catch(x){}
+    var sx = e.clientX, sy = e.clientY;
+    el.style.transition = 'none'; el.style.zIndex = 30; el.classList.add('drag'); sfx('pop');
+    function mv(ev){ el.style.transform = 'translate(' + ((ev.clientX - sx) / SC) + 'px,' + ((ev.clientY - sy) / SC) + 'px) scale(1.06)'; }
+    function up(ev){
+      el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+      el.classList.remove('drag');
+      var hit = null;
+      getTargets().forEach(function(t){ var r = t.getBoundingClientRect(); if(ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom) hit = t; });
+      if(hit && onDrop(el, hit)){ el.style.zIndex = ''; return; }
+      if(hit) sfx('fail');
+      el.style.transition = 'transform .35s cubic-bezier(.3,1.4,.5,1)'; el.style.transform = '';
+      setTimeout(function(){ el.style.zIndex = ''; }, 380);
+    }
+    el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+  });
+}
+function sortHtml(cfg){
+  var bw = (1260 - 30 * (cfg.bins.length - 1)) / cfg.bins.length;
+  var h = '<div style="display:flex;gap:30px">';
+  cfg.bins.forEach(function(n, i){ h += '<div class="bin" data-b="' + i + '" style="width:' + bw + 'px;height:' + cfg.binH + 'px"><h4>' + esc(n) + '</h4><div class="binlist"></div></div>'; });
+  h += '</div><div class="tray' + (cfg.small ? ' small' : '') + (cfg.lg ? ' lg' : '') + '" style="top:' + (cfg.binH + 22) + 'px;grid-template-columns:repeat(' + cfg.cols + ',1fr)">';
+  cfg.items.forEach(function(it, i){ h += '<div class="dcard" data-i="' + i + '">' + ph(it[0]) + '<span>' + esc(it[1]) + '</span></div>'; });
+  return h + '</div>';
+}
+function wireSort(cfg, z){
+  var bins = [].slice.call(host.querySelectorAll('.bin')), total = cfg.items.length, done = 0;
+  setTag('Sorted 0 of ' + total);
+  [].forEach.call(host.querySelectorAll('.dcard'), function(c){
+    enableDrag(c, function(){ return bins; }, function(el, bin){
+      var it = cfg.items[+el.getAttribute('data-i')];
+      if(it[2] !== +bin.getAttribute('data-b')){ ask("Not that box. " + it[3]); return false; }
+      bin.querySelector('.binlist').appendChild(el); el.style.transform = ''; el.style.transition = ''; el.classList.add('placed'); sfx('ding');
+      done++; setTag('Sorted ' + done + ' of ' + total);
+      if(done === total) solve(z); else if(done === Math.round(total / 2)) ask("Good sorting. Keep going.");
+      return true;
     });
   });
 }
+
+function sZ1(){
+  var cfg = { bins: ['Technology', 'Not technology'], binH: 250, cols: 5, lg: true, items: [
+    ['tree', 'Tree', 1, 'A tree is a living thing. People did not make it.'],
+    ['umbrella', 'Umbrella', 0, 'People made umbrellas to keep us dry. It does not plug in, but it is technology.'],
+    ['printer', 'Printer', 0, 'People made printers to help us. That is technology.'],
+    ['dog', 'Dog', 1, 'A dog is a living thing. People did not make it.'],
+    ['pencil-simple', 'Pencil', 0, 'People made pencils to help us write. It does not plug in, but it is technology.'],
+    ['cloud', 'Cloud', 1, 'The weather makes clouds, not people.'],
+    ['laptop', 'Laptop', 0, 'People made laptops to help us. That is technology.'],
+    ['book-open', 'Book', 0, 'People made books to help us learn. A book is technology too.'],
+    ['flower', 'Flower', 1, 'A flower is a living thing. People did not make it.'],
+    ['television', 'Television', 0, 'People made televisions to help us. That is technology.']
+  ] };
+  frame(1, 'Tech Town', sortHtml(cfg), '<span class="tag cnt2" id="tg">Sorted 0 of 10</span>');
+  botTo(30, 200, .72);
+  ask("Chip 1 is in Tech Town. People make technology on purpose, to help us. It does not have to plug in. Drag each card into the right box.", true);
+  wireSort(cfg, 1);
+}
+function sZ3(){
+  var cfg = { bins: ['Click', 'Double-click', 'Click and drag'], binH: 270, cols: 3, lg: true, items: [
+    ['cursor', 'Press the Start button', 0, 'Pressing a button needs just one click.'],
+    ['cursor-click', 'Open a folder', 1, 'Opening something needs two quick clicks, a double-click.'],
+    ['hand-grabbing', 'Move a picture', 2, 'Moving something needs you to hold the button down and drag.'],
+    ['cursor-click', 'Open a game from its icon', 1, 'An icon opens with a double-click.'],
+    ['cursor', 'Pick a name from a list', 0, 'Choosing from a list needs one click.'],
+    ['hand-grabbing', 'Put a file in the bin', 2, 'You drag a file to the bin, so click and drag.']
+  ] };
+  frame(3, 'Mouse Maze', sortHtml(cfg), '<span class="tag cnt2" id="tg">Sorted 0 of 6</span>');
+  botTo(30, 200, .72);
+  ask("Chip 3 is in Mouse Maze. Which mouse move does each job need? Drag each job to the right box.");
+  wireSort(cfg, 3);
+}
+function sZ6(){
+  var cfg = { bins: ['Good rule', 'Not a good rule'], binH: 250, cols: 5, small: true, items: [
+    ['cookie', 'Eat crisps over the keyboard', 1, 'Crumbs and greasy fingers can damage keyboards.'],
+    ['shield-check', 'Keep drinks away from computers', 0, 'Spills can break a computer, so drinks stay away.'],
+    ['eye-slash', 'Keep a worry secret', 1, 'A worry should never be a secret. Tell a grown-up.'],
+    ['users-three', 'Take turns', 0, 'Taking turns is fair and safe.'],
+    ['warning', 'Swing the iPad by its cover', 1, 'It could fly off and break, or hurt someone.'],
+    ['lock-key', 'Ask a grown-up before opening something new', 0, 'Asking first keeps you safe from things that are not for you.'],
+    ['lightning', 'Bash the keys as hard as you can', 1, 'Hard bashing can break the keys. Press gently.'],
+    ['hand-waving', 'Tell a grown-up if something worries you', 0, 'A grown-up can help, so always tell one.'],
+    ['cursor-click', 'Open anything you like', 1, 'Some things are not safe. Ask a grown-up first.'],
+    ['heart', 'Carry a laptop with two hands', 0, 'Two hands keeps it safe from drops.']
+  ] };
+  frame(6, 'Rule Castle', sortHtml(cfg), '<span class="tag cnt2" id="tg">Sorted 0 of 10</span>');
+  botTo(30, 200, .72);
+  ask("Chip 6 is in Rule Castle. Some of these rules keep us safe and some do not. Drag each one into the right box.");
+  wireSort(cfg, 6);
+}
+
 function sZ2(){
-  var key = '<rect x="0" y="0" width="0" height="0"/>', ks = '';
+  var ks = '';
   for(var r = 0; r < 3; r++) for(var c = 0; c < 13; c++) ks += '<rect x="' + (186 + c * 38) + '" y="' + (456 + r * 18) + '" width="30" height="12" rx="3" fill="#C9D3E4"/>';
-  var svg = '<svg viewBox="0 0 1260 520" width="1260" height="520" id="pc">' +
+  var svg = '<svg viewBox="150 0 920 520" width="920" height="520" id="pc" style="position:absolute;left:0;top:0">' +
     '<g class="part-hit" data-p="screen"><rect x="190" y="20" width="600" height="340" rx="30" fill="#2F3440" stroke="#0D2340" stroke-width="8"/><rect x="214" y="44" width="552" height="292" rx="14" fill="#8EC5FF"/><rect x="244" y="74" width="200" height="120" rx="10" fill="#fff" opacity=".85"/><circle cx="640" cy="130" r="46" fill="#FFC93C"/><rect x="244" y="220" width="400" height="16" rx="8" fill="#fff" opacity=".7"/><rect x="450" y="360" width="80" height="44" fill="#9AA2B4" stroke="#0D2340" stroke-width="6"/><rect x="380" y="402" width="220" height="24" rx="12" fill="#9AA2B4" stroke="#0D2340" stroke-width="6"/></g>' +
     '<g class="part-hit" data-p="base"><rect x="850" y="40" width="190" height="390" rx="22" fill="#DDE2EC" stroke="#0D2340" stroke-width="8"/><rect x="882" y="82" width="126" height="14" rx="7" fill="#8B93A6"/><rect x="882" y="112" width="126" height="14" rx="7" fill="#8B93A6"/><circle cx="945" cy="380" r="22" fill="#FFC93C" stroke="#0D2340" stroke-width="6"/></g>' +
     '<g class="part-hit" data-p="keyboard"><rect x="170" y="440" width="520" height="72" rx="14" fill="#EEF5FF" stroke="#0D2340" stroke-width="8"/>' + ks + '</g>' +
     '<g class="part-hit" data-p="mouse"><path d="M780 450 C 780 440, 760 440, 760 446" fill="none" stroke="#0D2340" stroke-width="6"/><ellipse cx="780" cy="482" rx="32" ry="38" fill="#fff" stroke="#0D2340" stroke-width="8"/><line x1="780" y1="446" x2="780" y2="478" stroke="#0D2340" stroke-width="5"/></g>' +
     '<g id="labs"></g></svg>';
-  frame(2, 'Computer Cove', svg, '<span class="tag cnt2" id="tg">Found 0 of 4</span>');
+  var names = { screen: 'Screen', keyboard: 'Keyboard', mouse: 'Mouse', base: 'Base unit' };
+  var tray = '<div id="tray2" style="position:absolute;left:960px;top:30px;width:300px;display:flex;flex-direction:column;gap:22px">';
+  ['mouse', 'base', 'screen', 'keyboard'].forEach(function(p){ tray += '<div class="dcard big" data-p="' + p + '"><span>' + names[p] + '</span></div>'; });
+  tray += '</div>';
+  frame(2, 'Computer Cove', svg + tray, '<span class="tag cnt2" id="tg">Labelled 0 of 4</span>');
   botTo(30, 200, .72);
-  var order = ['mouse', 'screen', 'base', 'keyboard'], names = { screen: 'screen', keyboard: 'keyboard', mouse: 'mouse', base: 'base unit' }, step = 0;
   var labPos = { screen: [490, 200, 'SCREEN'], base: [945, 240, 'BASE UNIT'], keyboard: [430, 480, 'KEYBOARD'], mouse: [830, 496, 'MOUSE'] };
-  ask("Chip 2 is in Computer Cove. Tap the " + names[order[0]] + ".");
-  [].forEach.call(host.querySelectorAll('.part-hit'), function(g){
+  var parts = [].slice.call(host.querySelectorAll('.part-hit')), placed = 0, phase = 1, J = [['keyboard', 'Which part do we use to type words?'], ['mouse', 'Which part do we use to point and click?'], ['screen', 'Which part shows us pictures and words?'], ['base', 'Which part is the box that does the thinking?']], jn = 0;
+  ask("Chip 2 is in Computer Cove. Drag each name onto the right part of the computer.");
+  function addLabel(p){
+    var lp = labPos[p], w = lp[2].length * 20 + 46;
+    $('labs').insertAdjacentHTML('beforeend', '<rect x="' + (p === 'mouse' ? lp[0] - 8 : lp[0] - w / 2) + '" y="' + (lp[1] - 28) + '" width="' + w + '" height="44" rx="22" fill="#fff" stroke="#0D2340" stroke-width="5"/><text class="plab" x="' + (p === 'mouse' ? lp[0] - 8 + w / 2 : lp[0]) + '" y="' + (lp[1] + 3) + '" text-anchor="middle">' + lp[2] + '</text>');
+  }
+  [].forEach.call(host.querySelectorAll('#tray2 .dcard'), function(c){
+    enableDrag(c, function(){ return phase === 1 ? parts : []; }, function(el, g){
+      var want = el.getAttribute('data-p'), got2 = g.getAttribute('data-p');
+      if(want !== got2){ ask("That is the " + names[got2].toLowerCase() + ", not the " + names[want].toLowerCase() + ". Try another part."); return false; }
+      el.style.display = 'none'; g.classList.add('okp'); addLabel(want); sfx('ding'); placed++; setTag('Labelled ' + placed + ' of 4');
+      if(placed === 4){
+        phase = 2; $('tray2').style.display = 'none'; parts.forEach(function(n){ n.classList.remove('okp'); }); setTag('Job 1 of 4');
+        later(function(){ ask("Well done. Now a harder one. " + J[0][1] + " Tap it."); }, 900);
+      } else if(placed === 2) ask("Good. Two to go.");
+      return true;
+    });
+  });
+  parts.forEach(function(g){
     g.addEventListener('click', function(){
-      var p = g.getAttribute('data-p');
-      if(busy || g.classList.contains('okp')) return;
-      if(p === order[step]){
-        g.classList.add('okp'); sfx('ding');
-        g.querySelectorAll('rect,ellipse').forEach(function(n){ if(n.getAttribute('fill') === '#DDE2EC' || n.getAttribute('fill') === '#EEF5FF' || n.getAttribute('fill') === '#fff' && n.getAttribute('rx') === '32') n.setAttribute('fill', '#BFF3D6'); });
-        var lp = labPos[p], w = lp[2].length * 20 + 46;
-        $('labs').insertAdjacentHTML('beforeend', '<rect x="' + (p === 'mouse' ? lp[0] - 8 : lp[0] - w / 2) + '" y="' + (lp[1] - 28) + '" width="' + w + '" height="44" rx="22" fill="#fff" stroke="#0D2340" stroke-width="5"/><text class="plab" x="' + (p === 'mouse' ? lp[0] - 8 + w / 2 : lp[0]) + '" y="' + (lp[1] + 3) + '" text-anchor="middle">' + lp[2] + '</text>');
-        step++; setTag('Found ' + step + ' of 4');
-        if(step === 4) solve(2); else ask("Yes. Now tap the " + names[order[step]] + ".");
-      } else { sfx('fail'); g.classList.remove('shk'); void g.getBoundingClientRect(); g.classList.add('shk'); ask("That is the " + names[p] + ". Tap the " + names[order[step]] + "."); }
+      if(phase !== 2 || busy) return; var p = g.getAttribute('data-p');
+      if(p === J[jn][0]){
+        g.classList.add('okp'); sfx('ding'); jn++;
+        if(jn === 4){ setTag('Job 4 of 4'); solve(2); } else { setTag('Job ' + (jn + 1) + ' of 4'); ask("Yes. " + J[jn][1] + " Tap it."); }
+      } else { sfx('fail'); g.classList.remove('shk'); void g.getBoundingClientRect(); g.classList.add('shk'); ask("That is the " + names[p].toLowerCase() + ". " + J[jn][1] + " Try again."); }
     });
   });
 }
-function sZ3(){
-  var R = [
-    ["A button on the screen. You want to choose it.", 0, "Yes. One click chooses a button."],
-    ["A folder on the desktop. You want to open it.", 1, "Yes. Two quick clicks open a folder."],
-    ["A picture. You want to move it somewhere new.", 2, "Yes. Hold the button down and drag to move things."]
-  ];
-  var O = [['cursor', 'Click', 'A single click only chooses things.'], ['cursor-click', 'Double-click', 'Double-click opens things.'], ['hand-grabbing', 'Click and drag', 'Click and drag moves things.']];
-  var inner = '<div class="plate" id="scn" style="left:0;top:0;width:1260px;height:190px;display:flex;align-items:center;justify-content:center;padding:0 40px"><div style="font-weight:700;font-size:52px;line-height:1.15;text-align:center;color:#1E2330"></div></div><div style="position:absolute;left:0;top:250px;display:flex;gap:36px">';
-  O.forEach(function(o, i){ inner += '<button class="opt big3" type="button" data-i="' + i + '">' + ph(o[0]) + '<span>' + o[1] + '</span></button>'; });
-  frame(3, 'Mouse Maze', inner + '</div>', '<span class="tag cnt2" id="tg">Question 1 of 3</span>');
-  botTo(30, 200, .72);
-  var q = 0, lock = false;
-  function show(){ lock = false; host.querySelector('#scn div').textContent = R[q][0]; setTag('Question ' + (q + 1) + ' of 3'); [].forEach.call(host.querySelectorAll('.opt'), function(b){ b.classList.remove('yes', 'no'); }); }
-  show();
-  ask("Chip 3 is in Mouse Maze. Which mouse move do we need?");
-  [].forEach.call(host.querySelectorAll('.opt'), function(b){
-    b.addEventListener('click', function(){
-      if(busy || lock) return; var i = +b.getAttribute('data-i');
-      if(i === R[q][1]){
-        b.classList.add('yes'); sfx('ding'); ask(R[q][2]); q++;
-        if(q === 3){ setTag('Question 3 of 3'); solve(3); } else { lock = true; later(show, 1500); }
-      } else { b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); sfx('fail'); ask("Not quite. " + O[i][2] + " Try again."); }
-    });
-  });
-}
+
 function sZ4(){
-  var rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], h = '<div style="text-align:center;margin-bottom:26px" id="wsl"><span class="wslot"></span><span class="wslot"></span><span class="wslot"></span></div><div class="kb k4" style="position:relative;left:0;top:0">';
+  var rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], h = '<div style="text-align:center;margin-bottom:26px" id="wsl"><span class="wslot"></span><span class="wslot"></span><span style="display:inline-block;width:70px"></span><span class="wslot"></span><span class="wslot"></span><span class="wslot"></span></div><div class="kb k4" style="position:relative;left:0;top:0">';
   rows.forEach(function(r){ h += '<div class="row">'; r.split('').forEach(function(k){ h += '<button class="key" type="button" data-k="' + k + '">' + k + '</button>'; }); h += '</div>'; });
   h += '<div class="row"><button class="key space" type="button" data-k=" ">Space bar</button></div></div>';
-  frame(4, 'Keyboard Canyon', h, '<span class="tag cnt2" id="tg">Spell BOT</span>');
+  frame(4, 'Keyboard Canyon', h, '<span class="tag cnt2" id="tg">Type MR BOT</span>');
   botTo(30, 200, .72);
-  var word = 'BOT', pos = 0, phase = 0, where = { B: 'It is in the bottom row.', O: 'It is in the top row.', T: 'It is in the top row.' };
-  ask("Chip 4 is in Keyboard Canyon. Spell my name: tap the letters B, O, T on the keyboard.");
+  var word = ['M', 'R', ' ', 'B', 'O', 'T'], pos = 0, where = { M: 'It is in the bottom row.', R: 'It is in the top row.', B: 'It is in the bottom row.', O: 'It is in the top row.', T: 'It is in the top row.', ' ': 'It is the long key at the bottom.' };
+  ask("Chip 4 is in Keyboard Canyon. Type my name: M, R, then the space bar, then B, O, T.");
+  function jobs(){
+    var ks = [['Space bar', 'Makes a gap between words', 0], ['Backspace', 'Takes a letter away', 1], ['Shift', 'Makes a capital letter', 2]];
+    var zc = $('zc'); zc.innerHTML = '<div id="kdz" style="display:flex;gap:30px">';
+    var t = '<div style="display:flex;gap:30px">';
+    ks.forEach(function(k, i){ t += '<div class="dz" data-d="' + i + '" style="width:400px"><div class="kk">' + k[0] + '</div><div class="binlist"></div></div>'; });
+    t += '</div><div style="position:absolute;left:0;top:260px;width:1260px;display:flex;gap:30px">';
+    [2, 0, 1].forEach(function(i){ t += '<div class="dcard big" data-i="' + i + '" style="width:400px;justify-content:center;text-align:center"><span>' + ks[i][1] + '</span></div>'; });
+    zc.innerHTML = t + '</div>';
+    var targets = [].slice.call(zc.querySelectorAll('.dz')), done = 0;
+    setTag('Matched 0 of 3'); ask("Well typed. Now match each key to its job. Drag the job onto its key.");
+    [].forEach.call(zc.querySelectorAll('.dcard'), function(c){
+      enableDrag(c, function(){ return targets; }, function(el, d){
+        var i = +el.getAttribute('data-i');
+        if(i !== +d.getAttribute('data-d')){ ask("Not that key. " + ks[i][1] + " is the job of the " + ks[i][0].toLowerCase() + ", so look for that key."); return false; }
+        d.querySelector('.binlist').appendChild(el); el.style.transform = ''; el.style.transition = ''; el.classList.add('placed'); sfx('ding'); done++; setTag('Matched ' + done + ' of 3');
+        if(done === 3) solve(4); return true;
+      });
+    });
+  }
   [].forEach.call(host.querySelectorAll('.key'), function(k){
     k.addEventListener('click', function(){
-      if(busy) return; var c = k.getAttribute('data-k');
-      if(phase === 0){
-        if(c === word.charAt(pos)){
-          k.classList.add('ok'); sfx('ding'); var sl = host.querySelectorAll('.wslot')[pos]; sl.textContent = c; sl.classList.add('on'); pos++;
-          if(pos === 3){ phase = 1; setTag('Now the space bar'); host.querySelector('.key.space').classList.add('glow'); ask("Now the long key at the bottom. Tap the space bar. It makes the gap between words."); }
-          else ask("Yes. Next is " + word.charAt(pos) + ".");
-        } else { badKey(k); sfx('fail'); ask(c === ' ' ? "Not yet. Spell BOT first." : "That is the letter " + c + ". Look for " + word.charAt(pos) + ". " + where[word.charAt(pos)]); }
-      } else {
-        if(c === ' '){ k.classList.remove('glow'); k.classList.add('ok'); sfx('ding'); solve(4); }
-        else { badKey(k); sfx('fail'); ask("Not that one. Tap the long space bar."); }
-      }
+      if(busy || pos >= 6) return; var c = k.getAttribute('data-k');
+      if(c === word[pos]){
+        k.classList.add('ok'); setTimeout(function(){ k.classList.remove('ok'); }, 600); sfx('ding');
+        if(c !== ' '){ var idx = pos < 2 ? pos : pos - 1, sl = host.querySelectorAll('.wslot')[idx]; sl.textContent = c; sl.classList.add('on'); }
+        pos++;
+        if(pos === 6){ later(jobs, 1400); ask("Yes. You typed MR BOT with a gap in the middle."); }
+        else ask(word[pos] === ' ' ? "Now the long key at the bottom, the space bar, to make a gap." : "Yes. Next is " + word[pos] + ".");
+      } else { badKey(k); sfx('fail'); ask(c === ' ' ? "Not yet. Next is " + word[pos] + "." : "That is the letter " + c + ". Look for " + (word[pos] === ' ' ? 'the space bar' : word[pos]) + ". " + where[word[pos]]); }
     });
   });
 }
@@ -946,23 +1047,6 @@ function sZ5(){
     });
   });
 }
-function sZ6(){
-  var R = [['cookie', 'Eat crisps over the keyboard', 0, 'Crumbs and greasy fingers can damage keyboards.'], ['shield-check', 'Keep drinks away from computers', 1], ['cursor-click', 'Open anything you like', 0, 'Some things online are not safe. Ask a grown-up first.'], ['users-three', 'Take turns', 1], ['eye-slash', 'Keep a worry secret', 0, 'A worry should never be a secret. Tell a grown-up.'], ['hand-waving', 'Tell a grown-up if something worries you', 1]];
-  var h = '<div style="display:grid;grid-template-columns:repeat(3,400px);gap:30px">';
-  R.forEach(function(it, i){ h += '<button class="pcard rule" type="button" data-i="' + i + '" style="width:400px;height:240px">' + ph(it[0]) + '<span>' + it[1] + '</span><span class="mk">' + ph('check', '#fff') + '</span></button>'; });
-  frame(6, 'Rule Castle', h + '</div>', '<span class="tag cnt2" id="tg">Found 0 of 3</span>');
-  botTo(30, 200, .72);
-  ask("Chip 6 is in Rule Castle. Some of these rules are good and some are bad. Tap only the 3 good rules.");
-  var found = 0;
-  [].forEach.call(host.querySelectorAll('.pcard'), function(c){
-    c.addEventListener('click', function(){
-      var it = R[+c.getAttribute('data-i')];
-      if(busy || c.classList.contains('ok')) return;
-      if(it[2]){ c.classList.add('ok'); found++; sfx('ding'); setTag('Found ' + found + ' of 3'); if(found === 3) solve(6); }
-      else { c.classList.add('bad'); sfx('fail'); setTimeout(function(){ c.classList.remove('bad'); }, 480); ask("Not a good rule. " + it[3] + " Find the 3 good rules."); }
-    });
-  });
-}
 function sReboot(){
   busy = false; botTo(100, 120, .95);
   var n = gotCount();
@@ -983,13 +1067,13 @@ function sReboot(){
 function badKey(k){ k.classList.remove('no'); void k.offsetWidth; k.classList.add('no'); setTimeout(function(){ k.classList.remove('no'); }, 500); }
 var SCENES = { 3: sArrive, 4: sZ1, 5: sZ2, 6: sZ3, 7: sZ4, 8: sZ5, 9: sZ6, 10: sReboot };
 var NOTES = {
-  3: "Say it as a story: Mr White-bot has lost his memory in the digital world and only this class can bring it back. Each zone is one end point from this half term. Let children come up and tap the board; the rest of the class can point and call out.",
-  4: "Identify technology. Use the class definition: people make it on purpose to help us, and it does not have to plug in. Umbrella and pencil are the tricky ones.",
-  5: "Identify a computer and its main parts. Words: screen, keyboard, mouse, base unit. If a child taps the wrong part, the robot names what they tapped, so use it to say the vocabulary together.",
-  6: "Using a mouse in different ways. Ask the class to act out each move with a hand in the air before anyone taps an answer.",
-  7: "Typing on a keyboard. Point out that the letters are in QWERTY order, not ABC. B is in the bottom row; O and T are in the top row.",
+  3: "Say it as a story: Mr White-bot has lost his memory in the digital world and only this class can bring it back. Each zone is one end point from this half term. Let children come up and drag on the board; the rest of the class can point and call out.",
+  4: "Identify technology. Use the class definition: people make it on purpose to help us, and it does not have to plug in. Umbrella, pencil and book are the tricky ones, and a wrong drop gets an explanation.",
+  5: "Identify a computer and its main parts. Round one: drag each name to its part. Round two: tap the part by its job. The robot names whatever a child tapped, so use it to say the words together.",
+  6: "Using a mouse in different ways. Ask the class to act out each move with a hand in the air before anyone drags a card.",
+  7: "Typing on a keyboard. Type MR BOT with a space in the middle; B is in the bottom row and O, R and T are in the top row. Then match the space bar, Backspace and Shift to their jobs.",
   8: "Editing text with the keyboard. Nine taps in order: full stop, left arrow five times, Backspace, Shift, W. Different children can take different taps.",
-  9: "Rules for using technology responsibly. Here children pick the good rules; they made their own in Lesson 6. Ask why each bad rule is bad before anyone taps, and finish on the one to remember: tell a grown-up.",
+  9: "Rules for using technology responsibly. Here children sort rules; they made their own in Lesson 6. Ask why before each drop, and finish on the one to remember: tell a grown-up.",
   10: "All chips in. Let one child press the big button. Then press Next to go home and finish with the vote on the trickiest chip."
 };
 function paintNav(){
