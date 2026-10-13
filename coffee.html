@@ -269,32 +269,32 @@
   /* ---------------- the race ---------------- */
   var ORDER = 'Large latte, oat milk, two sugars';
   var RACE = [
-    { k:'beacon', name:'Beacons', era:'Anglo-Saxon times',
+    { k:'beacon', name:'Beacons', era:'Anglo-Saxon times', lead:'Mr White is stuck on Holy Island and the café is in Bamburgh, 10 km down the coast.', ask:'Could a line of fire beacons carry his order?',
       route:[HI, [1030,215], [960,330], [985,450], [960,560], BAM], stops:[[960,330],[985,450],[960,560]],
       time:'About 10 minutes', got:'An army.', face:'shock', snd:'fire', end:'horn',
       why:'A beacon fire can only say one thing: DANGER. Bamburgh thought the Vikings were back.',
-      arrive:'!!!', note:'The beacons work like a relay: once one fire is lit, the next lookout sees it and lights theirs. Fast down the coast, but a fire can only say one thing, so the order arrives as just "something is wrong". The village grabs its spears.' },
-    { k:'horse', name:'Horse rider', era:'For hundreds of years',
+      arrive:'DANGER', note:'The beacons work like a relay: once one fire is lit, the next lookout sees it and lights theirs. Fast down the coast, but a fire can only say one thing, so the order arrives as just "something is wrong". The village grabs its spears.' },
+    { k:'horse', name:'Horse rider', era:'For hundreds of years', lead:'The beacons were quick, but a fire can only say one thing.', ask:'Could a rider carry the whole order, word for word?',
       route:[HI, [1030,215], [930,260], [900,420], [930,560], BAM],
       time:'About 1 hour', got:'A cold coffee, with a skin on top.', face:'sad', snd:'clop', end:'sad',
       why:'The message arrived word for word, but the coffee had to ride all the way back.',
       arrive:ORDER, note:'Riders could only cross the causeway at low tide. The order arrives exactly right, but by the time the coffee has come back on the horse it is stone cold. Accurate, but slow.' },
-    { k:'letter', name:'Letter in the post', era:'Since 1840 with a stamp',
+    { k:'letter', name:'Letter in the post', era:'Since 1840 with a stamp', lead:'The rider got every word right, but the coffee came back cold.', ask:'Is the post any quicker? And will it reach the right person?',
       route:[HI, [1030,215], [880,300], SORT, [880,560], [960,610], BAM], sorting:true,
       time:'About 1 day', got:'Nothing. The café dog ate it.', face:'blank', snd:'slot', end:'woof',
       why:'It reached the café, but it never reached the person making the coffee.',
       arrive:ORDER, note:'First class post usually arrives the next day. It goes off to a sorting office first, then back out. The letter reaches the café doormat and the dog eats it: the message arrived, but not to the right person. That is the idea of an address, which comes up later.' },
-    { k:'pigeon', name:'Carrier pigeon', era:'Used for over 2,000 years',
+    { k:'pigeon', name:'Carrier pigeon', era:'Used for over 2,000 years', lead:'The letter arrived, but a dog got to it first. We will find out why later.', ask:'Can a pigeon fly the order straight over the sea?',
       route:[HI, [1250,420], BAM],
       time:'About 10 minutes', got:'The smallest espresso in the world.', face:'stare', snd:'coo', end:'coo',
       why:'A pigeon can only carry a tiny note, so the order said: MR W COFFEE.',
       arrive:'MR W COFFEE', note:'Homing pigeons fly fast and straight over the sea, but they can only carry a tiny roll of paper, so the details get cut. Fast and far, but the message is short.' },
-    { k:'cups', name:'Paper cups and string', era:'The playground classic',
+    { k:'cups', name:'Paper cups and string', era:'The playground classic', lead:'A pigeon is quick, but it can only carry a tiny note.', ask:'What if you spoke into a cup and a string carried your voice?',
       route:[HI, BAM], string:true,
       time:'Instant (with 10 km of string)', got:'A goat.', face:'shock', snd:'whoosh', end:'baa',
       why:'Down a very long string, "a latte with oat milk" sounded like "a lot of goat milk".',
       arrive:'A lot of goat milk', note:'Sound travels along the string straight away, but it gets muffled, and you would need 10 km of string. Fast but only over a short distance, and not accurate.' },
-    { k:'ipad', name:'A message on an iPad', era:'Today',
+    { k:'ipad', name:'A message on an iPad', era:'Today', lead:'The string was instant, but muffled, and 10 km is a lot of string.', ask:'Could one message be fast, far and exactly right?',
       route:[HI, BAM], beam:true,
       time:'Less than 1 second', got:'Large latte, oat milk, two sugars. With a heart on top.', face:'smile', snd:'whoosh', end:'yay',
       why:'Fast, it can reach anywhere in the world, and it arrives exactly as it was sent.',
@@ -303,7 +303,7 @@
 
   function raceIntro(i){
     var m = RACE[i];
-    return { name:'Race: ' + m.name, steps:3, note:m.note + ' Step 0: predict on whiteboards (how long? will the order arrive right?). Step 1: run the race. Step 2: what turned up.',
+    return { name:'Race: ' + m.name, steps:3, note:m.note + ' Step 0: read the lead line, ask the question, then predict on whiteboards (how long? will the order arrive right?). Step 1: run the race. Step 2: what turned up.',
       build:function(r){
         var startIcon = '<g id="mover" transform="translate(' + HI[0] + ' ' + HI[1] + ')"><g transform="translate(-36 -36)"><foreignObject width="72" height="72"><div xmlns="http://www.w3.org/1999/xhtml" style="width:72px;height:72px">' + ICON[m.k] + '</div></foreignObject></g></g>';
         var extra = '<path id="trail" d="M0 0" fill="none" stroke="#D9622B" stroke-width="8" stroke-linecap="round" stroke-dasharray="' + (m.beam ? '2 18' : '18 12') + '"/>';
@@ -314,8 +314,9 @@
             '<h2 class="h2" style="margin-top:8px;font-size:52px;white-space:nowrap">' + ic(m.k, 64) + ' ' + esc(m.name) + '</h2></div>' +
           '<div class="abs card" style="left:60px;top:200px;width:560px;padding:22px 26px">' +
             '<div class="small" style="font-weight:700;color:var(--mu)">THE ORDER</div><div class="body" style="font-weight:700">Mr White needs a coffee. ' + ORDER + '.</div></div>' +
-          '<div class="abs pp" data-s="0" data-only="1" style="left:60px;top:400px;width:560px"><span class="tear hi build" style="font-size:34px">Predict</span>' +
-            '<div class="body" style="margin-top:16px">How long will it take? Will the order arrive right?</div></div>' +
+          '<div class="abs pp" data-s="0" data-only="1" style="left:60px;top:392px;width:600px"><div class="small" style="font-weight:700;color:var(--mu)">' + esc(m.lead) + '</div>' +
+            '<div style="margin-top:12px"><span class="tear or build" style="font-size:32px;line-height:1.2">' + esc(m.ask) + '</span></div>' +
+            '<div class="body" style="margin-top:18px;font-size:26px"><b>Predict:</b> how long will it take, and will the order arrive right? Write it on your whiteboard.</div></div>' +
           '<div class="abs card" id="watch" style="left:60px;top:400px;width:420px;padding:16px 22px;display:none"><div class="small" style="font-weight:700;color:var(--mu)">TIME</div><div class="counter" id="wt">0</div></div>' +
           '<div class="abs" id="arrive" style="left:1180px;top:690px;display:none"><span class="tear build" style="font-size:24px;max-width:400px">' + esc(m.arrive) + '</span></div>' +
           '<div class="abs pp" data-s="2" style="left:60px;top:400px;width:900px;height:380px">' +
@@ -366,14 +367,16 @@
   // six parts, one question each; a card before parts 3 to 6 says what we found out and what we ask next
   var CH = ['The problem', 'Ways to send', 'Addresses', 'Cables', 'How big?', 'Your turn'];
   var OBJ = ['Explain how devices can be connected.', 'Explain why a network needs a switch.', 'Spot connected devices around us.'];
-  function chapter(n, title, recap, q, note){
+  // the question is the headline: it is on screen the moment the part opens, with what we found out so far underneath.
+  // Next reveals what to do with it (guess, talk, draw)
+  function chapter(n, title, recap, q, guess, note){
     return { name:'Part ' + n + ': ' + title, steps:1, note:note,
       build:function(r){
         var chips = CH.map(function(t, i){ return '<div class="chip ' + (i + 1 < n ? 'done' : i + 1 === n ? 'on' : '') + '"><b>' + (i + 1) + '</b>' + esc(t) + '</div>'; }).join('');
         r.innerHTML = '<div class="abs chips" style="left:60px;top:44px">' + chips + '</div>' +
-          '<div class="abs" style="left:110px;top:190px;width:1380px"><div class="kick">Part ' + n + ' of 6</div><h1 class="h1" style="margin-top:14px;font-size:120px">' + esc(title) + '</h1></div>' +
-          '<div class="abs card" style="left:110px;top:430px;width:1380px;padding:22px 30px"><div class="small" style="font-weight:700;color:var(--mu)">SO FAR</div><div class="big" style="font-weight:700;text-wrap:balance">' + esc(recap) + '</div></div>' +
-          '<div class="abs pp" data-s="1" style="left:110px;top:640px;width:1380px"><span class="tear or build" style="font-size:42px;line-height:1.2;max-width:1180px;text-wrap:balance">' + esc(q) + '</span></div>';
+          '<div class="abs" style="left:110px;top:150px;width:1380px"><div class="kick">Part ' + n + ' of 6 · ' + esc(title) + '</div><h1 class="h1" style="margin-top:14px;font-size:' + (q.length > 28 ? 84 : 112) + 'px;text-wrap:balance">' + esc(q) + '</h1></div>' +
+          '<div class="abs card" style="left:110px;top:480px;width:1380px;padding:22px 30px"><div class="small" style="font-weight:700;color:var(--mu)">SO FAR</div><div class="big" style="font-weight:700;text-wrap:balance">' + esc(recap) + '</div></div>' +
+          '<div class="abs pp" data-s="1" style="left:110px;top:680px;width:1380px"><span class="tear or build" style="font-size:36px;line-height:1.2;max-width:1280px;text-wrap:balance">' + esc(guess) + '</span></div>';
       } };
   }
   var PARTS = [
@@ -406,7 +409,7 @@
     { name:'Today you will', steps:3, note:'Read them together.',
       build:function(r){
         var items = OBJ;
-        r.innerHTML = '<div class="abs" style="left:110px;top:70px;width:1380px"><div class="kick">Part 1 of 6 · Today you will</div>' +
+        r.innerHTML = '<div class="abs" style="left:110px;top:70px;width:1380px"><div class="kick">Today you will</div>' +
           items.map(function(t, i){ return '<div class="pp" data-s="' + (i + 1) + '" style="display:flex;gap:28px;align-items:center;margin-top:' + (i ? 34 : 60) + 'px"><span class="tear or" style="font-size:46px;padding:6px 22px">' + (i + 1) + '</span><span class="big" style="font-size:46px;font-weight:700">' + t + '</span></div>'; }).join('') + '</div>';
       } },
 
@@ -414,19 +417,20 @@
       build:function(r){
         r.innerHTML = mapSVG('<g transform="translate(' + (BAM[0] + 20) + ' ' + (BAM[1] - 40) + ')"><foreignObject width="80" height="80"><div xmlns="http://www.w3.org/1999/xhtml" style="width:80px;height:80px">' + ICON.coffee + '</div></foreignObject></g>' +
             '<path d="M' + HI[0] + ' ' + HI[1] + ' Q1300 420 ' + BAM[0] + ' ' + BAM[1] + '" stroke="#1E1B18" stroke-width="4" stroke-dasharray="4 10" fill="none"/><text x="1310" y="430" font-family="Archivo Black" font-size="28">about 10 km</text>') +
-          '<div class="abs" style="left:60px;top:40px;width:820px"><div class="kick">Part 2 of 6 · The great coffee race</div><h2 class="h2" style="margin-top:8px">Six ways to send it</h2></div>' +
+          '<div class="abs" style="left:60px;top:40px;width:820px"><div class="kick">Part 2 of 6 · The great coffee race</div><h2 class="h2" style="margin-top:8px;font-size:52px">How can Mr White order his coffee?</h2></div>' +
           '<div class="abs card" style="left:60px;top:200px;width:620px;padding:22px 26px"><div class="small" style="font-weight:700;color:var(--mu)">THE ORDER</div><div class="big" style="font-weight:700">' + ORDER + '.</div></div>' +
-          '<div class="abs pp" data-s="1" style="left:60px;top:420px;width:640px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">' +
-            RACE.map(function(m){ return '<div class="card" style="padding:12px;text-align:center">' + ic(m.k, 80) + '<div class="small" style="font-weight:700">' + m.name + '</div></div>'; }).join('') + '</div>';
+          '<div class="abs pp" data-s="1" style="left:60px;top:392px;width:640px"><div class="small" style="font-weight:700;color:var(--mu)">SIX WAYS TO SEND IT. WE RACE ALL OF THEM, AND YOU PREDICT FIRST.</div>' +
+            '<div style="margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">' +
+            RACE.map(function(m){ return '<div class="card" style="padding:10px;text-align:center">' + ic(m.k, 72) + '<div class="small" style="font-weight:700;font-size:20px">' + m.name + '</div></div>'; }).join('') + '</div></div>';
       } }
   ];
   RACE.forEach(function(m, i){ PARTS.push(raceIntro(i)); });
 
   PARTS.push({ name:'Rank them', steps:0,
-    note:'Hand the board over. Drag the six cards into order, best at the top. Use the tabs to rank them three times: fastest, furthest, most accurate. Check with the race flips every card to show what happened in the race; cards that are a long way from where the race put them wobble. That is a talking point, not a mark. The iPad wins every list.',
+    note:'Hand the board over. Drag the six cards into order, best at the top. Use the tabs to rank them three times: fastest, furthest, most accurate. Check with the race adds what happened in the race to every card; cards that are a long way from where the race put them wobble. That is a talking point, not a mark. The iPad wins every list.',
     build:function(r){
       var tab = 0, orders = RANK_TABS.map(function(){ return ['beacon','horse','letter','pigeon','cups','ipad']; }), checked = false;
-      r.innerHTML = '<div class="abs" style="left:60px;top:30px;width:1480px;display:flex;justify-content:space-between;align-items:flex-end"><div><div class="kick">Part 2 of 6 · Rank them</div><h2 class="h2" style="margin-top:6px">Best to worst</h2></div>' +
+      r.innerHTML = '<div class="abs" style="left:60px;top:30px;width:1480px;display:flex;justify-content:space-between;align-items:flex-end"><div><div class="kick">Part 2 of 6 · Rank them</div><h2 class="h2" style="margin-top:6px">Which way was best?</h2></div>' +
           '<div class="tabs">' + RANK_TABS.map(function(t, i){ return '<button type="button" class="tabbtn" data-t="' + i + '">' + t[0] + '</button>'; }).join('') + '</div></div>' +
         '<div class="abs" style="left:40px;top:175px;font-family:var(--hd);font-size:22px;color:var(--green);width:100px;text-align:right">BEST</div><div class="abs" style="left:40px;top:675px;font-family:var(--hd);font-size:22px;color:var(--red);width:100px;text-align:right">WORST</div>' +
         [0,1,2,3,4,5].map(function(i){ return '<div class="slot" style="top:' + (150 + i * 100) + 'px">' + (i + 1) + '</div>'; }).join('') +
@@ -483,30 +487,34 @@
     } });
 
   PARTS.push(chapter(3, 'Addresses',
-    'The iPad won every list. In race 3 the letter did arrive, but the dog got it.',
-    'How does a message reach the right place?',
-    'Pause here. The iPad beat the other five, but nobody has said how it works yet. Take answers on the dog: the letter arrived, to the wrong one. Press Next to reveal the question, then let pairs talk for ten seconds before moving on.'));
+    'The iPad won every list. The letter did arrive in race 3, but the dog got to it first.',
+    'Why did the dog get the letter?',
+    'Talk to your partner for ten seconds. What was missing?',
+    'Pause here. The iPad beat the other five, but nobody has said how it works yet. Take answers about the dog: the letter reached the café, but not the person. Press Next to reveal the prompt, then let pairs talk for ten seconds before moving on.'));
 
   PARTS.push({ name:'Addresses', steps:3,
     note:'Back to the letter and the dog. A letter needs an address so it reaches the right place, and a name so it reaches the right person. Devices have addresses too: every device on a network has its own, and a message carries the address of where it is going.',
     build:function(r){
-      r.innerHTML = '<div class="abs" style="left:110px;top:50px;width:1380px"><div class="kick">Part 3 of 6 · Why did the dog get it?</div><h2 class="h2" style="margin-top:8px">Every message needs an address</h2></div>' +
-        '<div class="abs card pp" data-s="1" style="left:110px;top:220px;width:620px;height:340px;padding:30px;transform:rotate(-2deg)">' +
+      r.innerHTML = '<div class="abs" style="left:110px;top:50px;width:1380px"><div class="kick">Part 3 of 6 · Addresses</div><h2 class="h2" style="margin-top:8px">What does an address do?</h2></div>' +
+        '<div class="abs pp" data-s="1" style="left:110px;top:560px;width:620px"><div class="body" style="font-size:26px">The address got the letter to the café. It had no way to find the right person inside.</div></div>' +
+        '<div class="abs pp" data-s="2" style="left:830px;top:560px;width:620px"><div class="body" style="font-size:26px">A device address points to one exact device, so the message cannot end up in the wrong place.</div></div>' +
+        '<div class="abs card pp" data-s="1" style="left:110px;top:200px;width:620px;height:330px;padding:30px;transform:rotate(-2deg)">' +
           '<div style="position:absolute;right:26px;top:22px;width:70px;height:84px;background:var(--red);border:3px solid var(--ink)"></div>' +
           '<div class="small" style="font-weight:700;color:var(--mu)">A LETTER</div>' +
           '<div style="font-family:var(--hd);font-size:34px;line-height:1.35;margin-top:60px">The Barista<br>The Coffee Café<br>Bamburgh</div></div>' +
-        '<div class="abs card pp" data-s="2" style="left:830px;top:220px;width:620px;height:340px;padding:30px;transform:rotate(1.5deg);background:#e9f2ff">' +
+        '<div class="abs card pp" data-s="2" style="left:830px;top:200px;width:620px;height:330px;padding:30px;transform:rotate(1.5deg);background:#e9f2ff">' +
           '<div class="small" style="font-weight:700;color:var(--mu)">A MESSAGE ON A NETWORK</div>' +
           '<div style="font-family:var(--hd);font-size:34px;line-height:1.35;margin-top:30px">To: iPad 14<br>From: iPad 3</div>' +
           '<div class="body" style="margin-top:14px">Large latte, oat milk, two sugars.</div></div>' +
-        '<div class="abs pp" data-s="3" style="left:110px;top:620px;width:1380px"><span class="tear or build" style="font-size:40px">Every device has its own address, so the message goes to the right one.</span></div>';
+        '<div class="abs pp" data-s="3" style="left:110px;top:660px;width:1380px"><span class="tear or build" style="font-size:36px">Every device has its own address, so the message goes to the right one.</span></div>';
     } });
 
   /* ---------------- cable chaos ---------------- */
   PARTS.push(chapter(4, 'Cables and switches',
     'Every message needs an address, and every device on a network has its own.',
-    'Five iPads must all talk to each other. How many cables does that take?',
-    'Pause here. Pupils predict on whiteboards before anyone touches the board. The answer is 10, which Cable Chaos shows next.'));
+    'Five iPads must all talk to each other. How many cables?',
+    'Write your number on your whiteboard.',
+    'Stop here. Pupils predict on whiteboards before anyone touches the board. The answer is 10, which Cable Chaos shows next.'));
 
   PARTS.push({ name:'Cable Chaos', steps:0,
     note:'Every iPad must be able to talk to every other iPad. Pupils come up: tap one iPad, then another, to plug in a cable. Predict first: how many cables for 5? (10.) Level 2 has 10 iPads: draw a few, then Finish it. (45.) Level 3 is the whole class of 27, which the computer draws: 351 cables. Then Add a switch: one cable each, 27 in total. Send a message: tap the sender, then who it is to, and watch it go through the switch, which reads the address. Unplug the switch and nothing gets through.',
@@ -563,7 +571,7 @@
       }
       function chaos(){
         face.style.display = 'block'; face.classList.remove('pop'); void face.offsetWidth; face.classList.add('pop');
-        sfx('fail'); say('<b>351 cables</b> for one class. Now imagine the whole school.');
+        sfx('fail'); say('<b>351 cables</b> for one class. Now imagine the whole school. Is there a cleverer way?');
         var t = 0; (function sh(){ if(t++ > 14){ pads.style.transform = ''; wires.style.transform = ''; return; } var dx = (Math.random() - .5) * 14, dy = (Math.random() - .5) * 14; pads.style.transform = wires.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; later(sh, 1000 / 12); })();
       }
       function go(a, b){
@@ -592,7 +600,7 @@
           if(a === 'fin') finish();
           if(a === 'up'){ lv++; cables = []; sel = null; msg.style.display = 'none'; face.style.display = 'none'; place(); wiresPaint(); setBtns(); r.querySelector('#cct').textContent = 'Level ' + (lv + 1) + ': ' + LV[lv] + ' iPads'; }
           if(a === 'clr'){ cables = []; sel = null; msg.style.display = 'none'; face.style.display = 'none'; mark(-1); wiresPaint(); setBtns(); }
-          if(a === 'sw'){ mode = 'switch'; face.style.display = 'none'; sfx('yay'); r.querySelector('#cct').textContent = 'Add a network switch'; say('Every iPad plugs into the <b>switch</b>. 27 cables instead of 351.'); wiresPaint(); setBtns(); }
+          if(a === 'sw'){ mode = 'switch'; face.style.display = 'none'; sfx('yay'); r.querySelector('#cct').textContent = 'Add a network switch'; say('Every iPad plugs into the <b>switch</b>. 27 cables instead of 351. Send a message and watch what the switch does.'); wiresPaint(); setBtns(); }
           if(a === 'send'){ mode = 'send'; sending = null; say('Tap who the message is <b>from</b>.'); setBtns(); }
           if(a === 'plug'){ plugged = !plugged; sfx(plugged ? 'ping' : 'fail'); wiresPaint(); setBtns(); }
         }); });
@@ -603,17 +611,19 @@
     } });
 
   /* ---------------- 33 billion: the rice ---------------- */
-  PARTS.push(chapter(5, 'How big is it?',
-    'A switch lets every iPad in a class share one network, with one cable each.',
-    'That is one classroom. How many devices are connected in the whole world?',
-    'Pause here. Ask for guesses: hundreds, thousands, millions? The rice slides show the answer one grain at a time.'));
+  PARTS.push(chapter(5, 'How big?',
+    'A switch lets every iPad in a class share one network, with one cable each. That was one classroom.',
+    'How big is the internet?',
+    'Guess how many devices are connected to it. Hundreds, thousands, millions or billions? Whiteboards.',
+    'Pause here. Ask for guesses before pressing Next: hundreds, thousands, millions, billions? Write them on the board. The rice slides then show the answer one grain at a time, so come back to the guesses afterwards.'));
 
   PARTS.push({ name:'33 billion', frame:'devices-rice.html',
     note:'One grain of rice is one connected device. One iPad, then the class (a pinch), then Stockton (16 bags), then the whole world: about 33 billion, 660 tonnes of rice. Use its own Next and Back buttons; it hands back to the lesson at either end. How we worked it out is behind the link at the bottom.' });
 
   PARTS.push(chapter(6, 'Your turn',
     'A network joins devices together, and a switch sends each message to the right one.',
-    'What is connected in our school? Draw it.',
+    'What is connected in our school?',
+    'Draw it on your map sheet.',
     'Pause here. Hand out the map sheets before pressing Next so pupils can start as soon as the next slide appears.'));
 
   PARTS.push({ name:'Map your network', steps:2,
@@ -637,30 +647,62 @@
   var SIG = { counts:[[0,0,0,0],[0,0,0,0],[0,0,0,0]], hist:[] };
   var LAB = [['No signal', 'I am lost'], ['Weak', 'I need help'], ['Good', 'Nearly there'], ['Full signal', 'I could teach it']];
   var LCOL = ['#C8402B', '#D9622B', '#2C6FB7', '#2E8A57'];
+  var GREY = '#c9bfae';
+  // one number drives everything on screen: the share of the class on Good or Full signal.
+  // 75% and up is strong (3 arcs), 50% good (2), otherwise weak (1); no signal (0) only when at least half the class chose No signal and under 25% are on Good or Full
+  var STATES = ['lost', 'weak', 'mixed', 'strong'];
   function sigStats(o){
-    var cs = SIG.counts[o], tot = cs[0] + cs[1] + cs[2] + cs[3], mean = tot ? (cs[1] + cs[2] * 2 + cs[3] * 3) / tot : 0, share = tot ? (cs[2] + cs[3]) / tot : 0;
-    var state = tot < 3 ? 'wait' : share >= .75 ? 'strong' : share >= .4 ? 'mixed' : 'weak';
-    return { cs:cs, tot:tot, mean:mean, share:share, state:state, level:!tot ? -1 : state === 'strong' ? 3 : Math.min(2, Math.round(mean)) };
+    var cs = SIG.counts[o], tot = cs[0] + cs[1] + cs[2] + cs[3], share = tot ? (cs[2] + cs[3]) / tot : 0;
+    var level = !tot ? -1 : share >= .75 ? 3 : share >= .5 ? 2 : (share >= .25 || cs[0] * 2 < tot) ? 1 : 0;
+    return { cs:cs, tot:tot, share:share, level:level, state:level < 0 ? 'none' : STATES[level] };
   }
-  var VERDICT = { wait:['Votes coming in', 'var(--mu)'], strong:['Strong signal. Most of us have got this.', 'var(--green)'], mixed:['Mixed signal. Some of us need another go.', 'var(--coffee)'], weak:['Weak signal. We need to go over this again.', 'var(--red)'] };
-  // the icon follows the class average: no votes = all grey, then 0 to 3 arcs
-  function wifi(level, col, w){
+  var VERDICT = {
+    none:['Tap a column for each person.', 'var(--mu)'],
+    lost:['No signal. We need to start this part again.', 'var(--red)'],
+    weak:['Weak signal. We need to go over this again.', 'var(--coffee)'],
+    mixed:['Good signal. A few of us need another go.', 'var(--blue)'],
+    strong:['Strong signal. Most of us have got this.', 'var(--green)']
+  };
+  // the icon is built once and then recoloured in place, so a change can animate instead of flashing
+  function wifiSVG(w){
     var arcs = ['M-44 -10 A62 62 0 0 1 44 -10', 'M-80 -46 A113 113 0 0 1 80 -46', 'M-116 -82 A164 164 0 0 1 116 -82'];
-    return '<svg class="sigico" viewBox="-140 -170 280 210" width="' + w + '" height="' + Math.round(w * .75) + '"><circle cx="0" cy="22" r="18" fill="' + (level >= 0 ? col : '#c9bfae') + '"/>' +
-      arcs.map(function(a, i){ return '<path d="' + a + '" fill="none" stroke="' + (level > i ? col : '#c9bfae') + '" stroke-width="26" stroke-linecap="round"/>'; }).join('') + '</svg>';
+    return '<svg class="sigico" viewBox="-140 -170 280 210" width="' + w + '" height="' + Math.round(w * .75) + '"><circle cx="0" cy="22" r="18" fill="' + GREY + '"/>' +
+      '<path class="xx" d="M-16 6 L16 38 M16 6 L-16 38" stroke="' + LCOL[0] + '" stroke-width="12" stroke-linecap="round" fill="none" opacity="0"/>' +
+      arcs.map(function(a){ return '<path class="arc" d="' + a + '" fill="none" stroke="' + GREY + '" stroke-width="26" stroke-linecap="round"/>'; }).join('') + '</svg>';
+  }
+  function wifiSet(svg, level){
+    var col = level < 0 ? GREY : LCOL[level];
+    var dot = svg.querySelector('circle'), xx = svg.querySelector('.xx');
+    dot.setAttribute('fill', col); dot.setAttribute('opacity', level === 0 ? 0 : 1);
+    xx.setAttribute('opacity', level === 0 ? 1 : 0);
+    [].forEach.call(svg.querySelectorAll('.arc'), function(p, i){ p.setAttribute('stroke', level > i ? col : GREY); });
+    svg.classList.toggle('glow', level === 3);
+  }
+  function iconIn(box, w, level){
+    if(!box.firstChild) box.innerHTML = wifiSVG(w);
+    wifiSet(box.firstChild, level);
+    return box.firstChild;
   }
   function iCan(t){ return 'I can ' + t.charAt(0).toLowerCase() + t.slice(1); }
-  function sigColour(s){ return s.state === 'strong' ? '#2E8A57' : s.state === 'weak' ? '#C8402B' : '#D9622B'; }
 
-  PARTS.push({ name:'Signal check', steps:3,
-    note:'One objective on each screen. Read it out, then every pupil holds up 0, 1, 2 or 3 fingers (no signal, weak, good, full signal) and you tap the matching column once for each pupil, or pupils come up and tap their own. The icon follows the class average and glows green when three quarters of the class are on Good or Full signal. Next moves to the next objective. The last screen puts all three side by side and flags the one to go over again. Undo takes back the last tap on this screen; Clear needs two taps and wipes this screen only.',
+  PARTS.push({ name:'Signal check', steps:4,
+    note:'Step 0 explains the scale. Then one goal on each screen: read it out, every pupil holds up 0, 1, 2 or 3 fingers (no signal, weak, good, full signal) and you tap the matching column once for each pupil, or pupils come up and tap their own. The icon follows the share of the class on Good or Full signal: three quarters or more is strong and glows green, half is good, and below that it is weak. It only drops to no signal when half the class or more chose No signal. It reacts on every tap. Next moves to the next goal. The last screen puts all three side by side and flags the one to go over again. Undo takes back the last tap on this screen; Clear needs two taps and wipes this screen only.',
     build:function(r){
       var armed = false, cur = 0;
+      var intro = '<div class="si" style="position:absolute;inset:0;display:none">' +
+        '<div class="abs" style="left:60px;top:136px;width:1480px"><div class="big" style="font-size:44px;font-weight:700">How confident do you feel? Show me 0 to 3 fingers.</div></div>' +
+        '<div class="abs" style="left:60px;top:240px;width:1480px;display:flex;gap:26px">' + LAB.map(function(l, k){
+          return '<div class="card" style="flex:1;height:420px;overflow:hidden;text-align:center"><div style="height:18px;background:' + LCOL[k] + '"></div>' +
+            '<div class="ico" data-k="' + k + '" style="height:190px;display:flex;align-items:center;justify-content:center;margin-top:12px"></div>' +
+            '<div style="font-family:var(--hd);font-size:84px;line-height:1;color:' + LCOL[k] + '">' + k + '</div>' +
+            '<div style="font-family:var(--hd);font-size:32px;line-height:1.05;margin-top:8px">' + l[0] + '</div>' +
+            '<div class="small" style="font-weight:700;color:var(--mu);margin-top:6px">' + l[1] + '</div></div>'; }).join('') + '</div>' +
+        '<div class="abs" style="left:60px;top:690px;width:1480px"><span class="tear or" style="font-size:28px">Be honest. A weak signal helps me, because it tells me what to teach again.</span></div></div>';
       var screens = OBJ.map(function(t, o){
         return '<div class="so" data-o="' + o + '" style="position:absolute;inset:0;display:none">' +
           '<div class="abs card" style="left:60px;top:142px;width:1480px;padding:16px 28px"><span class="big" style="font-size:46px;font-weight:700">' + esc(iCan(t)) + '</span></div>' +
           '<div class="abs" style="left:60px;top:310px;width:420px;text-align:center"><div class="ico" style="height:300px;display:flex;align-items:center;justify-content:center"></div>' +
-            '<div class="vd" style="margin-top:10px"></div><div class="small" style="margin-top:10px;font-weight:700;color:var(--mu)"></div></div>' +
+            '<div class="vd" style="margin-top:10px"></div><div class="small votes" style="margin-top:10px;font-weight:700;color:var(--mu)"></div></div>' +
           '<div class="abs" style="left:520px;top:272px;display:flex;gap:12px">' + LAB.map(function(l, k){
             return '<button type="button" class="scol" data-k="' + k + '" aria-label="' + l[0] + ': ' + l[1] + '"><div class="bar" style="background:' + LCOL[k] + '"></div><div class="lab">' + l[0] + '</div><div class="sub">' + l[1] + '</div><div class="dots"></div><div class="num">0</div></button>'; }).join('') + '</div></div>';
       }).join('');
@@ -668,48 +710,49 @@
         OBJ.map(function(t, o){ return '<div class="abs card sc" data-o="' + o + '" style="left:' + (60 + o * 500) + 'px;top:224px;width:470px;height:530px;padding:20px 22px;text-align:center">' +
           '<div class="body" style="font-weight:700;font-size:26px;height:72px;line-height:1.2">' + esc(iCan(t)) + '</div><div class="ico" style="height:240px;display:flex;align-items:center;justify-content:center"></div>' +
           '<div class="vd" style="font-size:26px;height:96px;margin-top:8px"></div>' +
-          '<div class="cnt">' + LAB.map(function(l, k){ return '<div style="border-color:' + LCOL[k] + '"><b></b><span>' + l[0].replace(' signal', '') + '</span></div>'; }).join('') + '</div></div>'; }).join('') + '</div>';
-      r.innerHTML = '<div class="abs" style="left:60px;top:24px;width:900px"><div class="kick">Part 6 of 6 · How strong is your signal?</div><h2 class="h2" style="margin-top:6px" id="sigt">Signal check</h2></div>' +
-        '<div class="abs" style="left:1000px;top:44px;display:flex;gap:12px;z-index:3"><button type="button" class="btn" id="und">Undo</button><button type="button" class="btn" id="clr">Clear</button></div>' + screens + summary;
+          '<div class="cnt">' + LAB.map(function(l, k){ return '<div style="border-color:' + LCOL[k] + '"><b></b><span>' + ['None', 'Weak', 'Good', 'Full'][k] + '</span></div>'; }).join('') + '</div></div>'; }).join('') + '</div>';
+      r.innerHTML = '<div class="abs" style="left:60px;top:24px;width:900px"><div class="kick">How strong is your signal?</div><h2 class="h2" style="margin-top:6px" id="sigt">Signal check</h2></div>' +
+        '<div class="abs" style="left:1000px;top:44px;display:flex;gap:12px;z-index:3"><button type="button" class="btn" id="und">Undo</button><button type="button" class="btn" id="clr">Clear</button></div>' + intro + screens + summary;
       var und = r.querySelector('#und'), clr = r.querySelector('#clr');
+      [].forEach.call(r.querySelectorAll('.si .ico'), function(b){ iconIn(b, 190, +b.getAttribute('data-k')); });
 
       function paintObj(o){
-        var sc = r.querySelector('.so[data-o="' + o + '"]'), s = sigStats(o), ico = sc.querySelector('.ico'), was = sc._state;
-        ico.innerHTML = wifi(s.level, sigColour(s), 300);
-        var svg = ico.firstChild; if(s.state === 'strong') svg.classList.add('glow');
-        sc.querySelector('.vd').innerHTML = '<span style="color:' + VERDICT[s.state][1] + '">' + (s.tot ? VERDICT[s.state][0] : 'Tap a column for each person.') + '</span>';
-        sc.querySelector('.small').textContent = s.tot + (s.tot === 1 ? ' vote' : ' votes');
+        var sc = r.querySelector('.so[data-o="' + o + '"]'), s = sigStats(o), was = sc._level;
+        var svg = iconIn(sc.querySelector('.ico'), 300, s.level);
+        sc.querySelector('.vd').innerHTML = '<span style="color:' + VERDICT[s.state][1] + '">' + VERDICT[s.state][0] + '</span>';
+        sc.querySelector('.votes').textContent = s.tot + (s.tot === 1 ? ' vote' : ' votes') + (s.tot ? ' · ' + Math.round(s.share * 100) + '% on Good or Full' : '');
         [].forEach.call(sc.querySelectorAll('.scol'), function(b){
-          var k = +b.getAttribute('data-k'), n = s.cs[k], d = b.querySelector('.dots'), have = d.children.length;
+          var k = +b.getAttribute('data-k'), n = s.cs[k], d = b.querySelector('.dots');
           while(d.children.length > n) d.removeChild(d.lastChild);
           while(d.children.length < n){ var i = document.createElement('i'); i.style.background = LCOL[k]; i.className = 'new'; d.appendChild(i); }
           b.querySelector('.num').textContent = n;
         });
-        sc._state = s.state;
-        return { svg:svg, was:was, now:s.state };
+        sc._level = s.level;
+        return { svg:svg, was:was, now:s.level, tot:s.tot };
       }
       function paintSum(){
         var stats = OBJ.map(function(t, o){ return sigStats(o); }), any = stats.some(function(s){ return s.tot; }), worst = -1;
-        stats.forEach(function(s, o){ if(s.tot && s.state !== 'strong' && (worst < 0 || s.mean < stats[worst].mean)) worst = o; });
+        stats.forEach(function(s, o){ if(s.tot && s.level < 3 && (worst < 0 || s.share < stats[worst].share)) worst = o; });
         [].forEach.call(r.querySelectorAll('.sc'), function(c){
           var o = +c.getAttribute('data-o'), s = stats[o];
-          c.querySelector('.ico').innerHTML = wifi(s.level, sigColour(s), 250);
-          if(s.state === 'strong') c.querySelector('.sigico').classList.add('glow');
+          iconIn(c.querySelector('.ico'), 250, s.level);
           c.querySelector('.vd').innerHTML = '<span style="color:' + VERDICT[s.state][1] + '">' + (s.tot ? VERDICT[s.state][0] : 'No votes yet') + '</span>';
           [].forEach.call(c.querySelectorAll('.cnt b'), function(b, k){ b.textContent = s.cs[k]; });
-          c.style.boxShadow = o === worst ? '0 0 0 8px rgba(217,98,43,.4), 6px 7px 0 rgba(30,27,24,.85)' : s.state === 'strong' ? '0 0 0 8px rgba(46,138,87,.35), 6px 7px 0 rgba(30,27,24,.85)' : '';
+          c.style.boxShadow = o === worst ? '0 0 0 8px rgba(217,98,43,.4), 6px 7px 0 rgba(30,27,24,.85)' : s.level === 3 ? '0 0 0 8px rgba(46,138,87,.35), 6px 7px 0 rgba(30,27,24,.85)' : '';
         });
         r.querySelector('#sumban').innerHTML = !any ? '<span class="tear" style="font-size:30px">No votes yet. Press Back and tap the columns.</span>' :
           worst >= 0 ? '<span class="tear or" style="font-size:30px">Go over next: ' + esc(OBJ[worst].replace(/\.$/, '').toLowerCase()) + '</span>' :
           '<span class="tear" style="font-size:30px;background:var(--green)">Strong signal on all three.</span>';
       }
+      // n: 0 is the explainer, 1 to 3 are the goals, 4 is the summary
       function showStep(n){
-        cur = n;
-        [].forEach.call(r.querySelectorAll('.so'), function(s){ s.style.display = +s.getAttribute('data-o') === n ? 'block' : 'none'; });
-        r.querySelector('.sum').style.display = n === 3 ? 'block' : 'none';
-        r.querySelector('#sigt').textContent = n === 3 ? 'How did we do?' : 'Signal check: ' + (n + 1) + ' of 3';
-        und.style.visibility = clr.style.visibility = n === 3 ? 'hidden' : 'visible';
-        if(n === 3) paintSum(); else paintObj(n);
+        cur = Math.max(0, n - 1);
+        r.querySelector('.si').style.display = n === 0 ? 'block' : 'none';
+        [].forEach.call(r.querySelectorAll('.so'), function(s){ s.style.display = +s.getAttribute('data-o') === n - 1 ? 'block' : 'none'; });
+        r.querySelector('.sum').style.display = n === 4 ? 'block' : 'none';
+        r.querySelector('#sigt').textContent = n === 0 ? 'Signal check' : n === 4 ? 'How did we do?' : 'Signal check: ' + n + ' of 3';
+        und.style.visibility = clr.style.visibility = (n === 0 || n === 4) ? 'hidden' : 'visible';
+        if(n === 4) paintSum(); else if(n > 0) paintObj(n - 1);
       }
       [].forEach.call(r.querySelectorAll('.so'), function(sc){
         var o = +sc.getAttribute('data-o');
@@ -723,16 +766,16 @@
             // the icon bounces on every tap; a rising note tells the class which level was tapped
             if(!RM){ res.svg.classList.remove('bump'); void res.svg.getBoundingClientRect(); res.svg.classList.add('bump'); }
             tone('triangle', [262, 330, 392, 523][k], 0, .16, .16);
-            if(res.now === 'strong' && res.was !== 'strong') later(function(){ sfx('ping'); }, 160);
+            if(res.now === 3 && res.was !== 3 && res.tot >= 3) later(function(){ sfx('ping'); }, 160);
             stage.focus({ preventScroll:true });
           });
         });
       });
-      und.addEventListener('click', function(e){ e.stopPropagation(); for(var i = SIG.hist.length - 1; i >= 0; i--){ if(SIG.hist[i][0] === cur){ var h = SIG.hist.splice(i, 1)[0]; SIG.counts[cur][h[1]]--; break; } } showStep(cur); stage.focus({ preventScroll:true }); });
+      und.addEventListener('click', function(e){ e.stopPropagation(); for(var i = SIG.hist.length - 1; i >= 0; i--){ if(SIG.hist[i][0] === cur){ var h = SIG.hist.splice(i, 1)[0]; SIG.counts[cur][h[1]]--; break; } } showStep(cur + 1); stage.focus({ preventScroll:true }); });
       clr.addEventListener('click', function(e){
         e.stopPropagation();
         if(!armed){ armed = true; clr.textContent = 'Tap again'; later(function(){ armed = false; clr.textContent = 'Clear'; }, 2500); return; }
-        SIG.counts[cur] = [0,0,0,0]; SIG.hist = SIG.hist.filter(function(h){ return h[0] !== cur; }); armed = false; clr.textContent = 'Clear'; showStep(cur);
+        SIG.counts[cur] = [0,0,0,0]; SIG.hist = SIG.hist.filter(function(h){ return h[0] !== cur; }); armed = false; clr.textContent = 'Clear'; showStep(cur + 1);
       });
       r._showStep = showStep;
       showStep(0);
