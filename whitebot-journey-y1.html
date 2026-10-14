@@ -782,7 +782,7 @@ function runCine(){
   });
   at(47000, function(){
     wb.classList.add('steam', 'hot'); sfx('hiss');
-    bsayAt("I feel very hot. All my knowledge is floating away.", CL);
+    bsayAt("I feel very hot. All my facts are floating away.", CL);
     var icons = ['television', 'keyboard', 'mouse-simple', 'cursor-click', 'laptop', 'backspace', 'shield-check', 'lightbulb', 'desktop-tower', 'lock-key'];
     for(var k = 0; k < 8; k++) (function(k){ at(47500 + k * 900, function(){ drift(760 + rnd() * 90, 250, icons[k % icons.length]); }); })(k);
     for(var l = 4; l >= 0; l--) (function(l){ at(49000 + (4 - l) * 1500, function(){ leds(l); }); })(l);
@@ -883,12 +883,12 @@ function botState(){
   else { sleep(); }
 }
 var RECALL = [
-  "Ah, a spark. I remember. People make technology on purpose, to help us. It does not have to plug in.",
+  "Ah, a spark. I remember. People make technology to help us.",
   "I remember. A computer has a screen, a keyboard, a mouse and a base unit.",
   "I remember. Click to choose, double-click to open, and click and drag to move.",
-  "I remember. A keyboard is QWERTY, not in ABC order, and the space bar makes the gaps between words.",
-  "I remember. Backspace takes a letter away, the arrow keys move the cursor and Shift gives us a capital.",
-  "I remember. Rules keep us and the computers safe, and if something worries us we tell a grown-up."
+  "I remember. The letters are not in ABC order. The space bar makes a gap between words.",
+  "I remember. Backspace takes a letter away. Shift makes a capital letter.",
+  "I remember. Rules keep us safe. If something worries us, we tell a grown-up."
 ];
 function award(z){
   var from = { x: 930, y: 520 }, to = cen(wb.querySelector('.chest'));
@@ -1018,7 +1018,7 @@ function sZ4(){
     [].forEach.call(zc.querySelectorAll('.dcard'), function(c){
       enableDrag(c, function(){ return targets; }, function(el, d){
         var i = +el.getAttribute('data-i');
-        if(i !== +d.getAttribute('data-d')){ ask("Not that key. " + ks[i][1] + " is the job of the " + ks[i][0].toLowerCase() + ", so look for that key."); return false; }
+        if(i !== +d.getAttribute('data-d')){ ask("Not that key. Which key " + ks[i][1].charAt(0).toLowerCase() + ks[i][1].slice(1) + "? Look again."); return false; }
         d.querySelector('.binlist').appendChild(el); el.style.transform = ''; el.style.transition = ''; el.classList.add('placed'); sfx('ding'); done++; setTag('Matched ' + done + ' of 2');
         if(done === 2) solve(4); return true;
       });
@@ -1089,7 +1089,7 @@ function sZ3(){
   ] };
   frame(3, 'Mouse Maze', sortHtml(cfg), '<span class="tag cnt2" id="tg">Sorted 0 of 3</span>');
   botTo(30, 200, .72);
-  ask("Chip 3 is in Mouse Maze. Drag each job to the mouse move it needs.");
+  ask("Chip 3 is in Mouse Maze. Drag each job onto the mouse action it needs.");
   wireSort(cfg, 3);
 }
 function sZ2(){
@@ -1318,8 +1318,8 @@ function goGetReady(){
 var SCENES = { 3: sArrive, 4: sZ1, 5: sZ2, 6: sZ3, 7: sZ4, 8: sZ5, 9: sZ6, 10: sReboot };
 var NOTES = {
   3: "Say it as a story: Mr White-bot has lost his memory in the digital world and only this class can bring it back. Each zone is one end point from this half term. Read every instruction aloud. Let children come up and drag on the board; the rest of the class can point and call out.",
-  4: "Identify technology. People make it on purpose to help us. Three cards are made by people and three grow by themselves. A wrong drop gets a short explanation, so read it aloud.",
-  5: "Identify a computer and its main parts. Round one: drag each name to its part. Round two: tap the part by its job (two jobs). The robot names whatever a child tapped, so use it to say the words together.",
+  4: "Identify technology. People make it on purpose to help us. Three cards are made by people and three are living things. A wrong drop gets a short explanation, so read it aloud.",
+  5: "Identify a computer and its main parts. Round one: drag each name to its part. Round two: tap the part by its job (two jobs). The robot tells the class when a wrong part is tapped, so use it to say the part names together.",
   6: "Using a mouse in different ways. Three jobs, three moves. Ask the class to act out each move with a hand in the air before anyone drags a card.",
   7: "Typing on a keyboard. Type BOT: B is in the bottom row and O and T are in the top row. Then match the space bar and Backspace to their jobs.",
   8: "Editing text with the keyboard. Five taps in order: left arrow twice, Backspace, Shift, B. Different children can take different taps.",
