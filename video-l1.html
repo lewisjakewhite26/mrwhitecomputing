@@ -193,6 +193,9 @@
   .lv-v.view{border-color:var(--yel);color:var(--yel)}
   .lv-v .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--play);margin-right:7px;vertical-align:1px}
   .lv-msg{font-size:20px;color:#ffb4ad}
+  .lv-done{font-size:21px;color:var(--mut);max-width:520px;line-height:1.3}
+  .lv-done[hidden]{display:none}
+  .lv-bar .bt:disabled{opacity:.4;cursor:default}
   .lv-big{position:absolute;inset:0;z-index:20;background:rgba(6,7,9,.94);display:none;align-items:center;justify-content:center;padding:60px 120px;cursor:pointer}
   .lv-big.on{display:flex}
   .lv-big p{margin:0;font-size:52px;font-weight:700;line-height:1.25;text-align:center;overflow-wrap:anywhere}
@@ -307,7 +310,8 @@
       <div class="lv-bar">
         <button class="bt yel" type="button" id="lvStart"><span data-ph="play"></span>Start</button>
         <button class="bt yel" type="button" id="lvNextV" hidden><span data-ph="arrow-right"></span>Next version</button>
-        <button class="bt" type="button" id="lvBest" hidden>Which fits best?</button>
+        <button class="bt" type="button" id="lvBest" hidden>Final question</button>
+        <span class="lv-done" id="lvDone" hidden>All versions done. Press End when you&rsquo;ve finished with the board.</span>
         <span class="lv-msg" id="lvMsg"></span>
         <div class="lv-vers" id="lvVers"></div>
         <button class="bt" type="button" id="lvEnd" hidden>End</button>
@@ -552,17 +556,25 @@
     function versionCount(){ return room.versions.filter(function(v){ return v.kind === 'ver'; }).length; }
     function msg(t){ $('lvMsg').textContent = t || ''; }
 
+    // busy stops a double tap skipping a version; it lifts a few seconds after the question changes
+    var busy = false;
+    function finished(){ return !!room && room.versions.some(function(v){ return v.kind === 'best'; }); }
     function setQuestion(v, done){
-      msg('');
+      if(busy || finished()) return;
+      busy = true; msg('');
+      $('lvStart').disabled = $('lvNextV').disabled = $('lvBest').disabled = true;
       rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:v.q }).then(function(ok){
         if(!ok) throw new Error('rejected');
         room.versions.push(v); viewIdx = liveIdx(); save(); paint(true); if(done) done();
+        setTimeout(function(){ busy = false; paint(false); }, 3000);
       }).catch(function(){
+        busy = false;
+        $('lvStart').disabled = $('lvNextV').disabled = $('lvBest').disabled = false;
         if(!room.versions.length) room = null;
         msg("Couldn't reach the answer wall. Check the internet and try again.");
       });
     }
-    function newVersion(){ var n = versionCount() + 1; return { kind:'ver', label:'VERSION ' + n, chip:'V' + n, q:'Version ' + n + ': how does this music make you feel?', answers:[] }; }
+    function newVersion(){ var n = versionCount() + 1; return { kind:'ver', label:'VERSION ' + n, chip:String(n), q:'Version ' + n + ': how does this music make you feel?', answers:[] }; }
 
     $('lvStart').addEventListener('click', function(){
       room = { code:genCode(), token:genToken(), versions:[] };
@@ -649,7 +661,10 @@
     }
     function paint(full){
       var started = !!room;
-      $('lvStart').hidden = started; $('lvNextV').hidden = !started; $('lvBest').hidden = !started; $('lvEnd').hidden = !started;
+      var done = finished();
+      $('lvStart').hidden = started; $('lvEnd').hidden = !started;
+      $('lvNextV').hidden = !started || done; $('lvBest').hidden = !started || done; $('lvDone').hidden = !done;
+      $('lvStart').disabled = $('lvNextV').disabled = $('lvBest').disabled = busy;
       var f = $('lvFloat');
       var want = tierFor(room && room.versions[viewIdx] ? room.versions[viewIdx].answers.length : 0);
       if(want !== tier || !slots.length){ tier = want; full = true; f.className = 'lv-float ' + tier.cls; }
