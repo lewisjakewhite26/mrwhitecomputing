@@ -2410,7 +2410,16 @@ window.HB_GAUGE = (function(){
     '<div class="icon" style="background:#1B2540;color:#F2B53A"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z"/></svg></div>' +
     '<div class="mid"><h2>Year 3 and 4</h2><p style="color:#4C5568">Autumn 2: Stop frame animation</p></div>' +
     '<div class="tag" style="color:#2F5FD0">Lesson 1 ready</div>';
-  groupsEl.appendChild(an);
+  groupsEl.insertBefore(an, vp);
+  var pn = document.createElement('a');
+  pn.className = 'group ready';
+  pn.href = 'painting.html';
+  pn.style.cssText = 'background:#FDEFC8;border-color:#F5B82E;color:#1B2540;text-decoration:none';
+  pn.innerHTML =
+    '<div class="icon" style="background:#F5B82E;color:#1B2540"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M232,32a8,8,0,0,0-8-8c-44.08,0-89.31,49.71-114.43,82.63A60,60,0,0,0,32,164c0,30.88-19.54,44.73-20.47,45.37A8,8,0,0,0,16,224H92a60,60,0,0,0,57.37-77.57C182.3,121.31,232,76.08,232,32ZM92,208H34.63C41.38,198.41,48,183.92,48,164a44,44,0,1,1,44,44Zm32.42-94.45q5.14-6.66,10.09-12.55A76.23,76.23,0,0,1,155,121.49q-5.9,4.94-12.55,10.09A60.54,60.54,0,0,0,124.42,113.55Zm42.7-2.68a92.57,92.57,0,0,0-22-22c31.78-34.53,55.75-45,69.9-47.91C212.17,55.12,201.65,79.09,167.12,110.87Z"/></svg></div>' +
+    '<div class="mid"><h2>Year 1 and 2</h2><p style="color:#4C5568">Autumn 2: Digital painting</p></div>' +
+    '<div class="tag" style="color:#8A5A12">Lesson 1 ready</div>';
+  groupsEl.insertBefore(pn, an);
 
   /* ---------- hub ---------- */
   var spine = document.getElementById('spine');

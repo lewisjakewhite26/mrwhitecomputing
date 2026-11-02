@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painting on a Computer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --wall:#F4EFE4; --card:#FFFFFF; --edge:#E4DCCB; --ink:#1B2540; --muted:#4C5568;
+    --sun:#F5B82E; --sun-soft:#FDEFC8; --good:#0E7D55; --good-soft:#D3F1E3; --bad:#B23A26; --bad-soft:#F8DCD5;
+    --p1:#E23B2E; --p2:#F28A1E; --p3:#F7D024; --p4:#2E9E4F; --p5:#2F6BE0; --p6:#7B4BC9;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;height:100%;background:#20283d;color:var(--ink);font-family:Lexend,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;background:var(--wall)}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none}
+  button{font-family:inherit;color:inherit}
+
+  .top{position:absolute;left:0;right:0;top:0;height:72px;display:flex;align-items:center;gap:18px;padding:0 28px}
+  .top a.home{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:600;font-size:20px;padding:9px 16px;border:2px solid var(--edge);border-radius:12px;background:var(--card)}
+  .top .unit{font-size:21px;font-weight:600;color:var(--muted)}
+  .top .unit b{color:var(--ink)}
+  .top .splash{margin-left:auto;display:flex;gap:8px}
+  .top .splash i{width:18px;height:18px;border-radius:50%}
+
+  .area{position:absolute;left:0;right:0;top:72px;height:700px}
+  .part{position:absolute;inset:0;padding:30px 64px 20px;display:none}
+  .part.on{display:block}
+  h2{margin:0 0 26px;font-size:72px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .lead{font-size:44px;line-height:1.35;margin:0;font-weight:500}
+  .pp{opacity:0;transform:translateY(14px);transition:opacity .45s,transform .45s}
+  .pp.in{opacity:1;transform:none}
+  .rm .pp{transform:none;transition:opacity .2s}
+  .hl{background:var(--sun-soft);padding:0 .18em;border-radius:8px}
+
+  .bt{display:inline-flex;align-items:center;gap:12px;font-size:30px;font-weight:700;color:var(--ink);background:var(--card);border:3px solid var(--edge);border-radius:16px;padding:16px 26px;cursor:pointer;text-decoration:none;line-height:1}
+  .bt .i{font-size:34px}
+  .bt.go{background:var(--sun);border-color:var(--sun)}
+  .bt.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bt.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bt:disabled{opacity:.4;cursor:default}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .banner{display:flex;align-items:center;gap:22px;font-size:44px;font-weight:700;line-height:1.25;padding:24px 32px;border-radius:20px;background:var(--sun-soft)}
+  .banner .i{font-size:54px}
+
+  /* title */
+  .title-wrap{position:absolute;left:96px;top:0;bottom:0;width:780px;display:flex;flex-direction:column;justify-content:center}
+  .kick{font-size:24px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin:0 0 20px}
+  .title-wrap h1{margin:0;font-size:120px;font-weight:800;letter-spacing:-.035em;line-height:.98}
+  .title-wrap .sub{font-size:38px;line-height:1.35;margin:30px 0 0;color:var(--muted)}
+  .title-art{position:absolute;right:90px;top:70px;width:600px;height:500px;border-radius:12px;background:#fff;box-shadow:0 0 0 3px var(--edge),0 30px 60px -36px rgba(27,37,64,.5);overflow:hidden}
+  .title-art canvas{width:100%;height:100%;display:block}
+
+  /* slider */
+  .cmp{display:grid;grid-template-columns:980px 1fr;gap:40px;align-items:start}
+  .art-wrap{position:relative;width:980px;height:551px;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px var(--edge);--x:50%;touch-action:none}
+  .art-wrap img{position:absolute;inset:0;width:980px;height:551px;object-fit:cover;user-select:none;pointer-events:none}
+  .art-b{position:absolute;inset:0;width:var(--x);overflow:hidden}
+  .art-line{position:absolute;top:0;bottom:0;left:var(--x);width:5px;margin-left:-2px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.35);pointer-events:none}
+  .art-grip{position:absolute;top:50%;left:var(--x);width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3);display:grid;place-items:center;font-size:40px;pointer-events:none}
+  .art-range{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+  .art-tag{position:absolute;top:16px;padding:10px 18px;border-radius:999px;background:rgba(27,37,64,.82);color:#fff;font-size:26px;font-weight:700;opacity:0;transition:opacity .4s}
+  .art-tag.l{left:16px} .art-tag.r{right:16px}
+  .tags-on .art-tag{opacity:1}
+  .art-empty{position:absolute;inset:18px;border:4px dashed var(--edge);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:40px;color:var(--muted);font-size:28px;line-height:1.4}
+  .art-empty b{font-size:36px;color:var(--ink)}
+  .cmp .say{display:flex;flex-direction:column;gap:22px}
+  .cmp .say p{margin:0;font-size:38px;line-height:1.3;font-weight:600}
+
+  /* tools */
+  .tgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+  .tc{background:var(--card);border:3px solid var(--edge);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+  .tc .hd{display:flex;align-items:center;gap:14px;padding:18px 20px;font-size:34px;font-weight:800}
+  .tc .hd .i{font-size:46px}
+  .tc .mk{height:200px;border-top:3px solid var(--edge);background:#fff;position:relative}
+  .tc .mk canvas{width:100%;height:100%;display:block}
+  .tc .mk .q{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:700;color:var(--muted);background:var(--wall)}
+  .tc .say{padding:14px 18px 18px;font-size:26px;line-height:1.3;font-weight:600;border-top:3px solid var(--edge);min-height:118px}
+  .tc.in .mk .q{display:none}
+  .tc .say{visibility:hidden}
+  .tc.in .say{visibility:visible}
+  .tc.in{border-color:var(--sun)}
+
+  /* rubber */
+  .two{display:grid;grid-template-columns:760px 1fr;gap:50px;align-items:center}
+  .pic{height:480px;border-radius:16px;background:#fff;box-shadow:0 0 0 3px var(--edge);overflow:hidden}
+  .pic canvas{width:100%;height:100%;display:block}
+  .two .say{display:flex;flex-direction:column;gap:24px}
+  .two .say p{margin:0;font-size:40px;line-height:1.3;font-weight:600}
+
+  /* undo */
+  .hist{display:flex;flex-direction:column-reverse;gap:14px}
+  .hs{display:flex;align-items:center;gap:18px;font-size:34px;font-weight:700;padding:16px 22px;border-radius:16px;background:var(--card);border:3px solid var(--edge);transition:opacity .3s,transform .3s}
+  .hs .n{width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:26px;flex:none}
+  .hs.latest{border-color:var(--sun);background:var(--sun-soft)}
+  .hs.gone{opacity:.25;text-decoration:line-through;transform:translateX(20px)}
+  .hlab{font-size:22px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+
+  /* leak */
+  .leak{display:grid;grid-template-columns:900px 1fr;gap:40px}
+  .leak .pic{height:520px}
+  .votes{display:flex;flex-direction:column;gap:16px}
+  .vote{font-size:34px;font-weight:700;padding:20px 24px;border-radius:18px;background:var(--card);border:3px solid var(--edge);text-align:left;cursor:pointer;display:flex;align-items:center;gap:18px}
+  .vote .i{font-size:44px}
+  .vote.on{border-color:var(--ink);background:var(--sun-soft)}
+
+  /* task */
+  .task{display:grid;grid-template-columns:1fr 430px;gap:40px}
+  .tk{display:flex;flex-direction:column;gap:18px}
+  .yr{display:flex;gap:22px;align-items:center;padding:20px 26px;border-radius:18px;background:var(--card);border:3px solid var(--edge);font-size:34px;line-height:1.3;font-weight:600}
+  .yr b{flex:none;font-size:24px;letter-spacing:.1em;padding:8px 14px;border-radius:10px;background:var(--ink);color:#fff}
+  .side{display:flex;flex-direction:column;gap:18px}
+  .timer{padding:22px 26px;border-radius:20px;background:var(--card);border:3px solid var(--edge);display:flex;flex-direction:column;gap:14px}
+  .timer .t{font-size:84px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+  .timer.done .t{color:var(--bad)}
+  .open{padding:20px 22px;border-radius:20px;background:var(--sun-soft);display:flex;align-items:center;gap:18px}
+  .open .qr{width:150px;height:150px;flex:none;background:#fff;border-radius:12px;padding:8px;display:grid;place-items:center}
+  .open .qr img,.open .qr canvas{width:134px!important;height:134px!important}
+  .open .qr{font-size:11px;overflow-wrap:anywhere;overflow:hidden}
+  .open p{margin:0;font-size:22px;line-height:1.35;font-weight:600}
+
+  /* freeze */
+  .qs{display:flex;flex-direction:column;gap:20px}
+  .q{display:flex;align-items:center;gap:24px;font-size:44px;font-weight:700;line-height:1.3;padding:24px 32px;border-radius:20px;background:var(--card);border:3px solid var(--edge)}
+  .q .i{font-size:54px}
+
+  /* quiz */
+  .quiz{display:grid;grid-template-columns:720px 1fr;gap:48px}
+  .quiz .pic{height:470px}
+  .qn{font-size:24px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin-bottom:12px}
+  .ans{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .an{display:flex;align-items:center;gap:16px;font-size:32px;font-weight:700;padding:18px 20px;border-radius:18px;background:var(--card);border:3px solid var(--edge);cursor:pointer}
+  .an .i{font-size:42px}
+  .an.right{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+  .an.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+  .fb{margin-top:18px;font-size:32px;font-weight:700;line-height:1.3;min-height:84px}
+  .fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
+
+  /* confidence */
+  .faces{display:flex;gap:44px;justify-content:center;margin-top:20px}
+  .face{display:flex;flex-direction:column;align-items:center;gap:16px;background:none;border:0;cursor:pointer;font-size:34px;font-weight:700}
+  .face .f{width:220px;height:220px;border-radius:50%;background:var(--card);border:5px solid var(--edge);display:grid;place-items:center;font-size:150px;transition:transform .15s}
+  .face.pick .f{border-color:var(--ink);transform:scale(1.06)}
+  .face[data-k="1"] .f{color:var(--p2)} .face[data-k="2"] .f{color:var(--sun)} .face[data-k="3"] .f{color:var(--good)}
+  .face .c{font-size:30px;color:var(--muted);min-height:1.2em}
+
+  /* live task */
+  .part.live{padding:24px 40px 16px}
+  .lv{display:grid;grid-template-columns:300px 1fr;gap:30px;height:100%}
+  .lv-side{display:flex;flex-direction:column;gap:12px}
+  .lv-qr{width:270px;height:270px;border-radius:18px;background:#fff;padding:14px;display:grid;place-items:center;box-shadow:0 0 0 3px var(--edge)}
+  .lv-qr img,.lv-qr canvas{width:242px!important;height:242px!important}
+  .lv-qr.off{background:var(--card);color:var(--muted);font-size:22px;text-align:center;padding:24px;line-height:1.35}
+  .lv-code{font-size:58px;font-weight:800;letter-spacing:.08em;line-height:1}
+  .lv-codelab{font-size:18px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .lv-joined{font-size:24px;font-weight:700}
+  .lv-msg{font-size:20px;color:var(--bad);line-height:1.3}
+  .lv-main{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .lv-task{display:flex;align-items:center;gap:20px;padding:14px 22px;border-radius:18px;background:var(--sun-soft);min-height:96px}
+  .lv-task .lab{font-size:18px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .lv-task b{display:block;font-size:46px;font-weight:800;line-height:1.1}
+  .lv-chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-size:24px;font-weight:700;padding:12px 18px;border-radius:999px;background:var(--card);border:3px solid var(--edge);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip input{font:inherit;font-size:22px;border:0;outline:0;background:transparent;width:230px}
+  .lv-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));grid-auto-rows:136px;gap:12px;overflow:hidden;align-content:start}
+  .pic-s{position:relative;border-radius:12px;background:#fff;box-shadow:0 0 0 3px var(--edge);overflow:hidden;cursor:pointer;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+  .pic-s img{width:100%;height:100%;object-fit:cover;display:block}
+  .pic-s .x{position:absolute;right:6px;top:6px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(27,37,64,.75);color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center}
+  .lv-empty{grid-column:1 / -1;font-size:28px;color:var(--muted);padding:40px 0;line-height:1.4}
+  @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+  .rm .pic-s{animation:none}
+  .big{position:absolute;inset:0;z-index:20;background:rgba(27,37,64,.92);display:none;align-items:center;justify-content:center;padding:50px;cursor:pointer}
+  .big.on{display:flex}
+  .big img{max-width:100%;max-height:100%;border-radius:14px;background:#fff}
+
+  /* nav: a row of paint pots */
+  .nav{position:absolute;left:0;right:0;bottom:0;height:128px;display:flex;align-items:center;gap:18px;padding:0 26px;background:var(--card);border-top:3px solid var(--edge)}
+  .pots{flex:1;display:flex;align-items:center;justify-content:center;gap:10px}
+  .pot{width:62px;height:62px;border-radius:50%;border:3px solid var(--edge);background:var(--wall);display:grid;place-items:center;font-size:20px;font-weight:800;color:var(--muted);cursor:pointer;padding:0;transition:transform .15s}
+  .pot.seen{background:var(--c);border-color:var(--c);color:#fff}
+  .pot.cur{transform:scale(1.22);background:var(--c);border-color:var(--ink);color:#fff;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--ink)}
+  .nb{height:82px;min-width:82px;display:grid;place-items:center;border-radius:18px;border:3px solid var(--edge);background:var(--card);font-size:38px;cursor:pointer;padding:0}
+  .nb.next{display:flex;gap:12px;padding:0 30px;font-size:28px;font-weight:800;background:var(--sun);border-color:var(--sun)}
+  .nb:disabled{opacity:.35;cursor:default}
+  .dots{display:flex;gap:6px;position:absolute;right:30px;top:-30px}
+  .dots i{width:14px;height:14px;border-radius:4px;background:var(--edge)}
+  .dots i.on{background:var(--ink)}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+
+  <div class="top">
+    <a class="home" href="painting.html"><span data-ph="arrow-left"></span>Units</a>
+    <span class="unit">Digital painting &middot; <b>Lesson 1</b> &middot; <span id="pname"></span></span>
+    <span class="splash"><i style="background:var(--p1)"></i><i style="background:var(--p2)"></i><i style="background:var(--p3)"></i><i style="background:var(--p4)"></i><i style="background:var(--p5)"></i><i style="background:var(--p6)"></i></span>
+  </div>
+
+  <div class="area">
+
+    <!-- 0 title -->
+    <section class="part" data-name="Title">
+      <div class="title-wrap">
+        <p class="kick">DIGITAL PAINTING &middot; LESSON 1</p>
+        <h1>Painting on a computer</h1>
+        <p class="sub">Today you meet the tools and paint your own picture on an iPad.</p>
+      </div>
+      <div class="title-art"><canvas width="600" height="500" data-art="title"></canvas></div>
+    </section>
+
+    <!-- 1 real or painted -->
+    <section class="part" data-name="Real or painted?" id="p-flower">
+      <div class="cmp">
+        <div class="art-wrap" id="artWrap"></div>
+        <div class="say">
+          <h2 style="font-size:60px;margin:0">Real or painted?</h2>
+          <p>Slide across slowly. What changes?</p>
+          <p class="pp" data-s="2">One is a real flower. One was painted on a computer.</p>
+          <div class="banner pp" data-s="3" style="font-size:36px"><span data-ph="lightbulb"></span>Can you paint without any paint?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 tools -->
+    <section class="part" data-name="The tools">
+      <h2>Meet the tools</h2>
+      <div class="tgrid" id="tgrid"></div>
+      <div class="row pp" data-s="6" style="margin-top:22px"><a class="bt dark" href="paint.html?mode=l1&amp;board" target="_blank" rel="noopener"><span data-ph="paint-brush"></span>Try them on the board</a></div>
+    </section>
+
+    <!-- 3 rubber -->
+    <section class="part" data-name="The rubber">
+      <div class="two">
+        <div class="pic"><canvas width="760" height="480" id="rubCv"></canvas></div>
+        <div class="say">
+          <h2 style="margin:0">The rubber</h2>
+          <p>What will happen if I rub out on the blue?</p>
+          <div class="row"><button class="bt go" type="button" id="rubGo"><span data-ph="eraser"></span>Rub it out</button><button class="bt" type="button" id="rubReset"><span data-ph="arrow-counter-clockwise"></span>Again</button></div>
+          <p class="pp" data-s="1">It leaves <span class="hl">white</span>.</p>
+          <p class="pp" data-s="2">The rubber doesn&rsquo;t take paint away. It paints white.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 undo -->
+    <section class="part" data-name="Undo">
+      <div class="two">
+        <div class="pic"><canvas width="760" height="480" id="undoCv"></canvas></div>
+        <div class="say">
+          <h2 style="margin:0">Undo</h2>
+          <span class="hlab">WHAT I DID, IN ORDER</span>
+          <div class="hist" id="hist"></div>
+          <div class="row"><button class="bt go" type="button" id="undoGo"><span data-ph="arrow-counter-clockwise"></span>Undo</button><button class="bt" type="button" id="undoReset">Start again</button></div>
+          <p class="pp" data-s="1" style="font-size:34px">The computer remembers every step. Undo takes back the last one.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 leak -->
+    <section class="part" data-name="Predict the leak">
+      <div class="leak">
+        <div class="pic"><canvas width="900" height="520" id="leakCv"></canvas></div>
+        <div class="votes">
+          <h2 style="font-size:50px;margin:0 0 6px">What will the fill do?</h2>
+          <button class="vote" type="button"><span data-ph="flower"></span>Only fill the circle</button>
+          <button class="vote" type="button"><span data-ph="paint-bucket"></span>Fill all over the page</button>
+          <div class="row" style="margin-top:6px">
+            <button class="bt go" type="button" id="leakFill"><span data-ph="paint-bucket"></span>Fill inside</button>
+            <button class="bt" type="button" id="leakFix"><span data-ph="pencil-simple"></span>Close the gap</button>
+          </div>
+          <p class="pp" data-s="1" style="margin:0;font-size:32px;font-weight:700;line-height:1.3">Fill pours out through any gap, just like real paint.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 live task -->
+    <section class="part live" data-name="Quick tasks" id="p-live">
+      <div class="lv">
+        <div class="lv-side">
+          <div class="lv-qr off" id="lvQr">Press Start and a code appears here</div>
+          <span class="lv-codelab">CODE</span>
+          <span class="lv-code" id="lvCode">&middot; &middot; &middot;</span>
+          <span class="lv-joined" id="lvJoined"></span>
+          <button class="bt go" type="button" id="lvStart"><span data-ph="play"></span>Start</button>
+          <button class="bt" type="button" id="lvClear" hidden>Clear pictures</button>
+          <span class="lv-msg" id="lvMsg"></span>
+        </div>
+        <div class="lv-main">
+          <div class="lv-task"><div><span class="lab">YOUR TASK</span><b id="lvTask">Draw a circle</b></div></div>
+          <div class="lv-chips" id="lvChips"></div>
+          <div class="lv-grid" id="lvGrid"><div class="lv-empty">Pictures appear here when children press Send to the board.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 your turn -->
+    <section class="part" data-name="Paint a garden">
+      <h2>Paint a garden</h2>
+      <div class="task">
+        <div class="tk">
+          <div class="yr pp" data-s="1"><b>EVERYONE</b>Use every tool at least once. Use undo if it goes wrong.</div>
+          <div class="yr pp" data-s="2"><b>YEAR 2</b>Pick the best tool for each part. Be ready to say why.</div>
+          <div class="banner pp" data-s="3" style="font-size:34px"><span data-ph="paint-bucket"></span>Fill leaking? Close the gap, then fill again.</div>
+        </div>
+        <div class="side">
+          <div class="timer" id="timer"><span class="t" id="tt">18:00</span><div class="row"><button class="bt go" type="button" id="tgo"><span data-ph="play"></span>Start</button><button class="bt" type="button" id="treset"><span data-ph="arrow-counter-clockwise"></span>Reset</button></div></div>
+          <div class="open"><div class="qr" id="appQr"></div><p>Open the paint app: scan this, or use the link on the iPad home screen.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 freeze -->
+    <section class="part" data-name="Freeze">
+      <h2>Freeze</h2>
+      <div class="qs">
+        <div class="q pp" data-s="1"><span data-ph="spray-bottle"></span>Show me your spray.</div>
+        <div class="q pp" data-s="2"><span data-ph="paint-bucket"></span>Did your fill leak? How did you fix it?</div>
+        <div class="q pp" data-s="3"><span data-ph="arrow-counter-clockwise"></span>Who used undo? What did it take back?</div>
+      </div>
+    </section>
+
+    <!-- 9 quiz -->
+    <section class="part" data-name="Which tool?">
+      <div class="quiz">
+        <div class="pic"><canvas width="720" height="470" id="quizCv"></canvas></div>
+        <div>
+          <div class="qn" id="qn">QUESTION 1 OF 6</div>
+          <h2 style="font-size:58px;margin:0 0 22px" id="qq">Which tool made this?</h2>
+          <div class="ans" id="ans"></div>
+          <div class="fb" id="fb"></div>
+          <button class="bt" type="button" id="qnext" hidden><span data-ph="arrow-right"></span>Next question</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 save -->
+    <section class="part" data-name="Save">
+      <h2>Save your picture</h2>
+      <div class="qs">
+        <div class="q"><span data-ph="floppy-disk"></span>Tap Save, then tap your name.</div>
+        <div class="q pp" data-s="1" style="background:var(--sun-soft)"><span data-ph="lightbulb"></span><span>Year 2: &ldquo;I used the ____ for the ____ because ____.&rdquo;</span></div>
+      </div>
+    </section>
+
+    <!-- 11 confidence -->
+    <section class="part" data-name="How sure?">
+      <h2 style="text-align:center">How sure are you about the tools?</h2>
+      <div class="faces" id="faces">
+        <button class="face" type="button" data-k="1"><span class="f" data-ph="smiley-sad"></span>Not yet<span class="c"></span></button>
+        <button class="face" type="button" data-k="2"><span class="f" data-ph="smiley-meh"></span>Getting there<span class="c"></span></button>
+        <button class="face" type="button" data-k="3"><span class="f" data-ph="smiley"></span>Got it<span class="c"></span></button>
+      </div>
+    </section>
+
+    <div class="big" id="big"></div>
+  </div>
+
+  <div class="nav">
+    <div class="dots" id="dots"></div>
+    <button class="nb" id="back" type="button" aria-label="Back"><span data-ph="arrow-left"></span></button>
+    <div class="pots" id="pots"></div>
+    <button class="nb next" id="next" type="button"><span id="nextlab">Next</span><span data-ph="arrow-right"></span></button>
+  </div>
+
+</div></div>
+
+<script>
+(function(){
+  // Teacher: the flower pair. Both pictures must be the same size and line up exactly.
+  // Put the two files next to this page and write their names here, e.g. 'img/flower-real.jpg'.
+  var FLOWER_REAL = '';
+  var FLOWER_PAINTED = '';
+
+  var PH = {"flower": "<path d=\"M210.35,129.36c-.81-.47-1.7-.92-2.62-1.36.92-.44,1.81-.89,2.62-1.36a40,40,0,1,0-40-69.28c-.81.47-1.65,1-2.48,1.59.08-1,.13-2,.13-3a40,40,0,0,0-80,0c0,.94,0,1.94.13,3-.83-.57-1.67-1.12-2.48-1.59a40,40,0,1,0-40,69.28c.81.47,1.7.92,2.62,1.36-.92.44-1.81.89-2.62,1.36a40,40,0,1,0,40,69.28c.81-.47,1.65-1,2.48-1.59-.08,1-.13,2-.13,2.95a40,40,0,0,0,80,0c0-.94-.05-1.94-.13-2.95.83.57,1.67,1.12,2.48,1.59A39.79,39.79,0,0,0,190.29,204a40.43,40.43,0,0,0,10.42-1.38,40,40,0,0,0,9.64-73.28ZM104,128a24,24,0,1,1,24,24A24,24,0,0,1,104,128Zm74.35-56.79a24,24,0,1,1,24,41.57c-6.27,3.63-18.61,6.13-35.16,7.19A40,40,0,0,0,154.53,98.1C163.73,84.28,172.08,74.84,178.35,71.21ZM128,32a24,24,0,0,1,24,24c0,7.24-4,19.19-11.36,34.06a39.81,39.81,0,0,0-25.28,0C108,75.19,104,63.24,104,56A24,24,0,0,1,128,32ZM44.86,80a24,24,0,0,1,32.79-8.79c6.27,3.63,14.62,13.07,23.82,26.89A40,40,0,0,0,88.81,120c-16.55-1.06-28.89-3.56-35.16-7.18A24,24,0,0,1,44.86,80ZM77.65,184.79a24,24,0,1,1-24-41.57c6.27-3.63,18.61-6.13,35.16-7.19a40,40,0,0,0,12.66,21.87C92.27,171.72,83.92,181.16,77.65,184.79ZM128,224a24,24,0,0,1-24-24c0-7.24,4-19.19,11.36-34.06a39.81,39.81,0,0,0,25.28,0C148,180.81,152,192.76,152,200A24,24,0,0,1,128,224Zm83.14-48a24,24,0,0,1-32.79,8.79c-6.27-3.63-14.62-13.07-23.82-26.89A40,40,0,0,0,167.19,136c16.55,1.06,28.89,3.56,35.16,7.18A24,24,0,0,1,211.14,176Z\"/>", "check": "<path d=\"M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z\"/>", "smiley-meh": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-56a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,160ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Z\"/>", "monitor": "<path d=\"M208,40H48A24,24,0,0,0,24,64V176a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V64A24,24,0,0,0,208,40Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V64a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Zm-48,48a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,224Z\"/>", "hand-pointing": "<path d=\"M196,88a27.86,27.86,0,0,0-13.35,3.39A28,28,0,0,0,144,74.7V44a28,28,0,0,0-56,0v80l-3.82-6.13A28,28,0,0,0,35.73,146l4.67,8.23C74.81,214.89,89.05,240,136,240a88.1,88.1,0,0,0,88-88V116A28,28,0,0,0,196,88Zm12,64a72.08,72.08,0,0,1-72,72c-37.63,0-47.84-18-81.68-77.68l-4.69-8.27,0-.05A12,12,0,0,1,54,121.61a11.88,11.88,0,0,1,6-1.6,12,12,0,0,1,10.41,6,1.76,1.76,0,0,0,.14.23l18.67,30A8,8,0,0,0,104,152V44a12,12,0,0,1,24,0v68a8,8,0,0,0,16,0V100a12,12,0,0,1,24,0v20a8,8,0,0,0,16,0v-4a12,12,0,0,1,24,0Z\"/>", "smiley-sad": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Zm-1.08,64a8,8,0,1,1-13.84,8c-7.47-12.91-19.21-20-33.08-20s-25.61,7.1-33.08,20a8,8,0,1,1-13.84-8c10.29-17.79,27.39-28,46.92-28S164.63,154.2,174.92,172Z\"/>", "eraser": "<path d=\"M225,80.4,183.6,39a24,24,0,0,0-33.94,0L31,157.66a24,24,0,0,0,0,33.94l30.06,30.06A8,8,0,0,0,66.74,224H216a8,8,0,0,0,0-16h-84.7L225,114.34A24,24,0,0,0,225,80.4ZM108.68,208H70.05L42.33,180.28a8,8,0,0,1,0-11.31L96,115.31,148.69,168Zm105-105L160,156.69,107.31,104,161,50.34a8,8,0,0,1,11.32,0l41.38,41.38a8,8,0,0,1,0,11.31Z\"/>", "arrow-counter-clockwise": "<path d=\"M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z\"/>", "arrows-left-right": "<path d=\"M213.66,181.66l-32,32a8,8,0,0,1-11.32-11.32L188.69,184H48a8,8,0,0,1,0-16H188.69l-18.35-18.34a8,8,0,0,1,11.32-11.32l32,32A8,8,0,0,1,213.66,181.66Zm-139.32-64a8,8,0,0,0,11.32-11.32L67.31,88H208a8,8,0,0,0,0-16H67.31L85.66,53.66A8,8,0,0,0,74.34,42.34l-32,32a8,8,0,0,0,0,11.32Z\"/>", "palette": "<path d=\"M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z\"/>", "user": "<path d=\"M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z\"/>", "paint-brush": "<path d=\"M232,32a8,8,0,0,0-8-8c-44.08,0-89.31,49.71-114.43,82.63A60,60,0,0,0,32,164c0,30.88-19.54,44.73-20.47,45.37A8,8,0,0,0,16,224H92a60,60,0,0,0,57.37-77.57C182.3,121.31,232,76.08,232,32ZM92,208H34.63C41.38,198.41,48,183.92,48,164a44,44,0,1,1,44,44Zm32.42-94.45q5.14-6.66,10.09-12.55A76.23,76.23,0,0,1,155,121.49q-5.9,4.94-12.55,10.09A60.54,60.54,0,0,0,124.42,113.55Zm42.7-2.68a92.57,92.57,0,0,0-22-22c31.78-34.53,55.75-45,69.9-47.91C212.17,55.12,201.65,79.09,167.12,110.87Z\"/>", "paint-bucket": "<path d=\"M234.53,139.07a8,8,0,0,0,3.13-13.24L122.17,10.34a8,8,0,0,0-11.31,0L70.25,51,45.65,26.34A8,8,0,0,0,34.34,37.66l24.6,24.6L15,106.17a24,24,0,0,0,0,33.94L99.89,225a24,24,0,0,0,33.94,0l78.49-78.49Zm-32.19-5.24-79.83,79.83a8,8,0,0,1-11.31,0L26.34,128.8a8,8,0,0,1,0-11.31L70.25,73.57l29.12,29.12a28,28,0,1,0,11.31-11.32L81.57,62.26l35-34.95L217.19,128l-11.72,3.9A8.09,8.09,0,0,0,202.34,133.83Zm-86.83-26.31,0,0a13.26,13.26,0,1,1-.05.06S115.51,107.53,115.51,107.52Zm123.15,56a8,8,0,0,0-13.32,0C223.57,166.23,208,190.09,208,208a24,24,0,0,0,48,0C256,190.09,240.43,166.23,238.66,163.56ZM232,216a8,8,0,0,1-8-8c0-6.8,4-16.32,8-24.08,4,7.76,8,17.34,8,24.08A8,8,0,0,1,232,216Z\"/>", "users-three": "<path d=\"M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z\"/>", "pause": "<path d=\"M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z\"/>", "x": "<path d=\"M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z\"/>", "paper-plane-right": "<path d=\"M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z\"/>", "spray-bottle": "<path d=\"M200,80a8,8,0,0,0,8-8,56.06,56.06,0,0,0-56-56H80A16,16,0,0,0,64,32V80a24,24,0,0,1-24,24,8,8,0,0,0,0,16A40,40,0,0,0,80,80h32v24.62a23.87,23.87,0,0,1-9,18.74L87,136.15a39.79,39.79,0,0,0-15,31.23V224a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V211.47A270.88,270.88,0,0,0,174,80ZM80,32h72a40.08,40.08,0,0,1,39.2,32H80ZM192,211.47V224H88V167.38a23.87,23.87,0,0,1,9-18.74l16-12.79a39.79,39.79,0,0,0,15-31.23V80h27.52A254.86,254.86,0,0,1,192,211.47Z\"/>", "floppy-disk": "<path d=\"M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z\"/>", "arrow-right": "<path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/>", "eye": "<path d=\"M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z\"/>", "arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "play": "<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>", "timer": "<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>", "pencil-simple": "<path d=\"M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z\"/>", "smiley": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Zm-1.07,48c-10.29,17.79-27.4,28-46.93,28s-36.63-10.2-46.92-28a8,8,0,1,1,13.84-8c7.47,12.91,19.21,20,33.08,20s25.61-7.1,33.07-20a8,8,0,0,1,13.86,8Z\"/>", "lightbulb": "<path d=\"M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.65,71.65,0,0,0,27.64,56.3A32,32,0,0,1,96,186v6h64v-6a32.15,32.15,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Zm-16.11-9.34a57.6,57.6,0,0,0-46.56-46.55,8,8,0,0,0-2.66,15.78c16.57,2.79,30.63,16.85,33.44,33.45A8,8,0,0,0,176,104a9,9,0,0,0,1.35-.11A8,8,0,0,0,183.89,94.66Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  function $(id){ return document.getElementById(id); }
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- marks: drawn the same way the paint app draws them ---------- */
+  var C = { black:'#1B1B1F', red:'#E23B2E', orange:'#F28A1E', yellow:'#F7D024', green:'#2E9E4F', blue:'#2F6BE0', purple:'#7B4BC9', brown:'#8A5A2B' };
+  function seeded(s){ return function(){ s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+  function stroke(cx, pts, w, c){ cx.strokeStyle = c; cx.lineWidth = w; cx.lineCap = 'round'; cx.lineJoin = 'round'; cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for(var i = 1; i < pts.length; i++) cx.lineTo(pts[i][0], pts[i][1]); cx.stroke(); }
+  function wave(x0, x1, y, a, n){ var p = []; for(var i = 0; i <= n; i++){ var t = i / n; p.push([x0 + (x1 - x0) * t, y + Math.sin(t * Math.PI * 2.2) * a]); } return p; }
+  function spray(cx, x, y, r, n, c, rnd){ cx.fillStyle = c; for(var i = 0; i < n; i++){ var rr = r * Math.sqrt(rnd()), t = rnd() * Math.PI * 2; cx.fillRect(Math.round(x + rr * Math.cos(t)), Math.round(y + rr * Math.sin(t)), 4, 4); } }
+  function white(cx, w, h){ cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h); }
+
+  // flood fill, the same rule as the app: every touching pixel that matches, through any gap
+  function fillOrder(cx, w, h, x0, y0){
+    var d = cx.getImageData(0, 0, w, h).data, i0 = (y0 * w + x0) * 4, tr = d[i0], tg = d[i0 + 1], tb = d[i0 + 2];
+    var seen = new Uint8Array(w * h), order = new Int32Array(w * h), head = 0, tail = 0;
+    function ok(p){ var k = p * 4; return !seen[p] && Math.abs(d[k] - tr) + Math.abs(d[k + 1] - tg) + Math.abs(d[k + 2] - tb) <= 110; }
+    var s = y0 * w + x0; seen[s] = 1; order[tail++] = s;
+    while(head < tail){
+      var p = order[head++], x = p % w;
+      if(x > 0 && ok(p - 1)){ seen[p - 1] = 1; order[tail++] = p - 1; }
+      if(x < w - 1 && ok(p + 1)){ seen[p + 1] = 1; order[tail++] = p + 1; }
+      if(p >= w && ok(p - w)){ seen[p - w] = 1; order[tail++] = p - w; }
+      if(p < w * (h - 1) && ok(p + w)){ seen[p + w] = 1; order[tail++] = p + w; }
+    }
+    return order.subarray(0, tail);
+  }
+  function fillNow(cx, w, h, x, y, hex){
+    var o = fillOrder(cx, w, h, x, y), img = cx.getImageData(0, 0, w, h), d = img.data, n = parseInt(hex.slice(1), 16);
+    for(var i = 0; i < o.length; i++){ var k = o[i] * 4; d[k] = n >> 16 & 255; d[k + 1] = n >> 8 & 255; d[k + 2] = n & 255; d[k + 3] = 255; }
+    cx.putImageData(img, 0, 0);
+  }
+  function fillAnimated(cx, w, h, x, y, hex, done){
+    var o = fillOrder(cx, w, h, x, y), img = cx.getImageData(0, 0, w, h), d = img.data, n = parseInt(hex.slice(1), 16), i = 0;
+    var r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255, step = Math.max(2500, Math.ceil(o.length / 70));
+    (function tick(){
+      var end = RM ? o.length : Math.min(o.length, i + step);
+      for(; i < end; i++){ var k = o[i] * 4; d[k] = r; d[k + 1] = g; d[k + 2] = b; d[k + 3] = 255; }
+      cx.putImageData(img, 0, 0);
+      if(i < o.length) requestAnimationFrame(tick); else if(done) done();
+    })();
+  }
+
+  // the small pictures on the tool cards and in the quiz
+  var MARK = {
+    pencil: function(cx, w, h){ white(cx, w, h); stroke(cx, wave(40, w - 40, h / 2, h * .22, 60), 4, C.black); },
+    brush: function(cx, w, h){ white(cx, w, h); stroke(cx, wave(40, w - 40, h / 2, h * .18, 60), 24, C.green); },
+    spray: function(cx, w, h){ white(cx, w, h); var r = seeded(7); for(var i = 0; i < 6; i++) spray(cx, w * (.25 + i * .1), h * (.5 + Math.sin(i) * .12), 40, 60, C.purple, r); },
+    fill: function(cx, w, h){ white(cx, w, h); cx.lineWidth = 4; cx.strokeStyle = C.black; cx.beginPath(); cx.moveTo(w * .5, h * .14); cx.lineTo(w * .8, h * .86); cx.lineTo(w * .2, h * .86); cx.closePath(); cx.stroke(); fillNow(cx, w, h, Math.round(w * .5), Math.round(h * .6), C.yellow); },
+    rubber: function(cx, w, h){ white(cx, w, h); cx.fillStyle = C.blue; cx.fillRect(w * .12, h * .18, w * .76, h * .64); stroke(cx, wave(w * .2, w * .8, h / 2, h * .12, 40), 38, '#fff'); },
+    leak: function(cx, w, h){ white(cx, w, h); cx.lineWidth = 4; cx.strokeStyle = C.black; cx.beginPath(); cx.arc(w * .5, h * .5, h * .32, .35, Math.PI * 2 - .1); cx.stroke(); fillNow(cx, w, h, Math.round(w * .5), Math.round(h * .5), C.red); }
+  };
+
+  /* ---------- title painting ---------- */
+  (function(){
+    var cv = document.querySelector('[data-art="title"]'), cx = cv.getContext('2d'), w = cv.width, h = cv.height, r = seeded(3);
+    white(cx, w, h);
+    cx.fillStyle = '#CFE6FA'; cx.fillRect(0, 0, w, h * .62);
+    cx.fillStyle = '#7CC36A'; cx.fillRect(0, h * .62, w, h * .38);
+    spray(cx, 470, 110, 60, 520, C.yellow, r);
+    stroke(cx, [[60, 296], [60, 206], [150, 136], [240, 206], [240, 296]], 6, C.black);
+    stroke(cx, [[60, 296], [240, 296]], 6, C.black);
+    fillNow(cx, w, h, 150, 250, C.red);
+    for(var i = 0; i < 5; i++){ var x = 330 + i * 55; stroke(cx, [[x, 420], [x + 4, 360]], 10, C.green); spray(cx, x + 4, 350, 18, 80, [C.purple, C.orange, C.blue, C.red, C.purple][i], r); }
+    stroke(cx, wave(20, 580, 470, 6, 30), 14, '#4f9a45');
+  })();
+
+  /* ---------- real or painted ---------- */
+  (function(){
+    var wrap = $('artWrap');
+    if(FLOWER_REAL && FLOWER_PAINTED){
+      wrap.innerHTML = '<img src="' + FLOWER_PAINTED + '" alt=""><div class="art-b"><img src="' + FLOWER_REAL + '" alt=""></div>' +
+        '<div class="art-line"></div><div class="art-grip">' + ph('arrows-left-right') + '</div>' +
+        '<span class="art-tag l">Real flower</span><span class="art-tag r">Painted on a computer</span>' +
+        '<input class="art-range" type="range" min="0" max="100" value="50" aria-label="Slide between the two pictures">';
+      var range = wrap.querySelector('.art-range');
+      range.addEventListener('input', function(){ wrap.style.setProperty('--x', range.value + '%'); });
+    } else {
+      wrap.innerHTML = '<div class="art-empty">' + ph('flower').replace('class="i"', 'class="i" style="font-size:90px"') + '<b>The flower pictures go here</b>A real flower and the same flower painted on a computer, the same size so they line up. Add them at the top of the script in painting-l1.html.</div>';
+    }
+  })();
+
+  /* ---------- tool cards ---------- */
+  var TOOLS = [
+    ['pencil', 'Pencil', 'pencil-simple', 'A thin, sharp line.'],
+    ['brush', 'Brush', 'paint-brush', 'A thick, soft line.'],
+    ['spray', 'Spray', 'spray-bottle', 'Lots of dots. Hold it still for more.'],
+    ['fill', 'Fill', 'paint-bucket', 'Fills a space in one tap.'],
+    ['rubber', 'Rubber', 'eraser', 'Paints white.']
+  ];
+  $('tgrid').innerHTML = TOOLS.map(function(t, i){
+    return '<div class="tc pp-card" data-s="' + (i + 1) + '"><div class="hd">' + ph(t[2]) + t[1] + '</div><div class="mk"><canvas width="300" height="200" data-mark="' + t[0] + '"></canvas><div class="q">What will it do?</div></div><div class="say">' + t[3] + '</div></div>';
+  }).join('');
+  [].forEach.call(document.querySelectorAll('[data-mark]'), function(c){ MARK[c.getAttribute('data-mark')](c.getContext('2d'), c.width, c.height); });
+
+  /* ---------- rubber ---------- */
+  var rcv = $('rubCv'), rcx = rcv.getContext('2d');
+  function rubSet(){ white(rcx, 760, 480); rcx.fillStyle = C.blue; rcx.fillRect(80, 80, 600, 320); }
+  rubSet();
+  $('rubGo').addEventListener('click', function(){
+    var pts = wave(140, 620, 240, 60, 60), i = 1;
+    (function t(){ stroke(rcx, pts.slice(Math.max(0, i - 2), i + 1), 44, '#fff'); i++; if(i < pts.length) RM ? t() : requestAnimationFrame(t); })();
+  });
+  $('rubReset').addEventListener('click', rubSet);
+
+  /* ---------- undo ---------- */
+  var STEPS = [
+    ['Painted the grass', function(cx){ cx.fillStyle = '#7CC36A'; cx.fillRect(0, 330, 760, 150); }],
+    ['Sprayed a sun', function(cx){ spray(cx, 620, 110, 60, 600, C.yellow, seeded(5)); }],
+    ['Drew a house', function(cx){ stroke(cx, [[200, 340], [200, 220], [300, 140], [400, 220], [400, 340]], 6, C.black); stroke(cx, [[200, 340], [400, 340]], 6, C.black); stroke(cx, [[280, 340], [280, 280], [320, 280], [320, 340]], 6, C.black); }]
+  ];
+  var ucv = $('undoCv'), ucx = ucv.getContext('2d'), uDone = STEPS.length;
+  function undoDraw(){
+    white(ucx, 760, 480);
+    for(var i = 0; i < uDone; i++) STEPS[i][1](ucx);
+    $('hist').innerHTML = STEPS.map(function(s, i){ return '<div class="hs' + (i >= uDone ? ' gone' : '') + (i === uDone - 1 ? ' latest' : '') + '"><span class="n">' + (i + 1) + '</span>' + s[0] + '</div>'; }).join('');
+    $('undoGo').disabled = !uDone;
+  }
+  $('undoGo').addEventListener('click', function(){ if(uDone){ uDone--; undoDraw(); } });
+  $('undoReset').addEventListener('click', function(){ uDone = STEPS.length; undoDraw(); });
+  undoDraw();
+
+  /* ---------- predict the leak ---------- */
+  var lcv = $('leakCv'), lcx = lcv.getContext('2d'), filling = false;
+  function leakSet(closed){
+    white(lcx, 900, 520); lcx.lineWidth = 6; lcx.strokeStyle = C.black; lcx.beginPath();
+    if(closed) lcx.arc(450, 260, 180, 0, Math.PI * 2); else lcx.arc(450, 260, 180, .32, Math.PI * 2 - .08);
+    lcx.stroke();
+  }
+  leakSet(false);
+  $('leakFill').addEventListener('click', function(){ if(filling) return; filling = true; fillAnimated(lcx, 900, 520, 450, 260, C.blue, function(){ filling = false; }); });
+  $('leakFix').addEventListener('click', function(){ if(!filling) leakSet(true); });
+  [].forEach.call(document.querySelectorAll('.vote'), function(v){ v.addEventListener('click', function(){ [].forEach.call(document.querySelectorAll('.vote'), function(o){ o.classList.toggle('on', o === v); }); }); });
+
+  /* ---------- quiz ---------- */
+  var QUIZ = [
+    ['brush', 'Brush. A thick, soft line.'],
+    ['spray', 'Spray. Lots of little dots.'],
+    ['pencil', 'Pencil. A thin, sharp line.'],
+    ['fill', 'Fill. The whole shape went yellow in one tap.'],
+    ['rubber', 'Rubber. It painted white over the blue.'],
+    ['leak', 'Fill. There was a gap, so the red leaked out all over the page.']
+  ];
+  var qi = 0, qcx = $('quizCv').getContext('2d');
+  function quizShow(){
+    var it = QUIZ[qi];
+    MARK[it[0]](qcx, 720, 470);
+    $('qn').textContent = 'QUESTION ' + (qi + 1) + ' OF ' + QUIZ.length;
+    $('qq').textContent = it[0] === 'leak' ? 'Which tool made this mess?' : 'Which tool made this?';
+    $('ans').innerHTML = TOOLS.map(function(t){ return '<button class="an" type="button" data-t="' + t[0] + '">' + ph(t[2]) + t[1] + '</button>'; }).join('');
+    $('fb').textContent = ''; $('fb').className = 'fb'; $('qnext').hidden = true;
+    [].forEach.call($('ans').children, function(b){
+      b.addEventListener('click', function(){
+        var want = it[0] === 'leak' ? 'fill' : it[0];
+        if(b.getAttribute('data-t') === want){ b.classList.add('right'); $('fb').textContent = it[1]; $('fb').className = 'fb good'; $('qnext').hidden = qi === QUIZ.length - 1; }
+        else { b.classList.add('wrong'); $('fb').textContent = 'Not that one. Look again.'; $('fb').className = 'fb bad'; }
+      });
+    });
+  }
+  $('qnext').addEventListener('click', function(){ if(qi < QUIZ.length - 1){ qi++; quizShow(); } });
+  quizShow();
+
+  /* ---------- confidence ---------- */
+  var conf = { 1:0, 2:0, 3:0 };
+  [].forEach.call(document.querySelectorAll('.face'), function(f){
+    f.addEventListener('click', function(){
+      var k = f.getAttribute('data-k'); conf[k]++;
+      [].forEach.call(document.querySelectorAll('.face'), function(o){ o.classList.toggle('pick', o === f); });
+      f.querySelector('.c').textContent = conf[k];
+    });
+  });
+
+  /* ---------- timer ---------- */
+  var tFull = 1080, tLeft = tFull, tRun = null;
+  function tShow(){ $('tt').textContent = Math.floor(tLeft / 60) + ':' + ('0' + tLeft % 60).slice(-2); $('timer').classList.toggle('done', tLeft === 0); }
+  $('tgo').addEventListener('click', function(){
+    var b = this;
+    if(tRun){ clearInterval(tRun); tRun = null; b.lastChild.textContent = 'Start'; return; }
+    if(!tLeft) return;
+    b.lastChild.textContent = 'Pause';
+    tRun = setInterval(function(){ tLeft--; tShow(); if(tLeft <= 0){ clearInterval(tRun); tRun = null; b.lastChild.textContent = 'Start'; } }, 1000);
+  });
+  $('treset').addEventListener('click', function(){ clearInterval(tRun); tRun = null; tLeft = tFull; $('tgo').lastChild.textContent = 'Start'; tShow(); });
+
+  function qr(el, text, size){
+    el.innerHTML = '';
+    if(window.QRCode){ try{ new QRCode(el, { text:text, width:size, height:size, correctLevel:QRCode.CorrectLevel.M }); return; }catch(e){} }
+    el.textContent = text;
+  }
+  var BASE = location.origin + location.pathname.replace(/[^\/]*$/, '');
+  qr($('appQr'), BASE + 'paint.html?mode=l1', 134);
+
+  /* ---------- live tasks: the same backend as the Year 5/6 live answer wall ---------- */
+  (function(){
+    var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
+    var CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', KEY = 'pl1_live';
+    var TASKS = ['Draw a circle', 'Draw a house', 'Draw a sun', 'Draw a tree', 'Draw yourself'];
+    function rpc(name, args){
+      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
+        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+    }
+    var room = null; try{ room = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+    var task = TASKS[0], timer = null, shown = {};
+    function save(){ try{ localStorage.setItem(KEY, JSON.stringify(room)); }catch(e){} }
+    function code(){ var o = ''; for(var i = 0; i < 5; i++) o += CHARS.charAt(Math.floor(Math.random() * CHARS.length)); return o; }
+    function token(){ return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now(); }
+    function msg(t){ $('lvMsg').textContent = t || ''; }
+    function chips(){
+      $('lvChips').innerHTML = TASKS.map(function(t){ return '<button class="chip' + (t === task ? ' on' : '') + '" type="button">' + t + '</button>'; }).join('') +
+        '<span class="chip"><input id="lvOwn" placeholder="Type your own task" maxlength="60"></span>';
+      [].forEach.call($('lvChips').querySelectorAll('button.chip'), function(b){ b.addEventListener('click', function(){ setTask(b.textContent); }); });
+      $('lvOwn').addEventListener('keydown', function(e){ if(e.key === 'Enter' && this.value.trim()){ setTask(this.value.trim()); } e.stopPropagation(); });
+    }
+    function setTask(t){
+      task = t; $('lvTask').textContent = t; chips();
+      if(room) rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:t }).then(function(ok){ if(!ok) msg('This room belongs to another board. Press Start again.'); else { shown = {}; $('lvGrid').innerHTML = ''; empty(); poll(); } }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
+    }
+    function empty(){ if(!$('lvGrid').querySelector('.pic-s')) $('lvGrid').innerHTML = '<div class="lv-empty">Pictures appear here when children press Send to the board.</div>'; }
+    function showRoom(){
+      if(!room){ $('lvQr').className = 'lv-qr off'; $('lvQr').textContent = 'Press Start and a code appears here'; $('lvCode').innerHTML = '&middot; &middot; &middot;'; $('lvClear').hidden = true; $('lvStart').lastChild.textContent = 'Start'; return; }
+      $('lvQr').className = 'lv-qr'; qr($('lvQr'), BASE + 'paint.html?mode=l1&room=' + room.code, 242);
+      $('lvCode').textContent = room.code; $('lvClear').hidden = false; $('lvStart').lastChild.textContent = 'New code';
+    }
+    function poll(){
+      if(!room) return;
+      rpc('live_get_room', { p_code:room.code }).then(function(rows){
+        msg('');
+        if(!rows || !rows.length){ return; }
+        if(rows[0].question && rows[0].question !== task){ task = rows[0].question; $('lvTask').textContent = task; chips(); }
+        $('lvJoined').textContent = (rows[0].joined || 0) + ' iPads joined';
+        var g = $('lvGrid');
+        rows.filter(function(r){ return r.id && r.kind === 'drawing'; }).sort(function(a, b){ return a.ts - b.ts; }).forEach(function(r){
+          if(shown[r.id]) return; shown[r.id] = 1;
+          var e = g.querySelector('.lv-empty'); if(e) e.remove();
+          var d = document.createElement('div'); d.className = 'pic-s';
+          d.innerHTML = '<img alt="" src="' + r.content + '"><button class="x" type="button" aria-label="Hide">' + ph('x') + '</button>';
+          d.addEventListener('click', function(){ $('big').innerHTML = '<img alt="" src="' + r.content + '">'; $('big').classList.add('on'); });
+          d.querySelector('.x').addEventListener('click', function(ev){ ev.stopPropagation(); d.remove(); empty(); rpc('live_hide_answer', { p_code:room.code, p_token:room.token, p_id:r.id }).catch(function(){}); });
+          g.insertBefore(d, g.firstChild);
+        });
+      }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
+    }
+    $('lvStart').addEventListener('click', function(){
+      var r = { code:code(), token:token() };
+      rpc('live_set_question', { p_code:r.code, p_token:r.token, p_question:task }).then(function(ok){
+        if(!ok){ msg('Try again.'); return; }
+        room = r; save(); shown = {}; $('lvGrid').innerHTML = ''; empty(); showRoom(); poll();
+      }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
+    });
+    $('lvClear').addEventListener('click', function(){
+      if(!room) return;
+      rpc('live_clear_all', { p_code:room.code, p_token:room.token }).then(function(){ shown = {}; $('lvGrid').innerHTML = ''; empty(); }).catch(function(){ msg('Can’t reach the live board.'); });
+    });
+    $('big').addEventListener('click', function(){ this.classList.remove('on'); });
+    chips(); showRoom();
+    window.PL1_LIVE = { on:function(){ if(!timer){ poll(); timer = setInterval(poll, 1500); } }, off:function(){ clearInterval(timer); timer = null; } };
+  })();
+
+  /* ---------- deck ---------- */
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+  var stage = $('stage');
+  function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', fit); fit();
+  if(RM) stage.classList.add('rm');
+
+  var PARTS = [].slice.call(document.querySelectorAll('.part'));
+  PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp,.pp-card'), function(e){ return +e.getAttribute('data-s'); }))); });
+  // the slider slide reveals its labels on step 1
+  var flowerPart = $('p-flower'); flowerPart.steps = Math.max(flowerPart.steps, 3);
+  var POTS = ['--p1','--p2','--p3','--p4','--p5','--p6'];
+  var potsEl = $('pots'), seen = {};
+  PARTS.forEach(function(p, i){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pot'; b.textContent = i + 1;
+    b.style.setProperty('--c', 'var(' + POTS[i % POTS.length] + ')');
+    b.setAttribute('aria-label', p.getAttribute('data-name'));
+    b.addEventListener('click', function(){ go(i, 0); });
+    potsEl.appendChild(b);
+  });
+  var cur = 0, step = 0;
+  function render(){
+    PARTS.forEach(function(p, i){ p.classList.toggle('on', i === cur); });
+    [].forEach.call(PARTS[cur].querySelectorAll('.pp'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
+    [].forEach.call(PARTS[cur].querySelectorAll('.pp-card'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
+    $('artWrap').classList.toggle('tags-on', PARTS[cur] === flowerPart && step >= 1);
+    seen[cur] = true;
+    [].forEach.call(potsEl.children, function(c, i){ c.classList.toggle('cur', i === cur); c.classList.toggle('seen', !!seen[i]); });
+    $('pname').textContent = PARTS[cur].getAttribute('data-name');
+    var d = ''; for(var i = 1; i <= PARTS[cur].steps; i++) d += '<i class="' + (i <= step ? 'on' : '') + '"></i>';
+    $('dots').innerHTML = d;
+    $('back').disabled = cur === 0 && step === 0;
+    $('next').disabled = cur === PARTS.length - 1 && step >= PARTS[cur].steps;
+    $('nextlab').textContent = step < PARTS[cur].steps ? 'Reveal' : 'Next';
+    if(PARTS[cur].id === 'p-live') PL1_LIVE.on(); else PL1_LIVE.off();
+    try{ history.replaceState(null, '', '#part' + cur); }catch(e){}
+  }
+  function go(p, s){ cur = Math.max(0, Math.min(PARTS.length - 1, p)); step = s === 'end' ? PARTS[cur].steps : (s || 0); render(); }
+  function next(){ if(step < PARTS[cur].steps){ step++; render(); } else if(cur < PARTS.length - 1) go(cur + 1, 0); }
+  function back(){ if(step > 0){ step--; render(); } else if(cur > 0) go(cur - 1, 'end'); }
+  $('next').addEventListener('click', next);
+  $('back').addEventListener('click', back);
+  addEventListener('keydown', function(e){
+    if(e.target.closest && e.target.closest('input,textarea')) return;
+    if(['ArrowRight','PageDown',' '].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+  });
+  var m = /^#part(\d+)$/.exec(location.hash);
+  go(m ? +m[1] : 0, 0);
+})();
+</script>
+</body>
+</html>

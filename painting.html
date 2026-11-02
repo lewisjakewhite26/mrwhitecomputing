@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Painting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{--paper:#F6F1E7;--card:#FFFDF8;--edge:#E2D8C6;--ink:#1B2540;--muted:#4C5568;--blue:#8A5A12;--blue-soft:#FDEFC8;--sun:#F5B82E;--strip:#1B2540;--strip2:#26304D}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Lexend,system-ui,-apple-system,"Segoe UI",sans-serif}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none}
+  .top{height:64px;background:var(--strip);display:flex;align-items:center;gap:16px;padding:0 clamp(16px,3vw,28px);position:relative}
+  .top a{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:600;font-size:17px;padding:7px 14px;border:2px solid #3a4566;border-radius:10px;background:var(--strip2)}
+  .top .path{font-size:15px;color:#c9d1e6;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  main{max-width:1100px;margin:0 auto;padding:clamp(28px,5vw,56px) clamp(16px,4vw,40px) 80px}
+  .kick{font-size:clamp(13px,1.5vw,16px);font-weight:700;letter-spacing:.14em;color:var(--blue);margin:0 0 10px}
+  h1{margin:0;font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.02;display:flex;align-items:center;gap:18px}
+  h1 .i{color:var(--sun)}
+  .intro{font-size:clamp(1.1rem,1.9vw,1.35rem);line-height:1.55;color:var(--muted);max-width:62ch;margin:18px 0 0}
+  .eps{margin:26px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ep{padding:16px 20px;border:2px solid var(--edge);border-radius:14px;background:var(--card);font-size:1rem;line-height:1.5}
+  .ep b{color:var(--blue);font-size:.8rem;letter-spacing:.12em;display:block;margin-bottom:6px}
+  .ep ul{margin:0;padding-left:20px}
+  .bin{margin-top:34px;display:flex;flex-direction:column;gap:12px}
+  .les{display:flex;align-items:center;gap:clamp(12px,2vw,22px);padding:14px;border:2px solid var(--edge);border-radius:14px;background:var(--card);color:var(--ink);text-decoration:none}
+  a.les:hover{border-color:var(--sun)}
+  .thumb{color:var(--sun);width:clamp(84px,14vw,140px);aspect-ratio:16/10;border-radius:8px;background:var(--strip);display:grid;place-items:center;font-size:clamp(28px,4vw,42px);color:var(--sun);flex:none;position:relative}
+  .thumb .tcode{position:absolute;left:6px;top:5px;font-size:12px;font-weight:700;color:#c9d1e6}
+  .les h2{margin:0;font-size:clamp(1.1rem,2.1vw,1.45rem);font-weight:800}
+  .les p{margin:4px 0 0;color:var(--muted);font-size:clamp(.95rem,1.5vw,1.05rem);line-height:1.45}
+  .les .st{margin-left:auto;font-size:13px;font-weight:700;letter-spacing:.08em;padding:6px 10px;border-radius:8px;white-space:nowrap}
+  .les .st.live{background:var(--sun);color:var(--ink)}
+  .les .st.soon{border:2px solid var(--edge);color:var(--muted)}
+  .les.off{opacity:.8}
+  @media (max-width:640px){ .eps{grid-template-columns:1fr} .les{flex-wrap:wrap} .les .st{margin-left:0} }
+</style>
+</head>
+<body>
+<div class="top"><a href="index.html"><span data-ph="arrow-left"></span>Year groups</a><span class="path">Year 1 and 2 &middot; Autumn 2</span></div>
+<main>
+  <p class="kick">YEAR 1 AND 2 &middot; AUTUMN 2 &middot; CREATING MEDIA</p>
+  <h1><span data-ph="paint-brush"></span>Digital painting</h1>
+  <p class="intro">Six lessons on our own paint app for the iPads. Children learn what each tool does, then paint in the style of Mondrian, Matisse, Kandinsky and Seurat, and finish by comparing painting on a computer with painting on paper.</p>
+  <div class="eps">
+    <div class="ep"><b>YEAR 1</b><ul><li>To describe what different freehand tools do</li><li>To use the shape tool and the line tools</li><li>To use a computer on my own to paint a picture</li></ul></div>
+    <div class="ep"><b>YEAR 2</b><ul><li>To make careful choices when painting a digital picture</li><li>To explain why I chose the tools I used</li><li>To compare painting a picture on a computer and on paper</li></ul></div>
+  </div>
+  <div class="bin" id="bin"></div>
+</main>
+<script>
+(function(){
+  var PH = {"arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "paint-brush": "<path d=\"M232,32a8,8,0,0,0-8-8c-44.08,0-89.31,49.71-114.43,82.63A60,60,0,0,0,32,164c0,30.88-19.54,44.73-20.47,45.37A8,8,0,0,0,16,224H92a60,60,0,0,0,57.37-77.57C182.3,121.31,232,76.08,232,32ZM92,208H34.63C41.38,198.41,48,183.92,48,164a44,44,0,1,1,44,44Zm32.42-94.45q5.14-6.66,10.09-12.55A76.23,76.23,0,0,1,155,121.49q-5.9,4.94-12.55,10.09A60.54,60.54,0,0,0,124.42,113.55Zm42.7-2.68a92.57,92.57,0,0,0-22-22c31.78-34.53,55.75-45,69.9-47.91C212.17,55.12,201.65,79.09,167.12,110.87Z\"/>", "squares-four": "<path d=\"M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z\"/>", "scissors": "<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>", "circle": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Z\"/>", "spray-bottle": "<path d=\"M200,80a8,8,0,0,0,8-8,56.06,56.06,0,0,0-56-56H80A16,16,0,0,0,64,32V80a24,24,0,0,1-24,24,8,8,0,0,0,0,16A40,40,0,0,0,80,80h32v24.62a23.87,23.87,0,0,1-9,18.74L87,136.15a39.79,39.79,0,0,0-15,31.23V224a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V211.47A270.88,270.88,0,0,0,174,80ZM80,32h72a40.08,40.08,0,0,1,39.2,32H80ZM192,211.47V224H88V167.38a23.87,23.87,0,0,1,9-18.74l16-12.79a39.79,39.79,0,0,0,15-31.23V80h27.52A254.86,254.86,0,0,1,192,211.47Z\"/>", "eye": "<path d=\"M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  var L = [
+    { t:'Painting on a computer', d:'The freehand tools: pencil, brush, spray, fill, rubber and undo. Predicting the fill leak, quick live tasks sent to the board, then painting a garden.', href:'painting-l1.html', ic:'paint-brush' },
+    { t:'Shapes and lines like Mondrian', ic:'squares-four' },
+    { t:'Careful choices like Matisse', ic:'scissors' },
+    { t:'Brush or shape tool? Kandinsky', ic:'circle' },
+    { t:'Dots like Seurat', ic:'spray-bottle' },
+    { t:'Computer or paper?', ic:'eye' }
+  ];
+  document.getElementById('bin').innerHTML = L.map(function(l, i){
+    var live = !!l.href, tag = live ? 'a' : 'div';
+    return '<' + tag + ' class="les' + (live ? '' : ' off') + '"' + (live ? ' href="' + l.href + '"' : '') + '>' +
+      '<div class="thumb">' + ph(l.ic) + '<span class="tcode">L' + (i + 1) + '</span></div>' +
+      '<div><h2>Lesson ' + (i + 1) + ': ' + l.t + '</h2>' + (l.d ? '<p>' + l.d + '</p>' : '') + '</div>' +
+      '<span class="st ' + (live ? 'live' : 'soon') + '">' + (live ? 'OPEN' : 'COMING') + '</span></' + tag + '>';
+  }).join('');
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+})();
+</script>
+</body>
+</html>
