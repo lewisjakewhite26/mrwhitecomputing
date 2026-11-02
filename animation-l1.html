@@ -48,6 +48,9 @@
   .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
   .banner{display:flex;align-items:center;gap:20px;font-size:38px;font-weight:700;line-height:1.25;padding:22px 30px;border-radius:16px;background:var(--blue-soft)}
   .banner .i{font-size:46px;color:var(--blue)}
+  .banner.y4{margin-top:14px;padding:16px 28px;background:var(--sun-soft);font-size:28px;font-weight:600}
+  .y4tag{flex:none;font-size:22px;font-weight:700;padding:8px 14px;border-radius:10px;background:var(--ink);color:#fff}
+  .y4ans{margin-left:auto;flex:none;font-weight:800;padding:8px 16px;border-radius:12px;background:#fff}
 
   /* title */
   .title-wrap{position:absolute;left:96px;top:0;bottom:0;width:820px;display:flex;flex-direction:column;justify-content:center}
@@ -79,11 +82,11 @@
   .fps{font-size:22px;color:var(--muted);font-weight:600}
 
   /* key words */
-  .defs{display:flex;flex-direction:column;gap:22px}
-  .def{display:flex;gap:26px;align-items:flex-start;padding:26px 32px;border-radius:16px;background:var(--card);border:2px solid var(--edge)}
+  .defs{display:flex;flex-direction:column;gap:14px}
+  .def{display:flex;gap:26px;align-items:flex-start;padding:18px 30px;border-radius:16px;background:var(--card);border:2px solid var(--edge)}
   .def .w{flex:none;width:250px;font-size:44px;font-weight:800;color:var(--ink)}
   .def .w span{background:var(--sun-soft);padding:0 .2em;border-radius:6px}
-  .def p{margin:0;font-size:36px;line-height:1.35}
+  .def p{margin:0;font-size:33px;line-height:1.3}
 
   /* timeline */
   .tl{position:relative;height:470px;margin-top:6px}
@@ -245,8 +248,8 @@
             <button class="bt" type="button" data-fps="0"><span data-ph="pause"></span>Stop</button>
           </div>
           <span class="fps" data-fpslab="ball">Press a button to start</span>
-          <p class="pp" data-s="1">Slowly, you see eight separate pictures.</p>
-          <p class="pp" data-s="2">Fast, your eyes see one ball bouncing.</p>
+          <p class="pp" data-s="1">When it&rsquo;s slow, you see eight pictures.</p>
+          <p class="pp" data-s="2">When it&rsquo;s fast, you see one ball bouncing.</p>
           <div class="row pp" data-s="3"><button class="bt" type="button" data-mix="ball"><span data-ph="arrows-clockwise"></span>Mix up the order</button></div>
         </div>
       </div>
@@ -259,7 +262,8 @@
         <div class="def pp" data-s="1"><span class="w"><span>animation</span></span><p>Lots of pictures shown quickly, one after another, so they look like they are moving.</p></div>
         <div class="def pp" data-s="2"><span class="w"><span>frame</span></span><p>One of the pictures in an animation. Our bouncing ball had eight frames.</p></div>
       </div>
-      <div class="banner pp" data-s="3" style="margin-top:26px"><span data-ph="eye"></span>The order matters. Mixed up frames make a muddle.</div>
+      <div class="banner pp" data-s="3" style="margin-top:14px;font-size:34px;padding:16px 28px"><span data-ph="eye"></span>The order matters. Mixed up frames make a muddle.</div>
+      <div class="banner pp y4" data-s="4"><span class="y4tag">Year 4</span>Our ball had 8 frames, shown 4 every second. How long did one bounce take?<span class="pp y4ans" data-s="5">2 seconds</span></div>
     </section>
 
     <!-- 4 timeline -->
@@ -270,7 +274,7 @@
         <div class="stop pp" data-s="1" style="left:0"><div class="pic" data-icon="thaum"></div><span class="yr">1825</span><h3>Thaumatrope</h3><p>Two pictures on a spinning card</p></div>
         <div class="stop pp" data-s="2" style="left:246px"><div class="pic" data-icon="zoe"></div><span class="yr">1834</span><h3>Spinning drum</h3><p>The first zoetrope, with slits to peep through</p></div>
         <div class="stop pp" data-s="3" style="left:492px"><div class="pic" data-icon="flip"></div><span class="yr">1868</span><h3>Flipbook</h3><p>A little book you flick with your thumb</p></div>
-        <div class="stop pp" data-s="4" style="left:738px"><div class="pic" data-icon="match"></div><span class="yr">1908</span><h3>Toys on film</h3><p>Toys come to life in one of the first model films</p></div>
+        <div class="stop pp" data-s="4" style="left:738px"><div class="pic" data-icon="match"></div><span class="yr">1908</span><h3>Toys on film</h3><p>Toys filmed a bit at a time, so they come to life</p></div>
         <div class="stop pp" data-s="5" style="left:984px"><div class="pic" data-icon="morph"></div><span class="yr">1977</span><h3>Morph</h3><p>A plasticine man made in Bristol</p></div>
         <div class="stop pp" data-s="6" style="left:1230px"><div class="pic" data-icon="cam"></div><span class="yr">Today</span><h3>You</h3><p>An iPad, a model and the same old trick</p></div>
       </div>
@@ -283,7 +287,7 @@
         <a class="vbox" data-yt="V8A4qudmsX0" target="_blank" rel="noopener"></a>
         <div class="look">
           <span class="lab">WHILE YOU WATCH</span>
-          <div class="q pp" data-s="1">Which old toys can you spot?</div>
+          <div class="q pp" data-s="1">Why do the pictures seem to move?</div>
           <div class="q pp" data-s="2">How did they make each picture different from the last?</div>
         </div>
       </div>
@@ -351,12 +355,12 @@
         <div class="col">
           <span class="cap">Card A</span>
           <div class="spin-area"><div class="stick"></div><div class="disc" data-disc="good2"></div></div>
-          <span class="verdict good pp" data-s="1">Works: the bird is in the middle, like the cage</span>
+          <span class="verdict good pp" data-s="1">It works. The bird is in the middle, like the cage.</span>
         </div>
         <div class="col">
           <span class="cap">Card B</span>
           <div class="spin-area"><div class="stick"></div><div class="disc" data-disc="bad"></div></div>
-          <span class="verdict bad pp" data-s="1">Bird outside: it was drawn too near the edge</span>
+          <span class="verdict bad pp" data-s="1">The bird is outside. It was drawn too near the edge.</span>
         </div>
       </div>
     </section>
@@ -405,7 +409,7 @@
       <p class="exit-q">What is an animation?</p>
       <div class="opts" data-quiz>
         <button class="opt no" type="button">One picture that moves all by itself<span class="tap">Tap to check</span><span class="res">No. One picture can never move.</span></button>
-        <button class="opt yes" type="button">Lots of pictures shown quickly, one after another<span class="tap">Tap to check</span><span class="res">Yes. That is all an animation is.</span></button>
+        <button class="opt yes" type="button">Lots of pictures shown quickly, one after another<span class="tap">Tap to check</span><span class="res">Yes. That&rsquo;s all an animation is.</span></button>
         <button class="opt no" type="button">A photo of something moving<span class="tap">Tap to check</span><span class="res">No. A photo is still just one picture.</span></button>
       </div>
       <div class="banner exit2 pp" data-s="1"><span data-ph="film-strip"></span>And what do we call one of those pictures?</div>
@@ -415,7 +419,7 @@
     <!-- 13 next -->
     <section class="part" data-name="Next time">
       <h2>Next time</h2>
-      <p class="lead">You turn one moment into twelve frames and make them move with a <span class="mark">flipbook</span> and a <span class="mark">zoetrope</span>.</p>
+      <p class="lead">You draw twelve frames and make them move with a <span class="mark">flipbook</span> and a <span class="mark">zoetrope</span>.</p>
       <div class="row" style="margin-top:40px;gap:30px">
         <div class="frame" style="width:420px;height:300px"><div class="loop" data-loop="snail"></div></div>
         <div class="frame" style="width:420px;height:300px"><div class="loop" data-loop="ball"></div></div>

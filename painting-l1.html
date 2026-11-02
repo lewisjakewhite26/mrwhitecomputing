@@ -6,7 +6,7 @@
 <title>Painting on a Computer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root{
@@ -16,7 +16,7 @@
   }
   *{box-sizing:border-box}
   [hidden]{display:none!important}
-  html,body{margin:0;height:100%;background:#20283d;color:var(--ink);font-family:Lexend,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  html,body{margin:0;height:100%;background:#20283d;color:var(--ink);font-family:Andika,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
   #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
   #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;background:var(--wall)}
   svg.i{width:1em;height:1em;fill:currentColor;flex:none}
@@ -51,7 +51,7 @@
 
   /* title */
   .title-wrap{position:absolute;left:96px;top:0;bottom:0;width:780px;display:flex;flex-direction:column;justify-content:center}
-  .kick{font-size:24px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin:0 0 20px}
+  .kick{font-size:30px;font-weight:700;color:var(--muted);margin:0 0 20px}
   .title-wrap h1{margin:0;font-size:120px;font-weight:800;letter-spacing:-.035em;line-height:.98}
   .title-wrap .sub{font-size:38px;line-height:1.35;margin:30px 0 0;color:var(--muted)}
   .title-art{position:absolute;right:90px;top:70px;width:600px;height:500px;border-radius:12px;background:#fff;box-shadow:0 0 0 3px var(--edge),0 30px 60px -36px rgba(27,37,64,.5);overflow:hidden}
@@ -114,7 +114,7 @@
   .task{display:grid;grid-template-columns:1fr 430px;gap:40px}
   .tk{display:flex;flex-direction:column;gap:18px}
   .yr{display:flex;gap:22px;align-items:center;padding:20px 26px;border-radius:18px;background:var(--card);border:3px solid var(--edge);font-size:34px;line-height:1.3;font-weight:600}
-  .yr b{flex:none;font-size:24px;letter-spacing:.1em;padding:8px 14px;border-radius:10px;background:var(--ink);color:#fff}
+  .yr b{flex:none;font-size:28px;padding:8px 14px;border-radius:10px;background:var(--ink);color:#fff}
   .side{display:flex;flex-direction:column;gap:18px}
   .timer{padding:22px 26px;border-radius:20px;background:var(--card);border:3px solid var(--edge);display:flex;flex-direction:column;gap:14px}
   .timer .t{font-size:84px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
@@ -133,13 +133,13 @@
   /* quiz */
   .quiz{display:grid;grid-template-columns:720px 1fr;gap:48px}
   .quiz .pic{height:470px}
-  .qn{font-size:24px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin-bottom:12px}
+  .qn{font-size:30px;font-weight:700;color:var(--muted);margin-bottom:12px}
   .ans{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .an{display:flex;align-items:center;gap:16px;font-size:32px;font-weight:700;padding:18px 20px;border-radius:18px;background:var(--card);border:3px solid var(--edge);cursor:pointer}
   .an .i{font-size:42px}
   .an.right{border-color:var(--good);background:var(--good-soft);color:var(--good)}
   .an.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
-  .fb{margin-top:18px;font-size:32px;font-weight:700;line-height:1.3;min-height:84px}
+  .fb{margin-top:12px;font-size:32px;font-weight:700;line-height:1.3;min-height:56px}
   .fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
 
   /* confidence */
@@ -163,7 +163,7 @@
   .lv-msg{font-size:20px;color:var(--bad);line-height:1.3}
   .lv-main{display:flex;flex-direction:column;gap:14px;min-width:0}
   .lv-task{display:flex;align-items:center;gap:20px;padding:14px 22px;border-radius:18px;background:var(--sun-soft);min-height:96px}
-  .lv-task .lab{font-size:18px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .lv-task .lab{font-size:24px;font-weight:700;color:var(--muted)}
   .lv-task b{display:block;font-size:46px;font-weight:800;line-height:1.1}
   .lv-chips{display:flex;gap:10px;flex-wrap:wrap}
   .chip{font-size:24px;font-weight:700;padding:12px 18px;border-radius:999px;background:var(--card);border:3px solid var(--edge);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
@@ -233,7 +233,7 @@
     <!-- 0 title -->
     <section class="part" data-name="Title">
       <div class="title-wrap">
-        <p class="kick">DIGITAL PAINTING &middot; LESSON 1</p>
+        <p class="kick">Digital painting &middot; Lesson 1</p>
         <h1>Painting on a computer</h1>
         <p class="sub">Today you meet the tools and paint your own picture on an iPad.</p>
       </div>
@@ -268,7 +268,6 @@
           <div class="row" style="margin-top:30px">
             <a class="bt go big-go" href="paint.html?mode=l1&amp;board&amp;tour" target="_blank" rel="noopener"><span data-ph="play"></span>Start the tour</a>
           </div>
-          <p class="note">It reads each step out loud. Turn the sound off with the speaker button.</p>
         </div>
         <div class="tour-prev"><canvas width="600" height="500" data-art="title"></canvas></div>
       </div>
@@ -279,7 +278,7 @@
       <div class="lv">
         <div class="lv-side">
           <div class="lv-qr off" id="lvQr">Press Start and a code appears here</div>
-          <span class="lv-codelab">CODE</span>
+          <span class="lv-codelab">Code</span>
           <span class="lv-code" id="lvCode">&middot; &middot; &middot;</span>
           <span class="lv-joined" id="lvJoined"></span>
           <button class="bt go" type="button" id="lvStart"><span data-ph="play"></span>Start</button>
@@ -288,7 +287,7 @@
           <span class="lv-hint">Scan it on each iPad before the lesson. The code stays the same until you press New code.</span>
         </div>
         <div class="lv-main">
-          <div class="lv-task"><div><span class="lab">YOUR TASK</span><b id="lvTask">Draw a circle</b></div></div>
+          <div class="lv-task"><div><span class="lab">Your task</span><b id="lvTask">Draw a circle</b></div></div>
           <div class="lv-chips" id="lvChips"></div>
           <div class="lv-grid" id="lvGrid"><div class="lv-empty">Pictures appear here when children press Send to the board.</div></div>
         </div>
@@ -296,19 +295,18 @@
     </section>
 
     <!-- 6 your turn -->
-    <section class="part" data-name="Paint a garden">
+    <section class="part" data-name="Paint a garden" id="p-garden">
       <h2>Paint a garden</h2>
       <div class="task">
         <div class="tk">
-          <div class="yr pp" data-s="1"><b>EVERYONE</b>Use every tool at least once. Use undo if it goes wrong.</div>
-          <div class="yr pp" data-s="2"><b>YEAR 2</b>Pick the best tool for each part. Be ready to say why.</div>
-          <div class="yr pp" data-s="3"><b>FINISHED?</b>Tap Send to the board.</div>
+          <div class="yr pp" data-s="1"><b>Everyone</b>Use every tool at least once. Use undo if it goes wrong.</div>
+          <div class="yr pp" data-s="2"><b>Year 2</b>Pick the best tool for each part. Be ready to say why.</div>
+          <div class="yr pp" data-s="3"><b>Finished?</b>Tap Send to the board.</div>
           <div class="strip" id="strip"></div>
         </div>
         <div class="side">
           <div class="timer" id="timer"><span class="t" id="tt">18:00</span><div class="row"><button class="bt go" type="button" id="tgo"><span data-ph="play"></span>Start</button><button class="bt" type="button" id="treset"><span data-ph="arrow-counter-clockwise"></span>Reset</button></div></div>
           <button class="bt dark" type="button" id="toGallery"><span data-ph="squares-four"></span>See the gardens</button>
-          <p class="note" style="margin:0">On the Quick tasks slide, choose <b>Paint a garden</b> first, so the gardens arrive on their own.</p>
         </div>
       </div>
     </section>
@@ -328,7 +326,7 @@
       <div class="quiz">
         <div class="pic"><canvas width="720" height="470" id="quizCv"></canvas></div>
         <div>
-          <div class="qn" id="qn">QUESTION 1 OF 6</div>
+          <div class="qn" id="qn">Question 1 of 6</div>
           <h2 style="font-size:54px;margin:0 0 6px" id="qq">Which tool made this?</h2>
           <p class="fingers"><span data-ph="hand-pointing"></span>Show me with your fingers.</p>
           <div class="ans" id="ans"></div>
@@ -476,7 +474,7 @@
   function quizShow(){
     var it = QUIZ[qi];
     MARK[it[0]](qcx, 720, 470);
-    $('qn').textContent = 'QUESTION ' + (qi + 1) + ' OF ' + QUIZ.length;
+    $('qn').textContent = 'Question ' + (qi + 1) + ' of ' + QUIZ.length;
     $('qq').textContent = it[0] === 'leak' ? 'Which tool made this mess?' : 'Which tool made this?';
     [].forEach.call($('ans').children, function(b){ b.classList.remove('right'); });
     $('fb').textContent = ''; $('fb').className = 'fb';
@@ -583,7 +581,7 @@
     });
     $('big').addEventListener('click', function(){ this.classList.remove('on'); });
     chips(); showRoom();
-    window.PL1_LIVE = { on:function(){ if(!timer){ poll(); timer = setInterval(poll, 1500); } }, off:function(){ clearInterval(timer); timer = null; } };
+    window.PL1_LIVE = { garden:function(){ if(room && task !== 'Paint a garden') setTask('Paint a garden'); }, on:function(){ if(!timer){ poll(); timer = setInterval(poll, 1500); } }, off:function(){ clearInterval(timer); timer = null; } };
   })();
 
   /* ---------- deck ---------- */
@@ -622,6 +620,7 @@
     $('next').disabled = cur === PARTS.length - 1 && step >= PARTS[cur].steps;
     $('nextlab').textContent = step < PARTS[cur].steps ? 'Reveal' : 'Next';
     if(PARTS[cur].id === 'p-live') PL1_LIVE.on(); else PL1_LIVE.off();
+    if(PARTS[cur].id === 'p-garden') PL1_LIVE.garden();
     try{ history.replaceState(null, '', '#part' + cur); }catch(e){}
   }
   function go(p, s){ cur = Math.max(0, Math.min(PARTS.length - 1, p)); step = s === 'end' ? PARTS[cur].steps : (s || 0); render(); }

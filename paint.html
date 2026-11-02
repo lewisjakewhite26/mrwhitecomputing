@@ -7,7 +7,7 @@
 <title>Hartburn Paint</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
 <style>
   :root{
     --wall:#F4EFE4; --card:#FFFFFF; --edge:#E4DCCB; --ink:#1B2540; --muted:#4C5568;
@@ -15,7 +15,7 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   [hidden]{display:none!important}
-  html,body{margin:0;height:100%;overflow:hidden;background:var(--wall);color:var(--ink);font-family:Lexend,system-ui,-apple-system,"Segoe UI",sans-serif;
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--wall);color:var(--ink);font-family:Andika,system-ui,-apple-system,"Segoe UI",sans-serif;
     touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
   svg.i{width:1em;height:1em;fill:currentColor;flex:none}
   button{font-family:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
@@ -32,7 +32,7 @@
   .act[hidden]{display:none}
   .task{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:6px 18px;border-radius:14px;background:var(--sun-soft);border:2px solid var(--sun);min-height:58px}
   .task[hidden]{display:none}
-  .task .tl{font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .task .tl{font-size:16px;font-weight:700;color:var(--muted)}
   .task b{font-size:24px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .room .brand{margin-right:0} .room .brand span.t{display:none}
 
@@ -95,7 +95,7 @@
 <div class="app">
   <div class="bar">
     <div class="brand"><span class="dot" data-ph="paint-brush"></span><span class="t">Hartburn Paint</span></div>
-    <div class="task" id="task" hidden><span class="tl">YOUR TASK</span><b id="taskText">Waiting for your teacher</b></div>
+    <div class="task" id="task" hidden><span class="tl">Your task</span><b id="taskText">Waiting for your teacher</b></div>
     <button class="act show-me" type="button" id="showMe"><span data-ph="lightbulb"></span>Show me</button>
     <button class="act" type="button" id="newPic"><span data-ph="flower"></span>New picture</button>
     <button class="act send" type="button" id="send" hidden><span data-ph="paper-plane-right"></span>Send to the board</button>
