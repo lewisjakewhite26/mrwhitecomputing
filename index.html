@@ -2402,6 +2402,15 @@ window.HB_GAUGE = (function(){
     '<div class="mid"><h2>Year 5 and 6</h2><p style="color:#b9bfcb">Autumn 2: Video production</p></div>' +
     '<div class="tag" style="color:#ffd23f">Lesson 1 ready</div>';
   groupsEl.appendChild(vp);
+  var an = document.createElement('a');
+  an.className = 'group ready';
+  an.href = 'animation.html';
+  an.style.cssText = 'background:#F6F1E7;border-color:#E2D8C6;color:#1B2540;text-decoration:none';
+  an.innerHTML =
+    '<div class="icon" style="background:#1B2540;color:#F2B53A"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z"/></svg></div>' +
+    '<div class="mid"><h2>Year 3 and 4</h2><p style="color:#4C5568">Autumn 2: Stop frame animation</p></div>' +
+    '<div class="tag" style="color:#2F5FD0">Lesson 1 ready</div>';
+  groupsEl.appendChild(an);
 
   /* ---------- hub ---------- */
   var spine = document.getElementById('spine');
