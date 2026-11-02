@@ -389,31 +389,14 @@
       </div>
     </section>
 
-    <!-- 8 iguana -->
-    <section class="part igu" data-name="Iguana" data-yt="Rv9hn4IGofM">
-      <div class="h2s"><h2><span class="tag">Clip 1</span> Iguana vs Snakes</h2></div>
-      <div class="player"></div>
-      <div class="side">
-        <span class="meta">BBC EARTH &middot; PLANET EARTH II &middot; 2016</span>
-        <p>Watch it in its own tab. Keep an eye out for the things on the last slide.</p>
-        <p>Straight after, everyone ticks what they spotted on their iPad.</p>
-        <div class="btns">
-          <button class="bt yel" type="button" data-goto="iguTicks"><span data-ph="arrow-right"></span>Tick chart</button>
-          <a class="bt" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Paper version</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="part spotb" data-name="Tick chart" id="iguTicks" data-clip="iguana"></section>
-
-    <!-- 9 levitating -->
+    <!-- 8 levitating -->
     <section class="part dua" data-name="Levitating" data-yt="TUVcZfQe-Kw">
-      <div class="h2s"><h2><span class="tag">Clip 2</span> Levitating</h2></div>
+      <div class="h2s"><h2><span class="tag">Clip 1</span> Levitating</h2></div>
       <div class="player"></div>
       <div class="side">
         <span class="meta">DUA LIPA &middot; OFFICIAL MUSIC VIDEO &middot; 2020</span>
-        <p>Same again. Watch it, then tick what you spotted.</p>
-        <p>This is a very different kind of video, so expect different ticks.</p>
+        <p>Watch it in its own tab. Keep an eye out for the things on the last slide.</p>
+        <p>Straight after, everyone ticks what they spotted on their iPad.</p>
         <div class="btns">
           <button class="bt yel" type="button" data-goto="duaTicks"><span data-ph="arrow-right"></span>Tick chart</button>
           <a class="bt" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Paper version</a>
@@ -423,12 +406,29 @@
 
     <section class="part spotb" data-name="Tick chart" id="duaTicks" data-clip="dua"></section>
 
+    <!-- 9 iguana -->
+    <section class="part igu" data-name="Iguana" data-yt="Rv9hn4IGofM">
+      <div class="h2s"><h2><span class="tag">Clip 2</span> Iguana vs Snakes</h2></div>
+      <div class="player"></div>
+      <div class="side">
+        <span class="meta">BBC EARTH &middot; PLANET EARTH II &middot; 2016</span>
+        <p>Same again. Watch it, then tick what you spotted.</p>
+        <p>This is a very different kind of video, so expect different ticks.</p>
+        <div class="btns">
+          <button class="bt yel" type="button" data-goto="iguTicks"><span data-ph="arrow-right"></span>Tick chart</button>
+          <a class="bt" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Paper version</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="part spotb" data-name="Tick chart" id="iguTicks" data-clip="iguana"></section>
+
     <!-- 10 compare -->
     <section class="part" data-name="Compare">
       <h2>Same or different?</h2>
       <div class="cmp2">
         <div class="cmp-chart">
-          <div class="cmp-key"><span><i style="background:var(--igu)"></i>Iguana vs Snakes</span><span><i style="background:var(--dua)"></i>Levitating</span></div>
+          <div class="cmp-key"><span><i style="background:var(--dua)"></i>Levitating</span><span><i style="background:var(--igu)"></i>Iguana vs Snakes</span></div>
           <div id="cmpRows"></div>
           <div class="cmp-empty" id="cmpEmpty" hidden>Run the tick chart after each clip and the class&rsquo;s results land here, side by side.</div>
         </div>
@@ -506,7 +506,7 @@
     pl.replaceWith(a);
   });
   // planned minutes per part, and what kind of clip it is on the timeline
-  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[4,'video'],[6,'task'],[3,'talk'],[3,'talk'],[4,'video'],[4,'task'],[5,'video'],[4,'task'],[7,'task'],[2,'talk']];
+  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[4,'video'],[6,'task'],[3,'talk'],[3,'talk'],[5,'video'],[4,'task'],[4,'video'],[4,'task'],[7,'task'],[2,'talk']];
   var AUDIO = [5, 9, 11];
   PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp'), function(e){ return +e.getAttribute('data-s'); }))); });
 
@@ -845,11 +845,11 @@
     (function(){
       $('cmpRows').innerHTML = SPOT.map(function(it){
         return '<div class="cmp-row"><span class="sp-ic">' + spotIcon(it) + '</span><span class="sp-lab">' + it[0] + '</span><span class="cmp-bars">' +
-          '<span class="cmp-b"><span style="background:var(--igu)"></span><em></em></span><span class="cmp-b"><span style="background:var(--dua)"></span><em></em></span></span></div>';
+          '<span class="cmp-b"><span style="background:var(--dua)"></span><em></em></span><span class="cmp-b"><span style="background:var(--igu)"></span><em></em></span></span></div>';
       }).join('');
     })();
     function paintCompare(){
-      var a = tally('iguana'), b = tally('dua'), any = a.n + b.n > 0;
+      var a = tally('dua'), b = tally('iguana'), any = a.n + b.n > 0;
       $('cmpEmpty').hidden = any; $('cmpRows').hidden = !any;
       var rows = $('cmpRows').querySelectorAll('.cmp-row');
       [a, b].forEach(function(t, k){
