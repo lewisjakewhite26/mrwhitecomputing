@@ -2219,7 +2219,7 @@ window.HB_GAUGE = (function(){
       else if(v === 'task'){ initQuiz(); }
       else if(v === 'task2'){ window.HB_DECK.task(unit); window.scrollTo(0,0); }
       else if(v === 'sheet'){ if(unit){ window.HB_DECK.sheet(unit, parts[3]); } else { renderSheet(parts[1], parts[2]); } window.scrollTo(0,0); }
-      else if(v === 'live'){ window.HB_LIVE.renderPupilView(views.live, parts[1]); window.scrollTo(0,0); }
+      else if(v === 'live'){ window.HB_LIVE.renderPupilView(views.live, parts[1], parts[2]); window.scrollTo(0,0); }
       else if(v === 'board'){ window.HB_LIVE.renderBoardView(views.board, parts[1], parts[2]); window.scrollTo(0,0); }
     }catch(err){
       if(window.console) console.error('route', err);
@@ -8891,8 +8891,9 @@ window.HB_GAUGE = (function(){
   // finger's stroke into one fat, wandering line -- see pvDown
   var pvPointers = {};
 
-  function renderPupilView(el, code){
+  function renderPupilView(el, code, mode){
     if(!code){ buildJoinForm(el); return; }
+    var startTab = mode === 'write' ? 'write' : 'draw';
     pvCode = code; pvRound = 0; pvStrokes = []; pvTool = 'pen'; pvColor = COLORS[0]; pvSize = SIZES[0]; pvActiveTab = 'draw';
     pvPointers = {};
     el.innerHTML = '<div class="lv-inactive">Loading…</div>';
@@ -8903,6 +8904,10 @@ window.HB_GAUGE = (function(){
       }
       pvRound = data.round || 1;
       buildPupilUI(el, data.question);
+      if(startTab === 'write'){
+        pvSetTab(el, 'write');
+        var ta = el.querySelector('.lv-block-text textarea'); if(ta) ta.focus();
+      }
       startPvPoll(el);
       markJoined(code, getPupilId(), function(){});     // once per room load, not per poll tick
     });

@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root{
     --bg:#0b0c0f; --panel:#15171c; --panel2:#1c1f26; --edge:#2c303a; --tx:#f4f5f7; --mut:#b9bfcb;
@@ -145,6 +146,57 @@
   .head{position:absolute;top:64px;bottom:14px;width:2px;background:var(--play);transition:left .5s;pointer-events:none;z-index:5}
   .head::before{content:"";position:absolute;left:-9px;top:0;border:10px solid transparent;border-top:13px solid var(--play)}
   .rm .head{transition:none}
+  /* video links: open in a browser tab rather than embedding */
+  a.player.poster{display:block;text-decoration:none;color:var(--tx);background:#000}
+  .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+  .poster .pv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(closest-side,rgba(0,0,0,.25),rgba(0,0,0,.7))}
+  .poster .pbtn{width:132px;height:132px;border-radius:50%;background:var(--yel);color:#141414;display:grid;place-items:center;font-size:64px;box-shadow:0 10px 40px -10px rgba(0,0,0,.9)}
+  .poster .pbtn svg{margin-left:8px}
+  .poster .plab{font-size:30px;font-weight:800;text-shadow:0 2px 12px rgba(0,0,0,.9)}
+  .poster:hover .pbtn{transform:scale(1.05)}
+
+  /* live answers */
+  .part.live{padding:0}
+  .lv-side{position:absolute;left:36px;top:44px;width:270px;bottom:100px;display:flex;flex-direction:column;gap:12px}
+  .lv-qr{width:230px;height:230px;border-radius:14px;background:#fff;padding:12px;display:grid;place-items:center}
+  .lv-qr img,.lv-qr canvas{width:206px!important;height:206px!important;display:block}
+  .lv-qr.off{background:var(--panel);border:1px dashed var(--edge);color:var(--mut);font-size:20px;text-align:center;padding:20px}
+  .lv-codelab{font-family:var(--mono);font-size:16px;letter-spacing:.12em;color:var(--mut);margin-top:6px}
+  .lv-code{font-family:var(--mono);font-size:56px;font-weight:700;letter-spacing:.08em;color:var(--yel);line-height:1}
+  .lv-joined{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:600}
+  .lv-joined i{width:12px;height:12px;border-radius:50%;background:var(--play);box-shadow:0 0 10px var(--play)}
+  .lv-hint{font-size:17px;line-height:1.35;color:var(--mut);overflow-wrap:anywhere}
+  .lv-float{position:absolute;left:336px;right:28px;top:40px;bottom:100px}
+  .lv-q{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:620px;text-align:center;z-index:1;pointer-events:none}
+  .lv-q .lab{font-family:var(--mono);font-size:20px;letter-spacing:.14em;color:var(--yel);margin-bottom:10px}
+  .lv-q .txt{font-size:46px;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+  .lv-q .sub{font-size:22px;color:var(--mut);margin-top:12px}
+  .ans{position:absolute;width:220px;padding:11px 14px;border-radius:12px;background:var(--panel2);border:1px solid #3a3f4b;box-shadow:0 10px 24px -12px rgba(0,0,0,.8);font-size:21px;line-height:1.28;cursor:pointer;z-index:2;
+    transform:rotate(var(--r,0deg));animation:pop .5s cubic-bezier(.2,1.4,.4,1) both, bob var(--d,6s) ease-in-out var(--dl,0s) infinite}
+  .lv-float.t2 .ans{width:184px;font-size:18px;padding:9px 12px}
+  .lv-float.t3 .ans{width:160px;font-size:16px;padding:8px 10px}
+  .lv-float.t2 .ans p,.lv-float.t3 .ans p{-webkit-line-clamp:2}
+  .lv-float.t2 .ans img{max-height:52px} .lv-float.t3 .ans img{max-height:42px}
+  .lv-float.t2 .lv-q{width:560px} .lv-float.t2 .lv-q .txt{font-size:40px}
+  .lv-float.t3 .lv-q{width:500px} .lv-float.t3 .lv-q .txt{font-size:34px} .lv-float.t3 .lv-q .lab{font-size:17px}
+  .ans p{margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .ans img{display:block;max-width:100%;max-height:78px;margin:0 auto;border-radius:6px;background:#fff}
+  .ans .x{position:absolute;right:-10px;top:-10px;width:30px;height:30px;border-radius:50%;border:1px solid #4a505c;background:#0b0c0f;color:var(--mut);font:700 18px/1 Inter,sans-serif;cursor:pointer;padding:0}
+  @keyframes pop{from{opacity:0;scale:.6}to{opacity:1;scale:1}}
+  @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+  .rm .ans{animation:none}
+  .lv-bar{position:absolute;left:36px;right:28px;bottom:22px;height:62px;display:flex;align-items:center;gap:12px}
+  .lv-bar .bt{padding:12px 18px;font-size:22px}
+  .lv-bar .bt[hidden]{display:none}
+  .lv-vers{display:flex;gap:8px;margin-left:auto;flex-wrap:nowrap;overflow:hidden}
+  .lv-v{font:inherit;font-family:var(--mono);font-size:17px;font-weight:700;padding:10px 12px;border-radius:8px;border:1px solid var(--edge);background:var(--panel);color:var(--tx);cursor:pointer;white-space:nowrap}
+  .lv-v.view{border-color:var(--yel);color:var(--yel)}
+  .lv-v .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--play);margin-right:7px;vertical-align:1px}
+  .lv-msg{font-size:20px;color:#ffb4ad}
+  .lv-big{position:absolute;inset:0;z-index:20;background:rgba(6,7,9,.94);display:none;align-items:center;justify-content:center;padding:60px 120px;cursor:pointer}
+  .lv-big.on{display:flex}
+  .lv-big p{margin:0;font-size:52px;font-weight:700;line-height:1.25;text-align:center;overflow-wrap:anywhere}
+  .lv-big img{max-width:100%;max-height:100%;background:#fff;border-radius:12px}
 </style>
 </head>
 <body>
@@ -226,21 +278,44 @@
     </section>
 
     <!-- 5 lion king -->
-    <section class="part" data-name="Lion King" data-yt="ecYgqLml89c">
+    <section class="part" data-name="Lion King" data-yt="ecYgqLml89c" id="lion">
       <div class="h2s"><h2>Same pictures. Different music.</h2></div>
       <div class="player"></div>
       <div class="side">
         <span class="meta">THE LION KING (1994) &middot; RESCORED BY LOUD SON</span>
         <p>The opening of <b>The Lion King</b> plays several times. The pictures never change; only the music does.</p>
-        <p>After each version, write on <span class="hl">Sheet 1</span> how it made you feel.</p>
+        <p>After each version, pause it. Everyone sends in how that music made them feel.</p>
         <div class="btns">
-          <a class="bt yel" href="video-l1-sheets.html#sheet1" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 1</a>
-          <a class="bt" href="https://www.youtube.com/watch?v=ecYgqLml89c" target="_blank" rel="noopener"><span data-ph="youtube-logo"></span>Open on YouTube</a>
+          <button class="bt yel" type="button" data-goto="live"><span data-ph="arrow-right"></span>Live answers</button>
+          <a class="bt" href="video-l1-sheets.html#sheet1" target="_blank" rel="noopener"><span data-ph="printer"></span>Paper version</a>
         </div>
       </div>
     </section>
 
-    <!-- 6 mood -->
+    <!-- 6 live answers -->
+    <section class="part live" data-name="Live answers" id="live">
+      <div class="lv-side">
+        <div class="lv-qr off" id="lvQr">The code appears here once you start</div>
+        <div class="lv-codelab">ROOM CODE</div>
+        <div class="lv-code" id="lvCode">&middot; &middot; &middot;</div>
+        <div class="lv-joined"><i></i><span id="lvJoined">0</span>&nbsp;joined</div>
+        <div class="lv-hint" id="lvHint"></div>
+      </div>
+      <div class="lv-float" id="lvFloat">
+        <div class="lv-q"><div class="lab" id="lvLab">LIVE ANSWERS</div><div class="txt" id="lvTxt">How does the music make you feel?</div><div class="sub" id="lvSub">Press Start, then scan the code on an iPad.</div></div>
+      </div>
+      <div class="lv-bar">
+        <button class="bt yel" type="button" id="lvStart"><span data-ph="play"></span>Start</button>
+        <button class="bt yel" type="button" id="lvNextV" hidden><span data-ph="arrow-right"></span>Next version</button>
+        <button class="bt" type="button" id="lvBest" hidden>Which fits best?</button>
+        <span class="lv-msg" id="lvMsg"></span>
+        <div class="lv-vers" id="lvVers"></div>
+        <button class="bt" type="button" id="lvEnd" hidden>End</button>
+      </div>
+      <div class="lv-big" id="lvBig"></div>
+    </section>
+
+    <!-- 7 mood -->
     <section class="part" data-name="Mood">
       <h2>So what changed?</h2>
       <div class="big3">
@@ -276,11 +351,10 @@
       <div class="player"></div>
       <div class="side">
         <span class="meta">BBC EARTH &middot; PLANET EARTH II &middot; 2016</span>
-        <p>Watch it twice. The first time, just watch.</p>
+        <p>Watch it twice in its own tab. The first time, just watch.</p>
         <p>The second time, tick everything you spot in the <span style="color:var(--igu);font-weight:700">Iguana</span> column on <span class="hl">Sheet 2</span>.</p>
         <div class="btns">
           <a class="bt yel" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 2</a>
-          <a class="bt" href="https://www.youtube.com/watch?v=Rv9hn4IGofM" target="_blank" rel="noopener"><span data-ph="youtube-logo"></span>Open on YouTube</a>
         </div>
       </div>
     </section>
@@ -295,7 +369,6 @@
         <p>This time you&rsquo;re filling in the <span style="color:var(--dua);font-weight:700">Levitating</span> column on <span class="hl">Sheet 2</span>.</p>
         <div class="btns">
           <a class="bt yel" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 2</a>
-          <a class="bt" href="https://www.youtube.com/watch?v=TUVcZfQe-Kw" target="_blank" rel="noopener"><span data-ph="youtube-logo"></span>Open on YouTube</a>
         </div>
       </div>
     </section>
@@ -341,7 +414,7 @@
 
 <script>
 (function(){
-  var PH = {"archive":"<path d=\"M224,48H32A16,16,0,0,0,16,64V88a16,16,0,0,0,16,16v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V104a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM208,192H48V104H208ZM224,88H32V64H224V88ZM96,136a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,136Z\"/>","arrow-left":"<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>","arrows-out-cardinal":"<path d=\"M90.34,61.66a8,8,0,0,1,0-11.32l32-32a8,8,0,0,1,11.32,0l32,32a8,8,0,0,1-11.32,11.32L136,43.31V96a8,8,0,0,1-16,0V43.31L101.66,61.66A8,8,0,0,1,90.34,61.66Zm64,132.68L136,212.69V160a8,8,0,0,0-16,0v52.69l-18.34-18.35a8,8,0,0,0-11.32,11.32l32,32a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Zm83.32-72-32-32a8,8,0,0,0-11.32,11.32L212.69,120H160a8,8,0,0,0,0,16h52.69l-18.35,18.34a8,8,0,0,0,11.32,11.32l32-32A8,8,0,0,0,237.66,122.34ZM43.31,136H96a8,8,0,0,0,0-16H43.31l18.35-18.34A8,8,0,0,0,50.34,90.34l-32,32a8,8,0,0,0,0,11.32l32,32a8,8,0,0,0,11.32-11.32Z\"/>","device-mobile":"<path d=\"M176,16H80A24,24,0,0,0,56,40V216a24,24,0,0,0,24,24h96a24,24,0,0,0,24-24V40A24,24,0,0,0,176,16ZM72,64H184V192H72Zm8-32h96a8,8,0,0,1,8,8v8H72V40A8,8,0,0,1,80,32Zm96,192H80a8,8,0,0,1-8-8v-8H184v8A8,8,0,0,1,176,224Z\"/>","film-slate":"<path d=\"M216,104H102.09L210,75.51a8,8,0,0,0,5.68-9.84l-8.16-30a15.93,15.93,0,0,0-19.42-11.13L35.81,64.74a15.75,15.75,0,0,0-9.7,7.4,15.51,15.51,0,0,0-1.55,12L32,111.56c0,.14,0,.29,0,.44v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V112A8,8,0,0,0,216,104ZM192.16,40l6,22.07-22.62,6L147.42,51.83Zm-66.69,17.6,28.12,16.24-36.94,9.75L88.53,67.37Zm-79.4,44.62-6-22.08,26.5-7L94.69,89.4ZM208,200H48V120H208v80Z\"/>","info":"<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z\"/>","lightning":"<path d=\"M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z\"/>","magnifying-glass":"<path d=\"M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z\"/>","megaphone":"<path d=\"M248,120a48.05,48.05,0,0,0-48-48H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48.07,48.07,0,0,0,248,120ZM48,199.93V40h0c42.81,35.91,86.63,45,104,47.24v65.48C134.65,155,90.84,164.07,48,199.93Zm131,8,0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z\"/>","microphone":"<path d=\"M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z\"/>","music-notes":"<path d=\"M212.92,17.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,56V166.08A36,36,0,1,0,88,196V110.25l112-28v51.83A36,36,0,1,0,216,164V24A8,8,0,0,0,212.92,17.69ZM52,216a20,20,0,1,1,20-20A20,20,0,0,1,52,216ZM88,93.75V62.25l112-28v31.5ZM180,184a20,20,0,1,1,20-20A20,20,0,0,1,180,184Z\"/>","play":"<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>","popcorn":"<path d=\"M229.52,74.21a8,8,0,0,0-7.13-2A44,44,0,0,0,168,41.67a44,44,0,0,0-80,0,44,44,0,0,0-54.4,30.51,8,8,0,0,0-9.4,9.65L54.76,211.67A16,16,0,0,0,70.34,224H185.66a16,16,0,0,0,15.58-12.33L231.79,81.83A8,8,0,0,0,229.52,74.21ZM76,56a27.68,27.68,0,0,1,13.11,3.26,8,8,0,0,0,11.56-5.34,28,28,0,0,1,54.66,0,8,8,0,0,0,11.56,5.34A28,28,0,0,1,207,76.54l-38.56,11-34.49-13.8a16,16,0,0,0-11.88,0L87.57,87.56,49,76.54A28,28,0,0,1,76,56ZM70.34,208,42.91,91.44l37.85,10.81L94.86,208ZM145,208H111L96.75,101.12,128,88.62l31.25,12.5Zm40.66,0H161.14l14.1-105.75,37.85-10.81Z\"/>","printer":"<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>","scissors":"<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>","speaker-high":"<path d=\"M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z\"/>","television":"<path d=\"M216,64H147.31l34.35-34.34a8,8,0,1,0-11.32-11.32L128,60.69,85.66,18.34A8,8,0,0,0,74.34,29.66L108.69,64H40A16,16,0,0,0,24,80V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64ZM40,80H144V200H40ZM216,200H160V80h56V200Zm-16-84a12,12,0,1,1-12-12A12,12,0,0,1,200,116Zm0,48a12,12,0,1,1-12-12A12,12,0,0,1,200,164Z\"/>","timer":"<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>","video-camera":"<path d=\"M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z\"/>","youtube-logo":"<path d=\"M164.44,121.34l-48-32A8,8,0,0,0,104,96v64a8,8,0,0,0,12.44,6.66l48-32a8,8,0,0,0,0-13.32ZM120,145.05V111l25.58,17ZM234.33,69.52a24,24,0,0,0-14.49-16.4C185.56,39.88,131,40,128,40s-57.56-.12-91.84,13.12a24,24,0,0,0-14.49,16.4C19.08,79.5,16,97.74,16,128s3.08,48.5,5.67,58.48a24,24,0,0,0,14.49,16.41C69,215.56,120.4,216,127.34,216h1.32c6.94,0,58.37-.44,91.18-13.11a24,24,0,0,0,14.49-16.41c2.59-10,5.67-28.22,5.67-58.48S236.92,79.5,234.33,69.52Zm-15.49,113a8,8,0,0,1-4.77,5.49c-31.65,12.22-85.48,12-86,12H128c-.54,0-54.33.2-86-12a8,8,0,0,1-4.77-5.49C34.8,173.39,32,156.57,32,128s2.8-45.39,5.16-54.47A8,8,0,0,1,41.93,68c30.52-11.79,81.66-12,85.85-12h.27c.54,0,54.38-.18,86,12a8,8,0,0,1,4.77,5.49C221.2,82.61,224,99.43,224,128S221.2,173.39,218.84,182.47Z\"/>"};
+  var PH = {"archive":"<path d=\"M224,48H32A16,16,0,0,0,16,64V88a16,16,0,0,0,16,16v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V104a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM208,192H48V104H208ZM224,88H32V64H224V88ZM96,136a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,136Z\"/>","arrow-left":"<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>","arrows-out-cardinal":"<path d=\"M90.34,61.66a8,8,0,0,1,0-11.32l32-32a8,8,0,0,1,11.32,0l32,32a8,8,0,0,1-11.32,11.32L136,43.31V96a8,8,0,0,1-16,0V43.31L101.66,61.66A8,8,0,0,1,90.34,61.66Zm64,132.68L136,212.69V160a8,8,0,0,0-16,0v52.69l-18.34-18.35a8,8,0,0,0-11.32,11.32l32,32a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Zm83.32-72-32-32a8,8,0,0,0-11.32,11.32L212.69,120H160a8,8,0,0,0,0,16h52.69l-18.35,18.34a8,8,0,0,0,11.32,11.32l32-32A8,8,0,0,0,237.66,122.34ZM43.31,136H96a8,8,0,0,0,0-16H43.31l18.35-18.34A8,8,0,0,0,50.34,90.34l-32,32a8,8,0,0,0,0,11.32l32,32a8,8,0,0,0,11.32-11.32Z\"/>","device-mobile":"<path d=\"M176,16H80A24,24,0,0,0,56,40V216a24,24,0,0,0,24,24h96a24,24,0,0,0,24-24V40A24,24,0,0,0,176,16ZM72,64H184V192H72Zm8-32h96a8,8,0,0,1,8,8v8H72V40A8,8,0,0,1,80,32Zm96,192H80a8,8,0,0,1-8-8v-8H184v8A8,8,0,0,1,176,224Z\"/>","film-slate":"<path d=\"M216,104H102.09L210,75.51a8,8,0,0,0,5.68-9.84l-8.16-30a15.93,15.93,0,0,0-19.42-11.13L35.81,64.74a15.75,15.75,0,0,0-9.7,7.4,15.51,15.51,0,0,0-1.55,12L32,111.56c0,.14,0,.29,0,.44v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V112A8,8,0,0,0,216,104ZM192.16,40l6,22.07-22.62,6L147.42,51.83Zm-66.69,17.6,28.12,16.24-36.94,9.75L88.53,67.37Zm-79.4,44.62-6-22.08,26.5-7L94.69,89.4ZM208,200H48V120H208v80Z\"/>","info":"<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z\"/>","lightning":"<path d=\"M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z\"/>","magnifying-glass":"<path d=\"M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z\"/>","megaphone":"<path d=\"M248,120a48.05,48.05,0,0,0-48-48H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48.07,48.07,0,0,0,248,120ZM48,199.93V40h0c42.81,35.91,86.63,45,104,47.24v65.48C134.65,155,90.84,164.07,48,199.93Zm131,8,0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z\"/>","microphone":"<path d=\"M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z\"/>","music-notes":"<path d=\"M212.92,17.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,56V166.08A36,36,0,1,0,88,196V110.25l112-28v51.83A36,36,0,1,0,216,164V24A8,8,0,0,0,212.92,17.69ZM52,216a20,20,0,1,1,20-20A20,20,0,0,1,52,216ZM88,93.75V62.25l112-28v31.5ZM180,184a20,20,0,1,1,20-20A20,20,0,0,1,180,184Z\"/>","play":"<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>","popcorn":"<path d=\"M229.52,74.21a8,8,0,0,0-7.13-2A44,44,0,0,0,168,41.67a44,44,0,0,0-80,0,44,44,0,0,0-54.4,30.51,8,8,0,0,0-9.4,9.65L54.76,211.67A16,16,0,0,0,70.34,224H185.66a16,16,0,0,0,15.58-12.33L231.79,81.83A8,8,0,0,0,229.52,74.21ZM76,56a27.68,27.68,0,0,1,13.11,3.26,8,8,0,0,0,11.56-5.34,28,28,0,0,1,54.66,0,8,8,0,0,0,11.56,5.34A28,28,0,0,1,207,76.54l-38.56,11-34.49-13.8a16,16,0,0,0-11.88,0L87.57,87.56,49,76.54A28,28,0,0,1,76,56ZM70.34,208,42.91,91.44l37.85,10.81L94.86,208ZM145,208H111L96.75,101.12,128,88.62l31.25,12.5Zm40.66,0H161.14l14.1-105.75,37.85-10.81Z\"/>","printer":"<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>","scissors":"<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>","speaker-high":"<path d=\"M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z\"/>","television":"<path d=\"M216,64H147.31l34.35-34.34a8,8,0,1,0-11.32-11.32L128,60.69,85.66,18.34A8,8,0,0,0,74.34,29.66L108.69,64H40A16,16,0,0,0,24,80V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64ZM40,80H144V200H40ZM216,200H160V80h56V200Zm-16-84a12,12,0,1,1-12-12A12,12,0,0,1,200,116Zm0,48a12,12,0,1,1-12-12A12,12,0,0,1,200,164Z\"/>","timer":"<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>","video-camera":"<path d=\"M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z\"/>","youtube-logo":"<path d=\"M164.44,121.34l-48-32A8,8,0,0,0,104,96v64a8,8,0,0,0,12.44,6.66l48-32a8,8,0,0,0,0-13.32ZM120,145.05V111l25.58,17ZM234.33,69.52a24,24,0,0,0-14.49-16.4C185.56,39.88,131,40,128,40s-57.56-.12-91.84,13.12a24,24,0,0,0-14.49,16.4C19.08,79.5,16,97.74,16,128s3.08,48.5,5.67,58.48a24,24,0,0,0,14.49,16.41C69,215.56,120.4,216,127.34,216h1.32c6.94,0,58.37-.44,91.18-13.11a24,24,0,0,0,14.49-16.41c2.59-10,5.67-28.22,5.67-58.48S236.92,79.5,234.33,69.52Zm-15.49,113a8,8,0,0,1-4.77,5.49c-31.65,12.22-85.48,12-86,12H128c-.54,0-54.33.2-86-12a8,8,0,0,1-4.77-5.49C34.8,173.39,32,156.57,32,128s2.8-45.39,5.16-54.47A8,8,0,0,1,41.93,68c30.52-11.79,81.66-12,85.85-12h.27c.54,0,54.38-.18,86,12a8,8,0,0,1,4.77,5.49C221.2,82.61,224,99.43,224,128S221.2,173.39,218.84,182.47Z\"/>","arrow-right":"<path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/>"};
   function ph(n, cls){ return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
   [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
 
@@ -367,9 +440,18 @@
   if(RM) stage.classList.add('rm');
 
   var PARTS = [].slice.call(document.querySelectorAll('.part'));
+  // each video opens in its own browser tab, so it can be paused there while the slides carry on
+  PARTS.forEach(function(p){
+    var id = p.getAttribute('data-yt'), pl = p.querySelector('.player');
+    if(!id || !pl) return;
+    var a = document.createElement('a');
+    a.className = 'player poster'; a.href = 'https://www.youtube.com/watch?v=' + id; a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML = '<img alt="" src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg" onerror="this.remove()"><div class="pv"><span class="pbtn">' + ph('play') + '</span><span class="plab">Open the video</span></div>';
+    pl.replaceWith(a);
+  });
   // planned minutes per part, and what kind of clip it is on the timeline
-  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[8,'video'],[3,'talk'],[3,'talk'],[8,'video'],[7,'video'],[8,'task'],[2,'talk']];
-  var AUDIO = [5, 8, 9];
+  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[4,'video'],[6,'task'],[3,'talk'],[3,'talk'],[8,'video'],[7,'video'],[8,'task'],[2,'talk']];
+  var AUDIO = [5, 9, 10];
   PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp'), function(e){ return +e.getAttribute('data-s'); }))); });
 
   // lay out the timeline: width per part is a floor plus its planned minutes
@@ -411,13 +493,6 @@
     PARTS.forEach(function(p, i){
       var on = i === cur;
       p.classList.toggle('on', on);
-      var pl = p.querySelector('.player');
-      if(pl){
-        var want = on ? p.getAttribute('data-yt') : null;
-        if(want && !pl.firstChild){
-          pl.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + want + '?rel=0&modestbranding=1" title="' + p.getAttribute('data-name') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
-        } else if(!want && pl.firstChild){ pl.innerHTML = ''; }   // leaving the part stops the sound
-      }
     });
     [].forEach.call(PARTS[cur].querySelectorAll('.pp'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
     [].forEach.call(clips, function(c, i){ c.classList.toggle('cur', i === cur); });
@@ -444,6 +519,176 @@
     if(['ArrowRight','PageDown',' '].indexOf(e.key) > -1){ e.preventDefault(); next(); }
     else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
   });
+
+  [].forEach.call(document.querySelectorAll('[data-goto]'), function(b){
+    b.addEventListener('click', function(){ go(PARTS.indexOf(document.getElementById(b.getAttribute('data-goto'))), 0); });
+  });
+
+  /* ---------- live answers: the same Supabase project and functions as HB_LIVE in index.html ---------- */
+  (function(){
+    var SB_URL = 'https://tbmvnyzwigolpfbnnwqy.supabase.co';
+    var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRibXZueXp3aWdvbHBmYm5ud3F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzMjI5NjgsImV4cCI6MjEwNDg5ODk2OH0.7bNsCcniJAZ0BZdvvhc5ohvu01X_L1a41-yjE8HOEQo';
+    var CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', STORE = 'vl1_live';
+    function $(id){ return document.getElementById(id); }
+    function rpc(name, args){
+      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
+        .then(function(r){ if(!r.ok) throw new Error('status ' + r.status); return r.json(); });
+    }
+    function genCode(){ var o = ''; for(var i = 0; i < 5; i++) o += CHARS.charAt(Math.floor(Math.random() * CHARS.length)); return o; }
+    function genToken(){ if(window.crypto && crypto.randomUUID) return crypto.randomUUID(); var o = ''; for(var i = 0; i < 32; i++) o += Math.floor(Math.random() * 16).toString(16); return o; }
+
+    var base = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
+    var room = null, viewIdx = 0, timer = null, cards = {}, slotN = 0;
+    try{ room = JSON.parse(sessionStorage.getItem(STORE)); }catch(e){}
+    function save(){
+      try{
+        // drawings are big, so only text answers survive a refresh
+        var slim = JSON.parse(JSON.stringify(room));
+        slim.versions.forEach(function(v){ v.answers = v.answers.filter(function(a){ return a.kind === 'text'; }); });
+        sessionStorage.setItem(STORE, JSON.stringify(slim));
+      }catch(e){}
+    }
+    function liveIdx(){ return room.versions.length - 1; }
+    function versionCount(){ return room.versions.filter(function(v){ return v.kind === 'ver'; }).length; }
+    function msg(t){ $('lvMsg').textContent = t || ''; }
+
+    function setQuestion(v, done){
+      msg('');
+      rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:v.q }).then(function(ok){
+        if(!ok) throw new Error('rejected');
+        room.versions.push(v); viewIdx = liveIdx(); save(); paint(true); if(done) done();
+      }).catch(function(){
+        if(!room.versions.length) room = null;
+        msg("Couldn't reach the answer wall. Check the internet and try again.");
+      });
+    }
+    function newVersion(){ var n = versionCount() + 1; return { kind:'ver', label:'VERSION ' + n, chip:'V' + n, q:'Version ' + n + ': how does this music make you feel?', answers:[] }; }
+
+    $('lvStart').addEventListener('click', function(){
+      room = { code:genCode(), token:genToken(), versions:[] };
+      setQuestion(newVersion(), startPoll);
+    });
+    $('lvNextV').addEventListener('click', function(){ setQuestion(newVersion()); });
+    $('lvBest').addEventListener('click', function(){ setQuestion({ kind:'best', label:'THE BIG QUESTION', chip:'Best', q:'Which music fits the pictures best? Why?', answers:[] }); });
+    $('lvEnd').addEventListener('click', function(){
+      if(!confirm('End live answers? Every answer in this room gets wiped.')) return;
+      rpc('live_clear_all', { p_code:room.code, p_token:room.token }).catch(function(){});
+      room = null; try{ sessionStorage.removeItem(STORE); }catch(e){}
+      if(timer){ clearInterval(timer); timer = null; }
+      paint(true);
+    });
+    $('lvBig').addEventListener('click', function(){ this.classList.remove('on'); });
+
+    function poll(){
+      if(!room) return;
+      rpc('live_get_room', { p_code:room.code }).then(function(rows){
+        if(!room || !rows || !rows.length) return;
+        $('lvJoined').textContent = rows[0].joined || 0;
+        var v = room.versions[liveIdx()];
+        if(!v || rows[0].question !== v.q) return;            // the new question hasn't landed yet
+        var known = {}; v.answers.forEach(function(a){ known[a.id] = 1; });
+        var added = false;
+        rows.forEach(function(r){
+          if(r.id && !known[r.id]){ v.answers.push({ id:r.id, kind:r.kind, content:r.content }); added = true; }
+        });
+        if(added){ save(); paint(false); }
+      }).catch(function(){});
+    }
+    function startPoll(){ if(!timer){ poll(); timer = setInterval(poll, 2000); } }
+
+    // the grid gets finer as answers arrive, so a whole class fits round the question
+    // without cards landing on top of each other; tapping a card shows it in full
+    var TIERS = [
+      { max:14, cols:5, rows:4, w:220, h:104, cls:'' },
+      { max:18, cols:6, rows:5, w:184, h:80, cls:'t2' },
+      { max:999, cols:7, rows:6, w:160, h:66, cls:'t3' }
+    ];
+    var tier = TIERS[0], slots = [];
+    function tierFor(n){ for(var i = 0; i < TIERS.length; i++) if(n <= TIERS[i].max) return TIERS[i]; return TIERS[TIERS.length - 1]; }
+    function buildSlots(t){
+      // fixed 1600x900 stage, so the board area and question box are known sizes even while this part is hidden
+      var W = 1196, H = 444, cw = W / t.cols, ch = H / t.rows, out = [];
+      var qw = { '':640, t2:580, t3:520 }[t.cls], qh = { '':210, t2:180, t3:160 }[t.cls];
+      var qx0 = (W - qw) / 2, qx1 = (W + qw) / 2, qy0 = (H - qh) / 2, qy1 = (H + qh) / 2;
+      for(var r = 0; r < t.rows; r++) for(var c = 0; c < t.cols; c++){
+        var x = c * cw + (cw - t.w) / 2, y = r * ch + (ch - t.h) / 2;
+        if(x < qx1 && x + t.w > qx0 && y < qy1 && y + t.h > qy0) continue;   // keeps the question clear
+        var dx = (x + t.w / 2 - W / 2) / W, dy = (y + t.h / 2 - H / 2) / H;
+        out.push({ x:x, y:y, d:dx * dx + dy * dy, k:(c * 7 + r * 3) % 5 });
+      }
+      // outer cells first, then mixed round the ring so answers don't fill one side
+      out.sort(function(a, b){ return (b.d - a.d) || (a.k - b.k); });
+      return out;
+    }
+    function placeCard(el, i){
+      var sl = slots[i % slots.length], wrap = Math.floor(i / slots.length);
+      el.style.left = (sl.x + wrap * 14 + (Math.random() - .5) * 8) + 'px';
+      el.style.top = (sl.y + wrap * 10 + (Math.random() - .5) * 6) + 'px';
+      el.style.setProperty('--r', ((Math.random() - .5) * 4).toFixed(1) + 'deg');
+      el.style.setProperty('--d', (5 + Math.random() * 3).toFixed(1) + 's');
+      el.style.setProperty('--dl', (-Math.random() * 5).toFixed(1) + 's');
+    }
+    function fill(box, a){
+      if(a.kind === 'drawing'){ var im = document.createElement('img'); im.src = a.content; im.alt = 'A drawn answer'; box.appendChild(im); }
+      else { var p = document.createElement('p'); p.textContent = a.content; box.appendChild(p); }
+    }
+    function card(a, v){
+      var el = document.createElement('div'); el.className = 'ans';
+      fill(el, a);
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.textContent = '\u00d7'; x.setAttribute('aria-label', 'Hide this answer');
+      x.addEventListener('click', function(e){
+        e.stopPropagation();
+        rpc('live_hide_answer', { p_code:room.code, p_token:room.token, p_id:a.id }).then(function(ok){
+          if(!ok) return;
+          v.answers = v.answers.filter(function(o){ return o.id !== a.id; }); save(); el.remove(); delete cards[a.id]; paint(false);
+        }).catch(function(){ msg("Couldn't hide that one. Try again."); });
+      });
+      el.appendChild(x);
+      el.addEventListener('click', function(){ var big = $('lvBig'); big.innerHTML = ''; fill(big, a); big.classList.add('on'); });
+      return el;
+    }
+    function paint(full){
+      var started = !!room;
+      $('lvStart').hidden = started; $('lvNextV').hidden = !started; $('lvBest').hidden = !started; $('lvEnd').hidden = !started;
+      var f = $('lvFloat');
+      var want = tierFor(room && room.versions[viewIdx] ? room.versions[viewIdx].answers.length : 0);
+      if(want !== tier || !slots.length){ tier = want; full = true; f.className = 'lv-float ' + tier.cls; }
+      if(full){ [].forEach.call(f.querySelectorAll('.ans'), function(n){ n.remove(); }); cards = {}; slotN = 0; }
+      var qr = $('lvQr');
+      if(!started){
+        qr.className = 'lv-qr off'; qr.removeAttribute('data-for'); qr.textContent = 'The code appears here once you start';
+        $('lvCode').innerHTML = '&middot; &middot; &middot;'; $('lvJoined').textContent = '0'; $('lvHint').textContent = '';
+        $('lvLab').textContent = 'LIVE ANSWERS'; $('lvTxt').textContent = 'How does the music make you feel?';
+        $('lvSub').textContent = 'Press Start, then scan the code on an iPad.'; $('lvVers').innerHTML = '';
+        return;
+      }
+      if(qr.getAttribute('data-for') !== room.code){
+        var join = base + 'index.html#/live/' + room.code + '/write';
+        qr.className = 'lv-qr'; qr.innerHTML = ''; qr.setAttribute('data-for', room.code);
+        try{ new QRCode(qr, { text:join, width:206, height:206, colorDark:'#0b0c0f', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M }); }
+        catch(e){ qr.textContent = join; }
+      }
+      $('lvCode').textContent = room.code;
+      $('lvHint').textContent = 'Scan it, or go to ' + base.replace(/^https?:\/\//, '') + '#/live and type the code.';
+      var v = room.versions[viewIdx], live = viewIdx === liveIdx();
+      $('lvLab').textContent = v.label + (live ? '' : ' \u00b7 CLOSED');
+      $('lvTxt').textContent = v.q.replace(/^Version \d+: /, '');
+      $('lvSub').textContent = v.answers.length ? '' : (live ? 'Waiting for answers\u2026' : 'Nobody answered this one.');
+      $('lvVers').innerHTML = room.versions.map(function(o, i){
+        return '<button type="button" class="lv-v' + (i === viewIdx ? ' view' : '') + '" data-i="' + i + '">' + (i === liveIdx() ? '<span class="dot"></span>' : '') + o.chip + ' \u00b7 ' + o.answers.length + '</button>';
+      }).join('');
+      [].forEach.call($('lvVers').querySelectorAll('.lv-v'), function(b){
+        b.addEventListener('click', function(){ viewIdx = +b.getAttribute('data-i'); paint(true); });
+      });
+      if(full) slots = buildSlots(tier);
+      v.answers.forEach(function(a){
+        if(cards[a.id]) return;
+        var el = card(a, v); f.appendChild(el); placeCard(el, slotN++); cards[a.id] = el;
+      });
+    }
+    if(room && room.versions && room.versions.length){ viewIdx = liveIdx(); startPoll(); } else room = null;
+    paint(true);
+  })();
   var m0 = /^#part(\d+)$/.exec(location.hash);
   go(m0 ? +m0[1] : 0, 0);
 })();
