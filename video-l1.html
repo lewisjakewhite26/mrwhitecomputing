@@ -193,6 +193,47 @@
   .lv-v.view{border-color:var(--yel);color:var(--yel)}
   .lv-v .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--play);margin-right:7px;vertical-align:1px}
   .lv-msg{font-size:20px;color:#ffb4ad}
+  /* tick charts */
+  .part.spotb{padding:0}
+  .sp-side{position:absolute;left:36px;top:44px;width:200px;display:flex;flex-direction:column;gap:10px}
+  .sp-side .lv-qr{width:180px;height:180px;padding:10px}
+  .sp-side .lv-qr img,.sp-side .lv-qr canvas{width:160px!important;height:160px!important}
+  .sp-side .lv-qr.off{font-size:17px;padding:14px}
+  .sp-side .lv-code{font-size:42px}
+  .sp-main{position:absolute;left:268px;width:850px;top:40px;bottom:100px}
+  .sp-title{margin:0 0 14px;font-size:38px;font-weight:800;line-height:1.1}
+  .sp-row{display:flex;align-items:center;gap:12px;height:37px}
+  .sp-ic{width:46px;height:30px;flex:none;border-radius:5px;background:#0c0e12;border:1px solid var(--edge);display:grid;place-items:center;color:var(--yel);font-size:20px;overflow:hidden}
+  .sp-ic svg.fr{width:100%;height:100%}
+  .sp-lab{width:350px;flex:none;font-size:21px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sp-track{flex:1;height:24px;border-radius:5px;background:var(--panel);border:1px solid var(--edge);overflow:hidden}
+  .sp-bar{display:block;height:100%;width:0;border-radius:4px;transition:width .6s cubic-bezier(.2,.9,.3,1)}
+  .rm .sp-bar{transition:none}
+  .sp-n{width:46px;flex:none;text-align:right;font-family:var(--mono);font-size:24px;font-weight:700}
+  .sp-notes-col{position:absolute;left:1146px;right:28px;top:44px;bottom:100px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+  .sp-notes-h{font-family:var(--mono);font-size:16px;letter-spacing:.12em;color:var(--mut)}
+  .sp-note{position:relative;padding:10px 14px;border-radius:10px;background:var(--panel2);border:1px solid #3a3f4b;font-size:19px;line-height:1.28;cursor:pointer;flex:none}
+  .sp-note p{margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .sp-note .x{position:absolute;right:-8px;top:-8px;width:28px;height:28px;border-radius:50%;border:1px solid #4a505c;background:#0b0c0f;color:var(--mut);font:700 17px/1 Inter,sans-serif;cursor:pointer;padding:0}
+  .sp-empty{font-size:19px;color:var(--mut);line-height:1.35}
+  .sp-status{font-size:22px;font-weight:700}
+  .sp-status .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--play);box-shadow:0 0 10px var(--play);margin-right:10px;vertical-align:1px}
+  /* compare chart */
+  .cmp2{display:flex;gap:34px}
+  .cmp-chart{width:860px;flex:none}
+  .cmp-key{display:flex;gap:26px;font-size:21px;font-weight:700;margin-bottom:10px}
+  .cmp-key i{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:9px;vertical-align:-1px}
+  .cmp-row{display:flex;align-items:center;gap:12px;height:37px}
+  .cmp-row .sp-lab{width:310px;font-size:19px}
+  .cmp-bars{flex:1;display:flex;flex-direction:column;gap:3px}
+  .cmp-b{display:flex;align-items:center;gap:8px;height:13px}
+  .cmp-b span{display:block;height:100%;width:0;border-radius:3px;transition:width .6s cubic-bezier(.2,.9,.3,1)}
+  .cmp-b em{font-style:normal;font-family:var(--mono);font-size:13px;color:var(--mut);white-space:nowrap}
+  .cmp-empty{font-size:24px;color:var(--mut);line-height:1.4;padding:30px 0}
+  .cmp-qs{flex:1;display:flex;flex-direction:column;gap:12px}
+  .cmp-qs .cq{font-size:26px;padding:12px 18px;margin:0}
+  .cmp-qs .cq .n{font-size:22px;padding-top:3px}
+  .cmp-qs .punch{font-size:28px;padding:16px 20px}
   .lv-done{font-size:21px;color:var(--mut);max-width:520px;line-height:1.3}
   .lv-done[hidden]{display:none}
   .lv-bar .bt:disabled{opacity:.4;cursor:default}
@@ -301,7 +342,7 @@
         <div class="lv-qr off" id="lvQr">The code appears here once you start</div>
         <div class="lv-codelab">ROOM CODE</div>
         <div class="lv-code" id="lvCode">&middot; &middot; &middot;</div>
-        <div class="lv-joined"><i></i><span id="lvJoined">0</span>&nbsp;joined</div>
+        <div class="lv-joined"><i></i><span class="lv-joinedN" id="lvJoined">0</span>&nbsp;joined</div>
         <div class="lv-hint" id="lvHint"></div>
       </div>
       <div class="lv-float" id="lvFloat">
@@ -316,7 +357,6 @@
         <div class="lv-vers" id="lvVers"></div>
         <button class="bt" type="button" id="lvEnd" hidden>End</button>
       </div>
-      <div class="lv-big" id="lvBig"></div>
     </section>
 
     <!-- 7 mood -->
@@ -355,13 +395,16 @@
       <div class="player"></div>
       <div class="side">
         <span class="meta">BBC EARTH &middot; PLANET EARTH II &middot; 2016</span>
-        <p>Watch it twice in its own tab. The first time, just watch.</p>
-        <p>The second time, tick everything you spot in the <span style="color:var(--igu);font-weight:700">Iguana</span> column on <span class="hl">Sheet 2</span>.</p>
+        <p>Watch it in its own tab. Keep an eye out for the things on the last slide.</p>
+        <p>Straight after, everyone ticks what they spotted on their iPad.</p>
         <div class="btns">
-          <a class="bt yel" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 2</a>
+          <button class="bt yel" type="button" data-goto="iguTicks"><span data-ph="arrow-right"></span>Tick chart</button>
+          <a class="bt" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Paper version</a>
         </div>
       </div>
     </section>
+
+    <section class="part spotb" data-name="Tick chart" id="iguTicks" data-clip="iguana"></section>
 
     <!-- 9 levitating -->
     <section class="part dua" data-name="Levitating" data-yt="TUVcZfQe-Kw">
@@ -369,25 +412,33 @@
       <div class="player"></div>
       <div class="side">
         <span class="meta">DUA LIPA &middot; OFFICIAL MUSIC VIDEO &middot; 2020</span>
-        <p>Same again: watch, then watch for the camera.</p>
-        <p>This time you&rsquo;re filling in the <span style="color:var(--dua);font-weight:700">Levitating</span> column on <span class="hl">Sheet 2</span>.</p>
+        <p>Same again. Watch it, then tick what you spotted.</p>
+        <p>This is a very different kind of video, so expect different ticks.</p>
         <div class="btns">
-          <a class="bt yel" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 2</a>
+          <button class="bt yel" type="button" data-goto="duaTicks"><span data-ph="arrow-right"></span>Tick chart</button>
+          <a class="bt" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Paper version</a>
         </div>
       </div>
     </section>
 
+    <section class="part spotb" data-name="Tick chart" id="duaTicks" data-clip="dua"></section>
+
     <!-- 10 compare -->
     <section class="part" data-name="Compare">
       <h2>Same or different?</h2>
-      <div class="cmp">
-        <div class="side-h"><i style="background:var(--igu)"></i>Iguana vs Snakes</div>
-        <div class="side-h"><i style="background:var(--dua)"></i>Levitating</div>
+      <div class="cmp2">
+        <div class="cmp-chart">
+          <div class="cmp-key"><span><i style="background:var(--igu)"></i>Iguana vs Snakes</span><span><i style="background:var(--dua)"></i>Levitating</span></div>
+          <div id="cmpRows"></div>
+          <div class="cmp-empty" id="cmpEmpty" hidden>Run the tick chart after each clip and the class&rsquo;s results land here, side by side.</div>
+        </div>
+        <div class="cmp-qs">
+          <div class="cq pp" data-s="1"><span class="n">01</span>What did both clips use?</div>
+          <div class="cq pp" data-s="2"><span class="n">02</span>What did only one of them use? Why?</div>
+          <div class="cq pp" data-s="3"><span class="n">03</span>Why would Planet Earth never film the iguana like a pop video?</div>
+          <div class="punch pp" data-s="4">The way a video is filmed depends on the job it has to do.</div>
+        </div>
       </div>
-      <div class="cq pp" data-s="1"><span class="n">01</span>Look at Sheet 2. Which rows got a tick in both columns?</div>
-      <div class="cq pp" data-s="2"><span class="n">02</span>Which rows only got one tick? Why might that be?</div>
-      <div class="cq pp" data-s="3"><span class="n">03</span>Why would Planet Earth never film the iguana like a pop video?</div>
-      <div class="punch pp" data-s="4">The way a video is filmed depends on the job it has to do.</div>
     </section>
 
     <!-- 11 next -->
@@ -399,6 +450,7 @@
       </div>
       <div class="banner"><span data-ph="video-camera"></span>Next lesson you pick up the camera and try these shots yourself.</div>
     </section>
+    <div class="lv-big" id="vBig"></div>
   </div>
 
   <div class="tl">
@@ -454,8 +506,8 @@
     pl.replaceWith(a);
   });
   // planned minutes per part, and what kind of clip it is on the timeline
-  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[4,'video'],[6,'task'],[3,'talk'],[3,'talk'],[8,'video'],[7,'video'],[8,'task'],[2,'talk']];
-  var AUDIO = [5, 9, 10];
+  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[4,'video'],[6,'task'],[3,'talk'],[3,'talk'],[4,'video'],[4,'task'],[5,'video'],[4,'task'],[7,'task'],[2,'talk']];
+  var AUDIO = [5, 9, 11];
   PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp'), function(e){ return +e.getAttribute('data-s'); }))); });
 
   // lay out the timeline: width per part is a floor plus its planned minutes
@@ -528,7 +580,7 @@
     b.addEventListener('click', function(){ go(PARTS.indexOf(document.getElementById(b.getAttribute('data-goto'))), 0); });
   });
 
-  /* ---------- live answers: the same Supabase project and functions as HB_LIVE in index.html ---------- */
+  /* ---------- live answers: one room for the whole lesson, on the same Supabase project as HB_LIVE in index.html ---------- */
   (function(){
     var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co';
     var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
@@ -541,9 +593,32 @@
     function genCode(){ var o = ''; for(var i = 0; i < 5; i++) o += CHARS.charAt(Math.floor(Math.random() * CHARS.length)); return o; }
     function genToken(){ if(window.crypto && crypto.randomUUID) return crypto.randomUUID(); var o = ''; for(var i = 0; i < 32; i++) o += Math.floor(Math.random() * 16).toString(16); return o; }
 
+    // the same ten things, in the same order, as the "Things to spot" slide, Sheet 2 and video-live.html
+    var SPOT = [['Wide shot','shot:wide'],['Mid shot','shot:mid'],['Close-up','shot:close'],['Slow motion','timer'],['Camera moves with the action','arrows-out-cardinal'],
+      ['Camera stays still','video-camera'],['Quick cuts','scissors'],['Music','music-notes'],['Sound effects','speaker-high'],['A voice talking or singing','microphone']];
+    // "[spot]" tells video-live.html to show the tick list instead of a text box
+    var CLIPS = {
+      iguana:{ name:'Iguana vs Snakes', col:'var(--igu)', q:'[spot] What did you spot in Iguana vs Snakes?' },
+      dua:{ name:'Levitating', col:'var(--dua)', q:'[spot] What did you spot in Levitating?' }
+    };
+    function spotIcon(it){
+      if(it[1].indexOf('shot:') === 0) return '<svg class="fr" viewBox="0 0 240 146" preserveAspectRatio="xMidYMid ' + (it[1] === 'shot:wide' ? 'slice' : 'meet') + '">' + SHOTS[it[1].slice(5)] + '</svg>';
+      return ph(it[1]);
+    }
+    function parseSpot(content){
+      try{
+        var o = JSON.parse(content);
+        if(o && Array.isArray(o.t)) return { t:o.t.filter(function(i){ return i === (i | 0) && i >= 0 && i < SPOT.length; }), n:String(o.n || '').slice(0, 300) };
+      }catch(e){}
+      return { t:[], n:String(content || '') };
+    }
+
     var base = location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
-    var room = null, viewIdx = 0, timer = null, cards = {}, slotN = 0;
+    var joinBase = base + 'video-live.html';
+    var room = null, viewIdx = 0, timer = null, cards = {}, slotN = 0, busy = false;
     try{ room = JSON.parse(sessionStorage.getItem(STORE)); }catch(e){}
+    if(room && !room.versions) room = null;
+    if(room){ room.spot = room.spot || {}; room.liveQ = room.liveQ || ''; }
     function save(){
       try{
         // drawings are big, so only text answers survive a refresh
@@ -552,62 +627,89 @@
         sessionStorage.setItem(STORE, JSON.stringify(slim));
       }catch(e){}
     }
-    function liveIdx(){ return room.versions.length - 1; }
+    function lionIdx(){ return room.versions.length - 1; }
     function versionCount(){ return room.versions.filter(function(v){ return v.kind === 'ver'; }).length; }
-    function msg(t){ $('lvMsg').textContent = t || ''; }
+    function lionDone(){ return !!room && room.versions.some(function(v){ return v.kind === 'best'; }); }
+    function msgAll(t){ [].forEach.call(document.querySelectorAll('.lv-msg'), function(m){ m.textContent = t || ''; }); }
+    function lockAll(on){ [].forEach.call(document.querySelectorAll('#lvStart,#lvNextV,#lvBest,.sp-start'), function(b){ b.disabled = on; }); }
+    function makeQR(el, code, size){
+      if(el.getAttribute('data-for') === code) return;
+      var join = joinBase + '#' + code;
+      el.classList.remove('off'); el.innerHTML = ''; el.setAttribute('data-for', code);
+      try{ new QRCode(el, { text:join, width:size, height:size, colorDark:'#0b0c0f', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M }); }
+      catch(e){ el.textContent = join; }
+    }
+    function qrOff(el){ el.classList.add('off'); el.removeAttribute('data-for'); el.textContent = 'The code appears here once you start'; }
 
-    // busy stops a double tap skipping a version; it lifts a few seconds after the question changes
-    var busy = false;
-    function finished(){ return !!room && room.versions.some(function(v){ return v.kind === 'best'; }); }
-    function setQuestion(v, done){
-      if(busy || finished()) return;
-      busy = true; msg('');
-      $('lvStart').disabled = $('lvNextV').disabled = $('lvBest').disabled = true;
-      rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:v.q }).then(function(ok){
+    // busy stops a double tap skipping a question; it lifts a few seconds after the question changes
+    function setQ(q, onOk){
+      if(busy) return;
+      if(!room) room = { code:genCode(), token:genToken(), versions:[], spot:{}, liveQ:'' };
+      busy = true; msgAll(''); lockAll(true);
+      rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:q }).then(function(ok){
         if(!ok) throw new Error('rejected');
-        room.versions.push(v); viewIdx = liveIdx(); save(); paint(true); if(done) done();
-        setTimeout(function(){ busy = false; paint(false); }, 3000);
+        room.liveQ = q; onOk(); save(); paintAll(true); startPoll();
+        setTimeout(function(){ busy = false; paintAll(false); }, 3000);
       }).catch(function(){
         busy = false;
-        $('lvStart').disabled = $('lvNextV').disabled = $('lvBest').disabled = false;
-        if(!room.versions.length) room = null;
-        msg("Couldn't reach the answer wall. Check the internet and try again.");
+        if(!room.versions.length && !Object.keys(room.spot).length) room = null;
+        msgAll("Couldn't reach the answer wall. Check the internet and try again.");
+        paintAll(false);
       });
     }
     function newVersion(){ var n = versionCount() + 1; return { kind:'ver', label:'VERSION ' + n, chip:String(n), q:'Version ' + n + ': how does this music make you feel?', answers:[] }; }
+    function addVersion(v){ setQ(v.q, function(){ room.versions.push(v); viewIdx = lionIdx(); }); }
 
-    $('lvStart').addEventListener('click', function(){
-      room = { code:genCode(), token:genToken(), versions:[] };
-      setQuestion(newVersion(), startPoll);
-    });
-    $('lvNextV').addEventListener('click', function(){ setQuestion(newVersion()); });
-    $('lvBest').addEventListener('click', function(){ setQuestion({ kind:'best', label:'THE BIG QUESTION', chip:'Best', q:'Which music fits the pictures best? Why?', answers:[] }); });
-    $('lvEnd').addEventListener('click', function(){
-      if(!confirm('End live answers? Every answer in this room gets wiped.')) return;
+    $('lvStart').addEventListener('click', function(){ addVersion(newVersion()); });
+    $('lvNextV').addEventListener('click', function(){ if(!lionDone()) addVersion(newVersion()); });
+    $('lvBest').addEventListener('click', function(){ if(!lionDone()) addVersion({ kind:'best', label:'THE BIG QUESTION', chip:'Best', q:'Which music fits the pictures best? Why?', answers:[] }); });
+    function endRoom(){
+      if(!confirm('End live answers? Every answer from this lesson gets wiped.')) return;
       rpc('live_clear_all', { p_code:room.code, p_token:room.token }).catch(function(){});
       room = null; try{ sessionStorage.removeItem(STORE); }catch(e){}
       if(timer){ clearInterval(timer); timer = null; }
-      paint(true);
-    });
-    $('lvBig').addEventListener('click', function(){ this.classList.remove('on'); });
+      paintAll(true);
+    }
+    $('lvEnd').addEventListener('click', endRoom);
+    $('vBig').addEventListener('click', function(){ this.classList.remove('on'); });
+    function enlarge(text, isImg){
+      var big = $('vBig'); big.innerHTML = '';
+      if(isImg){ var im = document.createElement('img'); im.src = text; big.appendChild(im); }
+      else { var p = document.createElement('p'); p.textContent = text; big.appendChild(p); }
+      big.classList.add('on');
+    }
 
+    function sessionFor(q){
+      if(!room) return null;
+      for(var i = 0; i < room.versions.length; i++) if(room.versions[i].q === q) return room.versions[i];
+      for(var k in CLIPS) if(CLIPS[k].q === q && room.spot[k]) return room.spot[k];
+      return null;
+    }
     function poll(){
       if(!room) return;
       rpc('live_get_room', { p_code:room.code }).then(function(rows){
         if(!room || !rows || !rows.length) return;
-        $('lvJoined').textContent = rows[0].joined || 0;
-        var v = room.versions[liveIdx()];
-        if(!v || rows[0].question !== v.q) return;            // the new question hasn't landed yet
-        var known = {}; v.answers.forEach(function(a){ known[a.id] = 1; });
+        var joined = rows[0].joined || 0;
+        [].forEach.call(document.querySelectorAll('.lv-joinedN'), function(n){ n.textContent = joined; });
+        var sess = sessionFor(rows[0].question);
+        if(!sess) return;                                      // the new question hasn't landed yet
+        var known = {}; sess.answers.forEach(function(a){ known[a.id] = 1; });
         var added = false;
         rows.forEach(function(r){
-          if(r.id && !known[r.id]){ v.answers.push({ id:r.id, kind:r.kind, content:r.content }); added = true; }
+          if(r.id && !known[r.id]){ sess.answers.push({ id:r.id, kind:r.kind, content:r.content }); added = true; }
         });
-        if(added){ save(); paint(false); }
+        if(added){ save(); paintAll(false); }
       }).catch(function(){});
     }
     function startPoll(){ if(!timer){ poll(); timer = setInterval(poll, 2000); } }
+    function hide(sess, a, onDone){
+      rpc('live_hide_answer', { p_code:room.code, p_token:room.token, p_id:a.id }).then(function(ok){
+        if(!ok) return;
+        sess.answers = sess.answers.filter(function(o){ return o.id !== a.id; }); save(); if(onDone) onDone(); paintAll(false);
+      }).catch(function(){ msgAll("Couldn't hide that one. Try again."); });
+    }
 
+    /* ----- Lion King board: answers float round the question ----- */
     // the grid gets finer as answers arrive, so a whole class fits round the question
     // without cards landing on top of each other; tapping a card shows it in full
     var TIERS = [
@@ -640,60 +742,40 @@
       el.style.setProperty('--d', (5 + Math.random() * 3).toFixed(1) + 's');
       el.style.setProperty('--dl', (-Math.random() * 5).toFixed(1) + 's');
     }
-    function fill(box, a){
-      if(a.kind === 'drawing'){ var im = document.createElement('img'); im.src = a.content; im.alt = 'A drawn answer'; box.appendChild(im); }
-      else { var p = document.createElement('p'); p.textContent = a.content; box.appendChild(p); }
-    }
     function card(a, v){
       var el = document.createElement('div'); el.className = 'ans';
-      fill(el, a);
-      var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.textContent = '\u00d7'; x.setAttribute('aria-label', 'Hide this answer');
-      x.addEventListener('click', function(e){
-        e.stopPropagation();
-        rpc('live_hide_answer', { p_code:room.code, p_token:room.token, p_id:a.id }).then(function(ok){
-          if(!ok) return;
-          v.answers = v.answers.filter(function(o){ return o.id !== a.id; }); save(); el.remove(); delete cards[a.id]; paint(false);
-        }).catch(function(){ msg("Couldn't hide that one. Try again."); });
-      });
+      if(a.kind === 'drawing'){ var im = document.createElement('img'); im.src = a.content; im.alt = 'A drawn answer'; el.appendChild(im); }
+      else { var p = document.createElement('p'); p.textContent = a.content; el.appendChild(p); }
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'Hide this answer');
+      x.addEventListener('click', function(e){ e.stopPropagation(); hide(v, a, function(){ el.remove(); delete cards[a.id]; }); });
       el.appendChild(x);
-      el.addEventListener('click', function(){ var big = $('lvBig'); big.innerHTML = ''; fill(big, a); big.classList.add('on'); });
+      el.addEventListener('click', function(){ enlarge(a.content, a.kind === 'drawing'); });
       return el;
     }
-    function paint(full){
-      var started = !!room;
-      var done = finished();
-      $('lvStart').hidden = started; $('lvEnd').hidden = !started;
-      $('lvNextV').hidden = !started || done; $('lvBest').hidden = !started || done; $('lvDone').hidden = !done;
-      $('lvStart').disabled = $('lvNextV').disabled = $('lvBest').disabled = busy;
+    function paintLive(full){
+      var started = !!room, hasLion = started && room.versions.length > 0, done = lionDone();
+      $('lvStart').hidden = hasLion; $('lvEnd').hidden = !started;
+      $('lvNextV').hidden = !hasLion || done; $('lvBest').hidden = !hasLion || done; $('lvDone').hidden = !done;
       var f = $('lvFloat');
-      var want = tierFor(room && room.versions[viewIdx] ? room.versions[viewIdx].answers.length : 0);
+      var want = tierFor(hasLion && room.versions[viewIdx] ? room.versions[viewIdx].answers.length : 0);
       if(want !== tier || !slots.length){ tier = want; full = true; f.className = 'lv-float ' + tier.cls; }
       if(full){ [].forEach.call(f.querySelectorAll('.ans'), function(n){ n.remove(); }); cards = {}; slotN = 0; }
-      var qr = $('lvQr');
-      if(!started){
-        qr.className = 'lv-qr off'; qr.removeAttribute('data-for'); qr.textContent = 'The code appears here once you start';
-        $('lvCode').innerHTML = '&middot; &middot; &middot;'; $('lvJoined').textContent = '0'; $('lvHint').textContent = '';
+      if(started){ makeQR($('lvQr'), room.code, 206); $('lvCode').textContent = room.code; $('lvHint').textContent = 'Scan it, or go to ' + joinBase.replace(/^https?:\/\//, '') + ' and type the code.'; }
+      else { qrOff($('lvQr')); $('lvCode').innerHTML = '&middot; &middot; &middot;'; $('lvHint').textContent = ''; }
+      if(!hasLion){
         $('lvLab').textContent = 'LIVE ANSWERS'; $('lvTxt').textContent = 'How does the music make you feel?';
         $('lvSub').textContent = 'Press Start, then scan the code on an iPad.'; $('lvVers').innerHTML = '';
         return;
       }
-      if(qr.getAttribute('data-for') !== room.code){
-        var join = base + 'index.html#/live/' + room.code + '/write';
-        qr.className = 'lv-qr'; qr.innerHTML = ''; qr.setAttribute('data-for', room.code);
-        try{ new QRCode(qr, { text:join, width:206, height:206, colorDark:'#0b0c0f', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M }); }
-        catch(e){ qr.textContent = join; }
-      }
-      $('lvCode').textContent = room.code;
-      $('lvHint').textContent = 'Scan it, or go to ' + base.replace(/^https?:\/\//, '') + '#/live and type the code.';
-      var v = room.versions[viewIdx], live = viewIdx === liveIdx();
-      $('lvLab').textContent = v.label + (live ? '' : ' \u00b7 CLOSED');
+      var v = room.versions[viewIdx], live = v.q === room.liveQ;
+      $('lvLab').textContent = v.label + (live ? '' : ' · CLOSED');
       $('lvTxt').textContent = v.q.replace(/^Version \d+: /, '');
-      $('lvSub').textContent = v.answers.length ? '' : (live ? 'Waiting for answers\u2026' : 'Nobody answered this one.');
+      $('lvSub').textContent = v.answers.length ? '' : (live ? 'Waiting for answers…' : 'Nobody answered this one.');
       $('lvVers').innerHTML = room.versions.map(function(o, i){
-        return '<button type="button" class="lv-v' + (i === viewIdx ? ' view' : '') + '" data-i="' + i + '">' + (i === liveIdx() ? '<span class="dot"></span>' : '') + o.chip + ' \u00b7 ' + o.answers.length + '</button>';
+        return '<button type="button" class="lv-v' + (i === viewIdx ? ' view' : '') + '" data-i="' + i + '">' + (o.q === room.liveQ ? '<span class="dot"></span>' : '') + o.chip + ' · ' + o.answers.length + '</button>';
       }).join('');
       [].forEach.call($('lvVers').querySelectorAll('.lv-v'), function(b){
-        b.addEventListener('click', function(){ viewIdx = +b.getAttribute('data-i'); paint(true); });
+        b.addEventListener('click', function(){ viewIdx = +b.getAttribute('data-i'); paintLive(true); });
       });
       if(full) slots = buildSlots(tier);
       v.answers.forEach(function(a){
@@ -701,8 +783,87 @@
         var el = card(a, v); f.appendChild(el); placeCard(el, slotN++); cards[a.id] = el;
       });
     }
-    if(room && room.versions && room.versions.length){ viewIdx = liveIdx(); startPoll(); } else room = null;
-    paint(true);
+
+    /* ----- tick charts, one per clip ----- */
+    function tally(key){
+      var out = { n:0, c:SPOT.map(function(){ return 0; }), notes:[] }, sess = room && room.spot[key];
+      if(!sess) return out;
+      sess.answers.forEach(function(a){
+        var r = parseSpot(a.content);
+        if(!r.t.length && !r.n) return;
+        out.n++;
+        r.t.forEach(function(i){ out.c[i]++; });
+        if(r.n) out.notes.push({ a:a, n:r.n });
+      });
+      return out;
+    }
+    [].forEach.call(document.querySelectorAll('.part.spotb'), function(part){
+      var key = part.getAttribute('data-clip'), c = CLIPS[key];
+      part.innerHTML =
+        '<div class="sp-side"><div class="lv-qr off sp-qr"></div><div class="lv-codelab">ROOM CODE</div><div class="lv-code sp-code"></div>' +
+          '<div class="lv-joined"><i></i><span class="lv-joinedN">0</span>&nbsp;joined</div></div>' +
+        '<div class="sp-main"><h2 class="sp-title">What did you spot in <span style="color:' + c.col + '">' + c.name + '</span>?</h2>' +
+          SPOT.map(function(it, i){
+            return '<div class="sp-row"><span class="sp-ic">' + spotIcon(it) + '</span><span class="sp-lab">' + it[0] + '</span>' +
+              '<span class="sp-track"><span class="sp-bar" style="background:' + c.col + '"></span></span><span class="sp-n">0</span></div>';
+          }).join('') + '</div>' +
+        '<div class="sp-notes-col"><div class="sp-notes-h">ALSO NOTICED</div><div class="sp-notes"></div></div>' +
+        '<div class="lv-bar"><button class="bt yel sp-start" type="button">' + ph('play') + '<span>Start tick chart</span></button>' +
+          '<span class="sp-status"></span><span class="lv-msg"></span>' +
+          '<a class="bt" style="margin-left:auto" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener">' + ph('printer') + 'Paper version</a></div>';
+      part.querySelector('.sp-start').addEventListener('click', function(){
+        setQ(c.q, function(){ room.spot[key] = room.spot[key] || { answers:[] }; });
+      });
+    });
+    function paintSpot(key){
+      var part = document.querySelector('.part.spotb[data-clip="' + key + '"]'), c = CLIPS[key];
+      var qr = part.querySelector('.sp-qr'), started = !!room, sess = started && room.spot[key], live = started && room.liveQ === c.q;
+      if(started){ makeQR(qr, room.code, 160); part.querySelector('.sp-code').textContent = room.code; }
+      else { qrOff(qr); part.querySelector('.sp-code').innerHTML = '&middot; &middot; &middot;'; part.querySelector('.lv-joinedN').textContent = '0'; }
+      var btn = part.querySelector('.sp-start');
+      btn.hidden = !!live;
+      btn.querySelector('span:last-child').textContent = sess ? 'Open it again' : 'Start tick chart';
+      var t = tally(key);
+      part.querySelector('.sp-status').innerHTML = live ? '<span class="dot"></span>' + t.n + ' sent' : (sess ? t.n + ' sent · closed' : '');
+      var bars = part.querySelectorAll('.sp-bar'), ns = part.querySelectorAll('.sp-n');
+      t.c.forEach(function(v, i){ bars[i].style.width = (t.n ? v / t.n * 100 : 0) + '%'; ns[i].textContent = v; });
+      var box = part.querySelector('.sp-notes');
+      box.innerHTML = '';
+      if(!t.notes.length){ var e = document.createElement('div'); e.className = 'sp-empty'; e.textContent = live ? 'Anything extra pupils write turns up here.' : ''; box.appendChild(e); }
+      t.notes.slice().reverse().slice(0, 7).forEach(function(o){
+        var el = document.createElement('div'); el.className = 'sp-note';
+        var p = document.createElement('p'); p.textContent = o.n; el.appendChild(p);
+        var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'Hide this answer');
+        x.addEventListener('click', function(ev){ ev.stopPropagation(); hide(room.spot[key], o.a); });
+        el.appendChild(x);
+        el.addEventListener('click', function(){ enlarge(o.n, false); });
+        box.appendChild(el);
+      });
+    }
+
+    /* ----- compare: both clips' ticks side by side, as a share of who answered ----- */
+    (function(){
+      $('cmpRows').innerHTML = SPOT.map(function(it){
+        return '<div class="cmp-row"><span class="sp-ic">' + spotIcon(it) + '</span><span class="sp-lab">' + it[0] + '</span><span class="cmp-bars">' +
+          '<span class="cmp-b"><span style="background:var(--igu)"></span><em></em></span><span class="cmp-b"><span style="background:var(--dua)"></span><em></em></span></span></div>';
+      }).join('');
+    })();
+    function paintCompare(){
+      var a = tally('iguana'), b = tally('dua'), any = a.n + b.n > 0;
+      $('cmpEmpty').hidden = any; $('cmpRows').hidden = !any;
+      var rows = $('cmpRows').querySelectorAll('.cmp-row');
+      [a, b].forEach(function(t, k){
+        t.c.forEach(function(v, i){
+          var pc = t.n ? Math.round(v / t.n * 100) : 0, line = rows[i].querySelectorAll('.cmp-b')[k];
+          line.querySelector('span').style.width = (pc * .82) + '%';
+          line.querySelector('em').textContent = t.n ? pc + '%' : '';
+        });
+      });
+    }
+
+    function paintAll(full){ paintLive(full); paintSpot('iguana'); paintSpot('dua'); paintCompare(); lockAll(busy); }
+    if(room){ viewIdx = Math.max(0, room.versions.length - 1); startPoll(); }
+    paintAll(true);
   })();
   var m0 = /^#part(\d+)$/.exec(location.hash);
   go(m0 ? +m0[1] : 0, 0);
