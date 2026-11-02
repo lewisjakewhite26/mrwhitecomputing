@@ -26,11 +26,8 @@
   .bar{grid-column:1 / 3;display:flex;align-items:center;gap:10px;min-height:58px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;margin-right:auto}
   .brand .dot{width:36px;height:36px;border-radius:10px;background:var(--sun);display:grid;place-items:center;font-size:22px;color:var(--ink)}
-  .who{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;padding:8px 16px;border-radius:14px;background:var(--card);border:2px solid var(--edge);min-height:54px}
-  .who .i{font-size:24px;color:var(--muted)}
   .act{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;padding:8px 18px;border-radius:14px;background:var(--card);border:2px solid var(--edge);min-height:54px}
   .act .i{font-size:26px}
-  .act.save{background:var(--ink);border-color:var(--ink);color:#fff}
   .act.send{background:var(--sun);border-color:var(--sun);color:var(--ink)}
   .act[hidden]{display:none}
   .task{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:6px 18px;border-radius:14px;background:var(--sun-soft);border:2px solid var(--sun);min-height:58px}
@@ -64,19 +61,10 @@
   .panel{width:min(820px,100%);max-height:100%;overflow:auto;background:var(--card);border-radius:24px;padding:28px 30px;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
   .panel h2{margin:0 0 6px;font-size:34px;font-weight:800}
   .panel p{margin:0 0 18px;font-size:20px;line-height:1.4;color:var(--muted)}
-  .names{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
-  .nm{font-size:22px;font-weight:700;padding:16px 10px;border-radius:14px;background:var(--wall);border:2px solid var(--edge)}
-  .nm.has{border-color:var(--sun);background:var(--sun-soft)}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .btn{font-size:20px;font-weight:700;padding:14px 20px;border-radius:14px;background:var(--wall);border:2px solid var(--edge);display:inline-flex;align-items:center;gap:10px}
   .btn.main{background:var(--ink);border-color:var(--ink);color:#fff}
   .btn.small{font-size:16px;padding:10px 14px}
-  textarea{width:100%;height:260px;font:inherit;font-size:20px;line-height:1.4;padding:14px;border-radius:14px;border:2px solid var(--edge);resize:vertical;-webkit-user-select:text;user-select:text;touch-action:auto}
-  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 20px}
-  .cnt{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;padding:10px 16px;border-radius:14px;background:var(--wall)}
-  .cnt .i{font-size:28px}
-  .cnt b{font-size:26px}
-  .msg{font-size:18px;color:var(--bad);min-height:1em}
 
   /* guided tour */
   .tour{grid-column:1 / 3;display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:20px;background:var(--card);border:3px solid var(--sun);min-height:96px}
@@ -108,10 +96,8 @@
   <div class="bar">
     <div class="brand"><span class="dot" data-ph="paint-brush"></span><span class="t">Hartburn Paint</span></div>
     <div class="task" id="task" hidden><span class="tl">YOUR TASK</span><b id="taskText">Waiting for your teacher</b></div>
-    <button class="who" type="button" id="who"><span data-ph="user"></span><span id="whoName">Who is painting?</span></button>
     <button class="act show-me" type="button" id="showMe"><span data-ph="lightbulb"></span>Show me</button>
     <button class="act" type="button" id="newPic"><span data-ph="flower"></span>New picture</button>
-    <button class="act save" type="button" id="save"><span data-ph="floppy-disk"></span>Save</button>
     <button class="act send" type="button" id="send" hidden><span data-ph="paper-plane-right"></span>Send to the board</button>
   </div>
   <div class="tour" id="tour" hidden>
@@ -124,41 +110,6 @@
   <div class="board" id="board"><canvas id="cv" width="1200" height="800"></canvas></div>
   <div class="pal" id="pal"></div>
 </div>
-
-<!-- who is painting -->
-<div class="sheet" id="whoSheet"><div class="panel">
-  <h2>Who is painting?</h2>
-  <p id="whoHint">Tap your name.</p>
-  <div class="names" id="names"></div>
-  <div class="row">
-    <button class="btn" type="button" id="skip">Just paint</button>
-    <button class="btn small" type="button" id="editClass" style="margin-left:auto">Teacher: edit names</button>
-  </div>
-</div></div>
-
-<!-- class list -->
-<div class="sheet" id="classSheet"><div class="panel">
-  <h2>Class names</h2>
-  <p>First names only, one on each line. They stay on this iPad.</p>
-  <textarea id="classList" spellcheck="false" autocapitalize="words"></textarea>
-  <div class="row" style="margin-top:14px"><button class="btn main" type="button" id="classSave">Save names</button><button class="btn" type="button" id="classCancel">Cancel</button></div>
-</div></div>
-
-<!-- found an old picture -->
-<div class="sheet" id="carrySheet"><div class="panel">
-  <h2 id="carryTitle">You have a picture saved</h2>
-  <p>Carry on with it, or start a new one?</p>
-  <div class="row"><button class="btn main" type="button" id="carryOn">Carry on</button><button class="btn" type="button" id="carryNew">Start a new one</button></div>
-</div></div>
-
-<!-- saved -->
-<div class="sheet" id="savedSheet"><div class="panel">
-  <h2 id="savedTitle">Saved</h2>
-  <p>The tools you used, and how many times:</p>
-  <div class="counts" id="counts"></div>
-  <p class="msg" id="saveMsg"></p>
-  <div class="row"><button class="btn main" type="button" id="savedOk">Keep painting</button></div>
-</div></div>
 
 <!-- new picture -->
 <div class="sheet" id="newSheet"><div class="panel">
@@ -326,67 +277,15 @@
   var lastTouch = 0;
   document.addEventListener('touchend', function(e){ var n = Date.now(); if(n - lastTouch < 350 && !e.target.closest('textarea')) e.preventDefault(); lastTouch = n; }, { passive:false });
 
-  /* ---------- who is painting, saving ---------- */
-  var who = null;
+  /* ---------- sheets ---------- */
   function $(id){ return document.getElementById(id); }
   function open(id){ $(id).classList.add('on'); }
   function close(id){ $(id).classList.remove('on'); }
-  function classList(){ return (store('class') || '').split('\n').map(function(s){ return s.trim(); }).filter(Boolean); }
-  function picKey(n){ return 'pic:' + MODE_KEY + ':' + n; }
-  function showNames(){
-    var list = classList(), el = $('names');
-    $('whoHint').textContent = list.length ? 'Tap your name.' : 'No names on this iPad yet. Ask your teacher to add them, or just paint.';
-    el.innerHTML = list.map(function(n){ return '<button class="nm' + (store(picKey(n)) ? ' has' : '') + '" type="button">' + n.replace(/</g, '&lt;') + '</button>'; }).join('');
-    [].forEach.call(el.children, function(b){ b.addEventListener('click', function(){ choose(b.textContent); }); });
-    open('whoSheet');
-  }
-  function setWho(n){ who = n; $('whoName').textContent = n || 'Who is painting?'; }
-  function choose(n){
-    close('whoSheet'); setWho(n);
-    var saved = store(picKey(n));
-    if(saved){ $('carryTitle').textContent = n + ', you have a picture saved'; open('carrySheet'); }
-  }
-  $('who').addEventListener('click', showNames);
-  $('skip').addEventListener('click', function(){ close('whoSheet'); });
-  $('editClass').addEventListener('click', function(){ close('whoSheet'); $('classList').value = classList().join('\n'); open('classSheet'); });
-  $('classSave').addEventListener('click', function(){ store('class', $('classList').value); close('classSheet'); showNames(); });
-  $('classCancel').addEventListener('click', function(){ close('classSheet'); showNames(); });
-
-  function loadPic(n){
-    try{
-      var o = JSON.parse(store(picKey(n)));
-      var im = new Image();
-      im.onload = function(){ blank(); cx.drawImage(im, 0, 0, W, H); history = []; undoBtn.disabled = true; log = []; counts = o.counts || {}; };
-      im.src = o.img;
-    }catch(e){}
-  }
-  $('carryOn').addEventListener('click', function(){ close('carrySheet'); loadPic(who); });
-  $('carryNew').addEventListener('click', function(){ close('carrySheet'); fresh(); });
-
   function fresh(){ blank(); history = []; log = []; counts = {}; undoBtn.disabled = true; }
   $('newPic').addEventListener('click', function(){ open('newSheet'); });
   $('newYes').addEventListener('click', function(){ close('newSheet'); fresh(); });
   $('newNo').addEventListener('click', function(){ close('newSheet'); });
 
-  var pendingSave = false;
-  $('save').addEventListener('click', function(){
-    if(!who){ pendingSave = true; showNames(); return; }
-    doSave();
-  });
-  var origChoose = choose;
-  choose = function(n){
-    if(pendingSave){ pendingSave = false; close('whoSheet'); setWho(n); doSave(); return; }
-    origChoose(n);
-  };
-  function doSave(){
-    var ok = store(picKey(who), JSON.stringify({ img:cv.toDataURL('image/jpeg', .82), counts:counts, t:Date.now() }));
-    $('savedTitle').textContent = ok ? 'Saved as ' + who + '’s picture' : 'Not saved';
-    $('saveMsg').textContent = ok ? '' : 'This iPad is full. Ask your teacher to help.';
-    var used = MODE.tools.filter(function(t){ return counts[t]; });
-    $('counts').innerHTML = used.length ? used.map(function(t){ return '<span class="cnt">' + ph(TOOLS[t].icon) + TOOLS[t].label + ' <b>' + counts[t] + '</b></span>'; }).join('') : '<span class="cnt">Nothing yet</span>';
-    open('savedSheet');
-  }
-  $('savedOk').addEventListener('click', function(){ close('savedSheet'); });
 
   [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
   requestAnimationFrame(function(){ fit(); });
@@ -399,7 +298,7 @@
         .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
     }
     document.querySelector('.app').classList.add('room');
-    $('task').hidden = false; $('send').hidden = false; $('who').hidden = true;
+    $('task').hidden = false; $('send').hidden = false;
     var pid; try{ pid = sessionStorage.getItem('hbpaint:pid'); if(!pid){ pid = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('hbpaint:pid', pid); } }catch(e){ pid = 'p' + Math.random(); }
     var round = 0, active = false, sentRound = 0;
     function poll(){
@@ -426,7 +325,6 @@
   }
   var toastTimer;
   function toast(t){ var el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ el.classList.remove('on'); }, 2400); }
-  if(!q.has('board') && !ROOM) showNames();
   // for the lesson deck: paint.html?mode=l1&board opens straight to the canvas with no name picker
   /* ---------- guided tour: paint.html?mode=l1&board&tour, or the "Show me" button ----------
      A tool glows, a child taps it on the board, the bubble says what it does,
