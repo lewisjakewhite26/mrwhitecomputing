@@ -701,7 +701,7 @@
         if(added){ save(); paintAll(false); }
       }).catch(function(){});
     }
-    function startPoll(){ if(!timer){ poll(); timer = setInterval(poll, 2000); } }
+    function startPoll(){ if(!timer){ poll(); timer = setInterval(poll, 1500); } }
     function hide(sess, a, onDone){
       rpc('live_hide_answer', { p_code:room.code, p_token:room.token, p_id:a.id }).then(function(ok){
         if(!ok) return;
@@ -785,15 +785,32 @@
     }
 
     /* ----- tick charts, one per clip ----- */
+    // pupils send one small event per tap ({p, i, on, s}); each pupil's latest event per item wins,
+    // so taking a tick back drops the bar. Older one-shot {t:[...]} answers still count too
     function tally(key){
       var out = { n:0, c:SPOT.map(function(){ return 0; }), notes:[] }, sess = room && room.spot[key];
       if(!sess) return out;
+      var pupils = {};
       sess.answers.forEach(function(a){
+        var o = null;
+        try{ o = JSON.parse(a.content); }catch(e){}
+        if(o && o.p && typeof o.i === 'number'){
+          if(o.i !== (o.i | 0) || o.i < 0 || o.i >= SPOT.length) return;
+          var pp = pupils[o.p] || (pupils[o.p] = {}), cur = pp[o.i];
+          if(!cur || (+o.s || 0) >= cur.s) pp[o.i] = { on:!!o.on, s:+o.s || 0 };
+          return;
+        }
+        if(o && o.p && typeof o.n === 'string'){ if(o.n.trim()) out.notes.push({ a:a, n:o.n.slice(0, 300) }); return; }
         var r = parseSpot(a.content);
         if(!r.t.length && !r.n) return;
-        out.n++;
+        if(r.t.length) out.n++;
         r.t.forEach(function(i){ out.c[i]++; });
         if(r.n) out.notes.push({ a:a, n:r.n });
+      });
+      Object.keys(pupils).forEach(function(id){
+        var any = false;
+        for(var i in pupils[id]) if(pupils[id][i].on){ out.c[i]++; any = true; }
+        if(any) out.n++;
       });
       return out;
     }
@@ -824,7 +841,8 @@
       btn.hidden = !!live;
       btn.querySelector('span:last-child').textContent = sess ? 'Open it again' : 'Start tick chart';
       var t = tally(key);
-      part.querySelector('.sp-status').innerHTML = live ? '<span class="dot"></span>' + t.n + ' sent' : (sess ? t.n + ' sent · closed' : '');
+      var who = t.n + (t.n === 1 ? ' pupil' : ' pupils');
+      part.querySelector('.sp-status').innerHTML = live ? '<span class="dot"></span>' + who + ' ticking' : (sess ? who + ' ticked · closed' : '');
       var bars = part.querySelectorAll('.sp-bar'), ns = part.querySelectorAll('.sp-n');
       t.c.forEach(function(v, i){ bars[i].style.width = (t.n ? v / t.n * 100 : 0) + '%'; ns[i].textContent = v; });
       var box = part.querySelector('.sp-notes');

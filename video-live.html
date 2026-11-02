@@ -41,6 +41,11 @@
   .tk .box{width:34px;height:34px;flex:none;border-radius:9px;border:2px solid #4a505c;display:grid;place-items:center;font-size:22px;color:transparent}
   .tk.on{border-color:var(--yel);background:#2a2614}
   .tk.on .box{background:var(--yel);border-color:var(--yel);color:#141414}
+  .tk.wait{opacity:.6}
+  .note-row{display:flex;gap:10px;align-items:stretch}
+  .note-row textarea{flex:1}
+  .note-row .send{width:auto;margin:0;padding:0 22px;min-height:0;font-size:19px}
+  .hint{font-size:16px;color:var(--mut);margin:-8px 0 16px}
   .done{text-align:center;padding:36px 18px}
   .done .big{width:84px;height:84px;margin:0 auto 16px;border-radius:50%;background:var(--ok);color:#0b0c0f;display:grid;place-items:center;font-size:48px}
   .done h2{margin:0 0 8px;font-size:28px}
@@ -107,51 +112,69 @@
       cb(null, rows && rows.length ? { question:rows[0].question || '', round:rows[0].round || 1 } : null);
     }).catch(function(e){ cb(e); });
   }
-  function sentKey(){ return 'vlive_sent_' + code + '_' + round; }
+  function tickKey(){ return 'vlive_ticks_' + code + '_' + round; }
 
   function render(){
     var spot = /^\[spot\]\s*/.test(question), q = question.replace(/^\[spot\]\s*/, '');
-    if(ss(sentKey())){ thanks(spot); return; }
-    if(spot){
-      app.innerHTML = '<p class="kick">TICK WHAT YOU SPOTTED</p><h1></h1>' +
-        '<div class="ticks">' + SPOT.map(function(it, i){
-          return '<button type="button" class="tk" data-i="' + i + '" aria-pressed="false"><span class="pic">' + pic(it) + '</span><span class="lb">' + it[0] + '</span><span class="box">' + ph('check') + '</span></button>';
-        }).join('') + '</div>' +
-        '<div class="lab">Anything else you noticed? (you don&rsquo;t have to)</div><textarea class="small" maxlength="200" placeholder="Type here&hellip;"></textarea>' +
-        '<button class="send" type="button">' + ph('paper-plane-right') + 'Send</button><div class="status"></div>';
-      [].forEach.call(app.querySelectorAll('.tk'), function(b){
-        b.addEventListener('click', function(){ var on = b.classList.toggle('on'); b.setAttribute('aria-pressed', on); });
-      });
-    } else {
-      app.innerHTML = '<p class="kick">WRITE YOUR ANSWER</p><h1></h1><div class="card">' +
-        '<textarea maxlength="300" placeholder="Type here&hellip;"></textarea>' +
-        '<button class="send" type="button">' + ph('paper-plane-right') + 'Send</button><div class="status"></div></div>';
-    }
+    if(spot){ renderTicks(q); return; }
+    app.innerHTML = '<p class="kick">WRITE YOUR ANSWER</p><h1></h1><div class="card">' +
+      '<textarea maxlength="300" placeholder="Type here&hellip;"></textarea>' +
+      '<button class="send" type="button">' + ph('paper-plane-right') + 'Send</button><div class="status"></div></div>';
     app.querySelector('h1').textContent = q;
-    var send = app.querySelector('.send'), st = app.querySelector('.status'), ta = app.querySelector('textarea');
+    wireSend(app.querySelector('.send'), app.querySelector('textarea'), app.querySelector('.status'), function(t){ return t; });
+  }
+
+  // a written answer can be followed by another one if they think of more
+  function wireSend(send, ta, st, wrap){
     send.addEventListener('click', function(){
-      var content, note = ta.value.trim();
-      if(spot){
-        var t = [].map.call(app.querySelectorAll('.tk.on'), function(b){ return +b.getAttribute('data-i'); });
-        if(!t.length && !note){ st.className = 'status err'; st.textContent = 'Tick at least one thing first.'; return; }
-        content = JSON.stringify({ t:t, n:note });
-      } else {
-        if(!note){ st.className = 'status err'; st.textContent = 'Write something first.'; return; }
-        content = note;
-      }
-      send.disabled = true; st.className = 'status'; st.textContent = 'Sending…';
-      rpc('live_submit_answer', { p_code:code, p_kind:'text', p_content:content }).then(function(id){
+      var note = ta.value.trim();
+      if(!note){ st.className = 'status err'; st.textContent = 'Write something first.'; return; }
+      send.disabled = true; st.className = 'status'; st.textContent = 'Sending\u2026';
+      rpc('live_submit_answer', { p_code:code, p_kind:'text', p_content:wrap(note) }).then(function(id){
         if(!id) throw new Error('rejected');
-        if(spot){ ss(sentKey(), '1'); thanks(true); return; }
-        // a written answer can be followed by another one if they think of more
         ta.value = ''; st.className = 'status ok'; st.textContent = 'Sent. Look at the board.';
         setTimeout(function(){ send.disabled = false; }, 1500);
       }).catch(function(){ send.disabled = false; st.className = 'status err'; st.textContent = "That didn't send. Try again."; });
     });
   }
-  function thanks(spot){
-    app.innerHTML = '<div class="done"><div class="big">' + ph('check') + '</div><h2>Sent</h2><p>' +
-      (spot ? 'Your ticks are on the board. Wait here for the next question.' : 'Wait here for the next question.') + '</p></div>';
+
+  // every tap goes to the board straight away. Each one is a small event (which pupil, which
+  // item, on or off, and a counter), so the board can work out each pupil's latest state even
+  // if two taps arrive out of order
+  function renderTicks(q){
+    var state = { on:[], s:0 };
+    try{ var saved = JSON.parse(ss(tickKey())); if(saved && Array.isArray(saved.on)) state = saved; }catch(e){}
+    app.innerHTML = '<p class="kick">TAP WHAT YOU SPOTTED</p><h1></h1><p class="hint">Each tap goes straight to the board. Tap again to take it back.</p>' +
+      '<div class="ticks">' + SPOT.map(function(it, i){
+        var on = state.on.indexOf(i) > -1;
+        return '<button type="button" class="tk' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="pic">' + pic(it) + '</span><span class="lb">' + it[0] + '</span><span class="box">' + ph('check') + '</span></button>';
+      }).join('') + '</div>' +
+      '<div class="status" id="tst"></div>' +
+      '<div class="lab">Spotted something else? (you don&rsquo;t have to)</div>' +
+      '<div class="note-row"><textarea class="small" maxlength="200" placeholder="Type here&hellip;"></textarea><button class="send" type="button">' + ph('paper-plane-right') + 'Send</button></div><div class="status" id="nst"></div>';
+    app.querySelector('h1').textContent = q;
+    var tst = document.getElementById('tst');
+    [].forEach.call(app.querySelectorAll('.tk'), function(b){
+      b.addEventListener('click', function(){
+        var i = +b.getAttribute('data-i'), on = !b.classList.contains('on');
+        b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.classList.add('wait');
+        state.s++;
+        state.on = state.on.filter(function(x){ return x !== i; }); if(on) state.on.push(i);
+        ss(tickKey(), JSON.stringify(state));
+        tst.className = 'status'; tst.textContent = '';
+        rpc('live_submit_answer', { p_code:code, p_kind:'text', p_content:JSON.stringify({ p:pid, i:i, on:on, s:state.s }) }).then(function(id){
+          if(!id) throw new Error('rejected');
+          b.classList.remove('wait');
+        }).catch(function(){
+          // undo on screen so what they see matches the board
+          b.classList.remove('wait'); b.classList.toggle('on', !on); b.setAttribute('aria-pressed', !on);
+          state.on = state.on.filter(function(x){ return x !== i; }); if(!on) state.on.push(i);
+          ss(tickKey(), JSON.stringify(state));
+          tst.className = 'status err'; tst.textContent = "That didn't reach the board. Tap it again.";
+        });
+      });
+    });
+    wireSend(app.querySelector('.note-row .send'), app.querySelector('.note-row textarea'), document.getElementById('nst'), function(t){ return JSON.stringify({ p:pid, n:t }); });
   }
 
   function check(first){
@@ -166,7 +189,7 @@
   if(!pid){ pid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2); ss('vlive_pid', pid); }
   rpc('live_mark_joined', { p_code:code, p_pupil_id:pid }).catch(function(){});
   check(true);
-  timer = setInterval(function(){ check(false); }, 2000);
+  timer = setInterval(function(){ check(false); }, 2500);
 })();
 </script>
 </body>
