@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Production</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  :root{--bg:#0b0c0f;--panel:#15171c;--panel2:#1c1f26;--edge:#2c303a;--tx:#f4f5f7;--mut:#b9bfcb;--yel:#ffd23f;--play:#ff5b4f;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none}
+  .top{height:60px;background:var(--panel);border-bottom:1px solid var(--edge);display:flex;align-items:center;gap:16px;padding:0 clamp(16px,3vw,28px)}
+  .top a{display:flex;align-items:center;gap:8px;color:var(--tx);text-decoration:none;font-weight:600;font-size:17px;padding:8px 14px;border:1px solid var(--edge);border-radius:8px;background:var(--panel2)}
+  .top .file{font-family:var(--mono);font-size:15px;color:var(--mut);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .top .rec{margin-left:auto;width:12px;height:12px;border-radius:50%;background:var(--play);box-shadow:0 0 10px var(--play);flex:none}
+  main{max-width:1100px;margin:0 auto;padding:clamp(28px,5vw,56px) clamp(16px,4vw,40px) 80px}
+  .kick{font-family:var(--mono);font-size:clamp(14px,1.6vw,17px);letter-spacing:.08em;color:var(--mut);margin:0 0 10px}
+  h1{margin:0;font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.02;display:flex;align-items:center;gap:18px}
+  h1 .i{color:var(--yel)}
+  .intro{font-size:clamp(1.1rem,1.9vw,1.4rem);line-height:1.5;color:var(--mut);max-width:62ch;margin:18px 0 0}
+  .ep{margin:26px 0 0;padding:16px 20px;border:1px solid var(--edge);border-radius:12px;background:var(--panel);font-size:1.05rem;line-height:1.5}
+  .ep b{color:var(--yel);font-family:var(--mono);font-size:.85rem;letter-spacing:.08em;display:block;margin-bottom:6px}
+  .bin{margin-top:34px;display:flex;flex-direction:column;gap:12px}
+  .les{display:flex;align-items:center;gap:clamp(12px,2vw,22px);padding:16px;border:1px solid var(--edge);border-radius:12px;background:var(--panel);color:var(--tx);text-decoration:none}
+  a.les:hover{border-color:var(--yel)}
+  .thumb{width:clamp(84px,14vw,150px);aspect-ratio:16/9;border-radius:8px;background:#060709;border:1px solid var(--edge);display:grid;place-items:center;font-size:clamp(28px,4vw,44px);color:var(--yel);flex:none;position:relative}
+  .thumb span.tcode{position:absolute;right:5px;bottom:4px;font-family:var(--mono);font-size:11px;color:var(--mut)}
+  .les h2{margin:0;font-size:clamp(1.15rem,2.2vw,1.5rem);font-weight:800}
+  .les p{margin:4px 0 0;color:var(--mut);font-size:clamp(.95rem,1.5vw,1.05rem);line-height:1.45}
+  .les .st{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:700;padding:6px 10px;border-radius:6px;white-space:nowrap}
+  .les .st.live{background:var(--yel);color:#141414}
+  .les .st.soon{border:1px solid var(--edge);color:var(--mut)}
+  .les.off{opacity:.75}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .links a{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--tx);text-decoration:none;background:var(--panel2);border:1px solid var(--edge);border-radius:8px;padding:8px 12px}
+  @media (max-width:560px){ .les{flex-wrap:wrap} .les .st{margin-left:0} }
+</style>
+</head>
+<body>
+<div class="top"><a href="index.html"><span data-ph="arrow-left"></span>Year groups</a><span class="file">year-5-6 / autumn-2 / video-production</span><span class="rec"></span></div>
+<main>
+  <p class="kick">YEAR 5 AND 6 &middot; AUTUMN 2 &middot; CREATING MEDIA</p>
+  <h1><span data-ph="film-slate"></span>Video production</h1>
+  <p class="intro">Six lessons on how video gets made. It starts with watching like a filmmaker, then moves on to filming, storyboarding and editing, and finishes with each group&rsquo;s own short video.</p>
+  <div class="ep"><b>END POINT</b>To explain what makes a video effective.</div>
+  <div class="bin" id="bin"></div>
+</main>
+<script>
+(function(){
+  var PH = {"arrow-left":"<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>","check-square":"<path d=\"M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM224,48V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM208,208V48H48V208H208Z\"/>","eye":"<path d=\"M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z\"/>","film-slate":"<path d=\"M216,104H102.09L210,75.51a8,8,0,0,0,5.68-9.84l-8.16-30a15.93,15.93,0,0,0-19.42-11.13L35.81,64.74a15.75,15.75,0,0,0-9.7,7.4,15.51,15.51,0,0,0-1.55,12L32,111.56c0,.14,0,.29,0,.44v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V112A8,8,0,0,0,216,104ZM192.16,40l6,22.07-22.62,6L147.42,51.83Zm-66.69,17.6,28.12,16.24-36.94,9.75L88.53,67.37Zm-79.4,44.62-6-22.08,26.5-7L94.69,89.4ZM208,200H48V120H208v80Z\"/>","film-strip":"<path d=\"M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z\"/>","printer":"<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>","scissors":"<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>","video-camera":"<path d=\"M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  var L = [
+    { t:'What is video?', d:'What video is for, how music sets the mood, and spotting filming choices in Planet Earth II and a Dua Lipa video.', href:'video-l1.html', sheets:'video-l1-sheets.html', ic:'film-slate' },
+    { t:'Filming techniques', ic:'video-camera' },
+    { t:'Using a storyboard', ic:'film-strip' },
+    { t:'Planning a video', ic:'check-square' },
+    { t:'Importing and editing video', ic:'scissors' },
+    { t:'Video evaluation', ic:'eye' }
+  ];
+  document.getElementById('bin').innerHTML = L.map(function(l, i){
+    var live = !!l.href, tag = live ? 'a' : 'div';
+    return '<' + tag + ' class="les' + (live ? '' : ' off') + '"' + (live ? ' href="' + l.href + '"' : '') + '>' +
+      '<div class="thumb">' + ph(l.ic) + '<span class="tcode">L' + (i + 1) + '</span></div>' +
+      '<div><h2>Lesson ' + (i + 1) + ': ' + l.t + '</h2>' + (l.d ? '<p>' + l.d + '</p>' : '') + '</div>' +
+      '<span class="st ' + (live ? 'live' : 'soon') + '">' + (live ? 'OPEN' : 'COMING') + '</span></' + tag + '>' +
+      (l.sheets ? '<div class="links"><a href="' + l.sheets + '">' + ph('printer') + 'Lesson 1 sheets</a></div>' : '');
+  }).join('');
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+})();
+</script>
+</body>
+</html>

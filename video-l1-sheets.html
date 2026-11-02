@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Is Video Sheets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  @page{size:A4 portrait;margin:10mm}
+  :root{--ink:#14161b;--mut:#4b5160;--line:#9aa1ae;--soft:#eef0f3;--igu:#1f9d5c;--dua:#c2349b}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#0b0c0f;color:var(--ink);font-family:Inter,'Segoe UI',Arial,sans-serif}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.12em}
+  .bar{max-width:210mm;margin:16px auto 0;display:flex;gap:10px;padding:0 4px}
+  .bar a,.bar button{font:inherit;font-weight:600;font-size:16px;color:#f4f5f7;background:#1c1f26;border:1px solid #2c303a;border-radius:8px;padding:9px 16px;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .bar button{margin-left:auto;background:#ffd23f;border-color:#ffd23f;color:#141414}
+  .page{width:210mm;min-height:297mm;margin:12px auto 30px;background:#fff;padding:12mm 13mm;display:flex;flex-direction:column;gap:5mm;break-after:page}
+  .page:last-child{break-after:auto}
+  @media print{ html,body{background:#fff} .bar{display:none} .page{margin:0;width:auto;min-height:0;height:276mm;padding:0} }
+
+  .hd{display:flex;align-items:flex-start;gap:5mm;border-bottom:.6mm solid var(--ink);padding-bottom:3mm}
+  .hd .num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11pt;background:var(--ink);color:#fff;border-radius:2mm;padding:1.5mm 3mm;white-space:nowrap}
+  .hd h1{margin:0;font-size:22pt;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+  .hd p{margin:1.5mm 0 0;font-size:11.5pt;color:var(--mut);line-height:1.4}
+  .who{display:flex;gap:6mm;font-weight:600;font-size:11pt}
+  .who span{flex:1;display:flex;gap:2mm;align-items:flex-end}
+  .who i{flex:1;border-bottom:.35mm solid var(--ink);height:6mm}
+
+  /* sheet 1 */
+  .ver{border:.45mm solid var(--ink);border-radius:3mm;padding:3.5mm 4.5mm;display:grid;grid-template-columns:20mm 1fr;gap:2mm 4mm}
+  .ver .tagv{grid-row:span 3;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10pt;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--soft);border-radius:2mm;text-align:center;line-height:1.2}
+  .ver .tagv b{font-size:24pt}
+  .lab{font-size:10.5pt;font-weight:600;display:flex;gap:2mm;align-items:flex-end}
+  .lab i{flex:1;border-bottom:.3mm solid var(--line);height:6mm}
+  .moods{display:flex;flex-wrap:wrap;gap:1.6mm;align-items:center;font-size:10.5pt;font-weight:600}
+  .moods em{font-style:normal;border:.35mm solid var(--ink);border-radius:99px;padding:.6mm 2.4mm}
+  .box{border:.45mm solid var(--ink);border-radius:3mm;padding:3.5mm 4.5mm;display:flex;flex-direction:column;gap:3mm}
+  .box h2{margin:0;font-size:12.5pt;font-weight:800}
+  .lines{display:flex;flex-direction:column;gap:7.5mm;padding-top:3mm}
+  .lines i{display:block;border-bottom:.3mm solid var(--line)}
+
+  /* sheet 2 */
+  table.spot{width:100%;border-collapse:collapse;font-size:12pt}
+  .spot th{font-size:11pt;text-align:center;padding:2mm;border-bottom:.5mm solid var(--ink)}
+  .spot th.l{text-align:left}
+  .spot th .dot{display:inline-block;width:3mm;height:3mm;border-radius:50%;margin-right:1.5mm;vertical-align:.1mm}
+  .spot td{border-bottom:.3mm solid #d3d7de;padding:1.6mm 2mm;vertical-align:middle}
+  .spot .it{display:flex;align-items:center;gap:4mm;font-weight:600}
+  .spot .pic{width:21mm;height:12.5mm;border:.35mm solid var(--ink);border-radius:1.5mm;display:grid;place-items:center;font-size:8mm;overflow:hidden;flex:none}
+  .spot .pic svg.fr{width:100%;height:100%}
+  .spot td.c{text-align:center;width:33mm}
+  .tick{display:inline-block;width:9mm;height:9mm;border:.5mm solid var(--ink);border-radius:1.5mm}
+  .jobsrow{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+  .jobsrow .box{gap:2.5mm}
+  .jobsrow .moods em{font-size:11pt}
+
+  /* sheet 3 */
+  .venn{position:relative;height:96mm}
+  .venn svg{width:100%;height:100%}
+  .starter{font-size:12pt;font-weight:600;line-height:1.5}
+  .starter .lines{gap:8mm;padding-top:2mm}
+  .st{margin:0}
+  .st .gap{display:inline-block;width:55mm;border-bottom:.3mm solid var(--line);margin:0 1mm}
+</style>
+</head>
+<body>
+<div class="bar"><a href="video-l1.html#part5"><span data-ph="arrow-left"></span>Back to the lesson</a><button type="button" onclick="window.print()"><span data-ph="printer"></span>Print all three</button></div>
+
+<!-- SHEET 1 -->
+<div class="page" id="sheet1">
+  <div class="hd"><span class="num">SHEET 1</span><div><h1>Same pictures, different music</h1><p>The opening of The Lion King plays with different music each time. After each version, fill in a row.</p></div></div>
+  <div class="who"><span>Name <i></i></span><span>Date <i></i></span></div>
+  <div id="vers" style="display:flex;flex-direction:column;gap:3.5mm"></div>
+  <div class="box"><h2>Which music fits the pictures best? Why?</h2><div class="lines"><i></i><i></i><i></i></div></div>
+</div>
+
+<!-- SHEET 2 -->
+<div class="page" id="sheet2">
+  <div class="hd"><span class="num">SHEET 2</span><div><h1>Spot it</h1><p>Watch each clip twice. The first time, just watch. The second time, tick everything you spot.</p></div></div>
+  <div class="who"><span>Name <i></i></span><span>Date <i></i></span></div>
+  <table class="spot">
+    <thead><tr><th class="l">Things to spot</th><th><span class="dot" style="background:var(--igu)"></span>Iguana vs Snakes</th><th><span class="dot" style="background:var(--dua)"></span>Levitating</th></tr></thead>
+    <tbody id="spotrows"></tbody>
+  </table>
+  <div class="jobsrow">
+    <div class="box"><h2>What job does the iguana clip do?</h2><div class="moods"><em>inform</em><em>entertain</em><em>promote</em><em>document</em></div><p style="margin:0;font-size:10pt;color:var(--mut)">Circle as many as you think.</p></div>
+    <div class="box"><h2>What job does Levitating do?</h2><div class="moods"><em>inform</em><em>entertain</em><em>promote</em><em>document</em></div><p style="margin:0;font-size:10pt;color:var(--mut)">Circle as many as you think.</p></div>
+  </div>
+</div>
+
+<!-- SHEET 3 -->
+<div class="page" id="sheet3">
+  <div class="hd"><span class="num">SHEET 3</span><div><h1>Same or different?</h1><p>Use your ticks from Sheet 2. Things only one clip did go in its own circle; things both clips did go in the middle.</p></div></div>
+  <div class="who"><span>Name <i></i></span><span>Date <i></i></span></div>
+  <div class="venn">
+    <svg viewBox="0 0 640 330">
+      <circle cx="235" cy="170" r="150" fill="rgba(31,157,92,.07)" stroke="#1f9d5c" stroke-width="3"/>
+      <circle cx="405" cy="170" r="150" fill="rgba(194,52,155,.07)" stroke="#c2349b" stroke-width="3"/>
+      <text x="150" y="14" font-family="Inter,Arial" font-weight="800" font-size="17" fill="#14161b" text-anchor="middle">Iguana vs Snakes</text>
+      <text x="490" y="14" font-family="Inter,Arial" font-weight="800" font-size="17" fill="#14161b" text-anchor="middle">Levitating</text>
+      <text x="320" y="98" font-family="Inter,Arial" font-weight="800" font-size="15" fill="#14161b" text-anchor="middle">Both</text>
+    </svg>
+  </div>
+  <div class="box starter"><p class="st">The iguana clip uses <span class="gap"></span> because</p><div class="lines"><i></i><i></i></div></div>
+  <div class="box starter"><p class="st">Levitating uses <span class="gap"></span> because</p><div class="lines"><i></i><i></i></div></div>
+  <div class="box starter"><p class="st">If Planet Earth filmed the iguana like a pop video,</p><div class="lines"><i></i><i></i></div></div>
+</div>
+
+<script>
+(function(){
+  var PH = {"arrow-left":"<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>","arrows-out-cardinal":"<path d=\"M90.34,61.66a8,8,0,0,1,0-11.32l32-32a8,8,0,0,1,11.32,0l32,32a8,8,0,0,1-11.32,11.32L136,43.31V96a8,8,0,0,1-16,0V43.31L101.66,61.66A8,8,0,0,1,90.34,61.66Zm64,132.68L136,212.69V160a8,8,0,0,0-16,0v52.69l-18.34-18.35a8,8,0,0,0-11.32,11.32l32,32a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Zm83.32-72-32-32a8,8,0,0,0-11.32,11.32L212.69,120H160a8,8,0,0,0,0,16h52.69l-18.35,18.34a8,8,0,0,0,11.32,11.32l32-32A8,8,0,0,0,237.66,122.34ZM43.31,136H96a8,8,0,0,0,0-16H43.31l18.35-18.34A8,8,0,0,0,50.34,90.34l-32,32a8,8,0,0,0,0,11.32l32,32a8,8,0,0,0,11.32-11.32Z\"/>","microphone":"<path d=\"M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z\"/>","music-notes":"<path d=\"M212.92,17.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,56V166.08A36,36,0,1,0,88,196V110.25l112-28v51.83A36,36,0,1,0,216,164V24A8,8,0,0,0,212.92,17.69ZM52,216a20,20,0,1,1,20-20A20,20,0,0,1,52,216ZM88,93.75V62.25l112-28v31.5ZM180,184a20,20,0,1,1,20-20A20,20,0,0,1,180,184Z\"/>","printer":"<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>","scissors":"<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>","speaker-high":"<path d=\"M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z\"/>","timer":"<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>","video-camera":"<path d=\"M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+
+  // the same ten items, in the same order, as the "Things to spot" slide
+  var INK = '#14161b';
+  function person(x, feet, s){
+    return '<g transform="translate(' + x + ' ' + feet + ') scale(' + s + ')" fill="none" stroke="' + INK + '" stroke-width="' + (7 / s) + '" stroke-linecap="round">' +
+      '<circle cx="0" cy="-150" r="22"/><path d="M0 -128 V-60 M0 -112 L-34 -78 M0 -112 L34 -78 M0 -60 L-26 0 M0 -60 L26 0"/></g>';
+  }
+  var SHOTS = {
+    wide:'<path d="M0 104 Q60 92 120 100 T240 98 V146 H0Z" fill="#dfe3e8"/><circle cx="196" cy="34" r="14" fill="none" stroke="' + INK + '" stroke-width="5"/>' + person(120, 98, .28),
+    mid:person(120, 212, 1.02),
+    close:'<circle cx="120" cy="74" r="56" fill="none" stroke="' + INK + '" stroke-width="7"/><circle cx="100" cy="64" r="7" fill="' + INK + '"/><circle cx="140" cy="64" r="7" fill="' + INK + '"/><path d="M98 92 Q120 108 142 92" fill="none" stroke="' + INK + '" stroke-width="7" stroke-linecap="round"/>'
+  };
+  var ITEMS = [
+    ['Wide shot','shot:wide'],['Mid shot','shot:mid'],['Close-up','shot:close'],
+    ['Slow motion','timer'],['Camera moves with the action','arrows-out-cardinal'],['Camera stays still','video-camera'],
+    ['Quick cuts','scissors'],['Music','music-notes'],['Sound effects','speaker-high'],['A voice talking or singing','microphone']
+  ];
+  document.getElementById('spotrows').innerHTML = ITEMS.map(function(it){
+    var pic = it[1].indexOf('shot:') === 0
+      ? '<svg class="fr" viewBox="0 0 240 146" preserveAspectRatio="xMidYMid slice">' + SHOTS[it[1].slice(5)] + '</svg>'
+      : ph(it[1]);
+    return '<tr><td><div class="it"><span class="pic">' + pic + '</span>' + it[0] + '</div></td><td class="c"><span class="tick"></span></td><td class="c"><span class="tick"></span></td></tr>';
+  }).join('');
+
+  var MOODS = ['happy','sad','scary','exciting','calm','funny','tense','silly'];
+  var v = '';
+  for(var n = 1; n <= 4; n++){
+    v += '<div class="ver"><div class="tagv">VERSION<b>' + n + '</b></div>' +
+      '<div class="lab">The music sounded like <i></i></div>' +
+      '<div class="moods">Circle: ' + MOODS.map(function(m){ return '<em>' + m + '</em>'; }).join('') + '</div>' +
+      '<div class="lab">One word for this version <i></i></div></div>';
+  }
+  document.getElementById('vers').innerHTML = v;
+
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+})();
+</script>
+</body>
+</html>

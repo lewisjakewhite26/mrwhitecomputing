@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Is Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  :root{
+    --bg:#0b0c0f; --panel:#15171c; --panel2:#1c1f26; --edge:#2c303a; --tx:#f4f5f7; --mut:#b9bfcb;
+    --play:#ff5b4f; --yel:#ffd23f; --igu:#46d98a; --dua:#ff7ad9;
+    --c-talk:#2d64c8; --c-video:#6247d1; --c-task:#0b7364; --c-title:#e8b923;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;background:var(--bg)}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none}
+
+  /* top bar */
+  .top{position:absolute;left:0;right:0;top:0;height:60px;background:var(--panel);border-bottom:1px solid var(--edge);display:flex;align-items:center;gap:18px;padding:0 22px}
+  .top a.home{display:flex;align-items:center;gap:10px;color:var(--tx);text-decoration:none;font-weight:600;font-size:20px;padding:8px 14px;border:1px solid var(--edge);border-radius:8px;background:var(--panel2)}
+  .top .file{font-family:var(--mono);font-size:19px;color:var(--mut)}
+  .top .file b{color:var(--tx);font-weight:700}
+  .top .tc{margin-left:auto;font-family:var(--mono);font-size:26px;font-weight:700;color:var(--yel);letter-spacing:.04em}
+  .top .rec{width:14px;height:14px;border-radius:50%;background:var(--play);box-shadow:0 0 10px var(--play)}
+
+  /* viewer */
+  .viewer{position:absolute;left:20px;right:20px;top:76px;height:584px;background:#060709;border:1px solid var(--edge);border-radius:10px;overflow:hidden}
+  .vlabel{position:absolute;left:16px;top:10px;font-family:var(--mono);font-size:16px;letter-spacing:.12em;color:var(--mut);z-index:3}
+  .safe{position:absolute;inset:14px;border:1px dashed rgba(255,255,255,.07);border-radius:6px;pointer-events:none;z-index:2}
+  .part{position:absolute;inset:0;padding:46px 56px 30px;display:none}
+  .part.on{display:block}
+  h2{margin:0 0 22px;font-size:62px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .lead{font-size:34px;line-height:1.35;margin:0;max-width:1300px}
+  .hl{color:var(--yel)}
+  .pp{opacity:0;transform:translateY(14px);transition:opacity .45s,transform .45s}
+  .pp.in{opacity:1;transform:none}
+  .rm .pp{transform:none;transition:opacity .2s}
+
+  /* title */
+  .title-wrap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 110px}
+  .slate{display:flex;align-items:center;gap:26px;font-size:120px;color:var(--yel)}
+  .title-wrap h1{margin:0;font-size:132px;font-weight:800;letter-spacing:-.035em;line-height:1}
+  .title-wrap .kick{font-family:var(--mono);font-size:26px;color:var(--mut);letter-spacing:.08em;margin:0 0 18px}
+  .title-wrap .sub{font-size:36px;line-height:1.35;margin:30px 0 0;max-width:1100px}
+
+  /* prompts */
+  .qs{display:flex;flex-direction:column;gap:22px;margin-top:10px}
+  .q{display:flex;align-items:center;gap:24px;font-size:44px;font-weight:600;background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:22px 30px}
+  .q .n{font-family:var(--mono);font-size:30px;color:var(--yel);min-width:56px}
+
+  /* tiles */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .tile{display:flex;align-items:center;gap:22px;background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:22px 26px;font-size:36px;font-weight:600}
+  .tile .ic{width:76px;height:76px;border-radius:14px;display:grid;place-items:center;font-size:46px;background:var(--panel2);color:var(--yel)}
+  .banner{margin-top:26px;font-size:40px;font-weight:700;padding:20px 30px;border-radius:14px;background:var(--panel2);border-left:0;display:flex;align-items:center;gap:20px}
+  .banner .i{color:var(--yel);font-size:48px}
+
+  /* advert v film */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  .card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;overflow:hidden}
+  .card .hd{display:flex;align-items:center;gap:18px;padding:18px 26px;font-size:40px;font-weight:800;background:var(--panel2)}
+  .card .hd .i{font-size:48px;color:var(--yel)}
+  .row{display:flex;flex-direction:column;gap:4px;padding:14px 26px;border-top:1px solid var(--edge)}
+  .row span{font-family:var(--mono);font-size:20px;color:var(--mut);letter-spacing:.04em}
+  .row b{font-size:32px;font-weight:600}
+
+  /* jobs */
+  .def{font-size:32px;line-height:1.3;margin:0 0 18px;padding:14px 24px;border-radius:12px;background:var(--panel);border:1px solid var(--edge)}
+  .jobs{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .job{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:18px 20px 20px}
+  .job .jh{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+  .job .ic{font-size:44px;color:var(--yel)}
+  .job h3{margin:0;font-size:36px;font-weight:800}
+  .job p{margin:0;font-size:26px;line-height:1.32;color:var(--tx)}
+
+  /* video parts */
+  .player{position:absolute;left:44px;top:122px;width:768px;height:432px;background:#000;border:1px solid var(--edge);border-radius:8px;overflow:hidden}
+  .player iframe{width:100%;height:100%;border:0;display:block}
+  .side{position:absolute;left:846px;right:52px;top:122px;bottom:30px;display:flex;flex-direction:column;gap:18px}
+  .side p{margin:0;font-size:31px;line-height:1.38}
+  .meta{font-family:var(--mono);font-size:21px;color:var(--mut);letter-spacing:.03em}
+  .btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:auto}
+  .bt{display:inline-flex;align-items:center;gap:12px;font:inherit;font-size:24px;font-weight:600;color:var(--tx);text-decoration:none;background:var(--panel2);border:1px solid var(--edge);border-radius:10px;padding:14px 20px;cursor:pointer}
+  .bt .i{font-size:30px}
+  .bt.yel{background:var(--yel);border-color:var(--yel);color:#141414}
+  .igu h2 .tag{color:var(--igu)} .dua h2 .tag{color:var(--dua)}
+  .h2s{display:flex;align-items:baseline;gap:22px}
+  .h2s .meta{font-size:22px}
+
+  /* mood */
+  .big3{display:flex;flex-direction:column;gap:22px}
+  .stmt{font-size:44px;font-weight:600;line-height:1.3}
+  .word{display:inline-flex;align-items:center;gap:18px;margin-top:6px;padding:20px 30px;border-radius:14px;background:var(--panel);border:2px solid var(--yel)}
+  .word b{font-size:54px;color:var(--yel)}
+  .word span{font-size:34px}
+
+  /* toolkit */
+  .kit{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .kt{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:10px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;height:200px}
+  .kt .pic{width:100%;height:110px;flex:none;border-radius:8px;background:#0c0e12;display:grid;place-items:center;color:var(--yel);font-size:70px;overflow:hidden}
+  .kt .pic svg.fr{width:100%;height:100%}
+  .kt b{font-size:25px;line-height:1.15;font-weight:700;flex:1;display:flex;align-items:center}
+
+  /* compare */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:16px}
+  .cmp .side-h{display:flex;align-items:center;gap:16px;font-size:32px;font-weight:800;padding:10px 24px;border-radius:12px;background:var(--panel)}
+  .cmp .side-h i{width:20px;height:20px;border-radius:50%}
+  .cq{font-size:32px;font-weight:600;line-height:1.3;padding:12px 24px;border-radius:12px;background:var(--panel);border:1px solid var(--edge);margin-bottom:12px;display:flex;gap:20px}
+  .cq .n{font-family:var(--mono);color:var(--yel);font-size:28px;padding-top:6px}
+  .punch{font-size:36px;font-weight:800;line-height:1.25;padding:16px 26px;border-radius:14px;background:var(--yel);color:#121212}
+
+  /* next */
+  .chips{display:flex;flex-wrap:wrap;gap:14px;margin:22px 0 30px}
+  .chip{font-size:32px;font-weight:600;padding:12px 24px;border-radius:999px;background:var(--panel);border:1px solid var(--edge)}
+
+  /* timeline */
+  .tl{position:absolute;left:0;right:0;bottom:0;height:226px;background:var(--panel);border-top:1px solid var(--edge)}
+  .tl-head{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--edge)}
+  .tbtn{width:56px;height:46px;display:grid;place-items:center;font-size:28px;color:var(--tx);background:var(--panel2);border:1px solid var(--edge);border-radius:8px;cursor:pointer;padding:0}
+  .tbtn.next{width:auto;padding:0 22px;gap:10px;display:flex;font:inherit;font-weight:700;font-size:22px;background:var(--yel);border-color:var(--yel);color:#141414}
+  .tbtn:disabled{opacity:.35;cursor:default}
+  .tl-name{font-family:var(--mono);font-size:19px;color:var(--mut);margin-left:10px}
+  .tl-name b{color:var(--tx)}
+  .tl-steps{margin-left:auto;display:flex;gap:8px}
+  .tl-steps i{width:14px;height:14px;border-radius:3px;background:var(--edge)}
+  .tl-steps i.on{background:var(--yel)}
+  .ruler{position:absolute;left:96px;right:20px;top:64px;height:28px;border-bottom:1px solid var(--edge)}
+  .ruler span{position:absolute;top:4px;font-family:var(--mono);font-size:14px;color:var(--mut);transform:translateX(-50%)}
+  .ruler i{position:absolute;bottom:0;width:1px;height:7px;background:#4a505c}
+  .track{position:absolute;left:96px;right:20px;height:52px}
+  .trk-lab{position:absolute;left:-80px;width:64px;top:0;bottom:0;display:grid;place-items:center;font-family:var(--mono);font-size:17px;font-weight:700;color:var(--mut);background:var(--panel2);border:1px solid var(--edge);border-radius:6px}
+  .t-v{top:100px} .t-a{top:160px;height:44px}
+  .clip{position:absolute;top:0;bottom:0;border-radius:6px;border:1px solid rgba(255,255,255,.18);color:#fff;font-size:15px;font-weight:700;padding:5px 7px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;text-align:left;font-family:inherit;line-height:1.15}
+  .clip small{display:block;font-family:var(--mono);font-weight:500;font-size:12px;opacity:.9}
+  .clip.k-title{background:var(--c-title);color:#141414}
+  .clip.k-talk{background:var(--c-talk)} .clip.k-video{background:var(--c-video)} .clip.k-task{background:var(--c-task)}
+  .clip.cur{outline:3px solid #fff;outline-offset:-1px}
+  .aclip{position:absolute;top:0;bottom:0;border-radius:6px;background:#0f5b37;border:1px solid #2fae6b;overflow:hidden}
+  .aclip svg{width:100%;height:100%}
+  .head{position:absolute;top:64px;bottom:14px;width:2px;background:var(--play);transition:left .5s;pointer-events:none;z-index:5}
+  .head::before{content:"";position:absolute;left:-9px;top:0;border:10px solid transparent;border-top:13px solid var(--play)}
+  .rm .head{transition:none}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+
+  <div class="top">
+    <a class="home" href="video-production.html"><span data-ph="arrow-left"></span>Units</a>
+    <span data-ph="film-slate" style="font-size:30px;color:var(--yel)"></span>
+    <span class="file">video-production / <b>lesson-1</b>.proj</span>
+    <span class="tc" id="tc">00:00:00</span><span class="rec"></span>
+  </div>
+
+  <div class="viewer">
+    <div class="vlabel">PROGRAM</div><div class="safe"></div>
+
+    <!-- 0 title -->
+    <section class="part" data-name="Title">
+      <div class="title-wrap">
+        <p class="kick">VIDEO PRODUCTION &middot; LESSON 1</p>
+        <div class="slate"><span data-ph="film-slate"></span><h1>What is video?</h1></div>
+        <p class="sub">This half term you&rsquo;ll plan, film and edit a video of your own. Today you start where every film crew starts: as the <span class="hl">audience</span>.</p>
+      </div>
+    </section>
+
+    <!-- 1 big question -->
+    <section class="part" data-name="Big question">
+      <h2>What is a video?</h2>
+      <div class="qs">
+        <div class="q pp" data-s="1"><span class="n">01</span>What does a video actually do?</div>
+        <div class="q pp" data-s="2"><span class="n">02</span>Why do we watch them?</div>
+        <div class="q pp" data-s="3"><span class="n">03</span>How is a video different from a photo?</div>
+      </div>
+    </section>
+
+    <!-- 2 where -->
+    <section class="part" data-name="Where">
+      <h2>Where do we watch video?</h2>
+      <div class="tiles">
+        <div class="tile pp" data-s="1"><span class="ic" data-ph="youtube-logo"></span>YouTube and Shorts</div>
+        <div class="tile pp" data-s="1"><span class="ic" data-ph="television"></span>TV</div>
+        <div class="tile pp" data-s="1"><span class="ic" data-ph="popcorn"></span>The cinema</div>
+        <div class="tile pp" data-s="1"><span class="ic" data-ph="device-mobile"></span>Apps on a phone</div>
+        <div class="tile pp" data-s="1"><span class="ic" data-ph="video-camera"></span>Video calls</div>
+        <div class="tile pp" data-s="1"><span class="ic" data-ph="megaphone"></span>Screens in shops</div>
+      </div>
+      <div class="banner pp" data-s="2"><span data-ph="magnifying-glass"></span>Do they all have the same job?</div>
+    </section>
+
+    <!-- 3 advert v film -->
+    <section class="part" data-name="Advert v film">
+      <h2>Cilit Bang advert or Star Wars?</h2>
+      <div class="vs">
+        <div class="card">
+          <div class="hd"><span data-ph="megaphone"></span>Cilit Bang advert</div>
+          <div class="row pp" data-s="1"><span>HOW LONG?</span><b>About 30 seconds</b></div>
+          <div class="row pp" data-s="2"><span>WHERE DO YOU SEE IT?</span><b>On TV, between programmes</b></div>
+          <div class="row pp" data-s="3"><span>WHAT DOES IT WANT FROM YOU?</span><b>Buy the cleaning spray</b></div>
+        </div>
+        <div class="card">
+          <div class="hd"><span data-ph="popcorn"></span>A Star Wars film</div>
+          <div class="row pp" data-s="1"><span>HOW LONG?</span><b>About two hours</b></div>
+          <div class="row pp" data-s="2"><span>WHERE DO YOU SEE IT?</span><b>At the cinema, then at home</b></div>
+          <div class="row pp" data-s="3"><span>WHAT DOES IT WANT FROM YOU?</span><b>Get lost in the story, and come back for the next one</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 jobs -->
+    <section class="part" data-name="Jobs">
+      <h2>The jobs a video can do</h2>
+      <p class="def"><span class="hl">Video</span> is moving pictures, usually with sound, recorded so people can watch them later or somewhere else.</p>
+      <div class="jobs">
+        <div class="job pp" data-s="1"><div class="jh"><span class="ic" data-ph="info"></span><h3>Inform</h3></div><p>The news, the weather, a how-to video on YouTube</p></div>
+        <div class="job pp" data-s="2"><div class="jh"><span class="ic" data-ph="popcorn"></span><h3>Entertain</h3></div><p>Films, cartoons, a funny Short</p></div>
+        <div class="job pp" data-s="3"><div class="jh"><span class="ic" data-ph="megaphone"></span><h3>Promote</h3></div><p>Adverts, film trailers, and music videos too</p></div>
+        <div class="job pp" data-s="4"><div class="jh"><span class="ic" data-ph="archive"></span><h3>Document</h3></div><p>A wedding video, the school play, a record of wild animals</p></div>
+      </div>
+      <div class="banner pp" data-s="5" style="margin-top:18px;font-size:30px;padding:16px 26px"><span data-ph="lightning"></span>Plenty of videos do two jobs at once. A music video entertains you and sells the song.</div>
+    </section>
+
+    <!-- 5 lion king -->
+    <section class="part" data-name="Lion King" data-yt="ecYgqLml89c">
+      <div class="h2s"><h2>Same pictures. Different music.</h2></div>
+      <div class="player"></div>
+      <div class="side">
+        <span class="meta">THE LION KING (1994) &middot; RESCORED BY LOUD SON</span>
+        <p>The opening of <b>The Lion King</b> plays several times. The pictures never change; only the music does.</p>
+        <p>After each version, write on <span class="hl">Sheet 1</span> how it made you feel.</p>
+        <div class="btns">
+          <a class="bt yel" href="video-l1-sheets.html#sheet1" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 1</a>
+          <a class="bt" href="https://www.youtube.com/watch?v=ecYgqLml89c" target="_blank" rel="noopener"><span data-ph="youtube-logo"></span>Open on YouTube</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 mood -->
+    <section class="part" data-name="Mood">
+      <h2>So what changed?</h2>
+      <div class="big3">
+        <div class="stmt pp" data-s="1">Nothing on the screen. Every version used exactly the same pictures.</div>
+        <div class="stmt pp" data-s="2">The <span class="hl">music</span> told you how to feel before anyone said a single word.</div>
+        <div class="pp" data-s="3"><div class="word"><b>mood</b><span>the feeling a video gives you. Filmmakers choose music, sound and pictures to set it.</span></div></div>
+      </div>
+      <div class="btns pp" data-s="4" style="margin-top:28px">
+        <a class="bt" href="https://www.youtube.com/watch?v=jHJI0y8TH3I" target="_blank" rel="noopener"><span data-ph="play"></span>Another one: Batman Returns, rescored</a>
+      </div>
+    </section>
+
+    <!-- 7 toolkit -->
+    <section class="part" data-name="Spot it">
+      <h2>Things to spot</h2>
+      <div class="kit">
+        <div class="kt pp" data-s="1"><div class="pic" data-shot="wide"></div><b>Wide shot</b></div>
+        <div class="kt pp" data-s="1"><div class="pic" data-shot="mid"></div><b>Mid shot</b></div>
+        <div class="kt pp" data-s="1"><div class="pic" data-shot="close"></div><b>Close-up</b></div>
+        <div class="kt pp" data-s="2"><div class="pic" data-ph="timer"></div><b>Slow motion</b></div>
+        <div class="kt pp" data-s="2"><div class="pic" data-ph="arrows-out-cardinal"></div><b>Camera moves with the action</b></div>
+        <div class="kt pp" data-s="2"><div class="pic" data-ph="video-camera"></div><b>Camera stays still</b></div>
+        <div class="kt pp" data-s="2"><div class="pic" data-ph="scissors"></div><b>Quick cuts</b></div>
+        <div class="kt pp" data-s="3"><div class="pic" data-ph="music-notes"></div><b>Music</b></div>
+        <div class="kt pp" data-s="3"><div class="pic" data-ph="speaker-high"></div><b>Sound effects</b></div>
+        <div class="kt pp" data-s="3"><div class="pic" data-ph="microphone"></div><b>A voice talking or singing</b></div>
+      </div>
+    </section>
+
+    <!-- 8 iguana -->
+    <section class="part igu" data-name="Iguana" data-yt="Rv9hn4IGofM">
+      <div class="h2s"><h2><span class="tag">Clip 1</span> Iguana vs Snakes</h2></div>
+      <div class="player"></div>
+      <div class="side">
+        <span class="meta">BBC EARTH &middot; PLANET EARTH II &middot; 2016</span>
+        <p>Watch it twice. The first time, just watch.</p>
+        <p>The second time, tick everything you spot in the <span style="color:var(--igu);font-weight:700">Iguana</span> column on <span class="hl">Sheet 2</span>.</p>
+        <div class="btns">
+          <a class="bt yel" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 2</a>
+          <a class="bt" href="https://www.youtube.com/watch?v=Rv9hn4IGofM" target="_blank" rel="noopener"><span data-ph="youtube-logo"></span>Open on YouTube</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 levitating -->
+    <section class="part dua" data-name="Levitating" data-yt="TUVcZfQe-Kw">
+      <div class="h2s"><h2><span class="tag">Clip 2</span> Levitating</h2></div>
+      <div class="player"></div>
+      <div class="side">
+        <span class="meta">DUA LIPA &middot; OFFICIAL MUSIC VIDEO &middot; 2020</span>
+        <p>Same again: watch, then watch for the camera.</p>
+        <p>This time you&rsquo;re filling in the <span style="color:var(--dua);font-weight:700">Levitating</span> column on <span class="hl">Sheet 2</span>.</p>
+        <div class="btns">
+          <a class="bt yel" href="video-l1-sheets.html#sheet2" target="_blank" rel="noopener"><span data-ph="printer"></span>Sheet 2</a>
+          <a class="bt" href="https://www.youtube.com/watch?v=TUVcZfQe-Kw" target="_blank" rel="noopener"><span data-ph="youtube-logo"></span>Open on YouTube</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 compare -->
+    <section class="part" data-name="Compare">
+      <h2>Same or different?</h2>
+      <div class="cmp">
+        <div class="side-h"><i style="background:var(--igu)"></i>Iguana vs Snakes</div>
+        <div class="side-h"><i style="background:var(--dua)"></i>Levitating</div>
+      </div>
+      <div class="cq pp" data-s="1"><span class="n">01</span>Look at Sheet 2. Which rows got a tick in both columns?</div>
+      <div class="cq pp" data-s="2"><span class="n">02</span>Which rows only got one tick? Why might that be?</div>
+      <div class="cq pp" data-s="3"><span class="n">03</span>Why would Planet Earth never film the iguana like a pop video?</div>
+      <div class="punch pp" data-s="4">The way a video is filmed depends on the job it has to do.</div>
+    </section>
+
+    <!-- 11 next -->
+    <section class="part" data-name="Next">
+      <h2>That&rsquo;s a wrap</h2>
+      <p class="lead">Words you used today:</p>
+      <div class="chips">
+        <span class="chip">video</span><span class="chip">mood</span><span class="chip">wide shot</span><span class="chip">mid shot</span><span class="chip">close-up</span><span class="chip">slow motion</span><span class="chip">cut</span>
+      </div>
+      <div class="banner"><span data-ph="video-camera"></span>Next lesson you pick up the camera and try these shots yourself.</div>
+    </section>
+  </div>
+
+  <div class="tl">
+    <div class="tl-head">
+      <button class="tbtn" id="back" type="button" aria-label="Back"><span data-ph="arrow-left"></span></button>
+      <button class="tbtn next" id="next" type="button"><span data-ph="play"></span><span id="nextlab">Next</span></button>
+      <span class="tl-name">TIMELINE &middot; <b id="pname"></b></span>
+      <div class="tl-steps" id="steps"></div>
+    </div>
+    <div class="ruler" id="ruler"></div>
+    <div class="track t-v"><div class="trk-lab">V1</div><div id="vclips"></div></div>
+    <div class="track t-a"><div class="trk-lab">A1</div><div id="aclips"></div></div>
+    <div class="head" id="head"></div>
+  </div>
+
+</div></div>
+
+<script>
+(function(){
+  var PH = {"archive":"<path d=\"M224,48H32A16,16,0,0,0,16,64V88a16,16,0,0,0,16,16v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V104a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM208,192H48V104H208ZM224,88H32V64H224V88ZM96,136a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,136Z\"/>","arrow-left":"<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>","arrows-out-cardinal":"<path d=\"M90.34,61.66a8,8,0,0,1,0-11.32l32-32a8,8,0,0,1,11.32,0l32,32a8,8,0,0,1-11.32,11.32L136,43.31V96a8,8,0,0,1-16,0V43.31L101.66,61.66A8,8,0,0,1,90.34,61.66Zm64,132.68L136,212.69V160a8,8,0,0,0-16,0v52.69l-18.34-18.35a8,8,0,0,0-11.32,11.32l32,32a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Zm83.32-72-32-32a8,8,0,0,0-11.32,11.32L212.69,120H160a8,8,0,0,0,0,16h52.69l-18.35,18.34a8,8,0,0,0,11.32,11.32l32-32A8,8,0,0,0,237.66,122.34ZM43.31,136H96a8,8,0,0,0,0-16H43.31l18.35-18.34A8,8,0,0,0,50.34,90.34l-32,32a8,8,0,0,0,0,11.32l32,32a8,8,0,0,0,11.32-11.32Z\"/>","device-mobile":"<path d=\"M176,16H80A24,24,0,0,0,56,40V216a24,24,0,0,0,24,24h96a24,24,0,0,0,24-24V40A24,24,0,0,0,176,16ZM72,64H184V192H72Zm8-32h96a8,8,0,0,1,8,8v8H72V40A8,8,0,0,1,80,32Zm96,192H80a8,8,0,0,1-8-8v-8H184v8A8,8,0,0,1,176,224Z\"/>","film-slate":"<path d=\"M216,104H102.09L210,75.51a8,8,0,0,0,5.68-9.84l-8.16-30a15.93,15.93,0,0,0-19.42-11.13L35.81,64.74a15.75,15.75,0,0,0-9.7,7.4,15.51,15.51,0,0,0-1.55,12L32,111.56c0,.14,0,.29,0,.44v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V112A8,8,0,0,0,216,104ZM192.16,40l6,22.07-22.62,6L147.42,51.83Zm-66.69,17.6,28.12,16.24-36.94,9.75L88.53,67.37Zm-79.4,44.62-6-22.08,26.5-7L94.69,89.4ZM208,200H48V120H208v80Z\"/>","info":"<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z\"/>","lightning":"<path d=\"M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z\"/>","magnifying-glass":"<path d=\"M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z\"/>","megaphone":"<path d=\"M248,120a48.05,48.05,0,0,0-48-48H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48.07,48.07,0,0,0,248,120ZM48,199.93V40h0c42.81,35.91,86.63,45,104,47.24v65.48C134.65,155,90.84,164.07,48,199.93Zm131,8,0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z\"/>","microphone":"<path d=\"M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z\"/>","music-notes":"<path d=\"M212.92,17.69a8,8,0,0,0-6.86-1.45l-128,32A8,8,0,0,0,72,56V166.08A36,36,0,1,0,88,196V110.25l112-28v51.83A36,36,0,1,0,216,164V24A8,8,0,0,0,212.92,17.69ZM52,216a20,20,0,1,1,20-20A20,20,0,0,1,52,216ZM88,93.75V62.25l112-28v31.5ZM180,184a20,20,0,1,1,20-20A20,20,0,0,1,180,184Z\"/>","play":"<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>","popcorn":"<path d=\"M229.52,74.21a8,8,0,0,0-7.13-2A44,44,0,0,0,168,41.67a44,44,0,0,0-80,0,44,44,0,0,0-54.4,30.51,8,8,0,0,0-9.4,9.65L54.76,211.67A16,16,0,0,0,70.34,224H185.66a16,16,0,0,0,15.58-12.33L231.79,81.83A8,8,0,0,0,229.52,74.21ZM76,56a27.68,27.68,0,0,1,13.11,3.26,8,8,0,0,0,11.56-5.34,28,28,0,0,1,54.66,0,8,8,0,0,0,11.56,5.34A28,28,0,0,1,207,76.54l-38.56,11-34.49-13.8a16,16,0,0,0-11.88,0L87.57,87.56,49,76.54A28,28,0,0,1,76,56ZM70.34,208,42.91,91.44l37.85,10.81L94.86,208ZM145,208H111L96.75,101.12,128,88.62l31.25,12.5Zm40.66,0H161.14l14.1-105.75,37.85-10.81Z\"/>","printer":"<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>","scissors":"<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>","speaker-high":"<path d=\"M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z\"/>","television":"<path d=\"M216,64H147.31l34.35-34.34a8,8,0,1,0-11.32-11.32L128,60.69,85.66,18.34A8,8,0,0,0,74.34,29.66L108.69,64H40A16,16,0,0,0,24,80V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64ZM40,80H144V200H40ZM216,200H160V80h56V200Zm-16-84a12,12,0,1,1-12-12A12,12,0,0,1,200,116Zm0,48a12,12,0,1,1-12-12A12,12,0,0,1,200,164Z\"/>","timer":"<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>","video-camera":"<path d=\"M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z\"/>","youtube-logo":"<path d=\"M164.44,121.34l-48-32A8,8,0,0,0,104,96v64a8,8,0,0,0,12.44,6.66l48-32a8,8,0,0,0,0-13.32ZM120,145.05V111l25.58,17ZM234.33,69.52a24,24,0,0,0-14.49-16.4C185.56,39.88,131,40,128,40s-57.56-.12-91.84,13.12a24,24,0,0,0-14.49,16.4C19.08,79.5,16,97.74,16,128s3.08,48.5,5.67,58.48a24,24,0,0,0,14.49,16.41C69,215.56,120.4,216,127.34,216h1.32c6.94,0,58.37-.44,91.18-13.11a24,24,0,0,0,14.49-16.41c2.59-10,5.67-28.22,5.67-58.48S236.92,79.5,234.33,69.52Zm-15.49,113a8,8,0,0,1-4.77,5.49c-31.65,12.22-85.48,12-86,12H128c-.54,0-54.33.2-86-12a8,8,0,0,1-4.77-5.49C34.8,173.39,32,156.57,32,128s2.8-45.39,5.16-54.47A8,8,0,0,1,41.93,68c30.52-11.79,81.66-12,85.85-12h.27c.54,0,54.38-.18,86,12a8,8,0,0,1,4.77,5.49C221.2,82.61,224,99.43,224,128S221.2,173.39,218.84,182.47Z\"/>"};
+  function ph(n, cls){ return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+
+  // shot-size frames: the same three drawings as Sheet 2
+  var SHOTS = {
+    wide:'<path d="M0 104 Q60 92 120 100 T240 98 V146 H0Z" fill="#2a3a2c"/><circle cx="196" cy="34" r="14" fill="#ffd23f"/>' + person(120, 98, .28),
+    mid:person(120, 212, 1.02),
+    close:'<circle cx="120" cy="74" r="56" fill="none" stroke="#ffd23f" stroke-width="7"/><circle cx="100" cy="64" r="7" fill="#ffd23f"/><circle cx="140" cy="64" r="7" fill="#ffd23f"/><path d="M98 92 Q120 108 142 92" fill="none" stroke="#ffd23f" stroke-width="7" stroke-linecap="round"/>'
+  };
+  function person(x, feet, s){
+    return '<g transform="translate(' + x + ' ' + feet + ') scale(' + s + ')" fill="none" stroke="#ffd23f" stroke-width="' + (7 / s) + '" stroke-linecap="round">' +
+      '<circle cx="0" cy="-150" r="22"/><path d="M0 -128 V-60 M0 -112 L-34 -78 M0 -112 L34 -78 M0 -60 L-26 0 M0 -60 L26 0"/></g>';
+  }
+  [].forEach.call(document.querySelectorAll('[data-shot]'), function(e){
+    var k = e.getAttribute('data-shot');
+    e.innerHTML = '<svg class="fr" viewBox="0 0 240 146" preserveAspectRatio="xMidYMid ' + (k === 'wide' ? 'slice' : 'meet') + '">' + SHOTS[k] + '</svg>';
+  });
+
+  var stage = document.getElementById('stage');
+  function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', fit); fit();
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(RM) stage.classList.add('rm');
+
+  var PARTS = [].slice.call(document.querySelectorAll('.part'));
+  // planned minutes per part, and what kind of clip it is on the timeline
+  var PLAN = [[1,'title'],[4,'talk'],[3,'talk'],[5,'talk'],[5,'talk'],[8,'video'],[3,'talk'],[3,'talk'],[8,'video'],[7,'video'],[8,'task'],[2,'talk']];
+  var AUDIO = [5, 8, 9];
+  PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp'), function(e){ return +e.getAttribute('data-s'); }))); });
+
+  // lay out the timeline: width per part is a floor plus its planned minutes
+  var W = 1484, total = 0, starts = [];
+  PLAN.forEach(function(p){ total += 54 + p[0] * 14; });
+  var scale = W / total, x = 0;
+  var vclips = document.getElementById('vclips'), aclips = document.getElementById('aclips'), mins = 0;
+  PLAN.forEach(function(p, i){
+    var w = (54 + p[0] * 14) * scale;
+    starts.push({ x:x, w:w, min:mins });
+    var c = document.createElement('button');
+    c.type = 'button'; c.className = 'clip k-' + p[1];
+    c.style.left = (x + 1) + 'px'; c.style.width = (w - 2) + 'px';
+    c.innerHTML = PARTS[i].getAttribute('data-name') + '<small>' + p[0] + ' min</small>';
+    c.addEventListener('click', function(){ go(i, 0); });
+    vclips.appendChild(c);
+    if(AUDIO.indexOf(i) > -1){
+      var a = document.createElement('div'); a.className = 'aclip';
+      a.style.left = (x + 1) + 'px'; a.style.width = (w - 2) + 'px';
+      var bars = '', n = Math.floor(w / 5);
+      for(var b = 0; b < n; b++){ var h = 6 + Math.abs(Math.sin(b * 1.7 + i) * Math.cos(b * .37)) * 30; bars += '<rect x="' + (b * 5 + 1) + '" y="' + (22 - h / 2) + '" width="3" height="' + h + '" fill="#58e09a"/>'; }
+      a.innerHTML = '<svg viewBox="0 0 ' + w + ' 44" preserveAspectRatio="none">' + bars + '</svg>';
+      aclips.appendChild(a);
+    }
+    x += w; mins += p[0];
+  });
+  var ruler = document.getElementById('ruler'), rh = '';
+  for(var m = 0; m <= mins; m += 5){
+    var pos = 0, acc = 0;
+    for(var k = 0; k < PLAN.length; k++){ if(acc + PLAN[k][0] >= m){ pos = starts[k].x + starts[k].w * ((m - acc) / PLAN[k][0]); break; } acc += PLAN[k][0]; }
+    rh += '<i style="left:' + pos + 'px"></i>' + (m % 10 === 0 ? '<span style="left:' + pos + 'px">' + pad(m) + ':00</span>' : '');
+  }
+  ruler.innerHTML = rh;
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  var cur = 0, step = 0;
+  var head = document.getElementById('head'), clips = vclips.children;
+  function render(){
+    PARTS.forEach(function(p, i){
+      var on = i === cur;
+      p.classList.toggle('on', on);
+      var pl = p.querySelector('.player');
+      if(pl){
+        var want = on ? p.getAttribute('data-yt') : null;
+        if(want && !pl.firstChild){
+          pl.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + want + '?rel=0&modestbranding=1" title="' + p.getAttribute('data-name') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+        } else if(!want && pl.firstChild){ pl.innerHTML = ''; }   // leaving the part stops the sound
+      }
+    });
+    [].forEach.call(PARTS[cur].querySelectorAll('.pp'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
+    [].forEach.call(clips, function(c, i){ c.classList.toggle('cur', i === cur); });
+    var s = starts[cur], frac = PARTS[cur].steps ? step / (PARTS[cur].steps + 1) : 0;
+    head.style.left = (96 + s.x + s.w * frac) + 'px';
+    var mm = s.min + PLAN[cur][0] * frac;
+    document.getElementById('tc').textContent = '00:' + pad(Math.floor(mm)) + ':' + pad(Math.round((mm % 1) * 60) % 60);
+    document.getElementById('pname').textContent = (cur + 1) + '/' + PARTS.length + '  ' + PARTS[cur].getAttribute('data-name');
+    var st = ''; for(var i = 1; i <= PARTS[cur].steps; i++) st += '<i class="' + (i <= step ? 'on' : '') + '"></i>';
+    document.getElementById('steps').innerHTML = st;
+    document.getElementById('back').disabled = cur === 0 && step === 0;
+    var last = cur === PARTS.length - 1 && step >= PARTS[cur].steps;
+    document.getElementById('next').disabled = last;
+    document.getElementById('nextlab').textContent = step < PARTS[cur].steps ? 'Reveal' : 'Next';
+    try{ history.replaceState(null, '', '#part' + cur); }catch(e){}
+  }
+  function go(p, s){ cur = Math.max(0, Math.min(PARTS.length - 1, p)); step = s === 'end' ? PARTS[cur].steps : (s || 0); render(); }
+  function next(){ if(step < PARTS[cur].steps){ step++; render(); } else if(cur < PARTS.length - 1) go(cur + 1, 0); }
+  function back(){ if(step > 0){ step--; render(); } else if(cur > 0) go(cur - 1, 'end'); }
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('back').addEventListener('click', back);
+  addEventListener('keydown', function(e){
+    if(e.target.closest && e.target.closest('iframe')) return;
+    if(['ArrowRight','PageDown',' '].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+  });
+  var m0 = /^#part(\d+)$/.exec(location.hash);
+  go(m0 ? +m0[1] : 0, 0);
+})();
+</script>
+</body>
+</html>
