@@ -48,7 +48,10 @@ body{font-family:var(--sans);color:var(--ink);background:#eef2f5;-webkit-text-si
 @media (max-width:1000px){
   .layout{grid-template-columns:1fr;}
   .layout .stage{order:-1;position:sticky;top:0;z-index:5;padding:12px;}
-  .layout .stage canvas{max-height:34vh;}
+  .layout .stage canvas{max-height:30vh;}
+  .frames{max-height:none !important;overflow:visible !important;grid-template-columns:repeat(3,1fr) !important;}
+  #download{position:static;}
+  .dl2{display:block !important;margin-top:10px;}
   .layout .stage .cap{margin-top:6px;}
 }
 
@@ -88,6 +91,8 @@ input[type=range]{width:100%;}
 
 .btn{width:100%;background:var(--navy);color:#fff;border:0;border-radius:8px;font-family:var(--sans);font-size:16px;font-weight:700;padding:15px;cursor:pointer;min-height:50px;position:sticky;bottom:10px;}
 .btn:hover{background:#01648f;}
+.dl2{display:none;}
+.topbar .back{display:inline-block;padding:13px 10px;margin:-13px 0;}
 .btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy);position:static;}
 
 .stage{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;text-align:center;}
@@ -169,7 +174,7 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
 <div class="topbar">
   <h1>Hartburn Studio</h1>
   <span class="note">Nothing you add here leaves this device.</span>
-  <a href="../" style="color:#fff;font-size:13px;">Back</a>
+  <a class="back" href="../" style="color:#fff;font-size:13px;">Back</a>
   <div class="tabs" role="tablist">
     <button class="tab" id="tabPosts" role="tab" aria-selected="true">Posts</button>
     <button class="tab" id="tabDocs" role="tab" aria-selected="false">Letters &amp; policies</button>
@@ -247,6 +252,7 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
   <div class="stage">
     <canvas id="canvas" width="1080" height="1080"></canvas>
     <div class="cap" id="sizeCap">1080 × 1080</div>
+    <button class="btn dl2" id="download2">Download image</button>
   </div>
 </section>
 
@@ -1386,7 +1392,7 @@ function drawShots(){
 }
 $("focal").oninput=e=>{ state.focal=+e.target.value; render(); };
 
-$("download").onclick=()=>{
+const doDownload=()=>{
   const safe=(state.title||"hartburn-post").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40);
   canvas.toBlob(blob=>{
     const url=URL.createObjectURL(blob);
@@ -1396,6 +1402,7 @@ $("download").onclick=()=>{
     setTimeout(()=>URL.revokeObjectURL(url),1500);
   },"image/png");
 };
+$("download").onclick=doDownload; $("download2").onclick=doDownload;
 
 function showTab(which){
   const posts=which==="posts";
