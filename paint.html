@@ -345,9 +345,44 @@
       speechSynthesis.speak(u);
     }catch(e){}
   }
-  function say(t){ lastSaid = t; tourText.textContent = t; speak(t); }
-  $('tourVoice').addEventListener('click', function(){ voiceOn = !voiceOn; store(TOUR_VOICE, voiceOn ? 'on' : 'off'); voiceIcon(); if(voiceOn) speak(lastSaid); else if(window.speechSynthesis) speechSynthesis.cancel(); });
-  $('tourAgain').addEventListener('click', function(){ speak(lastSaid); });
+  /* recorded voice: audio/tour-NN.mp3, one clip per line. Each line waits for the one before it
+     to finish, so nothing gets cut off. If a clip can't play, the board's own voice reads it instead. */
+  var clips = {}, current = null, lastN = 0, speechDone = Promise.resolve(), finishSpeech = function(){};
+  function clip(n){
+    if(!clips[n]){ var a = new Audio('audio/tour-' + ('0' + n).slice(-2) + '.mp3'); a.preload = 'auto'; clips[n] = a; }
+    return clips[n];
+  }
+  function preloadClips(){ for(var n = 1; n <= 19; n++) clip(n); }
+  function stopSpeech(){
+    if(current){ current.pause(); current.onended = current.onerror = null; }
+    if(window.speechSynthesis) speechSynthesis.cancel();
+    finishSpeech();
+  }
+  function playLine(n, t){
+    return new Promise(function(done){
+      var finished = false;
+      function end(){ if(finished) return; finished = true; done(); }
+      finishSpeech = end;
+      if(!voiceOn){ end(); return; }
+      var a = clip(n); current = a;
+      function fallback(){ speak(t); setTimeout(end, Math.max(900, t.replace(/[^A-Za-z]/g, '').length * 85)); }
+      a.onended = end;
+      a.onerror = function(){ a.onerror = null; fallback(); };
+      try{ a.currentTime = 0; }catch(e){}
+      var pr = a.play();
+      // the browser blocks sound until someone has tapped the page: show the words and move on
+      if(pr && pr.catch) pr.catch(function(err){ if(err && err.name === 'NotAllowedError') end(); else fallback(); });
+    });
+  }
+  async function say(n, t, id){
+    await speechDone;
+    if(id !== undefined) alive(id);
+    lastSaid = t; lastN = n; tourText.textContent = t;
+    speechDone = playLine(n, t);
+  }
+  function sayAgain(){ if(!lastN) return; stopSpeech(); speechDone = playLine(lastN, lastSaid); }
+  $('tourVoice').addEventListener('click', function(){ voiceOn = !voiceOn; store(TOUR_VOICE, voiceOn ? 'on' : 'off'); voiceIcon(); if(voiceOn) sayAgain(); else stopSpeech(); });
+  $('tourAgain').addEventListener('click', sayAgain);
   voiceIcon();
 
   var tourRun = 0;                       // bumps when the tour is stopped, so a running step gives up
@@ -477,53 +512,53 @@
   async function tour(){
     var id = ++tourRun;
     touring = true; document.body.classList.add('touring'); tourEl.hidden = false; fit(); await frame(); fit();
-    fresh(); setTool('pencil'); setColour('black');
+    fresh(); setTool('pencil'); setColour('black'); preloadClips(); speechDone = Promise.resolve();
     try{
-      say('Let’s meet the paint tools. When a button glows, come and tap it.');
+      await say(1, 'Let’s meet the paint tools. When a button glows, come and tap it.', id);
       await buttons(['Let’s go']); alive(id);
 
-      say('Tap the pencil.'); await tapOn(btn('pencil'), id);
-      say('The pencil draws thin lines. I’ll draw a house.');
+      await say(2, 'Tap the pencil.', id); await tapOn(btn('pencil'), id);
+      await say(3, 'The pencil draws thin lines. I’ll draw a house.', id);
       await wait(600); await paintPoly(HOUSE, 3200, id); await paintPoly(DOOR, 1200, id);
 
-      say('Tap the brush.'); await tapOn(btn('brush'), id);
-      say('The brush paints thick lines. Here’s some grass.');
+      await say(4, 'Tap the brush.', id); await tapOn(btn('brush'), id);
+      await say(5, 'The brush paints thick lines. Here’s some grass.', id);
       await handTap(sw('green'), id);
       await paintPath(grassRow(650, 0), 1500, id); await paintPath(grassRow(700, 1.5).reverse(), 1500, id); await paintPath(grassRow(750, 3), 1500, id);
 
-      say('Tap the spray.'); await tapOn(btn('spray'), id);
-      say('The spray makes lots of dots. If I hold still, I get more.');
+      await say(6, 'Tap the spray.', id); await tapOn(btn('spray'), id);
+      await say(7, 'The spray makes lots of dots. If I hold still, I get more.', id);
       await handTap(sw('yellow'), id);
       await sprayHold([980, 150], 2600, id);
 
-      say('Tap the fill.'); await tapOn(btn('fill'), id);
+      await say(8, 'Tap the fill.', id); await tapOn(btn('fill'), id);
       await handTap(sw('red'), id);
-      say('Fill colours a whole space in one tap. But look: my house has a gap in the roof. What will happen if I fill it?');
+      await say(9, 'Fill colours a whole space in one tap. But look: my house has a gap in the roof. What will happen if I fill it?', id);
       await buttons(['Only the house goes red', 'Red all over the page']); alive(id);
       await pour([430, 470], id);
-      say('Oh no. The paint leaked out through the gap. Tap undo to take it back.');
+      await say(10, 'Oh no. The paint leaked out through the gap. Tap undo to take it back.', id);
       await tapOn(undoBtn, id);
-      say('Undo took it back. I’ll close the gap with the pencil.');
+      await say(11, 'Undo took it back. I’ll close the gap with the pencil.', id);
       await handTap(btn('pencil'), id); await handTap(sw('black'), id);
       await paintPoly(GAP, 900, id);
-      say('Now tap the fill again.'); await tapOn(btn('fill'), id);
+      await say(12, 'Now tap the fill again.', id); await tapOn(btn('fill'), id);
       await handTap(sw('red'), id);
       await pour([430, 470], id);
-      say('No gap, no leak. Just the house.');
+      await say(13, 'No gap, no leak. Just the house.', id);
       await wait(1800);
 
-      say('Tap the rubber.'); await tapOn(btn('rubber'), id);
-      say('The rubber paints white. Watch the grass.');
+      await say(14, 'Tap the rubber.', id); await tapOn(btn('rubber'), id);
+      await say(15, 'The rubber paints white. Watch the grass.', id);
       await paintPath(PATH, 1800, id);
-      say('It made a white path. The rubber didn’t take the green away. It painted white on top.');
+      await say(16, 'It made a white path. The rubber didn’t take the green away. It painted white on top.', id);
       await wait(2200);
 
-      say('Tap undo.'); await tapOn(undoBtn, id);
-      say('The path has gone. Undo takes back the last thing you did, one step at a time.');
+      await say(17, 'Tap undo.', id); await tapOn(undoBtn, id);
+      await say(18, 'The path has gone. Undo takes back the last thing you did, one step at a time.', id);
       hand.classList.remove('on');
       await buttons(['Finish']); alive(id);
 
-      say('Now it’s your turn. Use every tool to paint a garden.');
+      await say(19, 'Now it’s your turn. Use every tool to paint a garden.', id);
       await buttons(['Start painting']);
     }catch(e){ if(e !== 'stopped') throw e; }
     endTour(id);
@@ -533,7 +568,7 @@
     tourRun++; touring = false;
     document.body.classList.remove('touring'); tourEl.hidden = true; hand.classList.remove('on'); requestAnimationFrame(fit);
     [].forEach.call(document.querySelectorAll('.glow'), function(e){ if(e.__stop) e.__stop(); });
-    if(window.speechSynthesis) speechSynthesis.cancel();
+    stopSpeech(); speechDone = Promise.resolve();
   }
   $('tourStop').addEventListener('click', function(){ endTour(); });
   $('showMe').addEventListener('click', function(){ tour(); });
