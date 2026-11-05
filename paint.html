@@ -271,11 +271,26 @@
   cv.addEventListener('pointercancel', end);
   cv.addEventListener('lostpointercapture', end);
 
-  // stop Safari zooming or scrolling the page
-  ['gesturestart','gesturechange','gestureend'].forEach(function(n){ document.addEventListener(n, function(e){ e.preventDefault(); }); });
-  document.addEventListener('touchmove', function(e){ if(!e.target.closest('textarea,.panel')) e.preventDefault(); }, { passive:false });
+  // stop Safari zooming the page, and if it zooms anyway, put it back.
+  // The block only works while the page is at normal size: once zoomed, pinching is allowed again so it can always be undone.
+  var vv = window.visualViewport;
+  function zoomed(){ return !!vv && vv.scale > 1.02; }
+  ['gesturestart','gesturechange','gestureend'].forEach(function(n){ document.addEventListener(n, function(e){ if(!zoomed()) e.preventDefault(); }, { passive:false }); });
+  document.addEventListener('touchstart', function(e){ if(e.touches.length > 1 && !zoomed()) e.preventDefault(); }, { passive:false });
+  document.addEventListener('touchmove', function(e){ if(zoomed() || e.target.closest('textarea,.panel')) return; e.preventDefault(); }, { passive:false });
   var lastTouch = 0;
-  document.addEventListener('touchend', function(e){ var n = Date.now(); if(n - lastTouch < 350 && !e.target.closest('textarea')) e.preventDefault(); lastTouch = n; }, { passive:false });
+  document.addEventListener('touchend', function(e){ var n = Date.now(); if(n - lastTouch < 350 && !zoomed() && !e.target.closest('textarea')) e.preventDefault(); lastTouch = n; }, { passive:false });
+  document.addEventListener('dblclick', function(e){ e.preventDefault(); }, { passive:false });
+  // Safari resets the zoom when the viewport tag changes, so nudge it whenever the page ends up zoomed
+  var vpMeta = document.querySelector('meta[name=viewport]'), vpBase = vpMeta.getAttribute('content'), vpFlip = false, unzoomTimer = null;
+  function unzoom(){
+    if(!zoomed()) return;
+    vpFlip = !vpFlip;
+    vpMeta.setAttribute('content', vpBase.replace('initial-scale=1', vpFlip ? 'initial-scale=1.0' : 'initial-scale=1'));
+    setTimeout(fit, 120);
+  }
+  if(vv) vv.addEventListener('resize', function(){ clearTimeout(unzoomTimer); unzoomTimer = setTimeout(unzoom, 350); fit(); });
+  addEventListener('orientationchange', function(){ setTimeout(function(){ unzoom(); fit(); }, 400); });
 
   /* ---------- sheets ---------- */
   function $(id){ return document.getElementById(id); }
