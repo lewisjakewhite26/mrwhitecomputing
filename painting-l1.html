@@ -533,6 +533,8 @@
     try{ localStorage.removeItem('pl1_live'); }catch(e){}
     var task = TASKS[0], timer = null, shown = {}, curRound = 0, lastTs = 0, lite = true, busy = false;
     function msg(t){ $('lvMsg').textContent = t || ''; }
+    // a short reason, so a problem with the database can be told apart from the Wi-Fi
+    function why(err){ var m = String(err && (err.name === 'AbortError' ? 'no reply' : err.message) || 'error'); return /^\d+$/.test(m) ? 'error ' + m : (m === 'Failed to fetch' || m === 'Load failed' ? 'blocked or offline' : m); }
     function chips(){
       $('lvChips').innerHTML = TASKS.map(function(t){ return '<button class="chip' + (t === task ? ' on' : '') + '" type="button">' + t + '</button>'; }).join('') +
         '<span class="chip"><input id="lvOwn" placeholder="Type your own task" maxlength="60"></span>';
@@ -546,7 +548,7 @@
       rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:t }).then(function(ok){
         if(!ok){ msg('Another board owns this code.'); return; }
         resetGrid(); poll();
-      }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
+      }).catch(function(err){ msg('Can’t change the task (' + why(err) + ').'); });
     }
     function showRoom(){ qr($('lvQr'), BASE + 'paint.html?mode=l1&room=' + CODE, 242); $('lvCode').textContent = CODE; }
     function addPics(rows){
@@ -577,7 +579,7 @@
         return rpc('live_get_room?select=id,kind,content,ts&id=not.is.null&ts=gte.' + lastTs + '&order=ts.asc', { p_code:CODE }).then(addPics);
       }).then(function(){ msg(''); }).catch(function(err){
         if(lite && /^4/.test(err && err.message)){ lite = false; return; }
-        msg('Can’t reach the live board. Check the internet.');
+        msg('Can’t reach the live board (' + why(err) + ').');
       }).then(function(){ busy = false; });
     }
     $('lvClear').addEventListener('click', function(){
