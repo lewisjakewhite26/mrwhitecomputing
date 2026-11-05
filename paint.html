@@ -311,9 +311,11 @@
   store('room', null);                      // forget the old random codes
   if(ROOM){
     var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
+    // every request gives up after 5 seconds, so one stuck request on the school Wi-Fi can't freeze the checks
     function rpc(name, args){
-      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
-        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+      var ctl = window.AbortController ? new AbortController() : null, t = ctl ? setTimeout(function(){ ctl.abort(); }, 5000) : 0;
+      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', cache:'no-store', signal:ctl ? ctl.signal : undefined, headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
+        .then(function(r){ clearTimeout(t); if(!r.ok) throw new Error(r.status); return r.json(); }, function(e){ clearTimeout(t); throw e; });
     }
     document.querySelector('.app').classList.add('room');
     $('task').hidden = false; $('send').hidden = false;

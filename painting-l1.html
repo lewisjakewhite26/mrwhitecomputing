@@ -524,9 +524,11 @@
     var CODE = 'H276J', TOKEN = 'hb-y12-paint-board-7c41e9b2', ENDED = '__ended__';
     var room = { code:CODE, token:TOKEN };
     var TASKS = ['Draw a circle', 'Draw a house', 'Draw a sun', 'Draw a tree', 'Paint a garden'];
+    // every request gives up after 5 seconds, so one stuck request on the school Wi-Fi can't freeze the checks
     function rpc(name, args){
-      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
-        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+      var ctl = window.AbortController ? new AbortController() : null, t = ctl ? setTimeout(function(){ ctl.abort(); }, 5000) : 0;
+      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', cache:'no-store', signal:ctl ? ctl.signal : undefined, headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
+        .then(function(r){ clearTimeout(t); if(!r.ok) throw new Error(r.status); return r.json(); }, function(e){ clearTimeout(t); throw e; });
     }
     try{ localStorage.removeItem('pl1_live'); }catch(e){}
     var task = TASKS[0], timer = null, shown = {}, curRound = 0, lastTs = 0, lite = true, busy = false;
