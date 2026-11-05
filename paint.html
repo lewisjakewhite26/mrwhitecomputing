@@ -304,12 +304,11 @@
 
   [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
   requestAnimationFrame(function(){ fit(); });
-  /* ---------- live task: paint.html?mode=l1&room=CODE sends pictures to the board, with no names ---------- */
-  // the code from the QR is remembered on this iPad, so reopening the app reconnects it to the board,
-  // until the teacher presses New code
-  var ENDED = '__ended__';
-  var ROOM = (q.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if(ROOM) store('room', ROOM); else if(!q.has('board')) ROOM = store('room') || '';
+  /* ---------- live task: every iPad joins the class board on code H276J, with no names ----------
+     A QR with ?room=CODE can still point it somewhere else. The board's own view (?board) never joins. */
+  var CODE = 'H276J', ENDED = '__ended__';
+  var ROOM = (q.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || (q.has('board') ? '' : CODE);
+  store('room', null);                      // forget the old random codes
   if(ROOM){
     var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
     function rpc(name, args){
@@ -318,33 +317,47 @@
     }
     document.querySelector('.app').classList.add('room');
     $('task').hidden = false; $('send').hidden = false;
+    var sendBtn = $('send'), sendLabel = sendBtn.lastChild;
     var pid; try{ pid = sessionStorage.getItem('hbpaint:pid'); if(!pid){ pid = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('hbpaint:pid', pid); } }catch(e){ pid = 'p' + Math.random(); }
-    var round = 0, active = false, sentRound = 0;
+    var round = 0, active = false, busy = false;
+    // one picture per task: remembered on the iPad, so reloading doesn't allow a second go
+    function sentKey(){ return 'sent:' + ROOM + ':' + round; }
+    function showSend(){
+      var done = !!(round && store(sentKey()));
+      sendBtn.disabled = done; sendLabel.textContent = done ? 'Sent' : 'Send to the board';
+    }
+    // ask only for the task and its number, never the pictures: that keeps each check tiny
+    var lite = true;
     function poll(){
-      rpc('live_get_room', { p_code:ROOM }).then(function(rows){
-        if(!rows || !rows.length){ active = false; $('taskText').textContent = 'Waiting for your teacher'; return; }
+      if(busy || document.hidden) return; busy = true;
+      rpc(lite ? 'live_get_room?select=question,round&limit=1' : 'live_get_room', { p_code:ROOM }).then(function(rows){
+        var r = rows && rows[0];
+        if(!r || r.question === ENDED){ active = false; $('taskText').textContent = 'Waiting for your teacher'; return; }
         if(!active){ active = true; rpc('live_mark_joined', { p_code:ROOM, p_pupil_id:pid }).catch(function(){}); }
-        var r = rows[0];
-        if(r.question === ENDED){
-          clearInterval(pollTimer); active = false; store('room', null); ROOM = '';
-          $('send').hidden = true; $('taskText').textContent = 'Your teacher has a new code. Scan it to join again.';
-          return;
-        }
         $('taskText').textContent = r.question || 'Paint anything you like';
         if(round && r.round !== round){ toast('New task: ' + (r.question || 'paint anything')); open('newSheet'); }
-        round = r.round;
-      }).catch(function(){ $('taskText').textContent = 'Can\u2019t reach the board. Keep painting.'; });
+        round = r.round; showSend();
+      }).catch(function(err){
+        if(lite && /^4/.test(err && err.message)){ lite = false; return; }   // older database: fall back to the full check
+        $('taskText').textContent = 'Can’t reach the board. Keep painting.';
+      }).then(function(){ busy = false; });
     }
-    var pollTimer = setInterval(poll, 2500); poll();
-    $('send').addEventListener('click', function(){
-      if(!active || !ROOM){ toast('The board isn\u2019t ready yet'); return; }
-      var small = document.createElement('canvas'); small.width = 480; small.height = 320;
-      small.getContext('2d').drawImage(cv, 0, 0, 480, 320);
-      var b = this; b.disabled = true;
-      rpc('live_submit_answer', { p_code:ROOM, p_kind:'drawing', p_content:small.toDataURL('image/jpeg', .7) })
-        .then(function(id){ toast(id ? (sentRound === round ? 'Sent again' : 'Sent to the board') : 'That task has finished'); sentRound = round; })
-        .catch(function(){ toast('Didn\u2019t send. Try again.'); })
-        .then(function(){ setTimeout(function(){ b.disabled = false; }, 1500); });
+    setInterval(poll, 3000); poll();
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) poll(); });
+    sendBtn.addEventListener('click', function(){
+      if(!active || !round){ toast('The board isn’t ready yet'); return; }
+      if(store(sentKey())){ showSend(); toast('You’ve sent this one'); return; }
+      var small = document.createElement('canvas'); small.width = 360; small.height = 240;
+      var sx = small.getContext('2d'); sx.fillStyle = '#fff'; sx.fillRect(0, 0, 360, 240); sx.drawImage(cv, 0, 0, 360, 240);
+      var forRound = round;
+      sendBtn.disabled = true; sendLabel.textContent = 'Sending';
+      rpc('live_submit_answer', { p_code:ROOM, p_kind:'drawing', p_content:small.toDataURL('image/jpeg', .72) })
+        .then(function(id){
+          if(id){ store('sent:' + ROOM + ':' + forRound, '1'); toast('Sent to the board'); }
+          else toast('That task has finished');
+        })
+        .catch(function(){ toast('Didn’t send. Try again.'); })
+        .then(showSend);
     });
   }
   var toastTimer;

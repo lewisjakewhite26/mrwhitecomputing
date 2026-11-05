@@ -277,14 +277,13 @@
     <section class="part live" data-name="Quick tasks" id="p-live">
       <div class="lv">
         <div class="lv-side">
-          <div class="lv-qr off" id="lvQr">Press Start and a code appears here</div>
+          <div class="lv-qr" id="lvQr"></div>
           <span class="lv-codelab">Code</span>
           <span class="lv-code" id="lvCode">&middot; &middot; &middot;</span>
           <span class="lv-joined" id="lvJoined"></span>
-          <button class="bt go" type="button" id="lvStart"><span data-ph="play"></span>Start</button>
-          <button class="bt" type="button" id="lvClear" hidden>Clear pictures</button>
+          <button class="bt" type="button" id="lvClear">Clear pictures</button>
           <span class="lv-msg" id="lvMsg"></span>
-          <span class="lv-hint">Scan it on each iPad before the lesson. The code stays the same until you press New code.</span>
+          <span class="lv-hint">Scan it once on each iPad. The code never changes.</span>
         </div>
         <div class="lv-main">
           <div class="lv-task"><div><span class="lab">Your task</span><b id="lvTask">Draw a circle</b></div></div>
@@ -521,18 +520,16 @@
   /* ---------- live tasks: the same backend as the Year 5/6 live answer wall ---------- */
   (function(){
     var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
-    var CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', KEY = 'pl1_live';
+    // one fixed code for the class. The board's key is fixed too, so any board can run it
+    var CODE = 'H276J', TOKEN = 'hb-y12-paint-board-7c41e9b2', ENDED = '__ended__';
+    var room = { code:CODE, token:TOKEN };
     var TASKS = ['Draw a circle', 'Draw a house', 'Draw a sun', 'Draw a tree', 'Paint a garden'];
     function rpc(name, args){
       return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
         .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
     }
-    var ENDED = '__ended__';
-    var room = null; try{ room = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
-    var task = TASKS[0], timer = null, shown = {};
-    function save(){ try{ localStorage.setItem(KEY, JSON.stringify(room)); }catch(e){} }
-    function code(){ var o = ''; for(var i = 0; i < 5; i++) o += CHARS.charAt(Math.floor(Math.random() * CHARS.length)); return o; }
-    function token(){ return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now(); }
+    try{ localStorage.removeItem('pl1_live'); }catch(e){}
+    var task = TASKS[0], timer = null, shown = {}, curRound = 0, lastTs = 0, lite = true, busy = false;
     function msg(t){ $('lvMsg').textContent = t || ''; }
     function chips(){
       $('lvChips').innerHTML = TASKS.map(function(t){ return '<button class="chip' + (t === task ? ' on' : '') + '" type="button">' + t + '</button>'; }).join('') +
@@ -540,57 +537,53 @@
       [].forEach.call($('lvChips').querySelectorAll('button.chip'), function(b){ b.addEventListener('click', function(){ setTask(b.textContent); }); });
       $('lvOwn').addEventListener('keydown', function(e){ if(e.key === 'Enter' && this.value.trim()){ setTask(this.value.trim()); } e.stopPropagation(); });
     }
+    function empty(){ if(!$('lvGrid').querySelector('.pic-s')) $('lvGrid').innerHTML = '<div class="lv-empty">Pictures appear here when children press Send to the board.</div>'; }
+    function resetGrid(){ shown = {}; lastTs = 0; $('lvGrid').innerHTML = ''; empty(); }
     function setTask(t){
       task = t; $('lvTask').textContent = t; chips();
-      if(room) rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:t }).then(function(ok){ if(!ok) msg('This room belongs to another board. Press Start again.'); else { shown = {}; $('lvGrid').innerHTML = ''; empty(); poll(); } }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
+      rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:t }).then(function(ok){
+        if(!ok){ msg('Another board owns this code.'); return; }
+        resetGrid(); poll();
+      }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
     }
-    function empty(){ if(!$('lvGrid').querySelector('.pic-s')) $('lvGrid').innerHTML = '<div class="lv-empty">Pictures appear here when children press Send to the board.</div>'; }
-    function showRoom(){
-      if(!room){ $('lvQr').className = 'lv-qr off'; $('lvQr').textContent = 'Press Start and a code appears here'; $('lvCode').innerHTML = '&middot; &middot; &middot;'; $('lvClear').hidden = true; $('lvStart').lastChild.textContent = 'Start'; return; }
-      $('lvQr').className = 'lv-qr'; qr($('lvQr'), BASE + 'paint.html?mode=l1&room=' + room.code, 242);
-      $('lvCode').textContent = room.code; $('lvClear').hidden = false; $('lvStart').lastChild.textContent = 'New code';
+    function showRoom(){ qr($('lvQr'), BASE + 'paint.html?mode=l1&room=' + CODE, 242); $('lvCode').textContent = CODE; }
+    function addPics(rows){
+      var g = $('lvGrid');
+      rows.filter(function(r){ return r.id && r.kind === 'drawing'; }).sort(function(a, b){ return a.ts - b.ts; }).forEach(function(r){
+        if(r.ts > lastTs) lastTs = r.ts;
+        if(shown[r.id]) return; shown[r.id] = 1;
+        var e = g.querySelector('.lv-empty'); if(e) e.remove();
+        var d = document.createElement('div'); d.className = 'pic-s';
+        d.innerHTML = '<img alt="" src="' + r.content + '"><button class="x" type="button" aria-label="Hide">' + ph('x') + '</button>';
+        d.addEventListener('click', function(){ $('big').innerHTML = '<img alt="" src="' + r.content + '">'; $('big').classList.add('on'); });
+        d.querySelector('.x').addEventListener('click', function(ev){ ev.stopPropagation(); d.remove(); empty(); rpc('live_hide_answer', { p_code:CODE, p_token:TOKEN, p_id:r.id }).catch(function(){}); });
+        g.insertBefore(d, g.firstChild);
+      });
     }
+    // each check asks for the task, then only the pictures that are new since the last check
     function poll(){
-      if(!room) return;
-      rpc('live_get_room', { p_code:room.code }).then(function(rows){
-        msg('');
-        if(!rows || !rows.length){ return; }
-        // this code was switched off by New code: go back to the Start button
-        if(rows[0].question === ENDED){ room = null; save(); shown = {}; $('lvGrid').innerHTML = ''; empty(); showRoom(); return; }
-        if(rows[0].question && rows[0].question !== task){ task = rows[0].question; $('lvTask').textContent = task; chips(); }
-        $('lvJoined').textContent = (rows[0].joined || 0) + ' iPads joined';
-        var g = $('lvGrid');
-        rows.filter(function(r){ return r.id && r.kind === 'drawing'; }).sort(function(a, b){ return a.ts - b.ts; }).forEach(function(r){
-          if(shown[r.id]) return; shown[r.id] = 1;
-          var e = g.querySelector('.lv-empty'); if(e) e.remove();
-          var d = document.createElement('div'); d.className = 'pic-s';
-          d.innerHTML = '<img alt="" src="' + r.content + '"><button class="x" type="button" aria-label="Hide">' + ph('x') + '</button>';
-          d.addEventListener('click', function(){ $('big').innerHTML = '<img alt="" src="' + r.content + '">'; $('big').classList.add('on'); });
-          d.querySelector('.x').addEventListener('click', function(ev){ ev.stopPropagation(); d.remove(); empty(); rpc('live_hide_answer', { p_code:room.code, p_token:room.token, p_id:r.id }).catch(function(){}); });
-          g.insertBefore(d, g.firstChild);
-        });
-      }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
+      if(busy) return; busy = true;
+      rpc(lite ? 'live_get_room?select=question,round,joined&limit=1' : 'live_get_room', { p_code:CODE }).then(function(rows){
+        var m = rows && rows[0];
+        if(!m || m.question === ENDED){                       // first time on this code: set it up
+          return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:task }).then(function(ok){ if(!ok) msg('Another board owns this code.'); });
+        }
+        if(m.round !== curRound){ curRound = m.round; resetGrid(); }
+        if(m.question && m.question !== task){ task = m.question; $('lvTask').textContent = task; chips(); }
+        $('lvJoined').textContent = (m.joined || 0) + ' iPads joined';
+        if(!lite){ addPics(rows); return; }
+        return rpc('live_get_room?select=id,kind,content,ts&id=not.is.null&ts=gte.' + lastTs + '&order=ts.asc', { p_code:CODE }).then(addPics);
+      }).then(function(){ msg(''); }).catch(function(err){
+        if(lite && /^4/.test(err && err.message)){ lite = false; return; }
+        msg('Can’t reach the live board. Check the internet.');
+      }).then(function(){ busy = false; });
     }
-    $('lvStart').addEventListener('click', function(){
-      var r = { code:code(), token:token() };
-      // the task to carry over, read now, before anything can change it
-      var keep = task && task !== ENDED ? task : TASKS[0];
-      // stop watching the old code straight away, then tell iPads still on it to let go
-      var oldRoom = room; room = null; save();
-      var old = oldRoom ? rpc('live_set_question', { p_code:oldRoom.code, p_token:oldRoom.token, p_question:ENDED }).catch(function(){}) : Promise.resolve();
-      old.then(function(){ return rpc('live_set_question', { p_code:r.code, p_token:r.token, p_question:keep }); }).then(function(ok){
-        if(!ok){ msg('Try again.'); showRoom(); return; }
-        task = keep; $('lvTask').textContent = task; chips();
-        room = r; save(); shown = {}; $('lvGrid').innerHTML = ''; empty(); showRoom(); poll();
-      }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
-    });
     $('lvClear').addEventListener('click', function(){
-      if(!room) return;
-      rpc('live_clear_all', { p_code:room.code, p_token:room.token }).then(function(){ shown = {}; $('lvGrid').innerHTML = ''; empty(); }).catch(function(){ msg('Can’t reach the live board.'); });
+      rpc('live_clear_all', { p_code:CODE, p_token:TOKEN }).then(resetGrid).catch(function(){ msg('Can’t reach the live board.'); });
     });
     $('big').addEventListener('click', function(){ this.classList.remove('on'); });
     chips(); showRoom();
-    window.PL1_LIVE = { garden:function(){ if(room && task !== 'Paint a garden') setTask('Paint a garden'); }, on:function(){ if(!timer){ poll(); timer = setInterval(poll, 1500); } }, off:function(){ clearInterval(timer); timer = null; } };
+    window.PL1_LIVE = { garden:function(){ if(room && task !== 'Paint a garden') setTask('Paint a garden'); }, on:function(){ if(!timer){ poll(); timer = setInterval(poll, 2000); } }, off:function(){ clearInterval(timer); timer = null; } };
   })();
 
   /* ---------- deck ---------- */
