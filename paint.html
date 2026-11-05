@@ -306,7 +306,7 @@
   requestAnimationFrame(function(){ fit(); });
   /* ---------- live task: every iPad joins the class board on code H276J, with no names ----------
      A QR with ?room=CODE can still point it somewhere else. The board's own view (?board) never joins. */
-  var CODE = 'H276J', ENDED = '__ended__';
+  var CODE = 'H276J', TOKEN = 'hb-y12-paint-board-7c41e9b2', ENDED = '__ended__';
   var ROOM = (q.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || (q.has('board') ? '' : CODE);
   store('room', null);                      // forget the old random codes
   if(ROOM){
@@ -332,7 +332,12 @@
       if(busy || document.hidden) return; busy = true;
       rpc(lite ? 'live_get_room?select=question,round&limit=1' : 'live_get_room', { p_code:ROOM }).then(function(rows){
         var r = rows && rows[0];
-        if(!r || r.question === ENDED){ active = false; $('taskText').textContent = 'Waiting for your teacher'; return; }
+        if(!r || r.question === ENDED){
+          active = false; $('taskText').textContent = 'Waiting for your teacher';
+          // nobody has set the class code up yet: do it from here, with the first task, so the iPads never wait on the board
+          if(ROOM === CODE) return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:'Draw a circle' }).then(function(){ busy = false; poll(); });
+          return;
+        }
         if(!active){ active = true; rpc('live_mark_joined', { p_code:ROOM, p_pupil_id:pid }).catch(function(){}); }
         $('taskText').textContent = r.question || 'Paint anything you like';
         if(round && r.round !== round){ toast('New task: ' + (r.question || 'paint anything')); open('newSheet'); }

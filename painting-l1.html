@@ -583,6 +583,7 @@
     });
     $('big').addEventListener('click', function(){ this.classList.remove('on'); });
     chips(); showRoom();
+    poll();                                   // set the code up as soon as the lesson opens, whatever slide it's on
     window.PL1_LIVE = { garden:function(){ if(room && task !== 'Paint a garden') setTask('Paint a garden'); }, on:function(){ if(!timer){ poll(); timer = setInterval(poll, 2000); } }, off:function(){ clearInterval(timer); timer = null; } };
   })();
 
