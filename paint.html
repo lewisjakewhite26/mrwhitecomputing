@@ -290,7 +290,11 @@
   [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
   requestAnimationFrame(function(){ fit(); });
   /* ---------- live task: paint.html?mode=l1&room=CODE sends pictures to the board, with no names ---------- */
+  // the code from the QR is remembered on this iPad, so reopening the app reconnects it to the board,
+  // until the teacher presses New code
+  var ENDED = '__ended__';
   var ROOM = (q.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if(ROOM) store('room', ROOM); else if(!q.has('board')) ROOM = store('room') || '';
   if(ROOM){
     var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
     function rpc(name, args){
@@ -306,14 +310,19 @@
         if(!rows || !rows.length){ active = false; $('taskText').textContent = 'Waiting for your teacher'; return; }
         if(!active){ active = true; rpc('live_mark_joined', { p_code:ROOM, p_pupil_id:pid }).catch(function(){}); }
         var r = rows[0];
+        if(r.question === ENDED){
+          clearInterval(pollTimer); active = false; store('room', null); ROOM = '';
+          $('send').hidden = true; $('taskText').textContent = 'Your teacher has a new code. Scan it to join again.';
+          return;
+        }
         $('taskText').textContent = r.question || 'Paint anything you like';
         if(round && r.round !== round){ toast('New task: ' + (r.question || 'paint anything')); open('newSheet'); }
         round = r.round;
       }).catch(function(){ $('taskText').textContent = 'Can\u2019t reach the board. Keep painting.'; });
     }
-    poll(); setInterval(poll, 2500);
+    var pollTimer = setInterval(poll, 2500); poll();
     $('send').addEventListener('click', function(){
-      if(!active){ toast('The board isn\u2019t ready yet'); return; }
+      if(!active || !ROOM){ toast('The board isn\u2019t ready yet'); return; }
       var small = document.createElement('canvas'); small.width = 480; small.height = 320;
       small.getContext('2d').drawImage(cv, 0, 0, 480, 320);
       var b = this; b.disabled = true;

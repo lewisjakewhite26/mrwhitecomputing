@@ -570,7 +570,9 @@
     }
     $('lvStart').addEventListener('click', function(){
       var r = { code:code(), token:token() };
-      rpc('live_set_question', { p_code:r.code, p_token:r.token, p_question:task }).then(function(ok){
+      // tell iPads still on the old code to let go of it, so nothing is sent to a board nobody is watching
+      var old = room ? rpc('live_set_question', { p_code:room.code, p_token:room.token, p_question:'__ended__' }).catch(function(){}) : Promise.resolve();
+      old.then(function(){ return rpc('live_set_question', { p_code:r.code, p_token:r.token, p_question:task }); }).then(function(ok){
         if(!ok){ msg('Try again.'); return; }
         room = r; save(); shown = {}; $('lvGrid').innerHTML = ''; empty(); showRoom(); poll();
       }).catch(function(){ msg('Can’t reach the live board. Check the internet.'); });
