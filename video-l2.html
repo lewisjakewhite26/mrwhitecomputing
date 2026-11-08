@@ -358,18 +358,18 @@
       </div>
     </section>
 
-    <!-- 6 matilda -->
-    <section class="part" data-name="Matilda" data-clip="matilda">
+    <!-- 6 shrek -->
+    <section class="part" data-name="Shrek" data-yt="lXsr5L1WswA" data-t="223">
       <div class="h2s"><h2>Who has the power?</h2></div>
       <div class="player"></div>
       <div class="side">
-        <span class="meta">MATILDA (1996) &middot; THE WORMWOODS &middot; PG</span>
-        <p>Matilda&rsquo;s dad shouts at her: &ldquo;I&rsquo;m big, you&rsquo;re little.&rdquo; Watch where the camera is for each of them.</p>
+        <span class="meta">SHREK (2001) &middot; DONKEY MEETS SHREK &middot; U</span>
+        <p>It starts 3 minutes 43 seconds in. Watch where the camera is for Donkey, then for Shrek.</p>
         <div class="look">
-          <div class="pp" data-s="1"><span data-ph="arrow-down"></span>On Matilda, the camera looks <b>down</b>. She looks tiny and alone.</div>
-          <div class="pp" data-s="2"><span data-ph="arrow-up"></span>Now find her dad. Is the camera looking <b>up</b> or down at him, and what does that do to him?</div>
+          <div class="pp" data-s="1"><span data-ph="arrow-down"></span>On Donkey, the camera looks <b>down</b>. He looks small and helpless.</div>
+          <div class="pp" data-s="2"><span data-ph="arrow-up"></span>On Shrek, the camera looks <b>up</b>. He looks huge and scary.</div>
         </div>
-        <div class="ask pp" data-s="3">How would the scene feel if the camera stayed at eye level?</div>
+        <div class="ask pp" data-s="3">What if the camera stayed at eye level?</div>
       </div>
     </section>
 
@@ -547,8 +547,7 @@
   /* Clips without a checked YouTube link yet. Paste the 11-character video ID between the quotes
      (the part after watch?v= in the address) and the slide shows that video instead of a search. */
   var CLIPS = {
-    penalty: { id:'', q:'Chloe Kelly winning penalty England Nigeria Women\'s World Cup 2023' },
-    matilda: { id:'', q:'Matilda 1996 Mr Wormwood I\'m big you\'re little' }
+    penalty: { id:'', q:'Chloe Kelly winning penalty England Nigeria Women\'s World Cup 2023' }
   };
 
   // drawn frames: shot sizes match Lesson 1; angles are new
@@ -602,7 +601,7 @@
     var id = p.getAttribute('data-yt'), pl = p.querySelector('.player');
     if(!id || !pl) return;
     var a = document.createElement('a');
-    a.className = 'player poster'; a.href = 'https://www.youtube.com/watch?v=' + id; a.target = '_blank'; a.rel = 'noopener';
+    a.className = 'player poster'; a.href = 'https://www.youtube.com/watch?v=' + id + (p.getAttribute('data-t') ? '&t=' + p.getAttribute('data-t') + 's' : ''); a.target = '_blank'; a.rel = 'noopener';
     a.innerHTML = '<img alt="" src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg" onerror="this.remove()"><div class="pv"><span class="pbtn">' + ph('play') + '</span><span class="plab">Open the video</span></div>';
     pl.replaceWith(a);
   });
