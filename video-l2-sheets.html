@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toy Hero Shot List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  @page{size:A4 portrait;margin:10mm}
+  :root{--ink:#14161b;--mut:#4b5160;--line:#9aa1ae;--soft:#eef0f3}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#0b0c0f;color:var(--ink);font-family:Inter,'Segoe UI',Arial,sans-serif}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.12em}
+  .bar{max-width:210mm;margin:16px auto 0;display:flex;gap:10px;padding:0 4px}
+  .bar a,.bar button{font:inherit;font-weight:600;font-size:16px;color:#f4f5f7;background:#1c1f26;border:1px solid #2c303a;border-radius:8px;padding:9px 16px;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .bar button{margin-left:auto;background:#ffd23f;border-color:#ffd23f;color:#141414}
+  .page{width:210mm;min-height:297mm;margin:12px auto 30px;background:#fff;padding:12mm 13mm;display:flex;flex-direction:column;gap:4.5mm}
+  @media print{ html,body{background:#fff} .bar{display:none} .page{margin:0;width:auto;min-height:0;height:276mm;padding:0} }
+  .hd{display:flex;align-items:flex-start;gap:5mm;border-bottom:.6mm solid var(--ink);padding-bottom:3mm}
+  .hd .num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11pt;background:var(--ink);color:#fff;border-radius:2mm;padding:1.5mm 3mm;white-space:nowrap}
+  .hd h1{margin:0;font-size:22pt;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+  .hd p{margin:1.5mm 0 0;font-size:11pt;color:var(--mut);line-height:1.4}
+  .roles{display:grid;grid-template-columns:34mm 1fr 1fr 1fr;border:.45mm solid var(--ink);border-radius:3mm;overflow:hidden;font-size:10.5pt}
+  .roles div{white-space:nowrap;padding:2.2mm 3mm;border-top:.3mm solid #d3d7de;border-left:.3mm solid #d3d7de;min-height:11mm;display:flex;align-items:center;gap:2mm}
+  .roles .h{font-weight:800;background:var(--soft);border-top:0}
+  .roles div:nth-child(4n+1){border-left:0;font-weight:700}
+  .roles .h .i{font-size:13pt}
+  table{width:100%;border-collapse:collapse}
+  th{font-size:9.5pt;text-align:center;padding:1.5mm;border-bottom:.5mm solid var(--ink);font-weight:800}
+  th.l{text-align:left}
+  td{border-bottom:.3mm solid #d3d7de;padding:2mm 1.5mm;vertical-align:middle}
+  .fr{width:30mm;height:18.3mm;border:.4mm solid var(--ink);border-radius:1.5mm;overflow:hidden;position:relative}
+  .fr > svg{width:100%;height:100%;display:block}
+  .fr .n{position:absolute;left:1mm;top:1mm;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:8.5pt;background:var(--ink);color:#fff;border-radius:1mm;padding:0 1.5mm}
+  .fr .m{position:absolute;right:1mm;bottom:1mm;font-size:11pt;background:#fff;border-radius:1mm;padding:.3mm .8mm;display:flex}
+  .sh b{display:block;font-size:12.5pt}
+  .sh span{display:block;font-size:10pt;color:var(--mut);line-height:1.35;margin-top:.8mm}
+  td.c{text-align:center;width:17mm}
+  .tick{display:inline-block;width:8mm;height:8mm;border:.5mm solid var(--ink);border-radius:1.5mm}
+  .tips{display:flex;flex-wrap:wrap;gap:1.6mm;font-size:9.8pt;font-weight:600}
+  .tips em{font-style:normal;border:.35mm solid var(--ink);border-radius:99px;padding:.7mm 2.6mm;display:inline-flex;align-items:center;gap:1.4mm}
+  .box{border:.45mm solid var(--ink);border-radius:3mm;padding:3mm 4.5mm;display:flex;flex-direction:column;gap:2mm}
+  .box h2{margin:0;font-size:11.5pt;font-weight:800;display:flex;gap:3mm;align-items:center}
+  .box h2 .y6{font-family:'JetBrains Mono',monospace;font-size:8.5pt;background:var(--ink);color:#fff;border-radius:1mm;padding:.4mm 1.6mm}
+  .st{margin:0;font-size:11.5pt;font-weight:600;line-height:2}
+  .gap{display:inline-block;width:42mm;border-bottom:.3mm solid var(--line);margin:0 1mm}
+  .lines{display:flex;flex-direction:column;gap:7mm;padding-top:2mm}
+  .lines i{display:block;border-bottom:.3mm solid var(--line)}
+</style>
+</head>
+<body>
+<div class="bar"><a href="video-l2.html#part12"><span data-ph="arrow-left"></span>Back to the lesson</a><button type="button" onclick="window.print()"><span data-ph="printer"></span>Print</button></div>
+
+<div class="page">
+  <div class="hd"><span class="num">SHOT LIST</span><div><h1>Toy Hero Trailer</h1><p>Film all six shots of your toy hero. Hold each shot for at least five seconds, then watch it back before you tick it.</p></div></div>
+
+  <div class="roles">
+    <div class="h"></div><div class="h"><span data-ph="megaphone-simple"></span>Director</div><div class="h"><span data-ph="video-camera"></span>Camera operator</div><div class="h"><span data-ph="hand-grabbing"></span>Hero mover</div>
+    <div>Shots 1 and 2</div><div></div><div></div><div></div>
+    <div>Shots 3 and 4</div><div></div><div></div><div></div>
+    <div>Shots 5 and 6</div><div></div><div></div><div></div>
+  </div>
+
+  <table>
+    <thead><tr><th class="l" colspan="2">Shot</th><th>Filmed</th><th>Watched back</th><th>Reshot</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="tips"><em><span data-ph="device-tablet"></span>Sideways</em><em><span data-ph="hand"></span>Two hands, elbows in</em><em><span data-ph="timer"></span>Count five before and after</em><em><span data-ph="footprints"></span>Walk closer, don&rsquo;t pinch</em><em><span data-ph="user-circle-dashed"></span>No faces</em></div>
+
+  <div class="box"><h2>Pick your best shot</h2><p class="st">We used a <span class="gap"></span> shot so the audience feels <span class="gap"></span>.</p></div>
+  <div class="box"><h2><span class="y6">YEAR 6</span>Which shot would you reshoot, and what would you change?</h2><div class="lines"><i></i><i></i></div></div>
+</div>
+
+<script>
+(function(){
+  var PH = {"arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "arrows-down-up": "<path d=\"M117.66,170.34a8,8,0,0,1,0,11.32l-32,32a8,8,0,0,1-11.32,0l-32-32a8,8,0,0,1,11.32-11.32L72,188.69V48a8,8,0,0,1,16,0V188.69l18.34-18.35A8,8,0,0,1,117.66,170.34Zm96-96-32-32a8,8,0,0,0-11.32,0l-32,32a8,8,0,0,0,11.32,11.32L168,67.31V208a8,8,0,0,0,16,0V67.31l18.34,18.35a8,8,0,0,0,11.32-11.32Z\"/>", "arrows-left-right": "<path d=\"M213.66,181.66l-32,32a8,8,0,0,1-11.32-11.32L188.69,184H48a8,8,0,0,1,0-16H188.69l-18.35-18.34a8,8,0,0,1,11.32-11.32l32,32A8,8,0,0,1,213.66,181.66Zm-139.32-64a8,8,0,0,0,11.32-11.32L67.31,88H208a8,8,0,0,0,0-16H67.31L85.66,53.66A8,8,0,0,0,74.34,42.34l-32,32a8,8,0,0,0,0,11.32Z\"/>", "device-tablet": "<path d=\"M192,24H64A24,24,0,0,0,40,48V208a24,24,0,0,0,24,24H192a24,24,0,0,0,24-24V48A24,24,0,0,0,192,24ZM56,72H200V184H56Zm8-32H192a8,8,0,0,1,8,8v8H56V48A8,8,0,0,1,64,40ZM192,216H64a8,8,0,0,1-8-8v-8H200v8A8,8,0,0,1,192,216Z\"/>", "footprints": "<path d=\"M208.06,184H152a8,8,0,0,0-8,8v12a36,36,0,0,0,72.05,0V192A8,8,0,0,0,208.06,184Zm-8,20a20,20,0,0,1-40,0v-4h40ZM104,160h-56a8,8,0,0,0-8,8v12A36,36,0,0,0,112,180V168A8,8,0,0,0,104,160Zm-8,20a20,20,0,0,1-40,0v-4H96ZM76,16C64.36,16,53.07,26.31,44.2,45c-13.93,29.38-18.56,73,.29,96a8,8,0,0,0,6.2,2.93h50.55a8,8,0,0,0,6.2-2.93c18.85-23,14.22-66.65.29-96C98.85,26.31,87.57,16,76,16ZM97.15,128H54.78c-11.4-18.1-7.21-52.7,3.89-76.11C65.14,38.22,72.17,32,76,32s10.82,6.22,17.3,19.89C104.36,75.3,108.55,109.9,97.15,128Zm57.61,40h50.55a8,8,0,0,0,6.2-2.93c18.85-23,14.22-66.65.29-96C202.93,50.31,191.64,40,180,40s-22.89,10.31-31.77,29c-13.93,29.38-18.56,73,.29,96A8.05,8.05,0,0,0,154.76,168Zm8-92.11C169.22,62.22,176.25,56,180,56s10.82,6.22,17.29,19.89c11.1,23.41,15.29,58,3.9,76.11H158.85C147.45,133.9,151.64,99.3,162.74,75.89Z\"/>", "hand": "<path d=\"M188,48a27.75,27.75,0,0,0-12,2.71V44a28,28,0,0,0-54.65-8.6A28,28,0,0,0,80,60v64l-3.82-6.13a28,28,0,0,0-48.6,27.82c16,33.77,28.93,57.72,43.72,72.69C86.24,233.54,103.2,240,128,240a88.1,88.1,0,0,0,88-88V76A28,28,0,0,0,188,48Zm12,104a72.08,72.08,0,0,1-72,72c-20.38,0-33.51-4.88-45.33-16.85C69.44,193.74,57.26,171,41.9,138.58a6.36,6.36,0,0,0-.3-.58,12,12,0,0,1,20.79-12,1.76,1.76,0,0,0,.14.23l18.67,30A8,8,0,0,0,96,152V60a12,12,0,0,1,24,0v60a8,8,0,0,0,16,0V44a12,12,0,0,1,24,0v76a8,8,0,0,0,16,0V76a12,12,0,0,1,24,0Z\"/>", "hand-grabbing": "<path d=\"M188,80a27.79,27.79,0,0,0-13.36,3.4,28,28,0,0,0-46.64-11A28,28,0,0,0,80,92v20H68a28,28,0,0,0-28,28v12a88,88,0,0,0,176,0V108A28,28,0,0,0,188,80Zm12,72a72,72,0,0,1-144,0V140a12,12,0,0,1,12-12H80v24a8,8,0,0,0,16,0V92a12,12,0,0,1,24,0v28a8,8,0,0,0,16,0V92a12,12,0,0,1,24,0v28a8,8,0,0,0,16,0V108a12,12,0,0,1,24,0Z\"/>", "megaphone-simple": "<path d=\"M228.54,86.66l-176.06-54A16,16,0,0,0,32,48V192a16,16,0,0,0,16,16,16,16,0,0,0,4.52-.65L136,181.73V192a16,16,0,0,0,16,16h32a16,16,0,0,0,16-16v-29.9l28.54-8.75A16.09,16.09,0,0,0,240,138V102A16.09,16.09,0,0,0,228.54,86.66ZM136,165,48,192V48l88,27Zm48,27H152V176.82L184,167Zm40-54-.11,0L152,160.08V79.92l71.89,22,.11,0v36Z\"/>", "printer": "<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>", "timer": "<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>", "user-circle-dashed": "<path d=\"M96.26,37A8,8,0,0,1,102,27.29a104.11,104.11,0,0,1,52,0,8,8,0,0,1-2,15.75,8.15,8.15,0,0,1-2-.26,88,88,0,0,0-44,0A8,8,0,0,1,96.26,37ZM33.35,110a8,8,0,0,0,9.85-5.57,87.88,87.88,0,0,1,22-38.09A8,8,0,0,0,53.8,55.14a103.92,103.92,0,0,0-26,45A8,8,0,0,0,33.35,110ZM150,213.22a88,88,0,0,1-44,0,8,8,0,0,0-4,15.49,104.11,104.11,0,0,0,52,0,8,8,0,0,0-4-15.49Zm62.8-108.77a8,8,0,0,0,15.42-4.28,104,104,0,0,0-26-45,8,8,0,1,0-11.41,11.21A88.14,88.14,0,0,1,212.79,104.45Zm15.44,51.39a103.68,103.68,0,0,1-30.68,49.47A8,8,0,0,1,185.07,203a64,64,0,0,0-114.14,0,8,8,0,0,1-12.48,2.32,103.74,103.74,0,0,1-30.68-49.49,8,8,0,0,1,15.42-4.27,87.58,87.58,0,0,0,19,34.88,79.57,79.57,0,0,1,36.1-28.77,48,48,0,1,1,59.38,0,79.57,79.57,0,0,1,36.1,28.77,87.58,87.58,0,0,0,19-34.88,8,8,0,1,1,15.42,4.28ZM128,152a32,32,0,1,0-32-32A32,32,0,0,0,128,152Z\"/>", "video-camera": "<path d=\"M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  var Y = '#14161b';
+  function person(x, feet, s){
+    return '<g transform="translate(' + x + ' ' + feet + ') scale(' + s + ')" fill="none" stroke="' + Y + '" stroke-width="' + (6 / s) + '" stroke-linecap="round" stroke-linejoin="round">' +
+      '<circle cx="0" cy="-150" r="22"/><path d="M0 -128 V-60 M0 -112 L-34 -78 M0 -112 L34 -78 M0 -60 L-26 0 M0 -60 L26 0"/></g>';
+  }
+  var ART = {
+    wide:'<rect x="-400" width="1040" height="146" fill="#eef2f7"/><rect x="-400" y="102" width="1040" height="44" fill="#d3dfcb"/><path d="M0 104 Q60 92 120 100 T240 98 V146 H0Z" fill="#d3dfcb"/><circle cx="196" cy="34" r="14" fill="' + Y + '"/>' + person(120, 98, .28),
+    mid:'<rect x="-400" width="1040" height="146" fill="#eef2f7"/>' + person(120, 212, 1.02),
+    close:'<rect x="-400" width="1040" height="146" fill="#eef2f7"/><circle cx="120" cy="74" r="56" fill="none" stroke="' + Y + '" stroke-width="7"/><circle cx="100" cy="64" r="7" fill="' + Y + '"/><circle cx="140" cy="64" r="7" fill="' + Y + '"/><path d="M98 92 Q120 108 142 92" fill="none" stroke="' + Y + '" stroke-width="7" stroke-linecap="round"/>',
+    eye:'<rect x="-400" width="1040" height="146" fill="#eef2f7"/><rect x="-400" y="96" width="1040" height="50" fill="#e2eadc"/>' + person(120, 140, .72),
+    // looking up: low horizon, legs wide at the bottom, small head high up
+    low:'<rect x="-400" width="1040" height="146" fill="#e6eef7"/><rect x="-400" y="132" width="1040" height="14" fill="#e2eadc"/>' +
+      '<g fill="none" stroke="' + Y + '" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M74 150 L108 70 L132 70 L166 150"/><path d="M108 70 L114 40 M132 70 L126 40 M114 40 H126"/><path d="M114 44 L88 70 M126 44 L152 70"/><circle cx="120" cy="25" r="11"/></g>',
+    // looking down: floor tiles run away from the camera, a small figure with a big head
+    high:'<rect x="-400" width="1040" height="146" fill="#e2eadc"/><g stroke="#bfcab8" stroke-width="2"><path d="M-360 146 L50 0 M-200 146 L70 0 M-40 146 L90 0 M40 146 L110 0 M120 146 L120 0 M200 146 L130 0 M280 146 L150 0 M440 146 L170 0 M600 146 L190 0"/><path d="M-400 30 H640 M-400 62 H640 M-400 100 H640"/></g>' +
+      '<g fill="none" stroke="' + Y + '" stroke-width="5" stroke-linecap="round"><circle cx="120" cy="62" r="13"/><path d="M120 75 V96 M120 80 L106 90 M120 80 L134 90 M120 96 L113 106 M120 96 L127 106"/></g>',
+    // a tall tower of books, camera at the bottom
+    tilt:'<rect x="-400" width="1040" height="146" fill="#eef2f7"/><g fill="none" stroke="' + Y + '" stroke-width="5"><rect x="92" y="112" width="56" height="30"/><rect x="96" y="82" width="48" height="30"/><rect x="90" y="52" width="60" height="30"/><rect x="98" y="22" width="44" height="30"/></g><path d="M120 18 V-4" stroke="' + Y + '" stroke-width="5" stroke-dasharray="6 6"/>'
+  };
+
+  var SHOTS = [
+    ['wide', 'Wide shot', 'Show your hero&rsquo;s whole world.'],
+    ['close', 'Close-up', 'Your hero&rsquo;s face. How do they feel?'],
+    ['low', 'Low angle', 'Camera down low. Your hero stands up, brave and strong.'],
+    ['high', 'High angle', 'Camera up high. Something huge appears and your hero looks tiny.'],
+    ['mid', 'Pan', 'Keep the iPad in one spot and turn it to follow your hero across the table.', 'arrows-left-right'],
+    ['tilt', 'Tilt up', 'Start at the bottom of something tall, like a pile of books, and tip up to the top.', 'arrows-down-up']
+  ];
+  document.getElementById('rows').innerHTML = SHOTS.map(function(s, i){
+    return '<tr><td style="width:33mm"><div class="fr"><svg viewBox="0 0 240 146" preserveAspectRatio="xMidYMid meet">' + ART[s[0]] + '</svg><span class="n">' + (i + 1) + '</span>' + (s[3] ? '<span class="m">' + ph(s[3]) + '</span>' : '') + '</div></td>' +
+      '<td class="sh"><b>' + s[1] + '</b><span>' + s[2] + '</span></td><td class="c"><span class="tick"></span></td><td class="c"><span class="tick"></span></td><td class="c"><span class="tick"></span></td></tr>';
+  }).join('');
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+})();
+</script>
+</body>
+</html>
