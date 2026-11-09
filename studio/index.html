@@ -87,7 +87,11 @@ input[type=text]:focus,textarea:focus{outline:2px solid var(--blue);outline-offs
 .shot button{position:absolute;top:-7px;right:-7px;width:24px;height:24px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:14px;line-height:1;cursor:pointer;}
 .focalwrap{margin-top:12px;}
 .focalwrap label{font-size:13px;font-weight:700;display:block;margin-bottom:4px;}
-input[type=range]{width:100%;}
+input[type=range]{width:100%;min-height:32px;}
+.sizehead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.sizehead label{font-size:14px;font-weight:700;}
+.sizehead output{font-size:13.5px;color:#30404d;font-variant-numeric:tabular-nums;}
+.sizeends{display:flex;justify-content:space-between;font-size:12.5px;color:#30404d;margin-top:2px;}
 
 .btn{width:100%;background:var(--navy);color:#fff;border:0;border-radius:8px;font-family:var(--sans);font-size:16px;font-weight:700;padding:15px;cursor:pointer;min-height:50px;position:sticky;bottom:10px;}
 .btn:hover{background:#01648f;}
@@ -112,10 +116,10 @@ input[type=range]{width:100%;}
 .lh-contact{font-family:var(--sans);font-size:9pt;color:var(--ink);text-align:right;line-height:1.55;white-space:pre-line;}
 .rule-navy{height:3px;background:var(--navy);}
 .rule-blue{height:5px;background:var(--blue);margin-bottom:22px;}
-.doc-meta{font-family:var(--sans);font-size:10.5pt;color:var(--ink);margin-bottom:18px;white-space:pre-line;}
-.doc-title{font-family:'Playfair',Georgia,serif;font-weight:600;font-size:19pt;color:var(--navy);margin:0 0 16px;line-height:1.25;}
-.doc-body{font-family:var(--sans);font-size:11pt;line-height:1.62;color:var(--ink);}
-.doc-body h3{font-family:var(--serif);font-weight:600;font-size:13pt;color:var(--navy);margin:22px 0 8px;}
+.doc-meta{font-family:var(--sans);font-size:calc(10.5pt * var(--ts,1));color:var(--ink);margin-bottom:18px;white-space:pre-line;}
+.doc-title{font-family:'Playfair',Georgia,serif;font-weight:600;font-size:calc(19pt * var(--ts,1));color:var(--navy);margin:0 0 16px;line-height:1.25;}
+.doc-body{font-family:var(--sans);font-size:calc(11pt * var(--ts,1));line-height:1.62;color:var(--ink);}
+.doc-body h3{font-family:var(--serif);font-weight:600;font-size:calc(13pt * var(--ts,1));color:var(--navy);margin:22px 0 8px;}
 .doc-body p{margin:0 0 11px;}
 .doc-body ul{margin:0 0 12px;padding-left:20px;}
 .doc-body li{margin-bottom:5px;}
@@ -242,6 +246,12 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
       <div class="hint" id="itemsHint">One per line. Put a dash between the heading and its detail.</div>
     </div>
 
+    <div class="field">
+      <div class="sizehead"><label for="textSize">Text size</label><output id="textSizeOut" for="textSize">100%</output></div>
+      <input type="range" id="textSize" min="70" max="140" step="5" value="100">
+      <div class="sizeends"><span>Smaller</span><span>Bigger</span></div>
+    </div>
+
     <button class="btn" id="download">Download image</button>
     <div class="privacy">
       Photos are handled inside this browser only. They are never uploaded, saved or sent anywhere.
@@ -281,6 +291,11 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
       <div class="hint">Blank line = new paragraph. Start a line with # for a heading, or - for a bullet.</div>
     </div>
     <div class="field"><label for="docSign">Sign off</label><textarea id="docSign" rows="3"></textarea></div>
+    <div class="field">
+      <div class="sizehead"><label for="docSize">Text size</label><output id="docSizeOut" for="docSize">100%</output></div>
+      <input type="range" id="docSize" min="80" max="130" step="5" value="100">
+      <div class="sizeends"><span>Smaller</span><span>Bigger</span></div>
+    </div>
 
     <button class="btn" id="printDoc">Save as PDF</button>
     <button class="btn ghost" id="clearDoc" style="margin-top:9px;">Clear</button>
@@ -417,7 +432,27 @@ function wrap(c,text,maxW,maxLines){
   if(line) lines.push(line);
   return lines.slice(0,maxLines);
 }
+/* The Text size slider scales the words staff type. Smaller just lowers
+   the sizes. Bigger tries larger sizes first but never lets the text wrap
+   onto more lines than it would at normal size, so it can't spill out of
+   the space the frame gives it. Titles stop at 120%, because many frames
+   place things just above and below them. */
 function fit(c,text,maxW,maxLines,tpl,max,min){
+  let k=state.textScale||1;
+  if(tpl===Fnt.titleTpl) k=Math.min(k,1.2);
+  if(k>1){
+    const base=fitAt(c,text,maxW,maxLines,tpl,max,min);
+    for(let s=Math.round(max*k);s>base.size;s-=2){
+      c.font=tpl.replace("%S",s);
+      const l=wrap(c,text,maxW,base.lines.length);
+      if(l.join(" ")===base.lines.join(" ") && !l.some(t=>c.measureText(t).width>maxW)) return {lines:l,size:s};
+    }
+    c.font=tpl.replace("%S",base.size);
+    return base;
+  }
+  return fitAt(c,text,maxW,maxLines,tpl,Math.round(max*k),Math.round(min*k));
+}
+function fitAt(c,text,maxW,maxLines,tpl,max,min){
   for(let s=max;s>min;s-=2){
     c.font=tpl.replace("%S",s);
     const l=wrap(c,text,maxW,maxLines);
@@ -477,6 +512,9 @@ function photoBox(c,i,x,y,w,h,r){
   }
   c.restore();
 }
+/* An off-screen context for measuring a layout before drawing it. */
+const scratchCtx=(()=>{ const s=document.createElement("canvas"); s.width=1080; s.height=1080; return s.getContext("2d"); })();
+
 /* Parse the list textarea: "Heading - detail" per line. */
 function listItems(max){
   return String(state.items||"").split("\n").map(l=>l.trim()).filter(Boolean).slice(0,max).map(l=>{
@@ -538,16 +576,21 @@ F("band","Header band",{
           body:{label:"Body text",limit:190,def:"Doors open at half past three. Please book your slot on the school office link before Wednesday."}},
   draw(c){
     const W=1080,H=1080, on=state.usePhoto;
-    const bh = on?400:470;
+    const tb={x:64,y:on?186:200,w:720,dark:true,eyebrow:true,
+              titleLines:2,titleMax:on?74:88,subSize:on?30:34,body:false};
+    /* Measure the title block first so the band grows to hold a
+       two-line title instead of letting it spill onto the white. */
+    const titleEnd=titleBlock(scratchCtx,tb);
+    const bh=Math.max(on?400:470, Math.round(titleEnd+44));
+    const ph=on?Math.max(230,330-(bh-400)):0;
     c.fillStyle=PAPER; c.fillRect(0,0,W,H);
     c.fillStyle=grad(c,0,0,W,bh); c.fillRect(0,0,W,bh);
     bleed(c,W+40,bh-150,330,"#ffffff",0.10);
     logo(c,64,56,228,true);
     mark(c,W-64,96,WHITE,"right",18);
-    titleBlock(c,{x:64,y:on?186:200,w:720,dark:true,eyebrow:true,
-                  titleLines:2,titleMax:on?74:88,subSize:on?30:34,body:false});
+    titleBlock(c,tb);
     let y=bh+70;
-    if(on){ photoBox(c,0,0,bh,W,330,0); y=bh+330+74; }
+    if(on){ photoBox(c,0,0,bh,W,ph,0); y=bh+ph+74; }
     if(state.body){
       const b=fit(c,state.body,W-128,on?3:5,Fnt.bodyTpl,31,23);
       c.fillStyle=INK; c.font=Fnt.body(b.size);
@@ -1286,7 +1329,7 @@ const crests={};
 /* =====================================================================
    STATE
 ===================================================================== */
-const state={frame:"band",eyebrow:"",title:"",subtitle:"",body:"",items:"",photos:[],usePhoto:false,focal:50};
+const state={frame:"band",eyebrow:"",title:"",subtitle:"",body:"",items:"",photos:[],usePhoto:false,focal:50,textScale:1};
 const $=id=>document.getElementById(id);
 const canvas=$("canvas"), ctx=canvas.getContext("2d");
 
@@ -1391,6 +1434,15 @@ function drawShots(){
   drop.classList.toggle("hidden",state.photos.length>=max);
 }
 $("focal").oninput=e=>{ state.focal=+e.target.value; render(); };
+$("textSize").oninput=e=>{
+  state.textScale=+e.target.value/100;
+  $("textSizeOut").textContent=e.target.value+"%";
+  render();
+};
+$("docSize").oninput=e=>{
+  $("page").style.setProperty("--ts",+e.target.value/100);
+  $("docSizeOut").textContent=e.target.value+"%";
+};
 
 const doDownload=()=>{
   const safe=(state.title||"hartburn-post").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40);
@@ -1421,7 +1473,7 @@ const DOC_DEFAULTS={
   letter:{title:"Year 5 visit to Preston Park Museum",
     meta:"4 November 2026\nDear Parent or Carer,",
     body:"I am writing to let you know about our forthcoming Year 5 visit to Preston Park Museum on Thursday 20 November.\n\nThe visit supports our history unit on Victorian Teesside. The children will take part in a guided workshop in the period street and handle objects from the museum's collection.\n\n# What your child needs\n\n- School uniform and a warm coat\n- A packed lunch and a named water bottle\n- No money is needed on the day\n\n# Getting there and back\n\nWe will leave school at nine o'clock and return by half past three, in time for the normal end of the school day.",
-    sign:"Yours sincerely,\n\nMr L White\nComputing Lead"},
+    sign:"Yours sincerely,\n\nMr L White"},
   policy:{title:"Acceptable Use of Technology Policy",
     meta:"Approved: November 2026\nReview date: November 2027",
     body:"# Purpose\n\nThis policy sets out how technology is used at Hartburn Primary School, and the responsibilities of staff, pupils and visitors.\n\n# Scope\n\nIt applies to all school devices and to personal devices used on school premises or to access school systems.\n\n# Expectations\n\n- Devices are used for learning and school business\n- Pupils report anything that worries them to a trusted adult\n- Staff keep pupil information on approved systems only",
