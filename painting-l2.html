@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lines Like Mondrian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --wall:#F4EFE4; --card:#FFFFFF; --edge:#E4DCCB; --ink:#1B2540; --muted:#4C5568;
+    --sun:#F5B82E; --sun-soft:#FDEFC8; --good:#0E7D55; --good-soft:#D3F1E3; --bad:#B23A26; --bad-soft:#F8DCD5;
+    --p1:#E23B2E; --p2:#F28A1E; --p3:#F7D024; --p4:#2E9E4F; --p5:#2F6BE0; --p6:#7B4BC9;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;height:100%;background:#20283d;color:var(--ink);font-family:Andika,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:1600px;height:900px;flex:none;transform-origin:center center;overflow:hidden;background:var(--wall)}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none}
+  button{font-family:inherit;color:inherit}
+
+  .top{position:absolute;left:0;right:0;top:0;height:72px;display:flex;align-items:center;gap:18px;padding:0 28px}
+  .top a.home{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:600;font-size:20px;padding:9px 16px;border:2px solid var(--edge);border-radius:12px;background:var(--card)}
+  .top .unit{font-size:21px;font-weight:600;color:var(--muted)}
+  .top .unit b{color:var(--ink)}
+  .top .splash{margin-left:auto;display:flex;gap:8px}
+  .top .splash i{width:18px;height:18px;border-radius:50%}
+
+  .area{position:absolute;left:0;right:0;top:72px;height:700px}
+  .part{position:absolute;inset:0;padding:30px 64px 20px;display:none}
+  .part.on{display:block}
+  h2{margin:0 0 26px;font-size:72px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .lead{font-size:44px;line-height:1.35;margin:0;font-weight:500}
+  .pp{opacity:0;transform:translateY(14px);transition:opacity .45s,transform .45s}
+  .pp.in{opacity:1;transform:none}
+  .rm .pp{transform:none;transition:opacity .2s}
+  .hl{background:var(--sun-soft);padding:0 .18em;border-radius:8px}
+
+  .bt{display:inline-flex;align-items:center;gap:12px;font-size:30px;font-weight:700;color:var(--ink);background:var(--card);border:3px solid var(--edge);border-radius:16px;padding:16px 26px;cursor:pointer;text-decoration:none;line-height:1}
+  .bt .i{font-size:34px}
+  .bt.go{background:var(--sun);border-color:var(--sun)}
+  .bt.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bt.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bt:disabled{opacity:.4;cursor:default}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .banner{display:flex;align-items:center;gap:22px;font-size:44px;font-weight:700;line-height:1.25;padding:24px 32px;border-radius:20px;background:var(--sun-soft)}
+  .banner .i{font-size:54px}
+
+  /* title */
+  .title-wrap{position:absolute;left:96px;top:0;bottom:0;width:780px;display:flex;flex-direction:column;justify-content:center}
+  .kick{font-size:30px;font-weight:700;color:var(--muted);margin:0 0 20px}
+  .title-wrap h1{margin:0;font-size:120px;font-weight:800;letter-spacing:-.035em;line-height:.98}
+  .title-wrap .sub{font-size:38px;line-height:1.35;margin:30px 0 0;color:var(--muted)}
+  .title-art{position:absolute;right:90px;top:70px;width:600px;height:500px;border-radius:12px;background:#fff;box-shadow:0 0 0 3px var(--edge),0 30px 60px -36px rgba(27,37,64,.5);overflow:hidden}
+  .title-art canvas{width:100%;height:100%;display:block}
+
+  /* slider */
+  .cmp{display:grid;grid-template-columns:980px 1fr;gap:40px;align-items:start}
+  .art-wrap{position:relative;width:980px;height:551px;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 0 0 3px var(--edge);--x:50%;touch-action:none}
+  .art-wrap img{position:absolute;inset:0;width:980px;height:551px;object-fit:cover;user-select:none;pointer-events:none}
+  .art-b{position:absolute;inset:0;width:var(--x);overflow:hidden}
+  .art-line{position:absolute;top:0;bottom:0;left:var(--x);width:5px;margin-left:-2px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.35);pointer-events:none}
+  .art-grip{position:absolute;top:50%;left:var(--x);width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3);display:grid;place-items:center;font-size:40px;pointer-events:none}
+  .art-range{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+  .art-tag{position:absolute;top:16px;padding:10px 18px;border-radius:999px;background:rgba(27,37,64,.82);color:#fff;font-size:26px;font-weight:700;opacity:0;transition:opacity .4s}
+  .art-tag.l{left:16px} .art-tag.r{right:16px}
+  .tags-on .art-tag{opacity:1}
+  .art-empty{position:absolute;inset:18px;border:4px dashed var(--edge);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:40px;color:var(--muted);font-size:28px;line-height:1.4}
+  .art-empty b{font-size:36px;color:var(--ink)}
+  .cmp .say{display:flex;flex-direction:column;gap:22px}
+  .cmp .say p{margin:0;font-size:34px;line-height:1.3;font-weight:600}
+
+  /* tools */
+  .tgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+  .tc{background:var(--card);border:3px solid var(--edge);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+  .tc .hd{display:flex;align-items:center;gap:14px;padding:18px 20px;font-size:34px;font-weight:800}
+  .tc .hd .i{font-size:46px}
+  .tc .mk{height:200px;border-top:3px solid var(--edge);background:#fff;position:relative}
+  .tc .mk canvas{width:100%;height:100%;display:block}
+  .tc .mk .q{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:700;color:var(--muted);background:var(--wall)}
+  .tc .say{padding:14px 18px 18px;font-size:26px;line-height:1.3;font-weight:600;border-top:3px solid var(--edge);min-height:118px}
+  .tc.in .mk .q{display:none}
+  .tc .say{visibility:hidden}
+  .tc.in .say{visibility:visible}
+  .tc.in{border-color:var(--sun)}
+
+  /* rubber */
+  .two{display:grid;grid-template-columns:760px 1fr;gap:50px;align-items:center}
+  .pic{height:480px;border-radius:16px;background:#fff;box-shadow:0 0 0 3px var(--edge);overflow:hidden}
+  .pic canvas{width:100%;height:100%;display:block}
+  .two .say{display:flex;flex-direction:column;gap:24px}
+  .two .say p{margin:0;font-size:40px;line-height:1.3;font-weight:600}
+
+  /* undo */
+  .hist{display:flex;flex-direction:column-reverse;gap:14px}
+  .hs{display:flex;align-items:center;gap:18px;font-size:34px;font-weight:700;padding:16px 22px;border-radius:16px;background:var(--card);border:3px solid var(--edge);transition:opacity .3s,transform .3s}
+  .hs .n{width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:26px;flex:none}
+  .hs.latest{border-color:var(--sun);background:var(--sun-soft)}
+  .hs.gone{opacity:.25;text-decoration:line-through;transform:translateX(20px)}
+  .hlab{font-size:22px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+
+  /* leak */
+  .leak{display:grid;grid-template-columns:900px 1fr;gap:40px}
+  .leak .pic{height:520px}
+  .votes{display:flex;flex-direction:column;gap:16px}
+  .vote{font-size:34px;font-weight:700;padding:20px 24px;border-radius:18px;background:var(--card);border:3px solid var(--edge);text-align:left;cursor:pointer;display:flex;align-items:center;gap:18px}
+  .vote .i{font-size:44px}
+  .vote.on{border-color:var(--ink);background:var(--sun-soft)}
+
+  /* task */
+  .task{display:grid;grid-template-columns:1fr 430px;gap:40px}
+  .tk{display:flex;flex-direction:column;gap:18px}
+  .yr{display:flex;gap:22px;align-items:center;padding:20px 26px;border-radius:18px;background:var(--card);border:3px solid var(--edge);font-size:34px;line-height:1.3;font-weight:600}
+  .yr b{flex:none;font-size:28px;padding:8px 14px;border-radius:10px;background:var(--ink);color:#fff}
+  .side{display:flex;flex-direction:column;gap:18px}
+  .timer{padding:22px 26px;border-radius:20px;background:var(--card);border:3px solid var(--edge);display:flex;flex-direction:column;gap:14px}
+  .timer .t{font-size:84px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+  .timer.done .t{color:var(--bad)}
+  .open{padding:20px 22px;border-radius:20px;background:var(--sun-soft);display:flex;align-items:center;gap:18px}
+  .open .qr{width:150px;height:150px;flex:none;background:#fff;border-radius:12px;padding:8px;display:grid;place-items:center}
+  .open .qr img,.open .qr canvas{width:134px!important;height:134px!important}
+  .open .qr{font-size:11px;overflow-wrap:anywhere;overflow:hidden}
+  .open p{margin:0;font-size:22px;line-height:1.35;font-weight:600}
+
+  /* freeze */
+  .qs{display:flex;flex-direction:column;gap:20px}
+  .q{display:flex;align-items:center;gap:24px;font-size:44px;font-weight:700;line-height:1.3;padding:24px 32px;border-radius:20px;background:var(--card);border:3px solid var(--edge)}
+  .q .i{font-size:54px}
+
+  /* quiz */
+  .quiz{display:grid;grid-template-columns:720px 1fr;gap:48px}
+  .quiz .pic{height:470px}
+  .qn{font-size:30px;font-weight:700;color:var(--muted);margin-bottom:12px}
+  .ans{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .an{display:flex;align-items:center;gap:16px;font-size:32px;font-weight:700;padding:18px 20px;border-radius:18px;background:var(--card);border:3px solid var(--edge);cursor:pointer}
+  .an .i{font-size:42px}
+  .an.right{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+  .an.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+  .fb{margin-top:12px;font-size:32px;font-weight:700;line-height:1.3;min-height:56px}
+  .fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
+
+  /* confidence */
+  .faces{display:flex;gap:44px;justify-content:center;margin-top:20px}
+  .face{display:flex;flex-direction:column;align-items:center;gap:16px;background:none;border:0;cursor:pointer;font-size:34px;font-weight:700}
+  .face .f{width:220px;height:220px;border-radius:50%;background:var(--card);border:5px solid var(--edge);display:grid;place-items:center;font-size:150px;transition:transform .15s}
+  .face.pick .f{border-color:var(--ink);transform:scale(1.06)}
+  .face[data-k="1"] .f{color:var(--p2)} .face[data-k="2"] .f{color:var(--sun)} .face[data-k="3"] .f{color:var(--good)}
+  .face .c{font-size:30px;color:var(--muted);min-height:1.2em}
+
+  /* live task */
+  .part.live{padding:24px 40px 16px}
+  .lv{display:grid;grid-template-columns:300px 1fr;gap:30px;height:100%}
+  .lv-side{display:flex;flex-direction:column;gap:12px}
+  .lv-qr{width:270px;height:270px;border-radius:18px;background:#fff;padding:14px;display:grid;place-items:center;box-shadow:0 0 0 3px var(--edge)}
+  .lv-qr img,.lv-qr canvas{width:242px!important;height:242px!important}
+  .lv-qr.off{background:var(--card);color:var(--muted);font-size:22px;text-align:center;padding:24px;line-height:1.35}
+  .lv-code{font-size:58px;font-weight:800;letter-spacing:.08em;line-height:1}
+  .lv-codelab{font-size:18px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .lv-joined{font-size:24px;font-weight:700}
+  .lv-msg{font-size:20px;color:var(--bad);line-height:1.3}
+  .lv-main{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .lv-task{display:flex;align-items:center;gap:20px;padding:14px 22px;border-radius:18px;background:var(--sun-soft);min-height:96px}
+  .lv-task .lab{font-size:24px;font-weight:700;color:var(--muted)}
+  .lv-task b{display:block;font-size:46px;font-weight:800;line-height:1.1}
+  .lv-chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-size:24px;font-weight:700;padding:12px 18px;border-radius:999px;background:var(--card);border:3px solid var(--edge);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip input{font:inherit;font-size:22px;border:0;outline:0;background:transparent;width:230px}
+  .lv-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));grid-auto-rows:136px;gap:12px;overflow:hidden;align-content:start}
+  .pic-s{position:relative;border-radius:12px;background:#fff;box-shadow:0 0 0 3px var(--edge);overflow:hidden;cursor:pointer;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+  .pic-s img{width:100%;height:100%;object-fit:cover;display:block}
+  .pic-s .x{position:absolute;right:6px;top:6px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(27,37,64,.75);color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center}
+  .lv-empty{grid-column:1 / -1;font-size:28px;color:var(--muted);padding:40px 0;line-height:1.4}
+  @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+  .rm .pic-s{animation:none}
+  .big{position:absolute;inset:0;z-index:20;background:rgba(27,37,64,.92);display:none;align-items:center;justify-content:center;padding:50px;cursor:pointer}
+  .big.on{display:flex}
+  .big img{max-width:100%;max-height:100%;border-radius:14px;background:#fff}
+
+  /* word bank */
+  .words{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .word{display:flex;align-items:center;gap:24px;padding:26px 30px;border-radius:24px;background:var(--card);border:3px solid var(--edge);font-size:56px;font-weight:800}
+  .word .ic{width:100px;height:100px;border-radius:24px;background:var(--sun-soft);display:grid;place-items:center;font-size:62px;flex:none}
+  .strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+  .strip span{display:inline-flex;align-items:center;gap:10px;font-size:26px;font-weight:700;padding:10px 16px;border-radius:999px;background:var(--card);border:3px solid var(--edge)}
+  .strip .i{font-size:32px}
+  .toolrow{display:flex;gap:22px;font-size:52px}
+
+  /* tour */
+  .tourcard{display:grid;grid-template-columns:1fr 560px;gap:56px;align-items:center;height:100%}
+  .tour-prev{height:460px;border-radius:14px;overflow:hidden;box-shadow:0 0 0 3px var(--edge),0 30px 60px -36px rgba(27,37,64,.5);background:#fff}
+  .tour-prev canvas{width:100%;height:100%;display:block}
+  .big-go{font-size:40px;padding:24px 36px}
+  .big-go .i{font-size:44px}
+  .note{font-size:24px;line-height:1.4;color:var(--muted);margin-top:22px}
+  .lv-hint{font-size:17px;line-height:1.35;color:var(--muted)}
+
+  /* quiz: answers by fingers */
+  .fingers{display:flex;align-items:center;gap:14px;margin:0 0 16px;font-size:32px;font-weight:700;color:var(--muted)}
+  .fingers .i{font-size:40px}
+  .an{cursor:default}
+  .an .num{width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:30px;font-weight:800;flex:none}
+  .an.right .num{background:var(--good)}
+
+  /* nav: a row of paint pots */
+  .nav{position:absolute;left:0;right:0;bottom:0;height:128px;display:flex;align-items:center;gap:18px;padding:0 26px;background:var(--card);border-top:3px solid var(--edge)}
+  .pots{flex:1;display:flex;align-items:center;justify-content:center;gap:10px}
+  .pot{width:62px;height:62px;border-radius:50%;border:3px solid var(--edge);background:var(--wall);display:grid;place-items:center;font-size:20px;font-weight:800;color:var(--muted);cursor:pointer;padding:0;transition:transform .15s}
+  .pot.seen{background:var(--c);border-color:var(--c);color:#fff}
+  .pot.cur{transform:scale(1.22);background:var(--c);border-color:var(--ink);color:#fff;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--ink)}
+  .nb{height:82px;min-width:82px;display:grid;place-items:center;border-radius:18px;border:3px solid var(--edge);background:var(--card);font-size:38px;cursor:pointer;padding:0}
+  .nb.next{display:flex;gap:12px;padding:0 30px;font-size:28px;font-weight:800;background:var(--sun);border-color:var(--sun)}
+  .nb:disabled{opacity:.35;cursor:default}
+  .dots{display:flex;gap:6px;position:absolute;right:30px;top:-30px}
+  .dots i{width:14px;height:14px;border-radius:4px;background:var(--edge)}
+  .dots i.on{background:var(--ink)}
+
+  /* lesson 2: Mondrian */
+  :root{--p1:#E23B2E;--p3:#F7D024;--p5:#2F6BE0}
+  .title-wrap h1{font-size:104px}
+  .look{display:grid;grid-template-columns:560px 1fr;gap:56px;align-items:start}
+  .mpic{margin:0;display:flex;flex-direction:column;gap:12px}
+  .mframe{width:560px;height:560px;background:#fff;box-shadow:0 0 0 3px var(--edge),0 30px 60px -36px rgba(27,37,64,.5);overflow:hidden;display:grid;place-items:center}
+  .mframe img{width:100%;height:100%;object-fit:cover;display:block}
+  .mframe canvas{width:100%;height:100%;display:block}
+  .mpic figcaption{font-size:22px;color:var(--muted);font-weight:600}
+  .look .say{display:flex;flex-direction:column;gap:16px}
+  .seen{display:flex;align-items:center;gap:22px;font-size:40px;font-weight:700;padding:16px 24px;border-radius:20px;background:var(--card);border:3px solid var(--edge)}
+  .seen .ic{width:76px;height:76px;flex:none;border-radius:18px;background:var(--sun-soft);display:grid;place-items:center;font-size:48px}
+  .seen .sw3{display:flex;gap:6px;background:none}
+  .seen .sw3 i{width:22px;height:60px;border-radius:4px;border:3px solid var(--ink)}
+  .y2{flex:none;font-size:26px;padding:8px 14px;border-radius:10px;background:var(--ink);color:#fff}
+  .words.w4{grid-template-columns:repeat(2,1fr)}
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .vcol{display:flex;flex-direction:column;gap:14px}
+  .vs .pic{height:330px}
+  .vlab{display:flex;align-items:center;gap:16px;font-size:40px}
+  .vlab .num{width:58px;height:58px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:32px;flex:none}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+
+  <div class="top">
+    <a class="home" href="painting.html"><span data-ph="arrow-left"></span>Units</a>
+    <span class="unit">Digital painting &middot; <b>Lesson 2</b> &middot; <span id="pname"></span></span>
+    <span class="splash"><i style="background:var(--p1)"></i><i style="background:var(--p3)"></i><i style="background:var(--p5)"></i></span>
+  </div>
+
+  <div class="area">
+
+    <!-- 0 title -->
+    <section class="part" data-name="Title">
+      <div class="title-wrap">
+        <p class="kick">Digital painting &middot; Lesson 2</p>
+        <h1>Shapes and lines like Mondrian</h1>
+        <p class="sub">Today you meet two new tools and paint like a famous artist.</p>
+      </div>
+      <div class="title-art"><canvas width="600" height="500" data-art="build"></canvas></div>
+    </section>
+
+    <!-- 1 look closely -->
+    <section class="part" data-name="Look closely" id="p-look">
+      <div class="look">
+        <figure class="mpic">
+          <div class="mframe" id="mFrame"></div>
+          <figcaption>Piet Mondrian painted this in 1930.</figcaption>
+        </figure>
+        <div class="say">
+          <h2 style="font-size:60px;margin:0 0 6px">What can you see?</h2>
+          <div class="seen pp" data-s="1"><span class="ic" data-ph="line-segment"></span>Thick, straight black lines</div>
+          <div class="seen pp" data-s="2"><span class="ic" data-ph="rectangle"></span>Rectangles</div>
+          <div class="seen pp" data-s="3"><span class="ic sw3"><i style="background:var(--p1)"></i><i style="background:var(--p3)"></i><i style="background:var(--p5)"></i></span>Only red, yellow and blue</div>
+          <div class="banner pp" data-s="4" style="font-size:30px;padding:18px 24px"><b class="y2">Year 2</b>Why do you think he only used a few colours?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 word bank -->
+    <section class="part" data-name="Our words">
+      <h2>Today&rsquo;s words</h2>
+      <div class="words w4" id="words"></div>
+    </section>
+
+    <!-- 3 pencil or line tool -->
+    <section class="part" data-name="Which is straighter?" id="p-vs">
+      <h2>Which looks more like Mondrian?</h2>
+      <div class="vs">
+        <div class="vcol"><div class="pic"><canvas width="680" height="380" data-art="pencil"></canvas></div><b class="vlab"><span class="num">1</span><span class="pp" data-s="1">Pencil</span></b></div>
+        <div class="vcol"><div class="pic"><canvas width="680" height="380" data-art="line"></canvas></div><b class="vlab"><span class="num">2</span><span class="pp" data-s="1">Line tool</span></b></div>
+      </div>
+      <div class="banner pp" data-s="2" style="margin-top:22px;font-size:36px"><span data-ph="line-segment"></span>The line tool makes every line straight, even if your hand wobbles.</div>
+    </section>
+
+    <!-- 4 tool tour -->
+    <section class="part" data-name="Meet the tools">
+      <div class="tourcard">
+        <div>
+          <h2>Two new tools</h2>
+          <p class="lead" style="font-size:38px">When a tool glows, someone comes up and taps it. Then watch what it does.</p>
+          <div class="toolrow" style="margin-top:20px;font-size:64px"><span data-ph="line-segment"></span><span data-ph="rectangle"></span></div>
+          <div class="row" style="margin-top:26px">
+            <a class="bt go big-go" href="paint.html?mode=l2&amp;board&amp;tour" target="_blank" rel="noopener"><span data-ph="play"></span>Start the tour</a>
+          </div>
+        </div>
+        <div class="tour-prev"><canvas width="600" height="500" data-art="build"></canvas></div>
+      </div>
+    </section>
+
+    <!-- 5 live task -->
+    <section class="part live" data-name="Quick tasks" id="p-live">
+      <div class="lv">
+        <div class="lv-side">
+          <div class="lv-qr" id="lvQr"></div>
+          <span class="lv-codelab">Code</span>
+          <span class="lv-code" id="lvCode">&middot; &middot; &middot;</span>
+          <span class="lv-joined" id="lvJoined"></span>
+          <button class="bt" type="button" id="lvClear">Clear pictures</button>
+          <span class="lv-msg" id="lvMsg"></span>
+          <span class="lv-hint">Same code as last lesson. The iPads switch to the Mondrian tools by themselves.</span>
+        </div>
+        <div class="lv-main">
+          <div class="lv-task"><div><span class="lab">Your task</span><b id="lvTask">Draw three straight lines</b></div></div>
+          <div class="lv-chips" id="lvChips"></div>
+          <div class="lv-grid" id="lvGrid"><div class="lv-empty">Pictures appear here when children press Send to the board.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 your turn -->
+    <section class="part" data-name="Paint a Mondrian" id="p-garden">
+      <h2>Paint your own Mondrian</h2>
+      <div class="task">
+        <div class="tk">
+          <div class="yr pp" data-s="1"><b>Everyone</b>Lines first. Then rectangles. Then fill the spaces.</div>
+          <div class="yr pp" data-s="2"><b>Year 2</b>Choose the best tool for each part. Be ready to say why.</div>
+          <div class="yr pp" data-s="3"><b>Finished?</b>Tap Send to the board.</div>
+          <div class="strip" id="strip"></div>
+        </div>
+        <div class="side">
+          <div class="timer" id="timer"><span class="t" id="tt">18:00</span><div class="row"><button class="bt go" type="button" id="tgo"><span data-ph="play"></span>Start</button><button class="bt" type="button" id="treset"><span data-ph="arrow-counter-clockwise"></span>Reset</button></div></div>
+          <button class="bt dark" type="button" id="toGallery"><span data-ph="squares-four"></span>See the pictures</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 freeze -->
+    <section class="part" data-name="Freeze">
+      <h2>Freeze</h2>
+      <div class="qs">
+        <div class="q pp" data-s="1"><span data-ph="line-segment"></span>Point to your straightest line.</div>
+        <div class="q pp" data-s="2"><span data-ph="paint-bucket"></span>Did your fill leak? Where was the gap?</div>
+        <div class="q pp" data-s="3"><span data-ph="users-three"></span>Year 2: tell your partner one tool you chose, and why.</div>
+      </div>
+    </section>
+
+    <!-- 8 quiz -->
+    <section class="part" data-name="Which tool?">
+      <div class="quiz">
+        <div class="pic"><canvas width="720" height="470" id="quizCv"></canvas></div>
+        <div>
+          <div class="qn" id="qn">Question 1 of 5</div>
+          <h2 style="font-size:54px;margin:0 0 6px" id="qq">Which tool made this?</h2>
+          <p class="fingers"><span data-ph="hand-pointing"></span>Show me with your fingers.</p>
+          <div class="ans" id="ans"></div>
+          <div class="fb" id="fb"></div>
+          <div class="row"><button class="bt go" type="button" id="qshow"><span data-ph="eye"></span>Show the answer</button><button class="bt" type="button" id="qnext"><span data-ph="arrow-right"></span>Next question</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 confidence -->
+    <section class="part" data-name="How sure?">
+      <h2 style="text-align:center">How sure are you about lines and rectangles?</h2>
+      <div class="faces" id="faces">
+        <button class="face" type="button" data-k="1"><span class="f" data-ph="smiley-sad"></span>Not yet<span class="c"></span></button>
+        <button class="face" type="button" data-k="2"><span class="f" data-ph="smiley-meh"></span>Getting there<span class="c"></span></button>
+        <button class="face" type="button" data-k="3"><span class="f" data-ph="smiley"></span>Got it<span class="c"></span></button>
+      </div>
+    </section>
+
+    <div class="big" id="big"></div>
+  </div>
+
+  <div class="nav">
+    <div class="dots" id="dots"></div>
+    <button class="nb" id="back" type="button" aria-label="Back"><span data-ph="arrow-left"></span></button>
+    <div class="pots" id="pots"></div>
+    <button class="nb next" id="next" type="button"><span id="nextlab">Next</span><span data-ph="arrow-right"></span></button>
+  </div>
+
+</div></div>
+
+<script>
+(function(){
+  var PH = {"arrow-counter-clockwise": "<path d=\"M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z\"/>", "arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "arrow-right": "<path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/>", "eraser": "<path d=\"M225,80.4,183.6,39a24,24,0,0,0-33.94,0L31,157.66a24,24,0,0,0,0,33.94l30.06,30.06A8,8,0,0,0,66.74,224H216a8,8,0,0,0,0-16h-84.7L225,114.34A24,24,0,0,0,225,80.4ZM108.68,208H70.05L42.33,180.28a8,8,0,0,1,0-11.31L96,115.31,148.69,168Zm105-105L160,156.69,107.31,104,161,50.34a8,8,0,0,1,11.32,0l41.38,41.38a8,8,0,0,1,0,11.31Z\"/>", "eye": "<path d=\"M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z\"/>", "hand-pointing": "<path d=\"M196,88a27.86,27.86,0,0,0-13.35,3.39A28,28,0,0,0,144,74.7V44a28,28,0,0,0-56,0v80l-3.82-6.13A28,28,0,0,0,35.73,146l4.67,8.23C74.81,214.89,89.05,240,136,240a88.1,88.1,0,0,0,88-88V116A28,28,0,0,0,196,88Zm12,64a72.08,72.08,0,0,1-72,72c-37.63,0-47.84-18-81.68-77.68l-4.69-8.27,0-.05A12,12,0,0,1,54,121.61a11.88,11.88,0,0,1,6-1.6,12,12,0,0,1,10.41,6,1.76,1.76,0,0,0,.14.23l18.67,30A8,8,0,0,0,104,152V44a12,12,0,0,1,24,0v68a8,8,0,0,0,16,0V100a12,12,0,0,1,24,0v20a8,8,0,0,0,16,0v-4a12,12,0,0,1,24,0Z\"/>", "line-segment": "<path d=\"M214.64,41.36a32,32,0,0,0-50.2,38.89L80.25,164.44a32.06,32.06,0,0,0-38.89,4.94h0a32,32,0,1,0,50.2,6.37l84.19-84.19a32,32,0,0,0,38.89-50.2Zm-139.33,162a16,16,0,0,1-22.64-22.64h0a16,16,0,0,1,22.63,0h0A16,16,0,0,1,75.31,203.33Zm128-128a16,16,0,1,1,0-22.63A16,16,0,0,1,203.33,75.3Z\"/>", "paint-bucket": "<path d=\"M234.53,139.07a8,8,0,0,0,3.13-13.24L122.17,10.34a8,8,0,0,0-11.31,0L70.25,51,45.65,26.34A8,8,0,0,0,34.34,37.66l24.6,24.6L15,106.17a24,24,0,0,0,0,33.94L99.89,225a24,24,0,0,0,33.94,0l78.49-78.49Zm-32.19-5.24-79.83,79.83a8,8,0,0,1-11.31,0L26.34,128.8a8,8,0,0,1,0-11.31L70.25,73.57l29.12,29.12a28,28,0,1,0,11.31-11.32L81.57,62.26l35-34.95L217.19,128l-11.72,3.9A8.09,8.09,0,0,0,202.34,133.83Zm-86.83-26.31,0,0a13.26,13.26,0,1,1-.05.06S115.51,107.53,115.51,107.52Zm123.15,56a8,8,0,0,0-13.32,0C223.57,166.23,208,190.09,208,208a24,24,0,0,0,48,0C256,190.09,240.43,166.23,238.66,163.56ZM232,216a8,8,0,0,1-8-8c0-6.8,4-16.32,8-24.08,4,7.76,8,17.34,8,24.08A8,8,0,0,1,232,216Z\"/>", "pencil-simple": "<path d=\"M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z\"/>", "play": "<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>", "rectangle": "<path d=\"M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200Z\"/>", "ruler": "<path d=\"M235.32,73.37,182.63,20.69a16,16,0,0,0-22.63,0L20.68,160a16,16,0,0,0,0,22.63l52.69,52.68a16,16,0,0,0,22.63,0L235.32,96A16,16,0,0,0,235.32,73.37ZM84.68,224,32,171.31l32-32,26.34,26.35a8,8,0,0,0,11.32-11.32L75.31,128,96,107.31l26.34,26.35a8,8,0,0,0,11.32-11.32L107.31,96,128,75.31l26.34,26.35a8,8,0,0,0,11.32-11.32L139.31,64l32-32L224,84.69Z\"/>", "smiley": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Zm-1.07,48c-10.29,17.79-27.4,28-46.93,28s-36.63-10.2-46.92-28a8,8,0,1,1,13.84-8c7.47,12.91,19.21,20,33.08,20s25.61-7.1,33.07-20a8,8,0,0,1,13.86,8Z\"/>", "smiley-meh": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-56a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,160ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Z\"/>", "smiley-sad": "<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Zm-1.08,64a8,8,0,1,1-13.84,8c-7.47-12.91-19.21-20-33.08-20s-25.61,7.1-33.08,20a8,8,0,1,1-13.84-8c10.29-17.79,27.39-28,46.92-28S164.63,154.2,174.92,172Z\"/>", "squares-four": "<path d=\"M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z\"/>", "users-three": "<path d=\"M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z\"/>", "x": "<path d=\"M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  function $(id){ return document.getElementById(id); }
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- marks: drawn the same way the paint app draws them ---------- */
+  var C = { black:'#1B1B1F', red:'#E23B2E', orange:'#F28A1E', yellow:'#F7D024', green:'#2E9E4F', blue:'#2F6BE0', purple:'#7B4BC9', brown:'#8A5A2B' };
+  function seeded(s){ return function(){ s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+  function stroke(cx, pts, w, c){ cx.strokeStyle = c; cx.lineWidth = w; cx.lineCap = 'round'; cx.lineJoin = 'round'; cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for(var i = 1; i < pts.length; i++) cx.lineTo(pts[i][0], pts[i][1]); cx.stroke(); }
+  function wave(x0, x1, y, a, n){ var p = []; for(var i = 0; i <= n; i++){ var t = i / n; p.push([x0 + (x1 - x0) * t, y + Math.sin(t * Math.PI * 2.2) * a]); } return p; }
+  function spray(cx, x, y, r, n, c, rnd){ cx.fillStyle = c; for(var i = 0; i < n; i++){ var rr = r * Math.sqrt(rnd()), t = rnd() * Math.PI * 2; cx.fillRect(Math.round(x + rr * Math.cos(t)), Math.round(y + rr * Math.sin(t)), 4, 4); } }
+  function white(cx, w, h){ cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h); }
+
+  // flood fill, the same rule as the app: every touching pixel that matches, through any gap
+  function fillOrder(cx, w, h, x0, y0){
+    var d = cx.getImageData(0, 0, w, h).data, i0 = (y0 * w + x0) * 4, tr = d[i0], tg = d[i0 + 1], tb = d[i0 + 2];
+    var seen = new Uint8Array(w * h), order = new Int32Array(w * h), head = 0, tail = 0;
+    function ok(p){ var k = p * 4; return !seen[p] && Math.abs(d[k] - tr) + Math.abs(d[k + 1] - tg) + Math.abs(d[k + 2] - tb) <= 110; }
+    var s = y0 * w + x0; seen[s] = 1; order[tail++] = s;
+    while(head < tail){
+      var p = order[head++], x = p % w;
+      if(x > 0 && ok(p - 1)){ seen[p - 1] = 1; order[tail++] = p - 1; }
+      if(x < w - 1 && ok(p + 1)){ seen[p + 1] = 1; order[tail++] = p + 1; }
+      if(p >= w && ok(p - w)){ seen[p - w] = 1; order[tail++] = p - w; }
+      if(p < w * (h - 1) && ok(p + w)){ seen[p + w] = 1; order[tail++] = p + w; }
+    }
+    return order.subarray(0, tail);
+  }
+  function fillNow(cx, w, h, x, y, hex){
+    var o = fillOrder(cx, w, h, x, y), img = cx.getImageData(0, 0, w, h), d = img.data, n = parseInt(hex.slice(1), 16);
+    for(var i = 0; i < o.length; i++){ var k = o[i] * 4; d[k] = n >> 16 & 255; d[k + 1] = n >> 8 & 255; d[k + 2] = n & 255; d[k + 3] = 255; }
+    cx.putImageData(img, 0, 0);
+  }
+  function fillAnimated(cx, w, h, x, y, hex, done){
+    var o = fillOrder(cx, w, h, x, y), img = cx.getImageData(0, 0, w, h), d = img.data, n = parseInt(hex.slice(1), 16), i = 0;
+    var r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255, step = Math.max(2500, Math.ceil(o.length / 70));
+    (function tick(){
+      var end = RM ? o.length : Math.min(o.length, i + step);
+      for(; i < end; i++){ var k = o[i] * 4; d[k] = r; d[k + 1] = g; d[k + 2] = b; d[k + 3] = 255; }
+      cx.putImageData(img, 0, 0);
+      if(i < o.length) requestAnimationFrame(tick); else if(done) done();
+    })();
+  }
+
+  // the small pictures on the tool cards and in the quiz
+  var MARK = {
+    pencil: function(cx, w, h){ white(cx, w, h); stroke(cx, wave(40, w - 40, h / 2, h * .22, 60), 4, C.black); },
+    brush: function(cx, w, h){ white(cx, w, h); stroke(cx, wave(40, w - 40, h / 2, h * .18, 60), 24, C.green); },
+    spray: function(cx, w, h){ white(cx, w, h); var r = seeded(7); for(var i = 0; i < 6; i++) spray(cx, w * (.25 + i * .1), h * (.5 + Math.sin(i) * .12), 40, 60, C.purple, r); },
+    fill: function(cx, w, h){ white(cx, w, h); cx.lineWidth = 4; cx.strokeStyle = C.black; cx.beginPath(); cx.moveTo(w * .5, h * .14); cx.lineTo(w * .8, h * .86); cx.lineTo(w * .2, h * .86); cx.closePath(); cx.stroke(); fillNow(cx, w, h, Math.round(w * .5), Math.round(h * .6), C.yellow); },
+    rubber: function(cx, w, h){ white(cx, w, h); cx.fillStyle = C.blue; cx.fillRect(w * .12, h * .18, w * .76, h * .64); stroke(cx, wave(w * .2, w * .8, h / 2, h * .12, 40), 38, '#fff'); },
+    leak: function(cx, w, h){ white(cx, w, h); cx.lineWidth = 4; cx.strokeStyle = C.black; cx.beginPath(); cx.arc(w * .5, h * .5, h * .32, .35, Math.PI * 2 - .1); cx.stroke(); fillNow(cx, w, h, Math.round(w * .5), Math.round(h * .5), C.red); }
+  };
+
+  /* ---------- a Mondrian-style picture, drawn the way the paint app draws ---------- */
+  // lines as fractions of the picture: [x1, y1, x2, y2]; fills as [x, y] points inside a space
+  var M_LINES = [[.3, 0, .3, 1], [0, .32, 1, .32], [.72, .32, .72, 1], [.3, .68, .72, .68], [.72, .55, 1, .55], [0, .8, .3, .8]];
+  var M_FILLS = [[.15, .16, 'red'], [.86, .78, 'yellow'], [.15, .9, 'blue'], [.86, .44, 'black']];
+  function mondrian(cx, w, h, t, wobble){
+    // t from 0 to 1: lines grow one after another, then the colours go in
+    white(cx, w, h);
+    var lw = Math.max(6, Math.round(w / 40)), nL = M_LINES.length, lineT = Math.min(1, t / .6);
+    if(t >= .75){
+      M_LINES.forEach(function(L){ seg(cx, L, w, h, lw, 1, wobble); });
+      var nF = Math.min(M_FILLS.length, Math.floor((t - .75) / .2 * M_FILLS.length) + 1);
+      for(var k = 0; k < nF; k++){ var F = M_FILLS[k]; fillNow(cx, w, h, Math.round(F[0] * w), Math.round(F[1] * h), C[F[2]]); }
+    }
+    M_LINES.forEach(function(L, i){ var p = Math.max(0, Math.min(1, lineT * nL - i)); if(p > 0) seg(cx, L, w, h, lw, p, wobble); });
+  }
+  function seg(cx, L, w, h, lw, p, wobble){
+    var a = [L[0] * w, L[1] * h], b = [L[0] * w + (L[2] - L[0]) * w * p, L[1] * h + (L[3] - L[1]) * h * p];
+    if(!wobble){ cx.lineCap = 'square'; stroke(cx, [a, b], lw, C.black); cx.lineCap = 'round'; return; }
+    var pts = [], n = 40;
+    for(var i = 0; i <= n; i++){ var f = i / n, s = Math.sin(f * 17 + L[0] * 9) * 7 + Math.sin(f * 6 + L[1] * 5) * 5; pts.push([a[0] + (b[0] - a[0]) * f + (L[0] === L[2] ? s : 0), a[1] + (b[1] - a[1]) * f + (L[1] === L[3] ? s : 0)]); }
+    stroke(cx, pts, 5, C.black);
+  }
+  // the title picture builds itself, then holds, then starts again
+  (function(){
+    var cvs = [].slice.call(document.querySelectorAll('[data-art="build"]')), t0 = performance.now();
+    function tick(now){
+      cvs.forEach(function(cv){
+        if(!cv.closest('.part.on')) return;
+        var t = RM ? 1 : ((now - t0) / 1000 % 9) / 6;
+        mondrian(cv.getContext('2d', { willReadFrequently:true }), cv.width, cv.height, Math.min(1, t));
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+  (function(){
+    var p = document.querySelector('[data-art="pencil"]'), l = document.querySelector('[data-art="line"]');
+    mondrian(p.getContext('2d', { willReadFrequently:true }), p.width, p.height, .74, true);
+    mondrian(l.getContext('2d', { willReadFrequently:true }), l.width, l.height, .74, false);
+  })();
+
+  /* ---------- the real painting ---------- */
+  // Piet Mondrian, Composition with Red, Blue and Yellow (1930). Out of copyright; the picture loads from Wikimedia Commons.
+  // If the school's internet blocks it, a picture in his style is drawn instead, and the caption says so.
+  (function(){
+    var box = $('mFrame'), img = new Image();
+    img.alt = 'Composition with Red, Blue and Yellow, by Piet Mondrian, 1930';
+    img.onerror = function(){
+      box.innerHTML = '<canvas width="560" height="560"></canvas>';
+      var cv = box.firstChild; mondrian(cv.getContext('2d', { willReadFrequently:true }), 560, 560, 1);
+      document.querySelector('.mpic figcaption').textContent = 'A picture in Mondrian’s style. His real paintings look like this.';
+    };
+    img.src = 'https://commons.wikimedia.org/wiki/Special:FilePath/Piet_Mondriaan,_1930_-_Mondrian_Composition_II_in_Red,_Blue,_and_Yellow.jpg?width=800';
+    box.appendChild(img);
+  })();
+
+  /* ---------- word bank and tools ---------- */
+  var TOOLS = [
+    ['pencil', 'Pencil', 'pencil-simple'],
+    ['line', 'Line', 'line-segment'],
+    ['rect', 'Rectangle', 'rectangle'],
+    ['fill', 'Fill', 'paint-bucket'],
+    ['rubber', 'Rubber', 'eraser']
+  ];
+  var WORDS = [['line', 'line', 'line-segment'], ['straight', 'straight', 'ruler'], ['rectangle', 'rectangle', 'rectangle'], ['fill', 'fill', 'paint-bucket']];
+  $('words').innerHTML = WORDS.map(function(w){ return '<div class="word"><span class="ic">' + ph(w[2]) + '</span>' + w[1] + '</div>'; }).join('');
+  $('strip').innerHTML = TOOLS.concat([['undo', 'Undo', 'arrow-counter-clockwise']]).map(function(w){ return '<span>' + ph(w[2]) + w[1] + '</span>'; }).join('');
+
+  /* ---------- quiz: children show the number on their fingers, then the board shows the answer ---------- */
+  var MARK2 = {
+    line: function(cx, w, h){ white(cx, w, h); cx.lineCap = 'square'; stroke(cx, [[60, h * .5], [w - 60, h * .5]], 18, C.black); stroke(cx, [[w * .6, 50], [w * .6, h - 50]], 18, C.black); cx.lineCap = 'round'; },
+    rect: function(cx, w, h){ white(cx, w, h); cx.strokeStyle = C.black; cx.lineWidth = 12; cx.lineJoin = 'miter'; cx.strokeRect(w * .2, h * .2, w * .6, h * .6); cx.lineJoin = 'round'; },
+    fill: function(cx, w, h){ white(cx, w, h); cx.strokeStyle = C.black; cx.lineWidth = 12; cx.lineJoin = 'miter'; cx.strokeRect(w * .25, h * .18, w * .5, h * .64); cx.lineJoin = 'round'; fillNow(cx, w, h, Math.round(w * .5), Math.round(h * .5), C.blue); },
+    pencil: function(cx, w, h){ white(cx, w, h); stroke(cx, wave(50, w - 50, h / 2, h * .12, 60), 4, C.black); },
+    leak: function(cx, w, h){ white(cx, w, h); cx.strokeStyle = C.black; cx.lineWidth = 12; cx.beginPath(); cx.moveTo(w * .62, h * .2); cx.lineTo(w * .25, h * .2); cx.lineTo(w * .25, h * .8); cx.lineTo(w * .75, h * .8); cx.lineTo(w * .75, h * .36); cx.stroke(); fillNow(cx, w, h, Math.round(w * .5), Math.round(h * .5), C.red); }
+  };
+  var QUIZ = [
+    ['line', 'Line. Thick and perfectly straight.'],
+    ['rect', 'Rectangle. One drag from corner to corner.'],
+    ['pencil', 'Pencil. A thin line that wobbles with your hand.'],
+    ['fill', 'Fill. The whole box in one tap.'],
+    ['leak', 'Fill. The box had a gap, so the red leaked out.']
+  ];
+  var qi = 0, qcx = $('quizCv').getContext('2d', { willReadFrequently:true });
+  $('ans').innerHTML = TOOLS.map(function(t, i){ return '<div class="an" data-t="' + t[0] + '"><span class="num">' + (i + 1) + '</span>' + ph(t[2]) + t[1] + '</div>'; }).join('');
+  function quizShow(){
+    var it = QUIZ[qi];
+    MARK2[it[0]](qcx, 720, 470);
+    $('qn').textContent = 'Question ' + (qi + 1) + ' of ' + QUIZ.length;
+    $('qq').textContent = it[0] === 'leak' ? 'Which tool made this mess?' : 'Which tool made this?';
+    [].forEach.call($('ans').children, function(b){ b.classList.remove('right'); });
+    $('fb').textContent = ''; $('fb').className = 'fb';
+    $('qshow').hidden = false; $('qnext').hidden = true;
+  }
+  $('qshow').addEventListener('click', function(){
+    var it = QUIZ[qi], want = it[0] === 'leak' ? 'fill' : it[0];
+    $('ans').querySelector('[data-t="' + want + '"]').classList.add('right');
+    $('fb').textContent = it[1]; $('fb').className = 'fb good';
+    $('qshow').hidden = true; $('qnext').hidden = qi === QUIZ.length - 1;
+  });
+  $('qnext').addEventListener('click', function(){ if(qi < QUIZ.length - 1){ qi++; quizShow(); } });
+  quizShow();
+
+  /* ---------- confidence ---------- */
+  var conf = { 1:0, 2:0, 3:0 };
+  [].forEach.call(document.querySelectorAll('.face'), function(f){
+    f.addEventListener('click', function(){
+      var k = f.getAttribute('data-k'); conf[k]++;
+      [].forEach.call(document.querySelectorAll('.face'), function(o){ o.classList.toggle('pick', o === f); });
+      f.querySelector('.c').textContent = conf[k];
+    });
+  });
+
+  /* ---------- timer ---------- */
+  var tFull = 1080, tLeft = tFull, tRun = null;
+  function tShow(){ $('tt').textContent = Math.floor(tLeft / 60) + ':' + ('0' + tLeft % 60).slice(-2); $('timer').classList.toggle('done', tLeft === 0); }
+  $('tgo').addEventListener('click', function(){
+    var b = this;
+    if(tRun){ clearInterval(tRun); tRun = null; b.lastChild.textContent = 'Start'; return; }
+    if(!tLeft) return;
+    b.lastChild.textContent = 'Pause';
+    tRun = setInterval(function(){ tLeft--; tShow(); if(tLeft <= 0){ clearInterval(tRun); tRun = null; b.lastChild.textContent = 'Start'; } }, 1000);
+  });
+  $('treset').addEventListener('click', function(){ clearInterval(tRun); tRun = null; tLeft = tFull; $('tgo').lastChild.textContent = 'Start'; tShow(); });
+
+  function qr(el, text, size){
+    el.innerHTML = '';
+    if(window.QRCode){ try{ new QRCode(el, { text:text, width:size, height:size, correctLevel:QRCode.CorrectLevel.M }); return; }catch(e){} }
+    el.textContent = text;
+  }
+  var BASE = location.origin + location.pathname.replace(/[^\/]*$/, '');
+
+  /* ---------- live tasks: the same backend as the Year 5/6 live answer wall ---------- */
+  (function(){
+    var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
+    // one fixed code for the class. The board's key is fixed too, so any board can run it
+    var CODE = 'H276J', TOKEN = 'hb-y12-paint-board-7c41e9b2', ENDED = '__ended__';
+    var room = { code:CODE, token:TOKEN };
+    var TASKS = ['Draw three straight lines', 'Make a rectangle', 'Fill a box red', 'Make a cross with two lines', 'Paint a Mondrian'];
+    // every task goes out as "l2|task", so each iPad switches to the Mondrian tools by itself
+    var LESSON = 'l2|';
+    function bare(q){ return String(q || '').replace(/^l\d+\|/, ''); }
+    // every request gives up after 5 seconds, so one stuck request on the school Wi-Fi can't freeze the checks
+    function rpc(name, args){
+      var ctl = window.AbortController ? new AbortController() : null, t = ctl ? setTimeout(function(){ ctl.abort(); }, 5000) : 0;
+      return fetch(SB_URL + '/rest/v1/rpc/' + name, { method:'POST', cache:'no-store', signal:ctl ? ctl.signal : undefined, headers:{ 'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY }, body:JSON.stringify(args) })
+        .then(function(r){ clearTimeout(t); if(!r.ok) throw new Error(r.status); return r.json(); }, function(e){ clearTimeout(t); throw e; });
+    }
+    var task = TASKS[0], timer = null, shown = {}, curRound = 0, lastTs = 0, lite = true, busy = false;
+    function msg(t){ $('lvMsg').textContent = t || ''; }
+    // a short reason, so a problem with the database can be told apart from the Wi-Fi
+    function why(err){ var m = String(err && (err.name === 'AbortError' ? 'no reply' : err.message) || 'error'); return /^\d+$/.test(m) ? 'error ' + m : (m === 'Failed to fetch' || m === 'Load failed' ? 'blocked or offline' : m); }
+    function chips(){
+      $('lvChips').innerHTML = TASKS.map(function(t){ return '<button class="chip' + (t === task ? ' on' : '') + '" type="button">' + t + '</button>'; }).join('') +
+        '<span class="chip"><input id="lvOwn" placeholder="Type your own task" maxlength="60"></span>';
+      [].forEach.call($('lvChips').querySelectorAll('button.chip'), function(b){ b.addEventListener('click', function(){ setTask(b.textContent); }); });
+      $('lvOwn').addEventListener('keydown', function(e){ if(e.key === 'Enter' && this.value.trim()){ setTask(this.value.trim()); } e.stopPropagation(); });
+    }
+    function empty(){ if(!$('lvGrid').querySelector('.pic-s')) $('lvGrid').innerHTML = '<div class="lv-empty">Pictures appear here when children press Send to the board.</div>'; }
+    function resetGrid(){ shown = {}; lastTs = 0; $('lvGrid').innerHTML = ''; empty(); }
+    function setTask(t){
+      task = t; $('lvTask').textContent = t; chips();
+      rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:LESSON + t }).then(function(ok){
+        if(!ok){ msg('Another board owns this code.'); return; }
+        resetGrid(); poll();
+      }).catch(function(err){ msg('Can’t change the task (' + why(err) + ').'); });
+    }
+    function showRoom(){ qr($('lvQr'), BASE + 'paint.html?mode=l2&room=' + CODE, 242); $('lvCode').textContent = CODE; }
+    function addPics(rows){
+      var g = $('lvGrid');
+      rows.filter(function(r){ return r.id && r.kind === 'drawing'; }).sort(function(a, b){ return a.ts - b.ts; }).forEach(function(r){
+        if(r.ts > lastTs) lastTs = r.ts;
+        if(shown[r.id]) return; shown[r.id] = 1;
+        var e = g.querySelector('.lv-empty'); if(e) e.remove();
+        var d = document.createElement('div'); d.className = 'pic-s';
+        d.innerHTML = '<img alt="" src="' + r.content + '"><button class="x" type="button" aria-label="Hide">' + ph('x') + '</button>';
+        d.addEventListener('click', function(){ $('big').innerHTML = '<img alt="" src="' + r.content + '">'; $('big').classList.add('on'); });
+        d.querySelector('.x').addEventListener('click', function(ev){ ev.stopPropagation(); d.remove(); empty(); rpc('live_hide_answer', { p_code:CODE, p_token:TOKEN, p_id:r.id }).catch(function(){}); });
+        g.insertBefore(d, g.firstChild);
+      });
+    }
+    // each check asks for the task, then only the pictures that are new since the last check
+    function poll(){
+      if(busy) return; busy = true;
+      rpc(lite ? 'live_get_room?select=question,round,joined&limit=1' : 'live_get_room', { p_code:CODE }).then(function(rows){
+        var m = rows && rows[0];
+        if(!m || m.question === ENDED){                       // first time on this code: set it up
+          return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:LESSON + task }).then(function(ok){ if(!ok) msg('Another board owns this code.'); });
+        }
+        if(m.question.indexOf(LESSON) !== 0){                // still on another lesson's task: move every iPad to this one
+          return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:LESSON + task }).then(function(){ resetGrid(); });
+        }
+        if(m.round !== curRound){ curRound = m.round; resetGrid(); }
+        if(m.question && bare(m.question) !== task){ task = bare(m.question); $('lvTask').textContent = task; chips(); }
+        $('lvJoined').textContent = (m.joined || 0) + ' iPads joined';
+        if(!lite){ addPics(rows); return; }
+        return rpc('live_get_room?select=id,kind,content,ts&id=not.is.null&ts=gte.' + lastTs + '&order=ts.asc', { p_code:CODE }).then(addPics);
+      }).then(function(){ msg(''); }).catch(function(err){
+        if(lite && /^4/.test(err && err.message)){ lite = false; return; }
+        msg('Can’t reach the live board (' + why(err) + ').');
+      }).then(function(){ busy = false; });
+    }
+    $('lvClear').addEventListener('click', function(){
+      rpc('live_clear_all', { p_code:CODE, p_token:TOKEN }).then(resetGrid).catch(function(){ msg('Can’t reach the live board.'); });
+    });
+    $('big').addEventListener('click', function(){ this.classList.remove('on'); });
+    chips(); showRoom();
+    poll();                                   // set the code up as soon as the lesson opens, whatever slide it's on
+    window.PL1_LIVE = { garden:function(){ if(room && task !== 'Paint a Mondrian') setTask('Paint a Mondrian'); }, on:function(){ if(!timer){ poll(); timer = setInterval(poll, 2000); } }, off:function(){ clearInterval(timer); timer = null; } };
+  })();
+
+  /* ---------- deck ---------- */
+  $('toGallery').addEventListener('click', function(){ go(PARTS.indexOf($('p-live')), 0); });
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+  var stage = $('stage');
+  function fit(){ stage.style.transform = 'scale(' + Math.min(innerWidth / 1600, innerHeight / 900) + ')'; }
+  addEventListener('resize', fit); fit();
+  if(RM) stage.classList.add('rm');
+
+  var PARTS = [].slice.call(document.querySelectorAll('.part'));
+  PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp,.pp-card'), function(e){ return +e.getAttribute('data-s'); }))); });
+  var POTS = ['--p1','--p3','--p5'];
+  var potsEl = $('pots'), seen = {};
+  PARTS.forEach(function(p, i){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pot'; b.textContent = i + 1;
+    b.style.setProperty('--c', 'var(' + POTS[i % POTS.length] + ')');
+    b.setAttribute('aria-label', p.getAttribute('data-name'));
+    b.addEventListener('click', function(){ go(i, 0); });
+    potsEl.appendChild(b);
+  });
+  var cur = 0, step = 0;
+  function render(){
+    PARTS.forEach(function(p, i){ p.classList.toggle('on', i === cur); });
+    [].forEach.call(PARTS[cur].querySelectorAll('.pp'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
+    [].forEach.call(PARTS[cur].querySelectorAll('.pp-card'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
+    seen[cur] = true;
+    [].forEach.call(potsEl.children, function(c, i){ c.classList.toggle('cur', i === cur); c.classList.toggle('seen', !!seen[i]); });
+    $('pname').textContent = PARTS[cur].getAttribute('data-name');
+    var d = ''; for(var i = 1; i <= PARTS[cur].steps; i++) d += '<i class="' + (i <= step ? 'on' : '') + '"></i>';
+    $('dots').innerHTML = d;
+    $('back').disabled = cur === 0 && step === 0;
+    $('next').disabled = cur === PARTS.length - 1 && step >= PARTS[cur].steps;
+    $('nextlab').textContent = step < PARTS[cur].steps ? 'Reveal' : 'Next';
+    if(PARTS[cur].id === 'p-live') PL1_LIVE.on(); else PL1_LIVE.off();
+    if(PARTS[cur].id === 'p-garden') PL1_LIVE.garden();
+    try{ history.replaceState(null, '', '#part' + cur); }catch(e){}
+  }
+  function go(p, s){ cur = Math.max(0, Math.min(PARTS.length - 1, p)); step = s === 'end' ? PARTS[cur].steps : (s || 0); render(); }
+  function next(){ if(step < PARTS[cur].steps){ step++; render(); } else if(cur < PARTS.length - 1) go(cur + 1, 0); }
+  function back(){ if(step > 0){ step--; render(); } else if(cur > 0) go(cur - 1, 'end'); }
+  $('next').addEventListener('click', next);
+  $('back').addEventListener('click', back);
+  addEventListener('keydown', function(e){
+    if(e.target.closest && e.target.closest('input,textarea')) return;
+    if(['ArrowRight','PageDown',' '].indexOf(e.key) > -1){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); back(); }
+  });
+  var m = /^#part(\d+)$/.exec(location.hash);
+  go(m ? +m[1] : 0, 0);
+})();
+</script>
+</body>
+</html>

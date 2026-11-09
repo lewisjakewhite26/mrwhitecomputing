@@ -524,6 +524,9 @@
     var CODE = 'H276J', TOKEN = 'hb-y12-paint-board-7c41e9b2', ENDED = '__ended__';
     var room = { code:CODE, token:TOKEN };
     var TASKS = ['Draw a circle', 'Draw a house', 'Draw a sun', 'Draw a tree', 'Paint a garden'];
+    // every task goes out as "l1|task", so each iPad switches to this lesson's tools by itself
+    var LESSON = 'l1|';
+    function bare(q){ return String(q || '').replace(/^l\d+\|/, ''); }
     // every request gives up after 5 seconds, so one stuck request on the school Wi-Fi can't freeze the checks
     function rpc(name, args){
       var ctl = window.AbortController ? new AbortController() : null, t = ctl ? setTimeout(function(){ ctl.abort(); }, 5000) : 0;
@@ -545,7 +548,7 @@
     function resetGrid(){ shown = {}; lastTs = 0; $('lvGrid').innerHTML = ''; empty(); }
     function setTask(t){
       task = t; $('lvTask').textContent = t; chips();
-      rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:t }).then(function(ok){
+      rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:LESSON + t }).then(function(ok){
         if(!ok){ msg('Another board owns this code.'); return; }
         resetGrid(); poll();
       }).catch(function(err){ msg('Can’t change the task (' + why(err) + ').'); });
@@ -570,10 +573,13 @@
       rpc(lite ? 'live_get_room?select=question,round,joined&limit=1' : 'live_get_room', { p_code:CODE }).then(function(rows){
         var m = rows && rows[0];
         if(!m || m.question === ENDED){                       // first time on this code: set it up
-          return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:task }).then(function(ok){ if(!ok) msg('Another board owns this code.'); });
+          return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:LESSON + task }).then(function(ok){ if(!ok) msg('Another board owns this code.'); });
+        }
+        if(m.question.indexOf(LESSON) !== 0){                // still on another lesson's task: move every iPad to this one
+          return rpc('live_set_question', { p_code:CODE, p_token:TOKEN, p_question:LESSON + task }).then(function(){ resetGrid(); });
         }
         if(m.round !== curRound){ curRound = m.round; resetGrid(); }
-        if(m.question && m.question !== task){ task = m.question; $('lvTask').textContent = task; chips(); }
+        if(m.question && bare(m.question) !== task){ task = bare(m.question); $('lvTask').textContent = task; chips(); }
         $('lvJoined').textContent = (m.joined || 0) + ' iPads joined';
         if(!lite){ addPics(rows); return; }
         return rpc('live_get_room?select=id,kind,content,ts&id=not.is.null&ts=gte.' + lastTs + '&order=ts.asc', { p_code:CODE }).then(addPics);
