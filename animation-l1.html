@@ -128,6 +128,13 @@
   .disc .face{position:absolute;inset:0;border-radius:50%;background:#fff;border:4px solid var(--ink);overflow:hidden}
   .disc .face svg{width:100%;height:100%;display:block}
   .disc .back svg{transform:scaleX(-1)}
+  /* spinning fast: show what your eyes see, both sides at once, the same on any screen */
+  .disc.blend .face{display:block !important}
+  .disc.blend .back{background:transparent}
+  .disc.blend{animation:wob .14s linear infinite alternate}
+  .disc.blend::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:6px solid rgba(27,37,64,.18);filter:blur(3px)}
+  @keyframes wob{from{transform:scaleX(.9)}to{transform:scaleX(.97)}}
+  .rm .disc.blend{animation:none;transform:scaleX(.94)}
   .th .say{display:flex;flex-direction:column;gap:20px}
   .th .say p{margin:0;font-size:34px;line-height:1.35}
   .ety{font-size:28px;line-height:1.4;padding:18px 24px;border-radius:14px;background:var(--sun-soft)}
@@ -421,7 +428,7 @@
     <!-- 13 next -->
     <section class="part" data-name="Next time">
       <h2>Next time</h2>
-      <p class="lead">You draw twelve frames and make them move with a <span class="mark">flipbook</span> and a <span class="mark">zoetrope</span>.</p>
+      <p class="lead">You draw lots of frames and make them move with a <span class="mark">flipbook</span>.</p>
       <div class="row" style="margin-top:40px;gap:30px">
         <div class="frame" style="width:420px;height:300px"><div class="loop" data-loop="snail"></div></div>
         <div class="frame" style="width:420px;height:300px"><div class="loop" data-loop="ball"></div></div>
@@ -569,7 +576,7 @@
       if(mode === 'stop'){ D.a = Math.round(D.a / Math.PI) * Math.PI; paintDisc(D); }
     });
   }
-  // fast spin swaps the picture on every screen refresh, just as a real card shows each side in turn
+  // fast spin shows both sides together, as your eyes see them. Swapping every screen refresh failed on boards that drop frames.
   var fastTick = 0;
   function spinLoop(now){
     fastTick++;
@@ -581,11 +588,8 @@
         var t = Math.min(1, (now - D.t0) / 700); D.a = D.from + (D.to - D.from) * (1 - Math.pow(1 - t, 3)); paintDisc(D);
         if(t >= 1) D.mode = 'stop';
       }
-      else if(D.mode === 'fast'){
-        if(RM){ D.front.style.display = ''; D.back.style.display = ''; D.back.style.opacity = '.55'; D.el.style.transform = 'scaleX(.92)'; }
-        else { D.a = (fastTick % 2) ? Math.PI : 0; paintDisc(D); D.el.style.transform = 'scaleX(' + (fastTick % 2 ? .9 : .96) + ')'; }
-      }
-      if(D.mode !== 'fast') D.back.style.opacity = '';
+      D.el.classList.toggle('blend', D.mode === 'fast');
+      if(D.mode === 'fast') D.el.style.transform = '';
     });
     requestAnimationFrame(spinLoop);
   }
