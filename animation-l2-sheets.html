@@ -68,7 +68,7 @@
   function sheet(kind, from){
     var h = '<div class="page ' + kind + '"><div class="hd"><div><h1>' + (kind === 'ball' ? 'Bouncing ball helper' : 'Flipbook pages') + '</h1>' +
       '<p>' + (kind === 'ball' ? 'Draw a ball over each dotted circle. Trace the last page so the ball stays the same size.' : 'Draw near the right-hand edge. Trace the last page each time and move things a tiny bit.') +
-      ' Cut on the dashed lines, put the pages in order with 1 on top, then staple on the dots.</p></div><span class="tag">PAGES ' + from + ' TO ' + (from + 9) + '</span></div><div class="grid">';
+      ' Cut on the dashed lines. Put the pages in order with 1 on top. Staple or clip on the dots.</p></div><span class="tag">PAGES ' + from + ' TO ' + (from + 9) + '</span></div><div class="grid">';
     for(var i = from; i < from + 10; i++){
       h += '<div class="pg">' + (i === from ? '<span class="cut">' + ph('scissors') + '</span>' : '') +
         '<div class="bind"><span class="st"></span><span class="n">' + i + '</span><span class="st"></span></div><div class="draw">' + (kind === 'ball' ? helper(i - 1) : '') + '</div></div>';
