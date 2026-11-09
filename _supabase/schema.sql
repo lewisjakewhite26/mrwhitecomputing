@@ -22,6 +22,7 @@ create table if not exists live_answers (
   created_at timestamptz not null default now()
 );
 alter table live_answers add column if not exists round int not null default 1;
+create index if not exists live_answers_room_round on live_answers(room_code, round);
 
 -- one row per distinct pupil DEVICE that has ever opened this room (not per
 -- round -- this is a whole-session headcount, like a classroom roster, not a
@@ -150,6 +151,13 @@ begin
 end;
 $$;
 
+-- only the anon key may call these, nothing else by default
+revoke execute on function live_get_room(text) from public;
+revoke execute on function live_set_question(text, text, text) from public;
+revoke execute on function live_submit_answer(text, text, text) from public;
+revoke execute on function live_hide_answer(text, text, uuid) from public;
+revoke execute on function live_clear_all(text, text) from public;
+revoke execute on function live_mark_joined(text, text) from public;
 grant execute on function live_get_room(text) to anon;
 grant execute on function live_set_question(text, text, text) to anon;
 grant execute on function live_submit_answer(text, text, text) to anon;

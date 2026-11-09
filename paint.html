@@ -350,7 +350,7 @@
   var ROOM = (q.get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '') || (q.has('board') ? '' : CODE);
   store('room', null);                      // forget the old random codes
   if(ROOM){
-    var SB_URL = 'https://bbmzmlkcabcweywpuewx.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJibXptbGtjYWJjd2V5d3B1ZXd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2MTExNDYsImV4cCI6MjEwOTE4NzE0Nn0.QhO-Auzuw5DtK8uwmGnRh0BSvnrh1yPhqJc01cDNwjw';
+    var SB_URL = 'https://mkqyfywzoeqnfazyrndy.supabase.co', SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcXlmeXd6b2VxbmZhenlybmR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyNTMyMTIsImV4cCI6MjEwOTgyOTIxMn0.7nehcwwYCmmxlH41a0Y8XMD6rFVhGv1XF5Oql8PIUic';
     // every request gives up after 5 seconds, so one stuck request on the school Wi-Fi can't freeze the checks
     function rpc(name, args){
       var ctl = window.AbortController ? new AbortController() : null, t = ctl ? setTimeout(function(){ ctl.abort(); }, 5000) : 0;
