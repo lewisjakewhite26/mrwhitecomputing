@@ -251,7 +251,11 @@
   /* make */
   .ladder{display:flex;flex-direction:column;gap:12px}
   .rung{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;padding:12px 18px;border-radius:16px;background:var(--card);border:2px solid var(--edge)}
-  .rung .frame{height:94px;border-radius:10px}
+  .rung .frame{height:78px;border-radius:10px}
+  .rung .frame.own{display:grid;place-items:center;color:var(--blue);background:var(--blue-soft)}
+  .rung .frame.own svg{width:46px;height:46px}
+  .ladder{gap:9px}
+  .rung{padding:9px 16px}
   .rung b{display:block;font-size:30px}
   .rung span{display:block;font-size:23px;color:var(--muted);line-height:1.3}
   .rung .lvl{font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--blue)}
@@ -355,12 +359,13 @@
 
     <!-- 7 make -->
     <section class="part" data-name="Make yours">
-      <h2>Make your flipbook</h2>
+      <h2>Pick one, or invent your own</h2>
       <div class="make">
         <div class="ladder">
-          <div class="rung pp" data-s="1"><div class="frame"><div class="loop" data-loop="wave"></div></div><div><span class="lvl">WARM UP</span><b>A stick person waving</b><span>Trace the body every time. Only the arm moves</span></div></div>
-          <div class="rung pp" data-s="2"><div class="frame"><div class="loop" data-loop="good"></div></div><div><span class="lvl">MAIN</span><b>A bouncing ball</b><span>Use the helper pages to see where the ball goes</span></div></div>
-          <div class="rung pp" data-s="3"><div class="frame"><div class="loop" data-loop="ufo"></div></div><div><span class="lvl">CHALLENGE</span><b>A UFO beams someone up</b><span>Trace the UFO each time so it stays the same</span></div></div>
+          <div class="rung pp" data-s="1"><div class="frame"><div class="loop" data-loop="wave"></div></div><div><span class="lvl">ONE STAR</span><b>A stick person waving</b><span>Trace the body every time. Only the arm moves</span></div></div>
+          <div class="rung pp" data-s="2"><div class="frame"><div class="loop" data-loop="good"></div></div><div><span class="lvl">TWO STARS</span><b>A bouncing ball</b><span>The helper pages show where the ball goes</span></div></div>
+          <div class="rung pp" data-s="3"><div class="frame"><div class="loop" data-loop="ufo"></div></div><div><span class="lvl">THREE STARS</span><b>A UFO beams someone up</b><span>Trace the UFO each time so it stays the same</span></div></div>
+          <div class="rung pp" data-s="4"><div class="frame own"><span data-ph="lightbulb"></span></div><div><span class="lvl">YOUR OWN IDEA</span><b>Anything that moves</b><span>Decide what moves and what stays the same, then start</span></div></div>
         </div>
         <div>
           <div class="need"><h3>YOU NEED</h3><ul><li>Flipbook pages</li><li>A pencil</li><li>Scissors</li><li>A bulldog clip</li><li>A window</li></ul><a class="bt printbt" href="animation-l2-sheets.html" target="_blank" rel="noopener"><span data-ph="printer"></span>Flipbook pages</a></div>
