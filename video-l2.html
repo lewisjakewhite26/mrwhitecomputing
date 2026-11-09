@@ -278,6 +278,25 @@
   .opts.show .opt.right{border-color:var(--yel)}
   .opts.show .opt:not(.right){opacity:.4}
   .why{margin-top:22px;font-size:32px;font-weight:700;padding:16px 24px;border-radius:12px;background:var(--yel);color:#141414}
+
+  /* example trailer */
+  .hx{display:grid;grid-template-columns:760px 1fr;gap:30px}
+  .hx-scr{position:relative;width:760px;height:427px;border-radius:10px;overflow:hidden;border:2px solid #3a3f4b;background:#000}
+  .hx-scr canvas{display:block;width:100%;height:100%;cursor:pointer}
+  .hx-tag{position:absolute;right:12px;top:12px;display:flex;align-items:center;gap:10px;background:rgba(11,12,15,.82);border-radius:8px;padding:7px 14px;font-family:var(--mono);font-size:18px;color:#fff;transition:opacity .3s}
+  .hx-tag i{width:11px;height:11px;border-radius:50%;background:var(--play);box-shadow:0 0 8px var(--play)}
+  .hx-tag b{color:var(--yel);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .hx-tag.off{opacity:0}
+  .hx-big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;border:0;background:var(--yel);color:#141414;font-size:56px;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  .hx-big.off{display:none}
+  .hx-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .hx-list li{display:flex;align-items:center;gap:14px;padding:7px 14px;border-radius:10px;background:var(--panel);border:1px solid var(--edge);cursor:pointer;transition:background .2s,border-color .2s}
+  .hx-list li .n{font-family:var(--mono);font-weight:700;font-size:20px;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:var(--panel2);color:var(--yel)}
+  .hx-list li b{display:block;font-size:24px}
+  .hx-list li div span{display:block;font-size:18px;color:var(--mut)}
+  .hx-list li.on{border-color:var(--yel);background:var(--panel2)}
+  .hx-list li.on .n{background:var(--yel);color:#141414}
+  .hx-btns{display:flex;gap:12px;margin-top:14px}
 </style>
 </head>
 <body>
@@ -446,6 +465,28 @@
       </div>
     </section>
 
+    <!-- 12 example trailer -->
+    <section class="part" data-name="Example trailer" id="example">
+      <h2>Watch an example first</h2>
+      <div class="hx">
+        <div class="hx-scr">
+          <canvas id="hxCv" width="1280" height="720"></canvas>
+          <div class="hx-tag" id="hxTag"><i></i><span id="hxNum">1/6</span><b id="hxName">Wide shot</b></div>
+          <button class="hx-big" type="button" id="hxBig" aria-label="Play the example"><span data-ph="play"></span></button>
+        </div>
+        <div class="hx-side">
+          <ol class="hx-list" id="hxList">
+            <li data-i="0"><span class="n">1</span><div><b>Wide shot</b><span>The hero&rsquo;s world</span></div></li>
+            <li data-i="1"><span class="n">2</span><div><b>Close-up</b><span>Nervous eyes</span></div></li>
+            <li data-i="2"><span class="n">3</span><div><b>Low angle</b><span>The hero stands up</span></div></li>
+            <li data-i="3"><span class="n">4</span><div><b>High angle</b><span>Something huge appears</span></div></li>
+            <li data-i="4"><span class="n">5</span><div><b>Pan</b><span>Run across the table</span></div></li>
+            <li data-i="5"><span class="n">6</span><div><b>Tilt up</b><span>Reveal the giant</span></div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
     <!-- 12 task -->
     <section class="part task" data-name="Toy Hero Trailer" id="task">
       <div class="task-h">
@@ -606,7 +647,7 @@
     pl.replaceWith(a);
   });
   // planned minutes per part, and what kind of clip it is on the timeline
-  var PLAN = [[1,'title'],[2,'talk'],[3,'talk'],[3,'video'],[2,'talk'],[3,'talk'],[4,'video'],[3,'talk'],[3,'video'],[4,'video'],[3,'talk'],[2,'talk'],[25,'task'],[2,'task'],[5,'task'],[2,'talk'],[1,'talk']];
+  var PLAN = [[1,'title'],[2,'talk'],[3,'talk'],[3,'video'],[2,'talk'],[3,'talk'],[4,'video'],[3,'talk'],[3,'video'],[4,'video'],[3,'talk'],[2,'talk'],[2,'video'],[25,'task'],[2,'task'],[5,'task'],[2,'talk'],[1,'talk']];
   var AUDIO = [3, 6, 8, 9];
   PARTS.forEach(function(p){ p.steps = Math.max.apply(null, [0].concat([].map.call(p.querySelectorAll('.pp'), function(e){ return +e.getAttribute('data-s'); }))); });
 
@@ -833,6 +874,201 @@
     show();
   })();
 
+
+  /* ---------- example trailer: a glue stick hero with wobbly eyes, six shots ---------- */
+  (function(){
+    var cv = document.getElementById('hxCv'), c = cv.getContext('2d');
+    var tag = document.getElementById('hxTag'), num = document.getElementById('hxNum'), nm = document.getElementById('hxName');
+    var big = document.getElementById('hxBig'), part = document.getElementById('example');
+    var items = [].slice.call(document.querySelectorAll('#hxList li'));
+    var NAMES = ['Wide shot', 'Close-up', 'Low angle', 'High angle', 'Pan', 'Tilt up'];
+    var SHOT = 4.2, END = 3;                                   // seconds per shot, then the title card
+    var TOTAL = SHOT * 6 + END;
+    var PUR = '#7b4fd6', PUR2 = '#5f37b8', BODY = '#f5f4ee', WOOD = '#c98f55', WOOD2 = '#b57b43', WALL = '#e9e2d3';
+
+    function ease(p){ p = Math.max(0, Math.min(1, p)); return p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; }
+    function rr(x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+
+    // one googly eye; (lx, ly) is where it looks, from -1 to 1
+    function eye(x, y, r, lx, ly, sx){
+      sx = sx || 1;
+      c.save(); c.translate(x, y); c.scale(sx, 1);
+      c.fillStyle = '#fff'; c.strokeStyle = '#1b1b1b'; c.lineWidth = r * .16;
+      c.beginPath(); c.arc(0, 0, r, 0, 7); c.fill(); c.stroke();
+      c.fillStyle = '#111'; c.beginPath(); c.arc(lx * r * .45, ly * r * .45, r * .52, 0, 7); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.8)'; c.beginPath(); c.arc(lx * r * .45 - r * .17, ly * r * .45 - r * .17, r * .12, 0, 7); c.fill();
+      c.restore();
+    }
+
+    /* The hero. (x, y) is the middle of its base. s is size.
+       taper: how much narrower the top is (below 1 when we look up at it, above 1 when we look down).
+       squash: how tall it looks (below 1 when seen from above). */
+    function hero(x, y, s, o){
+      o = o || {};
+      var taper = o.taper || 1, squash = o.squash || 1, lx = o.lx || 0, ly = o.ly || 0;
+      var W = 86 * s, H = 220 * s * squash, CH = 66 * s * squash, CW = W * 1.08;
+      function wAt(f){ return W * (1 + (taper - 1) * f); }          // width at a height fraction
+      if(!o.noShadow){ c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(x, y, W * .75, W * .16, 0, 0, 7); c.fill(); }
+      // body
+      c.fillStyle = BODY; c.strokeStyle = '#cfcdc2'; c.lineWidth = 2 * s;
+      c.beginPath(); c.moveTo(x - wAt(0) / 2, y); c.lineTo(x - wAt(1) / 2, y - H); c.lineTo(x + wAt(1) / 2, y - H); c.lineTo(x + wAt(0) / 2, y); c.closePath(); c.fill(); c.stroke();
+      // purple twist base and label band
+      function band(f0, f1, col){ c.fillStyle = col; c.beginPath(); c.moveTo(x - wAt(f0) / 2, y - H * f0); c.lineTo(x - wAt(f1) / 2, y - H * f1); c.lineTo(x + wAt(f1) / 2, y - H * f1); c.lineTo(x + wAt(f0) / 2, y - H * f0); c.closePath(); c.fill(); }
+      band(0, .08, PUR2); band(.16, .42, PUR);
+      c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 4 * s; c.beginPath();
+      for(var k = 0; k <= 10; k++){ var f = .29 + Math.sin(k / 10 * Math.PI * 2) * .04, wx = x - wAt(f) / 2 + wAt(f) * k / 10; k ? c.lineTo(wx, y - H * f) : c.moveTo(wx, y - H * f); }
+      c.stroke();
+      // cap
+      var cb = y - H + 4 * s, cwb = CW * (1 + (taper - 1) * 1), cwt = CW * (1 + (taper - 1) * (1 + CH / Math.max(H, 1)));
+      c.fillStyle = PUR; c.beginPath(); c.moveTo(x - cwb / 2, cb); c.lineTo(x - cwt / 2, cb - CH); c.lineTo(x + cwt / 2, cb - CH); c.lineTo(x + cwb / 2, cb); c.closePath(); c.fill();
+      if(o.top){ c.beginPath(); c.ellipse(x, cb - CH, cwt / 2, cwt * .32, 0, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(x, cb - CH, cwt * .34, cwt * .2, 0, 0, 7); c.fill(); }
+      c.fillStyle = 'rgba(255,255,255,.22)'; c.fillRect(x - cwb * .32, cb - CH * .85, cwb * .1, CH * .7);
+      // two wobbly eyes stuck on the body
+      var ef = .66, ew = wAt(ef), er = ew * .2;
+      eye(x - ew * .22, y - H * ef, er, lx, ly, o.eyeSx);
+      eye(x + ew * .22, y - H * ef, er * 1.08, lx, ly, o.eyeSx);
+    }
+
+    function wobble(t, k){ return Math.sin(t * 23) * k; }
+    function table(y, h){
+      c.fillStyle = WOOD; c.fillRect(0, y, 1280, h);
+      c.strokeStyle = WOOD2; c.lineWidth = 3;
+      for(var i = 0; i < 6; i++){ var gy = y + 14 + i * (h - 20) / 6; c.beginPath(); c.moveTo(0, gy); c.bezierCurveTo(400, gy + 6, 800, gy - 6, 1280, gy + 3); c.stroke(); }
+      c.fillStyle = 'rgba(0,0,0,.12)'; c.fillRect(0, y, 1280, 8);
+    }
+    function pencilPot(x, y, s){
+      var cols = ['#e04f3a', '#2f8fd8', '#f2c230', '#3aa35b'];
+      cols.forEach(function(col, i){ c.save(); c.translate(x - 30 * s + i * 20 * s, y - 120 * s); c.rotate((i - 1.5) * .12); c.fillStyle = col; c.fillRect(-6 * s, -70 * s, 12 * s, 90 * s); c.fillStyle = '#f0d3a8'; c.beginPath(); c.moveTo(-6 * s, -70 * s); c.lineTo(0, -88 * s); c.lineTo(6 * s, -70 * s); c.fill(); c.restore(); });
+      c.fillStyle = '#4a5a78'; rr(x - 50 * s, y - 130 * s, 100 * s, 130 * s, 10 * s); c.fill();
+    }
+    function books(x, y, n, s, cols){
+      cols = cols || ['#c0392b', '#2e86c1', '#27ae60', '#8e44ad', '#d68910', '#16a085', '#cb4335', '#2471a3'];
+      for(var i = 0; i < n; i++){
+        var w = (230 + (i * 37 % 60)) * s, h = 46 * s, bx = x - w / 2 + ((i * 53) % 30 - 15) * s, by = y - (i + 1) * h;
+        c.fillStyle = cols[i % cols.length]; rr(bx, by, w, h - 3 * s, 5 * s); c.fill();
+        c.fillStyle = '#f3ecd9'; c.fillRect(bx + w - 14 * s, by + 6 * s, 10 * s, h - 15 * s);
+        c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(bx + 18 * s, by + 14 * s, w * .35, 5 * s);
+      }
+    }
+    // the giant: a stapler with wobbly eyes, whose jaw opens
+    function stapler(x, y, s, open){
+      c.save(); c.translate(x, y);
+      c.fillStyle = '#2b2f36'; rr(-170 * s, -40 * s, 340 * s, 40 * s, 14 * s); c.fill();
+      c.save(); c.translate(150 * s, -40 * s); c.rotate(-open * .5);
+      c.fillStyle = '#d23a2f'; rr(-330 * s, -70 * s, 350 * s, 62 * s, 26 * s); c.fill();
+      c.fillStyle = '#b02e25'; c.fillRect(-330 * s, -16 * s, 340 * s, 10 * s);
+      c.fillStyle = '#ddd'; for(var i = 0; i < 6; i++){ c.beginPath(); c.moveTo(-320 * s + i * 22 * s, -6 * s); c.lineTo(-310 * s + i * 22 * s, 10 * s); c.lineTo(-300 * s + i * 22 * s, -6 * s); c.fill(); }
+      eye(-250 * s, -44 * s, 22 * s, .6, .5); eye(-196 * s, -44 * s, 24 * s, .6, .5);
+      c.restore(); c.restore();
+    }
+    function wall(){ c.fillStyle = WALL; c.fillRect(0, 0, 1280, 720); }
+    function windowPane(x, y, w, h){
+      c.fillStyle = '#9fd0ef'; c.fillRect(x, y, w, h); c.strokeStyle = '#fff'; c.lineWidth = 14; c.strokeRect(x, y, w, h);
+      c.beginPath(); c.moveTo(x + w / 2, y); c.lineTo(x + w / 2, y + h); c.moveTo(x, y + h / 2); c.lineTo(x + w, y + h / 2); c.stroke();
+    }
+
+    var SHOTS = [
+      // 1 wide: the whole table, the hero small in the middle
+      function(p, t){
+        wall(); windowPane(860, 70, 300, 220);
+        c.fillStyle = '#d8cfbd'; c.fillRect(0, 380, 1280, 10);
+        table(420, 300);
+        pencilPot(230, 520, .9); books(1010, 540, 3, .8);
+        c.fillStyle = '#e8c547'; c.save(); c.translate(430, 600); c.rotate(-.05); c.fillRect(0, 0, 260, 26); c.restore();
+        hero(640 + Math.sin(t * 1.3) * 6, 560, .62, { lx:Math.sin(t * 1.7) * .8, ly:wobble(t, .08) });
+      },
+      // 2 close-up: just the eyes, nervous
+      function(p, t){
+        c.fillStyle = '#d9cfbc'; c.fillRect(0, 0, 1280, 720);
+        c.fillStyle = 'rgba(160,190,210,.5)'; c.beginPath(); c.arc(1100, 120, 160, 0, 7); c.fill();
+        var look = p < .3 ? -1 : p < .6 ? 1 : -.2;
+        hero(640, 1040, 4.3, { lx:look * .9 + wobble(t, .06), ly:p > .6 ? .5 : 0, noShadow:true });
+        if(p > .55){ var d = ease((p - .55) * 3); c.fillStyle = 'rgba(120,190,240,' + (.9 * d) + ')'; c.beginPath(); c.moveTo(1000, 140 + d * 60); c.quadraticCurveTo(1030, 200 + d * 60, 1000, 220 + d * 60); c.quadraticCurveTo(970, 200 + d * 60, 1000, 140 + d * 60); c.fill(); }
+      },
+      // 3 low angle: camera on the table looking up, the hero rises and stands tall
+      function(p, t){
+        var g = c.createLinearGradient(0, 0, 0, 720); g.addColorStop(0, '#f4f1ea'); g.addColorStop(1, '#ddd4c2'); c.fillStyle = g; c.fillRect(0, 0, 1280, 720);
+        c.fillStyle = '#fffbe6'; [[180, 40], [700, 10], [1100, 50]].forEach(function(l){ rr(l[0], l[1], 260, 30, 8); c.fill(); });
+        c.save(); c.globalAlpha = .25 * ease(p * 2); c.fillStyle = '#ffe680';
+        for(var i = 0; i < 9; i++){ c.beginPath(); c.moveTo(640, 300); var a = -Math.PI / 2 + (i - 4) * .3; c.lineTo(640 + Math.cos(a - .08) * 1200, 300 + Math.sin(a - .08) * 1200); c.lineTo(640 + Math.cos(a + .08) * 1200, 300 + Math.sin(a + .08) * 1200); c.fill(); }
+        c.restore();
+        c.fillStyle = WOOD; c.fillRect(0, 650, 1280, 70); c.fillStyle = WOOD2; c.fillRect(0, 650, 1280, 6);
+        var up = ease(p * 1.6);
+        hero(640, 690 + (1 - up) * 560, 2.4, { taper:.68, lx:0, ly:-.35 + wobble(t, .05), noShadow:true });
+      },
+      // 4 high angle: looking down at the table, a huge shadow falls over the tiny hero
+      function(p, t){
+        c.fillStyle = WOOD; c.fillRect(0, 0, 1280, 720);
+        c.strokeStyle = WOOD2; c.lineWidth = 4;
+        for(var i = -8; i <= 8; i++){ c.beginPath(); c.moveTo(640 + i * 60, -40); c.lineTo(640 + i * 150, 760); c.stroke(); }
+        var sh = ease((p - .25) * 1.6);
+        c.fillStyle = 'rgba(20,14,10,' + (.55 * sh) + ')'; c.beginPath(); c.ellipse(640 - 120 + sh * 120, -200 + sh * 520, 520 * sh + 10, 360 * sh + 10, 0, 0, 7); c.fill();
+        hero(640 + wobble(t, sh * 3), 470, 1.5, { taper:1.3, squash:.55, top:true, lx:0, ly:sh > .3 ? -1 : .4 });
+      },
+      // 5 pan: the hero hops along the table and the camera turns to follow
+      function(p, t){
+        var hx = 300 + ease(p) * 2200, camX = hx - 640;
+        c.save(); c.translate(-camX, 0);
+        c.fillStyle = WALL; c.fillRect(camX - 10, 0, 1300, 720);
+        for(var w = 0; w < 4; w++) windowPane(200 + w * 800, 70, 260, 200);
+        c.restore();
+        c.save(); c.translate(-camX * 1, 0);
+        c.fillStyle = WOOD; c.fillRect(camX - 10, 430, 1300, 290);
+        c.strokeStyle = WOOD2; c.lineWidth = 3; for(var i = 0; i < 5; i++){ c.beginPath(); c.moveTo(camX - 10, 460 + i * 50); c.lineTo(camX + 1300, 462 + i * 50); c.stroke(); }
+        pencilPot(150, 560, .9); books(900, 580, 2, .8); pencilPot(1700, 560, .9); books(2400, 580, 3, .8); books(3050, 580, 2, .8);
+        c.fillStyle = '#e8c547'; c.fillRect(1250, 600, 260, 24);
+        var hop = Math.abs(Math.sin(p * Math.PI * 7)) * 70;
+        hero(hx, 600 - hop, .8, { lx:1, ly:wobble(t, .25) });
+        c.restore();
+        c.fillStyle = 'rgba(255,255,255,.55)'; for(var m = 0; m < 4; m++){ c.fillRect(0, 160 + m * 130, 1280, 0); }
+      },
+      // 6 tilt up: from the bottom of a tall pile of books to the giant at the top
+      function(p, t){
+        var camY = 1400 - ease(p * 1.15) * 1400;               // the camera tips up through a tall scene
+        c.save(); c.translate(0, -camY);
+        var g = c.createLinearGradient(0, 0, 0, 2120); g.addColorStop(0, '#d7cdb9'); g.addColorStop(1, WALL); c.fillStyle = g; c.fillRect(0, 0, 1280, 2120);
+        c.fillStyle = WOOD; c.fillRect(0, 1880, 1280, 240);
+        books(640, 1900, 30, 1.25);
+        hero(300, 2010, .7, { lx:.6, ly:-1, noShadow:false });
+        stapler(680, 1900 - 30 * 46 * 1.25, 1.15, p > .82 ? Math.min(1, (p - .82) * 6) * (.6 + Math.sin(t * 10) * .4) : 0);
+        c.restore();
+      }
+    ];
+    function endCard(p){
+      c.fillStyle = '#0b0c0f'; c.fillRect(0, 0, 1280, 720);
+      c.globalAlpha = ease(p * 2.5);
+      c.fillStyle = '#ffd23f'; c.textAlign = 'center'; c.font = '800 96px Inter, Arial, sans-serif'; c.fillText('GLUE STICK HERO', 640, 360);
+      c.fillStyle = '#c9cdd6'; c.font = '600 36px Inter, Arial, sans-serif'; c.fillText('Coming soon to a classroom near you', 640, 430);
+      c.globalAlpha = 1;
+    }
+
+    var clock = 0, playing = false, last = 0, raf = 0, shown = -1;
+    function frame(){
+      var i = Math.min(6, Math.floor(clock / SHOT));
+      if(i < 6){ c.save(); SHOTS[i](Math.min(1, (clock - i * SHOT) / SHOT), clock); c.restore(); }
+      else endCard((clock - 6 * SHOT) / END);
+      if(i !== shown){
+        shown = i;
+        tag.classList.toggle('off', i > 5);
+        if(i < 6){ num.textContent = (i + 1) + '/6'; nm.textContent = NAMES[i]; }
+        items.forEach(function(li, k){ li.classList.toggle('on', k === i); });
+      }
+    }
+    function tick(now){
+      if(!playing) return;
+      if(!part.classList.contains('on')){ pause(); return; }
+      clock += Math.min(.1, (now - last) / 1000); last = now;
+      if(clock >= TOTAL){ clock = TOTAL - .001; frame(); pause(); return; }
+      frame(); raf = requestAnimationFrame(tick);
+    }
+    function play(){ if(clock >= TOTAL - .01) clock = 0; playing = true; big.classList.add('off'); last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }
+    function pause(){ playing = false; cancelAnimationFrame(raf); big.classList.remove('off'); }
+    big.addEventListener('click', play);
+    cv.addEventListener('click', function(){ playing ? pause() : play(); });
+    items.forEach(function(li, k){ li.addEventListener('click', function(){ clock = k * SHOT; shown = -1; frame(); play(); }); });
+    window.HX = { at:function(s){ big.classList.add('off'); clock = s; shown = -1; frame(); } };    // for checking a single moment
+    frame();
+  })();
   // Alt+F: the whole lesson fills the screen, press again to leave
   addEventListener('keydown', function(e){
     if(!(e.altKey && e.code === 'KeyF')) return;
