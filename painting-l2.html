@@ -207,9 +207,9 @@
 
   /* nav: a row of paint pots */
   .nav{position:absolute;left:0;right:0;bottom:0;height:128px;display:flex;align-items:center;gap:18px;padding:0 26px;background:var(--card);border-top:3px solid var(--edge)}
-  .pots{flex:1;display:flex;align-items:center;justify-content:center;gap:10px}
-  .pot{width:62px;height:62px;border-radius:50%;border:3px solid var(--edge);background:var(--wall);display:grid;place-items:center;font-size:20px;font-weight:800;color:var(--muted);cursor:pointer;padding:0;transition:transform .15s}
-  .pot.seen{background:var(--c);border-color:var(--c);color:#fff}
+  .pots{flex:1;display:flex;align-items:center;justify-content:center;gap:19px}
+  .pot{width:56px;height:56px;flex:none;border-radius:50%;border:3px solid var(--edge);background:var(--wall);display:grid;place-items:center;font-size:20px;font-weight:800;color:var(--muted);cursor:pointer;padding:0;transition:transform .15s}
+  .pot.done{background:var(--c);border-color:var(--c);color:#fff}
   .pot.cur{transform:scale(1.22);background:var(--c);border-color:var(--ink);color:#fff;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--ink)}
   .nb{height:82px;min-width:82px;display:grid;place-items:center;border-radius:18px;border:3px solid var(--edge);background:var(--card);font-size:38px;cursor:pointer;padding:0}
   .nb.next{display:flex;gap:12px;padding:0 30px;font-size:28px;font-weight:800;background:var(--sun);border-color:var(--sun)}
@@ -819,7 +819,7 @@
     [].forEach.call(PARTS[cur].querySelectorAll('.pp'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
     [].forEach.call(PARTS[cur].querySelectorAll('.pp-card'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
     seen[cur] = true;
-    [].forEach.call(potsEl.children, function(c, i){ c.classList.toggle('cur', i === cur); c.classList.toggle('seen', !!seen[i]); });
+    [].forEach.call(potsEl.children, function(c, i){ c.classList.toggle('cur', i === cur); c.classList.toggle('done', !!seen[i]); });
     $('pname').textContent = PARTS[cur].getAttribute('data-name');
     var d = ''; for(var i = 1; i <= PARTS[cur].steps; i++) d += '<i class="' + (i <= step ? 'on' : '') + '"></i>';
     $('dots').innerHTML = d;
