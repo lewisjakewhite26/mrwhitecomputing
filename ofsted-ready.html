@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hartburn Ofsted Ready</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one calm column, like a phone app. A curved Orient-to-Cerulean header on the
+   home screen, then one card at a time in the lesson player with a single action at the bottom. */
+:root{
+  --orient:#015481; --cer:#0B93E3; --alto:#DDDDDD;
+  --ink:#12324A; --soft:#4A6478; --paper:#F3F7FA; --card:#FFFFFF; --tint:#E6F3FC;
+  --good:#17835A; --good-bg:#E5F5EE; --miss:#B4541A; --miss-bg:#FCEFE4;
+  --display:'Lora',Georgia,'Times New Roman',serif;
+  --body:'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --r:18px; --ease:cubic-bezier(.2,.8,.2,1); --spring:cubic-bezier(.34,1.56,.64,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+h1,h2,h3,p,ul,ol{margin:0;padding:0}
+ul,ol{list-style:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--cer);outline-offset:3px;border-radius:10px}
+#app{min-height:100%;display:flex;flex-direction:column}
+.wrap{width:100%;max-width:560px;margin:0 auto;padding:0 20px}
+.view{flex:1;display:flex;flex-direction:column;animation:viewIn .38s var(--ease)}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}}
+
+/* ---------- home header ---------- */
+.hero{position:relative;background:linear-gradient(120deg,var(--orient) 0%,var(--orient) 30%,var(--cer) 100%);color:#fff;padding:22px 0 54px;border-bottom-left-radius:50% 34px;border-bottom-right-radius:50% 34px;overflow:hidden}
+.hero::before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-50px;top:-90px;background:rgba(255,255,255,.13)}
+.hero .wrap{position:relative}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand img{height:40px;width:auto;display:block}
+.brand span{font:500 10.5px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;opacity:.95}
+.hero h1{font:700 34px/1.12 var(--display);margin-top:26px;text-wrap:balance}
+.hero p{margin-top:8px;font-size:16px;opacity:.95;max-width:34ch}
+.herorow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.ring{position:relative;width:76px;height:76px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:7}
+.ring .bg{stroke:rgba(255,255,255,.25)}
+.ring .fg{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset 1s var(--ease)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 15px/1 var(--body);font-variant-numeric:tabular-nums}
+
+/* ---------- shared bits ---------- */
+.sec{font:700 20px/1.25 var(--display);color:var(--orient);margin:26px 0 4px}
+.lead{color:var(--soft);margin-bottom:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;padding:0 22px;border-radius:16px;background:var(--orient);color:#fff;font-weight:700;font-size:16.5px;box-shadow:0 4px 0 #013d5e;transition:transform .12s var(--ease),box-shadow .12s var(--ease),background .2s}
+.btn:hover{background:#02629a}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #013d5e}
+.btn[disabled]{background:var(--alto);color:#7b8791;box-shadow:none;cursor:default;transform:none}
+.btn.ghost{background:transparent;color:var(--orient);box-shadow:none;border:2px solid var(--alto);min-height:50px}
+.btn.ghost:active{transform:scale(.98)}
+.btn svg{width:20px;height:20px;transition:transform .2s var(--ease)}
+.btn:hover svg.arr{transform:translateX(4px)}
+.link{color:var(--orient);font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:10px 4px}
+
+/* ---------- role picker ---------- */
+.roles{display:grid;gap:8px;margin-bottom:6px}
+.grp{font:700 12.5px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--cer);margin:18px 0 8px}
+.pick{padding-bottom:20px}
+.dock.stick{position:sticky;bottom:0;z-index:3}
+.codebox{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:320px;margin:8px 0 10px}
+.codebox i{height:72px;border-radius:16px;background:var(--card);border:2px solid var(--alto);display:grid;place-items:center;font:700 30px/1 var(--display);font-style:normal;color:var(--orient);transition:border-color .15s,transform .2s var(--spring),background .2s}
+.codebox i.on{border-color:var(--orient);transform:scale(1.04)}
+.codebox:focus-within i.cur{border-color:var(--cer);box-shadow:0 0 0 4px rgba(11,147,227,.18)}
+.codebox input{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:pointer}
+.codebox.bad{animation:shake .4s}
+.codebox.bad i{border-color:var(--miss);background:var(--miss-bg)}
+.codebox.ok i{border-color:var(--good);background:var(--good-bg);color:var(--good)}
+.codemsg{min-height:24px;color:var(--miss);font-weight:600;font-size:15px}
+.btn.tickle{animation:bump .4s var(--spring)}
+.step.extra .n{background:transparent;border:2px dashed var(--alto);color:var(--soft)}
+.step.extra.done .n{border:0}
+.role{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:2px solid transparent;border-radius:var(--r);padding:13px 16px;box-shadow:0 1px 2px rgba(1,84,129,.08);font-weight:600;transition:transform .15s var(--ease),border-color .15s,box-shadow .15s;animation:rise .45s var(--ease) backwards}
+.role:hover{border-color:var(--cer);box-shadow:0 6px 18px rgba(1,84,129,.12)}
+.role:active{transform:scale(.98)}
+.role i{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--alto);display:grid;place-items:center;transition:all .2s var(--spring)}
+.role i svg{width:14px;height:14px;stroke:#fff;opacity:0;transform:scale(.3);transition:all .25s var(--spring)}
+.role.on{border-color:var(--orient)}
+.role.on i{background:var(--orient);border-color:var(--orient)}
+.role.on i svg{opacity:1;transform:scale(1)}
+.role small{display:block;font-weight:400;color:var(--soft);font-size:13.5px;margin-top:1px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+
+/* ---------- path ---------- */
+.path{position:relative;display:grid;gap:10px;margin:6px 0 18px}
+.step{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border-radius:var(--r);padding:14px 16px;border:2px solid transparent;box-shadow:0 1px 2px rgba(1,84,129,.08);transition:transform .15s var(--ease),box-shadow .15s,border-color .15s;animation:rise .45s var(--ease) backwards}
+.step:hover{box-shadow:0 6px 18px rgba(1,84,129,.12)}
+.step:active{transform:scale(.985)}
+.step .n{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--tint);color:var(--orient);font-variant-numeric:tabular-nums}
+.step .n svg{width:20px;height:20px;stroke:#fff}
+.step.done .n{background:var(--good)}
+.step.next{border-color:var(--cer)}
+.step.next .n{background:var(--orient);color:#fff;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(11,147,227,.45)}60%{box-shadow:0 0 0 10px rgba(11,147,227,0)}}
+.step h3{font:700 16.5px/1.25 var(--display);color:var(--orient)}
+.step p{font-size:13.5px;color:var(--soft);line-height:1.4;margin-top:2px}
+.step .meta{margin-left:auto;flex:none;font-size:12.5px;font-weight:600;color:var(--soft);white-space:nowrap;padding-left:6px}
+.step.done .meta{color:var(--good)}
+.step.next .meta{color:#fff;background:var(--orient);padding:6px 12px;border-radius:99px}
+.rolebar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px}
+.rolebar .sec{margin:0}
+.foot{margin-top:auto;padding:22px 0 26px;color:var(--soft);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- finish card ---------- */
+.fin{background:var(--card);border-radius:22px;padding:22px 20px;margin:4px 0 20px;box-shadow:0 8px 28px rgba(1,84,129,.12);border-top:5px solid var(--cer)}
+.fin h2{font:700 22px/1.2 var(--display);color:var(--orient)}
+.fin p{color:var(--soft);margin:6px 0 14px}
+.fin label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.fin input{width:100%;height:52px;border-radius:14px;border:2px solid var(--alto);padding:0 14px;font:inherit;color:var(--ink);background:#fff;margin-bottom:12px;transition:border-color .15s}
+.fin input:focus{border-color:var(--cer);outline:none}
+.cert{text-align:center;background:linear-gradient(160deg,#fff 0%,var(--tint) 100%);border:2px solid var(--orient);border-radius:22px;padding:26px 20px;margin:4px 0 20px;animation:pop .5s var(--spring)}
+.cert .seal{width:64px;height:64px;border-radius:50%;background:var(--orient);display:grid;place-items:center;margin:0 auto 12px}
+.cert .seal svg{width:32px;height:32px;stroke:#fff}
+.cert small{font:500 11px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--cer)}
+.cert h2{font:700 26px/1.2 var(--display);color:var(--orient);margin:8px 0 4px;overflow-wrap:anywhere}
+.cert p{color:var(--ink)}
+.cert .row{display:flex;justify-content:center;gap:22px;margin-top:14px;font-size:14px;color:var(--soft)}
+.cert .row b{display:block;font-size:18px;color:var(--orient);font-variant-numeric:tabular-nums}
+.cert .note{font-size:13px;color:var(--soft);margin-top:14px}
+@keyframes pop{from{opacity:0;transform:scale(.9)}}
+
+/* ---------- player ---------- */
+.player{height:100%;position:fixed;inset:0;background:var(--paper);display:flex;flex-direction:column;z-index:5}
+.top{padding:14px 0 8px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.x{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--soft);transition:background .15s,transform .15s var(--ease)}
+.x:hover{background:#e3eaf0}.x:active{transform:scale(.9)}
+.x svg{width:20px;height:20px}
+.bar{flex:1;display:flex;gap:4px}
+.bar i{flex:1;height:8px;border-radius:99px;background:var(--alto);overflow:hidden;position:relative}
+.bar i.q{background:#cfdce6}
+.bar i::after{content:"";position:absolute;inset:0;border-radius:99px;background:var(--cer);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+.bar i.f::after{transform:scaleX(1)}
+.bar i.q.f::after{background:var(--orient)}
+.streak{flex:none;font-size:12.5px;font-weight:700;color:var(--orient);background:var(--tint);padding:6px 10px;border-radius:99px;animation:pop .4s var(--spring);white-space:nowrap}
+.stage{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:10px 0 24px}
+.cardwrap{animation:slideIn .34s var(--ease)}
+.cardwrap.back{animation-name:slideBack}
+@keyframes slideIn{from{opacity:0;transform:translateX(34px)}}
+@keyframes slideBack{from{opacity:0;transform:translateX(-34px)}}
+.kick{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cer);margin:8px 0 8px}
+.card h2{font:700 27px/1.18 var(--display);color:var(--orient);text-wrap:balance;margin-bottom:16px}
+.card p{font-size:17px;line-height:1.6;margin-bottom:12px;max-width:60ch}
+.card .footn{font-size:15px;color:var(--soft);background:var(--tint);border-radius:14px;padding:13px 15px;margin-top:16px;border-left:4px solid var(--cer)}
+.card .footn b{color:var(--orient)}
+.stag>*{animation:rise .45s var(--ease) backwards}
+.stag>*:nth-child(1){animation-delay:.06s}.stag>*:nth-child(2){animation-delay:.13s}.stag>*:nth-child(3){animation-delay:.2s}.stag>*:nth-child(4){animation-delay:.27s}.stag>*:nth-child(5){animation-delay:.34s}.stag>*:nth-child(6){animation-delay:.41s}
+.items{display:grid;gap:9px}
+.items li{background:var(--card);border-radius:14px;padding:13px 15px 13px 44px;position:relative;font-size:16px;line-height:1.45;box-shadow:0 1px 2px rgba(1,84,129,.07)}
+.items li::before{content:"";position:absolute;left:18px;top:21px;width:9px;height:9px;border-radius:50%;background:var(--cer)}
+ol.items{counter-reset:s}
+ol.items li{counter-increment:s;padding-left:54px}
+ol.items li::before{content:counter(s);left:13px;top:11px;width:28px;height:28px;background:var(--orient);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
+.people{display:grid;gap:12px}
+.people div{background:var(--card);border-radius:16px;padding:14px 16px;border-left:5px solid var(--cer);box-shadow:0 1px 2px rgba(1,84,129,.07)}
+.people h3{font:700 13px/1.3 var(--body);color:var(--cer);margin-bottom:6px}
+.people li{font:600 17px/1.5 var(--display);color:var(--orient)}
+.route{display:grid;gap:10px}
+.route div{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 1px 2px rgba(1,84,129,.07)}
+.route h3{font:700 13px/1.3 var(--body);color:var(--cer);margin-bottom:3px}
+.route p{font:600 17px/1.4 var(--display);color:var(--orient);margin:0}
+.quote{background:linear-gradient(140deg,var(--orient),#0672b5);color:#fff;border-radius:22px;padding:24px 22px}
+.quote li{font:600 20px/1.35 var(--display);padding:7px 0}
+.quote li+li{border-top:1px solid rgba(255,255,255,.22)}
+.flip{width:100%;text-align:left;background:var(--card);border-radius:20px;padding:20px;border:2px dashed var(--cer);transition:transform .15s var(--ease),border-color .2s,background .3s;display:block}
+.flip:active{transform:scale(.985)}
+.flip .hint{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--orient)}
+.flip .hint svg{width:22px;height:22px;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.flip .think{display:block;color:var(--soft);font-size:15px;margin-top:6px}
+.flip.open{border-style:solid;border-color:var(--orient);cursor:default}
+.flip .ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.flip.open .ans{grid-template-rows:1fr}
+.flip .ans>div{overflow:hidden}
+.flip .ans h3{font:700 13px/1.3 var(--body);color:var(--cer);margin:0 0 6px;letter-spacing:.04em;text-transform:uppercase}
+.flip .ans p{margin:0;font-size:17px}
+.flip.open .hint,.flip.open .think{display:none}
+.revnote{color:var(--soft);font-size:15px;margin-top:12px}
+
+/* ---------- quiz ---------- */
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:var(--card);border:2px solid var(--alto);border-radius:16px;padding:14px 15px;font-size:16.5px;line-height:1.4;font-weight:600;box-shadow:0 3px 0 var(--alto);transition:transform .12s var(--ease),box-shadow .12s,border-color .15s,background .2s,opacity .3s}
+.opt:hover{border-color:var(--cer)}
+.opt:active{transform:translateY(3px);box-shadow:0 0 0 var(--alto)}
+.opt k{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--alto);display:grid;place-items:center;font:700 13.5px/1 var(--body);color:var(--soft);transition:all .2s var(--spring)}
+.opt k svg{width:16px;height:16px;stroke:#fff}
+.opts.lock .opt{pointer-events:none}
+.opts.lock .opt:not(.ok):not(.no){opacity:.5;box-shadow:none}
+.opt.ok{border-color:var(--good);background:var(--good-bg);box-shadow:0 3px 0 var(--good);animation:bump .45s var(--spring)}
+.opt.ok k{background:var(--good);border-color:var(--good)}
+.opt.no{border-color:var(--miss);background:var(--miss-bg);box-shadow:0 3px 0 var(--miss);animation:shake .4s}
+.opt.no k{background:var(--miss);border-color:var(--miss)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:scale(1)}}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.draw{stroke-dasharray:30;stroke-dashoffset:30;animation:draw .35s .08s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.tf{grid-template-columns:1fr 1fr}
+.tf .opt{justify-content:center;min-height:76px;font-size:18px}
+
+/* ---------- bottom action ---------- */
+.dock{padding:12px 0 calc(16px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--paper) 70%,rgba(243,247,250,0))}
+.dock .wrap{display:flex;gap:10px}
+.backb{flex:none;width:54px;height:54px;border-radius:16px;border:2px solid var(--alto);display:grid;place-items:center;color:var(--orient);background:var(--card);transition:transform .12s var(--ease)}
+.backb:active{transform:scale(.92)}
+.backb svg{width:20px;height:20px}
+.fb{border-radius:22px 22px 0 0;padding:18px 0 calc(16px + env(safe-area-inset-bottom));animation:sheet .38s var(--ease);box-shadow:0 -8px 30px rgba(1,84,129,.12)}
+@keyframes sheet{from{transform:translateY(100%)}}
+.fb.ok{background:var(--good-bg)}.fb.no{background:var(--miss-bg)}
+.fb h3{display:flex;align-items:center;gap:9px;font:700 19px/1.2 var(--display)}
+.fb.ok h3{color:var(--good)}.fb.no h3{color:var(--miss)}
+.fb h3 svg{width:24px;height:24px}
+.fb p{margin:6px 0 14px;font-size:15.5px;line-height:1.5}
+.fb.ok .btn{background:var(--good);box-shadow:0 4px 0 #0f6344}
+.fb.no .btn{background:var(--miss);box-shadow:0 4px 0 #8a3f12}
+
+/* ---------- module complete ---------- */
+.doneview{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:24px 0}
+.big{position:relative;width:168px;height:168px;margin:0 auto 18px}
+.big svg{width:100%;height:100%;transform:rotate(-90deg)}
+.big circle{fill:none;stroke-width:12}
+.big .bg{stroke:var(--alto)}
+.big .fg{stroke:var(--cer);stroke-linecap:round;transition:stroke-dashoffset 1.2s .25s var(--ease)}
+.big b{position:absolute;inset:0;display:grid;place-items:center;font:700 44px/1 var(--display);color:var(--orient);font-variant-numeric:tabular-nums}
+.big b small{font:600 15px/1 var(--body);color:var(--soft);display:block;margin-top:4px}
+.doneview h2{font:700 28px/1.2 var(--display);color:var(--orient);text-wrap:balance}
+.doneview p{color:var(--soft);margin:8px auto 0;max-width:34ch}
+.doneact{display:grid;gap:10px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+
+/* ---------- admin list ---------- */
+.rows{display:grid;gap:8px;margin:10px 0 24px}
+.rowi{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:12px 15px;box-shadow:0 1px 2px rgba(1,84,129,.07)}
+.rowi b{font:700 16px/1.3 var(--display);color:var(--orient);overflow-wrap:anywhere}
+.rowi small{display:block;color:var(--soft);font-size:13px}
+.rowi span{margin-left:auto;font-weight:700;color:var(--orient);font-variant-numeric:tabular-nums;white-space:nowrap}
+.empty{background:var(--card);border-radius:16px;padding:20px;color:var(--soft);text-align:center}
+.topbar{background:var(--orient);color:#fff;padding:16px 0}
+.topbar .wrap{display:flex;align-items:center;gap:12px}
+.topbar h1{font:700 20px/1.2 var(--display)}
+.topbar .x{color:#fff}.topbar .x:hover{background:rgba(255,255,255,.15)}
+
+#fx{position:fixed;inset:0;pointer-events:none;z-index:20;width:100%;height:100%}
+@media (min-width:700px){
+  .hero{padding-top:30px}.hero h1{font-size:42px}
+  .card h2{font-size:31px}
+  .stage{padding-top:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<script>
+/* Ofsted ready: content. Every fact here comes from the Hartburn Ofsted question prep document. */
+const CORE = ["how", "team", "tells", "adults", "answer"];
+const ORDER = ["how", "team", "tells", "adults", "answer", "classroom", "support", "inclusion", "early", "subject", "sendlead", "leading", "safelead", "call", "governance", "office"];
+/* Tick all that apply. The path is the core blocks plus the blocks for every tick. */
+const GROUPS = [
+  { h: "In the classroom", ticks: [
+    { id: "teach", label: "I teach classes", short: "Teaching", mods: ["classroom", "inclusion"] },
+    { id: "support", label: "I support pupils in lessons", short: "Supporting pupils", mods: ["support", "inclusion"] },
+    { id: "early", label: "I work in early years", short: "Early years", mods: ["early"] } ] },
+  { h: "Leading", ticks: [
+    { id: "subject", label: "I lead a subject", short: "Subject leader", mods: ["subject"] },
+    { id: "phase", label: "I lead a phase", short: "Phase leader", mods: ["subject", "leading"] },
+    { id: "slt", label: "I'm a senior leader", short: "Senior leader", mods: ["leading", "safelead", "call"] } ] },
+  { h: "Around school", ticks: [
+    { id: "gov", label: "I'm a governor or trustee", short: "Governor or trustee", mods: ["governance"] },
+    { id: "office", label: "I work in the office or wider team", short: "Office and wider team", mods: ["office"] } ] },
+];
+const TICKS = GROUPS.flatMap(g => g.ticks);
+
+const MODULES = {
+  how: {
+    title: "How the inspection works", mins: 3, blurb: "The call, the six areas and what has changed.",
+    cards: [
+      { k: "info", h: "The phone call", p: ["The call usually comes between 9.30 and 10am, and the inspector asks for the headteacher.", "Later that day there's a planning call, usually by video, which can last up to 90 minutes."] },
+      { k: "list", h: "Inspectors look at six areas", items: ["Inclusion", "Curriculum and teaching", "Achievement", "Attendance and behaviour", "Personal development and wellbeing", "Leadership and governance"], foot: "Early years is graded separately. Safeguarding is judged as <b>met</b> or <b>not met</b>." },
+      { k: "info", h: "No more deep dives", p: ["The renewed framework doesn't use deep dives. Inspectors now join leaders on learning walks, look at pupils' work and meet subject leaders.", "A learning walk is a short visit to several lessons; it isn't a formal observation."] },
+      { k: "info", h: "Case sampling", p: ["Inspectors choose around six pupils and follow their experience in detail, which includes talking to their teachers and looking at their work.", "They choose from pupils who are disadvantaged, have special educational needs and disabilities (SEND), are known to children's social care or face other barriers."] },
+      { k: "quote", h: "If you remember one thing", lines: ["We know our pupils well.", "We identify barriers early.", "We provide high-quality teaching.", "We check whether it is working.", "If it isn't, we change it."] },
+    ],
+    quiz: [
+      { q: "When does the notification call usually come?", opts: ["Between 9.30 and 10am", "At 8am, before pupils arrive", "After school, around 4pm", "The evening before"], why: "The call usually comes between 9.30 and 10am, and the inspector asks for the headteacher." },
+      { q: "How does Ofsted judge safeguarding?", opts: ["Met or not met", "On the same scale as the six areas", "It isn't judged any more", "With a score out of ten"], why: "Safeguarding is judged as met or not met." },
+      { q: "Inspectors still carry out deep dives.", tf: false, why: "The renewed framework doesn't use them. Inspectors join learning walks, look at pupils' work and meet subject leaders." },
+      { q: "Around how many pupils do inspectors follow in case sampling?", opts: ["Around six", "Two", "One from every class", "Every pupil with SEND"], why: "Inspectors choose around six pupils and follow their experience in detail." },
+    ],
+  },
+
+  team: {
+    title: "Our safeguarding team", mins: 2, blurb: "Six people you can go to, and who chairs the governors.",
+    cards: [
+      { k: "people", h: "Who's who", groups: [["Designated Safeguarding Leads (DSLs)", ["Mr Jonathon Bull", "Mrs Jo Brown", "Mrs Zoe Holdsworth"]], ["Deputy DSLs", ["Mr M Whitecross", "Mr L White", "Miss L Smith"]], ["Chair of Governors and safeguarding governor", ["Mrs Jill Ellison"]]] },
+      { k: "info", h: "If Mr Bull is out", p: ["Mr Bull is our DSL, and Mrs Brown and Mrs Holdsworth are DSLs too. Mr Whitecross, Mr White and Miss Smith are the deputies.", "That gives you six people to try. If you can't find any of them, ask the office."] },
+      { k: "reveal", h: "Who do you report safeguarding concerns to?", a: "The DSL. Ours is Mr Bull, and there are five more people on the team if he's out.", note: "Every member of staff will be asked this." },
+      { k: "info", h: "Why it matters", p: ["The lead inspector meets the DSL on day one, and every member of staff will be asked who they report safeguarding concerns to."] },
+    ],
+    quiz: [
+      { q: "Who is the DSL inspectors will expect you to name?", opts: ["Mr Bull", "Mrs Ellison", "The school office", "Your year group lead"], why: "Our Designated Safeguarding Lead is Mr Bull. Mrs Brown and Mrs Holdsworth are DSLs too." },
+      { q: "How many people on the safeguarding team can you take a concern to?", opts: ["Six", "One", "Two", "Three"], why: "Three DSLs and three deputies. That gives you six people to try." },
+      { q: "You can't find any of the six. What do you do?", opts: ["Ask the office", "Wait until tomorrow", "Email the trust", "Leave a note on a desk"], why: "If you can't find any of them, ask the office." },
+      { q: "Who is our Chair of Governors and safeguarding governor?", opts: ["Mrs Jill Ellison", "Mrs Jo Brown", "Mrs Zoe Holdsworth", "Miss L Smith"], why: "Mrs Jill Ellison chairs the governors and is the safeguarding governor." },
+    ],
+  },
+
+  tells: {
+    title: "When a child tells you something", mins: 3, blurb: "What to do in the moment and straight after.",
+    cards: [
+      { k: "steps", h: "In the moment", items: ["Stay calm and let them talk.", "Don't promise to keep it secret.", "Don't ask questions that put words in their mouth."] },
+      { k: "steps", h: "Straight after", items: ["Tell a member of the safeguarding team in person, that day.", "Write it on CPOMS, our online record of concerns, the same day.", "Use the child's own words, with the date, the time and who was there."], foot: "Stick to facts and leave your opinion out. If the child is in immediate danger, ring <b>999</b> first." },
+      { k: "info", h: "Signs to look for", p: ["Look for a sudden change: a child who goes quiet or angry, misses more school, has injuries that don't add up, or says or draws something odd.", "You don't have to be sure. Report it, and the DSL works out what it means."] },
+      { k: "info", h: "Child-on-child abuse and online safety", p: ["If you see or hear about child-on-child abuse, never wave it off as banter or kids being kids. Report it the way you'd report any other concern.", "In lessons, check what's on screen, use only the sites and tools we've approved, and report anything that shouldn't be there straight away."] },
+      { k: "info", h: "Your training", p: ["Inspectors may ask when you last had safeguarding training, so know the date.", "Part one of Keeping Children Safe in Education (KCSIE) 2026 has applied since 1 September, and you're expected to have read it."] },
+    ],
+    quiz: [
+      { q: "A child says, “I'll tell you if you promise not to tell anyone.” What do you do?", opts: ["Say you can't keep it secret, and keep listening", "Promise, so they keep talking", "Send them straight to Mr Bull", "Ask them to write it down instead"], why: "Stay calm and let them talk, but don't promise to keep it secret." },
+      { q: "When do you write a concern on CPOMS?", opts: ["The same day", "By the end of the week", "Only when you're sure", "Only if the DSL asks"], why: "Tell the safeguarding team in person that day, then record it on CPOMS the same day." },
+      { q: "What belongs in the record?", opts: ["The child's own words, the date, the time and who was there", "Your view of what probably happened", "A tidy summary in your own words", "Only the child's name"], why: "Write the child's own words, the date, the time and who was there. Stick to facts." },
+      { q: "A child is in immediate danger. What comes first?", opts: ["Ring 999", "Write it on CPOMS", "Email the DSL", "Finish the lesson"], why: "If the child is in immediate danger, ring 999 first." },
+      { q: "You don't need to be sure before you report a concern.", tf: true, why: "You don't have to be sure. Report it, and the DSL works out what it means." },
+    ],
+  },
+
+  adults: {
+    title: "Concerns about adults", mins: 3, blurb: "Low-level concerns, and who to tell.",
+    cards: [
+      { k: "info", h: "What is a low-level concern?", p: ["A low-level concern is about an adult who works with children, where the behaviour isn't harmful enough to reach the threshold for the Local Authority Designated Officer (LADO).", "It still falls short of our staff code of conduct, and it can happen outside work too."] },
+      { k: "list", h: "What it can look like", items: ["Being over-friendly with children", "Having favourites", "Being alone with a child in a secluded place or behind a closed door", "Using inappropriate, intimidating or offensive language", "Being overly harsh with particular pupils"] },
+      { k: "list", h: "It can be about you", intro: "You can refer yourself. For example:", items: ["Finding yourself in a one-to-one with a child", "Looking back and realising you reacted too strongly", "Saying something you shouldn't have"], foot: "Reporting a low-level concern isn't a failure, even when it's about you." },
+      { k: "route", h: "Who to tell", rows: [["About any adult in school", "Tell Mr Bull. Don't use CPOMS."], ["About the Headteacher", "Tell Mrs Ellison, our Chair of Governors."], ["You really can't raise it in school", "Ring the NSPCC whistleblowing helpline on 0800 028 0285."]] },
+      { k: "info", h: "What the LADO does", p: ["LADO stands for Local Authority Designated Officer. The LADO manages and oversees allegations made against adults who work or volunteer with children."] },
+    ],
+    quiz: [
+      { q: "A colleague's behaviour with a pupil makes you uncomfortable. Where does it go?", opts: ["To Mr Bull, and not on CPOMS", "On CPOMS, like any concern", "To the colleague's friend on the staff", "Nowhere, unless it happens twice"], why: "Take it to Mr Bull. Don't put it on CPOMS." },
+      { q: "Your concern is about the Headteacher. Who do you tell?", opts: ["Mrs Ellison, our Chair of Governors", "A deputy DSL", "The school office", "Ofsted"], why: "If it's about Mr Bull, take it to Mrs Ellison, our Chair of Governors." },
+      { q: "What does the LADO do?", opts: ["Manages allegations against adults who work or volunteer with children", "Checks the single central record", "Runs our safeguarding training", "Looks after CPOMS"], why: "The LADO manages and oversees allegations made against adults who work or volunteer with children." },
+      { q: "A low-level concern can be about something that happened outside work.", tf: true, why: "It falls short of our staff code of conduct, and it can happen outside work too." },
+      { q: "Looking back, you realise you reacted too strongly with a pupil. What's the right move?", opts: ["Refer yourself to Mr Bull", "Say nothing and move on", "Record it on CPOMS", "Wait to see if a parent complains"], why: "You can refer yourself. Reporting a low-level concern isn't a failure, even when it's about you." },
+    ],
+  },
+
+  answer: {
+    title: "Answering well", mins: 2, blurb: "What helps when an inspector asks you something.",
+    cards: [
+      { k: "info", h: "What to say", p: ["Talk about what you do day to day and give specific examples. If you're still working on something, say so; inspectors want an accurate account of the school."] },
+      { k: "info", h: "Scripts don't help", p: ["Inspectors notice rehearsed answers. Where this module shows a strong answer, treat it as a pattern and swap in your own pupils, evidence and words."] },
+      { k: "list", h: "Expect questions about working here", items: ["Do you feel supported by your curriculum and senior leaders?", "What training have you had this year?", "Do you have the tools and time you need to do your job well?", "How do leaders take your workload into account?"], foot: "Answer these honestly. Inspectors follow up themes from the anonymous staff questionnaire." },
+      { k: "info", h: "Pupils and parents", p: ["Inspectors talk to pupils of all ages, sometimes with no other adults present. They notice rehearsed answers from children as well, so there's no point preparing pupils.", "Parents give their views through Parent View."] },
+    ],
+    quiz: [
+      { q: "What helps most when you answer an inspector?", opts: ["Specific day-to-day examples, and honesty about what you're working on", "Policy wording learned by heart", "Saying everything is going well", "Keeping every answer to one word"], why: "Talk about what you do day to day, with specific examples. Be honest about what you're still working on." },
+      { q: "It's worth scripting answers for pupils.", tf: false, why: "Inspectors notice rehearsed answers, so there's no point preparing pupils." },
+      { q: "An inspector asks how leaders take your workload into account. How do you answer?", opts: ["Honestly", "With whatever sounds most positive", "By pointing them to the headteacher", "By changing the subject"], why: "Answer honestly. Inspectors want to hear what working here is really like." },
+    ],
+  },
+
+  classroom: {
+    title: "In your classroom", mins: 3, blurb: "Learning walks, books and checking understanding.",
+    cards: [
+      { k: "list", h: "On a learning walk, expect", items: ["How does this lesson fit into the sequence for this unit?", "What did pupils learn before this, and what comes next?", "How do you know whether pupils have understood?", "What would you expect the teaching assistant to be doing?", "How do you adapt the lesson for pupils who are finding it hard?"] },
+      { k: "reveal", h: "What would an inspector see in a strong lesson?", a: "Pupils building on prior knowledge and teachers explaining clearly. Regular checks of understanding, plus chances to retrieve and apply learning. A clear link to the curriculum sequence.", note: "Then try saying it about one of your own lessons." },
+      { k: "list", h: "When they look at books", items: ["Can you talk me through this pupil's book?", "Where does this piece of work fit in the sequence of lessons?", "What has this pupil learned since the start of the unit?", "What are their next steps?"], foot: "Inspectors often ask the pupil about their work. They aren't judging individual books or marking." },
+      { k: "info", h: "Checking understanding", p: ["Formative assessment means checking understanding during lessons, through questioning, retrieval and review tasks. Adaptive teaching is what you do next: you change your teaching in response to what those checks show.", "We fix gaps quickly, before they set in."] },
+      { k: "info", h: "Challenging the most able", p: ["We don't just give more work. Challenge comes through deeper thinking, reasoning, problem solving and application, with pupils asked to justify, explain, evaluate and connect ideas."] },
+    ],
+    quiz: [
+      { q: "What is a learning walk?", opts: ["A short visit to several lessons, not a formal observation", "A graded observation of one full lesson", "A tour of the building for visitors", "A meeting about pupils' books"], why: "Inspectors visit lessons as part of learning walks. These aren't formal lesson observations." },
+      { q: "Inspectors judge individual books and marking.", tf: false, why: "They look at work as they go round and often ask the pupil about it. They aren't judging individual books or marking." },
+      { q: "What does formative assessment mean?", opts: ["Checking understanding during lessons", "An end-of-term test", "A report sent to parents", "Marking every piece of work"], why: "Formative assessment means checking understanding during lessons. Adaptive teaching is how you respond." },
+      { q: "How do we challenge pupils who find the work easiest?", opts: ["Deeper thinking, reasoning and application", "Extra pages of the same work", "Moving them up a year group", "Letting them finish early"], why: "We don't just give more work. Challenge comes through deeper thinking, reasoning, problem solving and application." },
+    ],
+  },
+
+  inclusion: {
+    title: "Inclusion in every lesson", mins: 3, blurb: "What inspectors look for, and when support starts.",
+    cards: [
+      { k: "info", h: "What inspectors look for", p: ["Inclusion is now an evaluation area in its own right. Inspectors look for early, accurate assessment of pupils' needs, then a cycle of planning, action and review, with specialists brought in when needed."] },
+      { k: "steps", h: "Assess, plan, do, review", items: ["Assess the need.", "Plan the support.", "Do it.", "Review whether it is working."], foot: "Support starts when we identify the need, not when a diagnosis arrives. Avoid saying “We wait for a diagnosis.”" },
+      { k: "info", h: "Before any intervention", p: ["Our first response is high-quality inclusive teaching, where teachers adapt explanations, resources, scaffolding, modelling and questioning.", "Interventions add to classroom teaching. They never replace it."] },
+      { k: "info", h: "Reviewing support", p: ["We review progress against individual targets and watch how pupils engage in class. If support isn't working we change it; we don't carry on indefinitely."] },
+      { k: "info", h: "If your pupil is sampled", p: ["If inspectors sample one of your pupils, expect to be asked what their needs are and how you know the support is working. They may look at the pupil's work too."] },
+    ],
+    quiz: [
+      { q: "When does support for a pupil start?", opts: ["When we identify the need", "When a diagnosis arrives", "When an EHC plan is agreed", "When a parent asks for it"], why: "Support starts when we identify the need, not when a diagnosis arrives." },
+      { q: "Which phrase should you avoid?", opts: ["“We wait for a diagnosis.”", "“Our first response is inclusive teaching.”", "“If it isn't working, we change it.”", "“We review progress against targets.”"], why: "Avoid saying “We wait for a diagnosis.” Support follows the need." },
+      { q: "What is the role of interventions?", opts: ["They add to classroom teaching and never replace it", "They replace lessons for pupils with SEND", "They are the first response to any need", "They only happen after a diagnosis"], why: "Our first response is high-quality inclusive teaching. Interventions add to it." },
+      { q: "Support for a pupil isn't working. What do we do?", opts: ["Change it", "Carry on and hope it improves", "Stop all support", "Wait for the annual review"], why: "If support isn't working, we change it. We don't carry on indefinitely." },
+    ],
+  },
+
+  support: {
+    title: "Your role as support staff", mins: 3, blurb: "What inspectors ask teaching assistants and support staff.",
+    cards: [
+      { k: "list", h: "The questions to expect", items: ["What would you do if you were worried about a pupil?", "How does behaviour management work in the school, and do you feel supported to follow the policy?", "What is your role in lessons and in interventions?", "What training have you had, and how has it helped you?", "How do you know what each pupil you support needs?"] },
+      { k: "reveal", h: "What would you do if you were worried about a pupil?", a: "Tell a member of the safeguarding team in person, that day. Then write it on CPOMS, using the child's own words.", note: "Say it the way you'd really do it." },
+      { k: "info", h: "Your role in the lesson", p: ["Teachers are asked what they'd expect you to be doing during the lesson, so be ready to describe your role in lessons and in interventions.", "You may also be asked how you know what each pupil you support needs."] },
+      { k: "info", h: "Interventions", p: ["Inspectors want interventions matched to a pupil's real gaps, with someone checking the impact. They may ask who delivers them, what training you've had and how they link to what pupils are learning in class."] },
+    ],
+    quiz: [
+      { q: "Which of these questions is aimed at teaching assistants?", opts: ["What is your role in lessons and in interventions?", "Can you show me the single central record?", "How do you shape the school's vision?", "What is your vision for maths?"], why: "Inspectors ask support staff about their role in lessons and interventions, behaviour, training and worries about pupils." },
+      { q: "What do inspectors want to see in an intervention?", opts: ["It matches a pupil's real gaps, and someone checks the impact", "It runs for the whole year regardless", "It replaces the pupil's lessons", "It uses the newest scheme"], why: "Inspectors want interventions matched to a pupil's real gaps, with someone checking the impact." },
+      { q: "You're asked about training. What's the fullest answer?", opts: ["What you've had, and how it has helped you", "A list of course titles", "“The usual.”", "That the office keeps the records"], why: "The question is “What training have you had, and how has it helped you?”" },
+    ],
+  },
+
+  subject: {
+    title: "Leading your subject", mins: 3, blurb: "Design, sequencing and knowing what happens across school.",
+    cards: [
+      { k: "list", h: "Design and sequencing", items: ["How did you design your curriculum, and what was your starting point?", "How have you sequenced it, and why in that order?", "What should every pupil know by the end of Year 6?", "What core concepts run through your curriculum?", "What are the strengths of your subject, and what are you working on?"] },
+      { k: "info", h: "What makes a strong answer", p: ["A strong answer explains why the curriculum is built the way it is. Say what you're still working on and why, then point to the key strengths and how you build on them."] },
+      { k: "reveal", h: "How do you know what's happening in your subject?", a: "I gather evidence through lesson visits, work scrutiny, pupil conversations, assessment information and chats with staff. That shows me how the curriculum runs in practice, where it's strong and where staff need support.", note: "Swap in the evidence you really use." },
+      { k: "info", h: "Assessment and gaps", p: ["Short, regular checks of understanding tell you far more than an end-of-term test alone. When they show a gap, we fix it quickly through reteaching, adaptation and targeted support."] },
+      { k: "list", h: "Also be ready for", items: ["What would you expect an inspector to see in a lesson?", "How do you make sure staff have the subject knowledge they need?", "How do you know your assessments are accurate?", "What do staff and pupils think of your subject?"] },
+    ],
+    quiz: [
+      { q: "A strong subject leader answer explains…", opts: ["Why the curriculum is built the way it is", "Every lesson plan in detail", "Why nothing needs to change", "What the scheme's website says"], why: "A strong answer explains why the curriculum is built the way it is, and what you're still working on." },
+      { q: "Which tells you more about what pupils know?", opts: ["Short, regular checks of understanding", "An end-of-term test alone", "The number of pages in books", "The display boards"], why: "Short, regular checks tell you far more than an end-of-term test alone." },
+      { q: "Saying what you're still working on weakens your answer.", tf: false, why: "A strong answer says what you're still working on, and why." },
+      { q: "Which end point should you be able to describe?", opts: ["What every pupil should know by the end of Year 6", "What the scheme covers in week one", "What the next school teaches in Year 9", "What last year's leader planned"], why: "Expect “What should every pupil know by the end of Year 6?” Knowing your subject's end points matters." },
+    ],
+  },
+
+  sendlead: {
+    title: "Leading inclusion", mins: 4, blurb: "SEND, pupil premium, interventions and case sampling.",
+    cards: [
+      { k: "list", h: "The questions to expect", items: ["How long does it take from a concern being raised to support being in place?", "How do class teachers know which pupils have additional needs?", "How do you involve parents in decisions about support?", "When do you bring in outside specialists, and how do you make sure their advice is followed?", "How are pupils with education, health and care (EHC) plans doing compared with their starting points?"] },
+      { k: "info", h: "Shaping your answer", p: ["Start with everyday teaching, because the most effective inclusion strategy begins with high-quality inclusive teaching. Then explain how targeted support builds on it.", "Use one or two real examples of pupils whose support you changed because a review showed it wasn't working."] },
+      { k: "info", h: "Inspectors will check", p: ["If inspectors sample a pupil with an EHC plan, they may ask that pupil's teacher the same questions they asked you, and they may look at the pupil's work."] },
+      { k: "info", h: "How case sampling works", p: ["During the planning call, leaders list pupils who are disadvantaged, have SEND or are known to children's social care. Inspectors choose around six and follow their experience in detail.", "Where the school has a child with an EHC plan, at least one is included."] },
+      { k: "info", h: "Pupil premium", p: ["The Education Endowment Foundation evidence base guides our spending. Funding goes first to high-quality teaching and targeted academic support, and governors regularly review the impact and the value for money."] },
+    ],
+    quiz: [
+      { q: "Where does a strong inclusion answer start?", opts: ["With everyday classroom teaching", "With the list of interventions", "With the number of EHC plans", "With the budget"], why: "Start with everyday teaching, then explain how targeted support builds on it." },
+      { q: "Where the school has one, case sampling always includes…", opts: ["At least one child with an EHC plan", "Every child with SEND", "Only pupils in Year 6", "Only pupils leaders choose"], why: "Inspectors choose around six pupils, including at least one child with an EHC plan where the school has one." },
+      { q: "What guides our pupil premium spending?", opts: ["The Education Endowment Foundation evidence base", "Whatever was bought last year", "The cheapest option", "A national fixed list"], why: "The Education Endowment Foundation evidence base guides our spending." },
+      { q: "Inspectors may ask a sampled pupil's teacher the same questions they asked you.", tf: true, why: "Expect inspectors to test your answers with the pupil's teacher and in the pupil's work." },
+    ],
+  },
+
+  early: {
+    title: "Early years", mins: 3, blurb: "Graded on its own, plus early reading.",
+    cards: [
+      { k: "info", h: "How early years is judged", p: ["All the evaluation areas apply to early years, and early years provision is also graded separately."] },
+      { k: "list", h: "The questions to expect", items: ["How do you meet the statutory requirements of the early years foundation stage (EYFS)?", "How do you find out about each child's starting points when they join?", "How do you develop children's communication and language?", "How do you support children with SEND, and disadvantaged children?", "How do you build partnerships with parents?"] },
+      { k: "info", h: "Listening to readers", p: ["Inspectors may listen to pupils read, especially Year 2 pupils who didn't pass the phonics screening check in Year 1.", "These pupils read the next book in their sequence, one they haven't seen, to an adult they know. That shows whether they know 90% of the sounds they read."] },
+    ],
+    quiz: [
+      { q: "How is early years provision judged?", opts: ["It is graded separately", "It isn't inspected", "Only through safeguarding", "As part of Key Stage 1"], why: "All the evaluation areas apply to early years, and early years provision is also graded on its own." },
+      { q: "Which book does a pupil read to show their phonics?", opts: ["The next book in their sequence, one they haven't seen", "Their favourite book from home", "A book they've practised all week", "Any book the inspector brings"], why: "They read the next book in their sequence, one they haven't seen, to an adult they know." },
+      { q: "Who does the pupil read to?", opts: ["An adult they know", "The lead inspector alone", "The whole class", "An older pupil"], why: "The pupil reads to an adult they know." },
+    ],
+  },
+
+  leading: {
+    title: "Leading the school", mins: 4, blurb: "Knowing what works, attendance and behaviour.",
+    cards: [
+      { k: "reveal", h: "How do you know what's working and what isn't?", a: "We use a range of evidence, not a single data source: lesson visits, work scrutiny, pupil voice, attendance and behaviour information, assessment results, safeguarding records and staff feedback. We compare these to find strengths and areas to improve.", note: "Then give a real example of something you changed." },
+      { k: "list", h: "Inspectors want to hear", items: ["Self-awareness", "Honest evaluation", "Evidence-based decisions", "Examples of improvement"] },
+      { k: "info", h: "The limits of data", p: ["Data shows trends, but it doesn't explain them. That's why we pair it with monitoring, pupil voice and work scrutiny."] },
+      { k: "info", h: "When attendance drops", p: ["We step in early: attendance is reviewed weekly, so absence patterns show up quickly. We contact families, explore barriers and offer support, and for persistent absence we use a graduated response."] },
+      { k: "info", h: "Consistent behaviour", p: ["We have clear expectations, routines and a behaviour policy that every adult and pupil understands. Leaders check behaviour data, visit classrooms and support staff, so expectations are applied fairly."] },
+    ],
+    quiz: [
+      { q: "How should leaders show they know the school?", opts: ["With a range of evidence, compared", "With one headline data set", "With the last inspection report", "With the improvement plan alone"], why: "We use a range of evidence, not a single data source, and compare the sources." },
+      { q: "What is the limit of data?", opts: ["It shows trends but doesn't explain them", "It is always out of date", "Inspectors ignore it", "It only covers Year 6"], why: "Data shows trends, but it doesn't explain them. So we pair it with monitoring, pupil voice and work scrutiny." },
+      { q: "How often do we review attendance?", opts: ["Weekly", "Termly", "Once a year", "Only when a parent calls"], why: "We review attendance weekly and spot absence patterns quickly." },
+      { q: "Inspectors want examples of improvement, not only plans.", tf: true, why: "They want self-awareness, honest evaluation, evidence-based decisions and examples of improvement." },
+    ],
+  },
+
+  safelead: {
+    title: "Safeguarding for leaders", mins: 4, blurb: "The record, a case, cover and filtering.",
+    cards: [
+      { k: "info", h: "The single central record", p: ["The single central record is one register of every adult's recruitment checks, and inspectors ask for it early on day one.", "Keep it open, complete and dated, and know who checked it last."] },
+      { k: "info", h: "“Talk me through a case”", p: ["Choose a case before they do. Tell it as a story (what you knew, what you did, who you rang and what changed for the child) and have the CPOMS record ready."] },
+      { k: "info", h: "When the DSL is away", p: ["Say who covers, then explain how a teaching assistant would find them at two o'clock on a Friday afternoon."] },
+      { k: "info", h: "“How do you know nothing has been missed?”", p: ["A named person reads every report and follows it up. Be ready for “show me this week's concerns”, with a decision recorded against each one."] },
+      { k: "list", h: "Also be ready for", items: ["How do you follow up children who are absent or off site?", "How do you work with other agencies?", "What are the main risks around Hartburn?", "How do you check filtering and monitoring?", "How do you keep vulnerable children safe?"] },
+    ],
+    quiz: [
+      { q: "When do inspectors ask for the single central record?", opts: ["Early on day one", "At the final feedback meeting", "Only if there's a concern", "Before the notification call"], why: "They ask early on day one. Keep it open, complete and dated." },
+      { q: "“Talk me through a case.” What's the best preparation?", opts: ["Choose one before they do, and have the CPOMS record ready", "Wait to see which they pick", "Describe the policy instead", "Offer the most recent one unseen"], why: "Choose one before they do. Tell it as a story and have the CPOMS record ready." },
+      { q: "“Show me this week's concerns.” What should each one have?", opts: ["A decision recorded against it", "A parent's signature", "A printed copy", "A governor's initials"], why: "A named person reads every report and follows it up, with a decision recorded against each one." },
+      { q: "For filtering and monitoring, be ready to say…", opts: ["Who is responsible, when we last tested it and what happens when something is flagged", "Which company sold it", "That the trust handles it", "How much it costs"], why: "Say who is responsible, when we last tested it, and what happens when something is flagged." },
+    ],
+  },
+
+  call: {
+    title: "Ready for the call", mins: 3, blurb: "What to have to hand when the phone rings.",
+    cards: [
+      { k: "info", h: "The planning call", p: ["The planning call can last up to 90 minutes and usually runs by video. It covers our context, our priorities, the pupils we list for case sampling and the timetable for the two days.", "You can choose a nominee to work with inspectors, and it's worth encouraging another senior leader to join the call."] },
+      { k: "list", h: "People and contacts", items: ["Your full name and title, and how you'd like it on the report", "The Chair of Governors' name and email address", "The trust's CEO and Chair of the board, with titles and emails", "The trust's scheme of delegation, and who oversees the school"] },
+      { k: "list", h: "Pupils and provision", items: ["The number of pupils on roll, and their age range", "Pupils with SEND, EHC plans, children in need, child protection plans, early help and looked-after children", "Any alternative provision or part-time timetables", "Any nursery, before-school, after-school or holiday provision"] },
+      { k: "list", h: "Dates and timings", items: ["The next school holiday dates, and any closures in the next two months", "Break times, dinner times and breakfast club", "Phonics, maths and English timings", "Any reason to ask for a deferral"] },
+    ],
+    quiz: [
+      { q: "How long can the planning call last?", opts: ["Up to 90 minutes", "Ten minutes", "Half a day", "Two days"], why: "The planning call can last up to 90 minutes and usually runs by video." },
+      { q: "Which of these does the planning call cover?", opts: ["The pupils we list for case sampling", "The final judgements", "Individual staff appraisals", "Next year's budget"], why: "It covers our context, our priorities, the pupils we list for case sampling and the timetable." },
+      { q: "You can choose a nominee to work with inspectors.", tf: true, why: "You can choose a nominee, and you should encourage another senior leader to join the planning call." },
+    ],
+  },
+
+  governance: {
+    title: "Governors and trustees", mins: 4, blurb: "Challenge, visits and your safeguarding role.",
+    cards: [
+      { k: "list", h: "The questions to expect", items: ["How do you shape the school's vision and strategic direction?", "How do you support and challenge the headteacher?", "How do you assure yourselves that policies are understood and followed?", "How do you know the pupil premium is being spent well?", "How do you take staff workload and wellbeing into account?"] },
+      { k: "info", h: "What makes a strong answer", p: ["A strong answer shows that governors know the school well enough to ask hard questions. Give examples of challenge, including in local governing body meetings.", "It helps to mention a school visit: pinpoint what you discussed and say what went well."] },
+      { k: "info", h: "The safeguarding governor", p: ["Our safeguarding governor is Mrs Ellison, who also chairs the board. She oversees safeguarding but doesn't handle individual cases, and you should be ready to say how often she meets the DSL."] },
+      { k: "route", h: "An allegation about the Headteacher", rows: [["Where it goes", "To Mrs Ellison as Chair."], ["What happens next", "She decides the next steps with the Local Authority Designated Officer (LADO)."], ["Who should know this", "Every governor, before anyone needs it."]] },
+      { k: "list", h: "Know these too", items: ["What safeguarding training each governor has done, and when. It should cover the Prevent duty.", "Which governor checks the single central record, and how often.", "A governor sits on every recruitment panel.", "How you find out whether pupils and staff feel able to speak up."] },
+    ],
+    quiz: [
+      { q: "What does the safeguarding governor do?", opts: ["Oversees safeguarding, without handling individual cases", "Manages every case personally", "Keeps the CPOMS records", "Trains the pupils"], why: "Mrs Ellison oversees safeguarding but doesn't handle individual cases." },
+      { q: "An allegation is made about the Headteacher. Where does it go?", opts: ["To Mrs Ellison as Chair, who works with the LADO", "To the deputy headteacher", "To the school office", "To the next full governors' meeting"], why: "It goes to Mrs Ellison as Chair. She decides the next steps with the LADO." },
+      { q: "What strengthens a governor's answer most?", opts: ["Real examples of challenge and a school visit", "Agreeing with everything leaders say", "Quoting the policy list", "Saying governors leave it to staff"], why: "Give examples of challenge, mention a school visit and say what you discussed." },
+      { q: "A governor sits on every recruitment panel.", tf: true, why: "Be ready to say which governor checks the single central record, and that a governor sits on every recruitment panel." },
+    ],
+  },
+
+  office: {
+    title: "Front office", mins: 2, blurb: "The call, the record and visitors.",
+    cards: [
+      { k: "info", h: "The notification call", p: ["The call usually comes between 9.30 and 10am, and the inspector asks for the headteacher."] },
+      { k: "list", h: "What you might be asked", intro: "Office staff are less likely to be questioned, but you hold records inspectors ask for early.", items: ["Where is the single central record, and who keeps it up to date?", "How are visitors signed in and checked?", "How are attendance records kept and followed up?"] },
+      { k: "info", h: "The single central record", p: ["It's one register of every adult's recruitment checks. Have it ready from the start, because inspectors ask for it early so leaders can correct any minor administrative gaps."] },
+    ],
+    quiz: [
+      { q: "Who does the inspector ask for on the notification call?", opts: ["The headteacher", "The Chair of Governors", "The office manager", "The DSL"], why: "The call usually comes between 9.30 and 10am, and the inspector asks for the headteacher." },
+      { q: "What is the single central record?", opts: ["One register of every adult's recruitment checks", "The pupil attendance register", "The visitor book", "The list of safeguarding concerns"], why: "It's one register of every adult's recruitment checks." },
+      { q: "When should the single central record be ready?", opts: ["From the start", "By the end of day two", "Only if asked twice", "After the inspection"], why: "Have it ready from the start. Inspectors ask for it early." },
+    ],
+  },
+};
+
+</script>
+<script>
+(function(){
+"use strict";
+const LOGO="data:image/png;base64,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";
+const KEY="hb-ofsted-ready-v1";
+const $=(s,r=document)=>r.querySelector(s);
+const app=$("#app");
+const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const I={
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  cross:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>',
+  arrow:'<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  tap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',
+  okc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>',
+  noc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v6M12 16.5v.5"/></svg>',
+};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- state ---------- */
+let S={roles:[],picked:false,done:{},name:"",finishedAt:null,listed:false};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+if(!Array.isArray(S.roles))S.roles=[];
+const modsFor=ids=>{const set=new Set(CORE);TICKS.forEach(t=>{if(ids.includes(t.id))t.mods.forEach(m=>set.add(m));});return ORDER.filter(m=>set.has(m));};
+const minsFor=list=>list.reduce((a,id)=>a+MODULES[id].mins,0);
+const roleLabel=()=>TICKS.filter(t=>S.roles.includes(t.id)).map(t=>t.short).join(", ");
+const mods=()=>S.picked?modsFor(S.roles):[];
+const extras=()=>ORDER.filter(m=>!mods().includes(m));
+const doneCount=()=>mods().filter(id=>S.done[id]).length;
+const allDone=()=>mods().length>0&&doneCount()===mods().length;
+const totals=()=>mods().reduce((a,id)=>{const d=S.done[id];if(d){a.s+=d.score;a.t+=d.total;}return a;},{s:0,t:0});
+const mins=()=>minsFor(mods());
+
+const canAdmin=false;
+
+/* ---------- confetti ---------- */
+const fx=$("#fx"),ctx=fx.getContext("2d");let parts=[],raf=0;
+function burst(x,y,n){
+  if(reduce)return;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  fx.width=innerWidth*dpr;fx.height=innerHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cols=["#015481","#0B93E3","#7CC7F4","#DDDDDD","#FFFFFF"];
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=4+Math.random()*9;
+    parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-6,r:3+Math.random()*5,c:cols[i%cols.length],rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:1,sq:Math.random()<.5});}
+  if(!raf)raf=requestAnimationFrame(tick);
+}
+function tick(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.life>0);
+  for(const p of parts){p.vy+=.34;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life-=.013;
+    ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,p.life*1.6));ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;
+    if(p.sq)ctx.fillRect(-p.r,-p.r*.6,p.r*2,p.r*1.2);else{ctx.beginPath();ctx.arc(0,0,p.r*.8,0,7);ctx.fill();}
+    if(p.c==="#FFFFFF"){ctx.strokeStyle="#0B93E3";ctx.lineWidth=1;ctx.stroke&&p.sq&&ctx.strokeRect(-p.r,-p.r*.6,p.r*2,p.r*1.2);}
+    ctx.restore();}
+  if(parts.length)raf=requestAnimationFrame(tick);else{raf=0;ctx.clearRect(0,0,innerWidth,innerHeight);}
+}
+const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}};
+
+/* ---------- home ---------- */
+let view="home",keyHandler=null;
+function ringHTML(cls,frac,label,r){
+  const c=2*Math.PI*r;
+  return `<div class="${cls}"><svg viewBox="0 0 ${r*2+14} ${r*2+14}"><circle class="bg" cx="${r+7}" cy="${r+7}" r="${r}"/><circle class="fg" cx="${r+7}" cy="${r+7}" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c}" data-to="${c*(1-frac)}"/></svg><b>${label}</b></div>`;
+}
+function runRings(){requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll(".fg[data-to]").forEach(e=>e.style.strokeDashoffset=e.dataset.to);}));}
+function home(){
+  view="home";keyHandler=null;
+  const r=S.picked;
+  let h=`<div class="view"><header class="hero"><div class="wrap"><div class="brand"><img src="${LOGO}" alt="Hartburn Primary School"><span>Learning for Life</span></div>`;
+  if(!r){
+    h+=`<h1>Ofsted ready</h1><p>Work through what Ofsted may ask you, a few minutes at a time.</p></div></header>
+    <main class="wrap pick"><h2 class="sec">What do you do here?</h2><p class="lead">Tick everything that fits, and you'll only get the blocks you need.</p>`;
+    let i=0;
+    GROUPS.forEach(g=>{h+=`<h3 class="grp">${esc(g.h)}</h3><div class="roles">`;
+      g.ticks.forEach(x=>{h+=`<button class="role ${S.roles.includes(x.id)?"on":""}" role="checkbox" aria-checked="${S.roles.includes(x.id)}" data-role="${x.id}" style="animation-delay:${.035*i++}s"><i>${I.check}</i><span>${esc(x.label)}</span></button>`;});
+      h+=`</div>`;});
+    h+=`</main><div class="dock stick"><div class="wrap"><button class="btn" id="build" disabled><span id="buildtxt">Tick at least one</span> ${I.arrow}</button></div></div>`;
+  }else{
+    const n=doneCount(),tot=mods().length,nextId=mods().find(id=>!S.done[id]);
+    h+=`<div class="herorow"><div><h1>${n===0?"Ofsted ready":allDone()?"All done":"Welcome back"}</h1><p>${allDone()?"You've finished every block on your path.":n===0?`${tot} short blocks, about ${mins()} minutes in total. Your place saves, so you can stop and come back.`:`${tot-n} ${tot-n===1?"block":"blocks"} to go. Your place is saved.`}</p></div>${ringHTML("ring",n/tot,`${n}/${tot}`,31)}</div></div></header><main class="wrap">`;
+    if(allDone())h+=finishHTML();
+    h+=`<div class="rolebar"><h2 class="sec">Your path</h2><button class="link" id="chg">Change my ticks</button></div><p class="lead">${esc(roleLabel())}</p><div class="path">`;
+    mods().forEach((id,i)=>{const m=MODULES[id],d=S.done[id],nx=id===nextId;
+      h+=`<button class="step ${d?"done":""} ${nx?"next":""}" data-mod="${id}" style="animation-delay:${.04*i}s"><span class="n">${d?I.check:i+1}</span><span><h3>${esc(m.title)}</h3><p>${esc(m.blurb)}</p></span><span class="meta">${d?`${d.score}/${d.total}`:nx?(n===0&&i===0?"Start":"Next"):`${m.mins} min`}</span></button>`;});
+    h+=`</div>`;
+    if(extras().length){h+=`<h2 class="sec">More blocks</h2><p class="lead">Optional. These don't count towards finishing.</p><div class="path">`;
+      extras().forEach(id=>{const m=MODULES[id],d=S.done[id];
+        h+=`<button class="step extra ${d?"done":""}" data-mod="${id}"><span class="n">${d?I.check:"+"}</span><span><h3>${esc(m.title)}</h3><p>${esc(m.blurb)}</p></span><span class="meta">${d?`${d.score}/${d.total}`:`${m.mins} min`}</span></button>`;});
+      h+=`</div>`;}
+    h+=`</main>`;
+  }
+  h+=`<footer class="wrap foot"><span>Hartburn Primary School</span>${canAdmin?'<button class="link" id="adm" style="padding:0">Completion list</button>':""}</footer></div>`;
+  app.innerHTML=h;runRings();window.scrollTo(0,0);
+  const build=$("#build");
+  const sync=()=>{if(!build)return;const n=S.roles.length;build.disabled=!n;const l=modsFor(S.roles);
+    $("#buildtxt").textContent=n?`Build my path: ${l.length} blocks, ${minsFor(l)} min`:"Tick at least one";};
+  app.querySelectorAll(".role").forEach(b=>b.onclick=()=>{const id=b.dataset.role,on=!S.roles.includes(id);
+    S.roles=on?S.roles.concat(id):S.roles.filter(x=>x!==id);b.classList.toggle("on",on);b.setAttribute("aria-checked",on);buzz(8);save();sync();
+    if(build&&on){build.classList.remove("tickle");void build.offsetWidth;build.classList.add("tickle");}});
+  sync();
+  if(build)build.onclick=()=>{S.picked=true;save();home();};
+  app.querySelectorAll(".step").forEach(b=>b.onclick=()=>play(b.dataset.mod));
+  const chg=$("#chg");if(chg)chg.onclick=()=>{S.picked=false;save();home();};
+  
+  wireFinish();
+}
+function finishHTML(){
+  const t=totals();
+  if(S.finishedAt&&S.name){
+    const d=new Date(S.finishedAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+    return `<div class="cert" style="margin-top:22px"><div class="seal">${I.check}</div><small>Ofsted ready</small><h2 id="certname"></h2><p>${esc(roleLabel())}</p><div class="row"><span><b>${mods().length}</b>blocks finished</span><span><b>${d}</b>completed</span></div><p class="note">Keep a screenshot of this as your record.</p></div>`;
+  }
+  return `<div class="fin" style="margin-top:22px"><h2>You've finished</h2><p>That's every block on your path. Add your name for your record.</p><form id="finform"><label for="fname">Your name</label><input id="fname" autocomplete="name" maxlength="60" placeholder="First name and surname"><button class="btn" type="submit" id="finbtn" disabled>Finish ${I.arrow}</button></form></div>`;
+}
+function wireFinish(){
+  const cn=$("#certname");if(cn)cn.textContent=S.name;
+  const f=$("#finform");if(!f)return;
+  const inp=$("#fname"),btn=$("#finbtn");
+  inp.oninput=()=>{btn.disabled=inp.value.trim().length<2;};
+  f.onsubmit=async e=>{e.preventDefault();const v=inp.value.trim();if(v.length<2)return;
+    S.name=v;S.finishedAt=new Date().toISOString();save();btn.disabled=true;
+    home();
+    burst(innerWidth/2,innerHeight*.35,120);buzz(20);};
+}
+
+/* ---------- player ---------- */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function play(id){
+  view="play";
+  const m=MODULES[id];
+  const steps=m.cards.map(c=>({t:"card",c})).concat(m.quiz.map((q,i)=>({t:"quiz",q,i})));
+  const nQ=m.quiz.length;let pos=0,score=0,streak=0,dir=1,retry=new Set(),answered=false;
+  const el=document.createElement("div");el.className="player";
+  el.innerHTML=`<div class="top"><div class="wrap"><button class="x" aria-label="Close and go back to your path">${I.close}</button><div class="bar" role="progressbar" aria-label="Progress through this block"></div><span id="streak"></span></div></div><div class="stage"><div class="wrap" id="slot"></div></div><div id="dock"></div>`;
+  app.innerHTML="";app.appendChild(el);
+  const slot=$("#slot",el),dock=$("#dock",el),bar=$(".bar",el),stage=$(".stage",el);
+  $(".x",el).onclick=home;
+  function paintBar(){bar.innerHTML=steps.map((s,i)=>`<i class="${s.t==="quiz"?"q":""} ${i<pos?"f":""}"></i>`).join("");bar.setAttribute("aria-valuenow",pos);bar.setAttribute("aria-valuemax",steps.length);}
+  function fillTo(){[...bar.children].forEach((e,i)=>e.classList.toggle("f",i<pos));}
+  function go(d){dir=d;pos+=d;if(pos>=steps.length)return finish();if(steps.length!==bar.children.length)paintBar();else fillTo();show();}
+  function show(){
+    const s=steps[pos];answered=false;stage.scrollTop=0;
+    slot.innerHTML=`<div class="cardwrap ${dir<0?"back":""}">${s.t==="card"?cardHTML(s.c):quizHTML(s)}</div>`;
+    if(s.t==="card"){
+      const needsOpen=s.c.k==="reveal";
+      dock.className="dock";
+      dock.innerHTML=`<div class="wrap">${pos>0&&steps[pos-1].t==="card"?`<button class="backb" aria-label="Back">${I.back}</button>`:""}<button class="btn" id="go" ${needsOpen?"disabled":""}>${pos===m.cards.length-1?"Start the questions":"Continue"} ${I.arrow}</button></div>`;
+      $("#go",dock).onclick=()=>go(1);
+      const bb=$(".backb",dock);if(bb)bb.onclick=()=>go(-1);
+      const fl=$(".flip",slot);
+      if(fl)fl.onclick=()=>{if(fl.classList.contains("open"))return;fl.classList.add("open");fl.setAttribute("aria-expanded","true");buzz(8);$("#go",dock).disabled=false;};
+      keyHandler=e=>{if(e.key==="ArrowRight"||e.key==="Enter"){const g=$("#go",dock);if(g&&!g.disabled){e.preventDefault();g.click();}else if(fl&&!fl.classList.contains("open")){e.preventDefault();fl.click();}}
+        else if(e.key==="ArrowLeft"&&bb){bb.click();}};
+    }else{
+      dock.className="";dock.innerHTML="";
+      const btns=[...slot.querySelectorAll(".opt")];
+      btns.forEach(b=>b.onclick=()=>pick(s,b,btns));
+      keyHandler=e=>{const n=parseInt(e.key,10);
+        if(!answered&&n>=1&&n<=btns.length){btns[n-1].click();}
+        else if(answered&&(e.key==="Enter"||e.key==="ArrowRight")){e.preventDefault();const g=$("#go",dock);g&&g.click();}};
+    }
+  }
+  function pick(s,b,btns){
+    if(answered)return;answered=true;
+    const ok=b.dataset.ok==="1",first=!s.again;
+    $(".opts",slot).classList.add("lock");
+    btns.forEach(x=>{if(x.dataset.ok==="1"){x.classList.add("ok");$("k",x).innerHTML=I.check;}});
+    if(ok){
+      if(first)score++;streak++;
+      const r=b.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,26);buzz(12);
+    }else{
+      b.classList.add("no");$("k",b).innerHTML=I.cross;streak=0;buzz([20,40,20]);
+      if(!retry.has(s.i)){retry.add(s.i);steps.push({t:"quiz",q:s.q,i:s.i,again:true});paintBar();}
+    }
+    const st=$("#streak",el);st.innerHTML=streak>=2?`<span class="streak">${streak} in a row</span>`:"";
+    const last=pos===steps.length-1;
+    dock.className="fb "+(ok?"ok":"no");
+    dock.innerHTML=`<div class="wrap" style="display:block" role="status"><h3>${ok?I.okc:I.noc}${ok?praise():"Not quite"}</h3><p>${esc(s.q.why)}${!ok&&!s.again?" You'll see this one again at the end.":""}</p><button class="btn" id="go">${last?"Finish":"Continue"} ${I.arrow}</button></div>`;
+    $("#go",dock).onclick=()=>go(1);
+    setTimeout(()=>{const g=$("#go",dock);g&&g.focus({preventScroll:true});},60);
+  }
+  const P=["Correct","That's right"];let pi=0;const praise=()=>P[pi++%P.length];
+  function quizHTML(s){
+    const q=s.q,n=s.i+1;
+    const kick=s.again?"One more go":`Question ${n} of ${nQ}`;
+    let opts;
+    if("tf" in q){opts=`<div class="opts tf">${["True","False"].map((t,i)=>`<button class="opt" data-ok="${(i===0)===q.tf?1:0}">${t}<k style="display:none"></k></button>`).join("")}</div>`;
+      return `<div class="card"><p class="kick">${kick} · True or false?</p><h2>${esc(q.q)}</h2>${opts}</div>`;}
+    const sh=shuffle(q.opts.map((t,i)=>({t,ok:i===0})));
+    opts=`<div class="opts stag">${sh.map((o,i)=>`<button class="opt" data-ok="${o.ok?1:0}"><k>${"ABCD"[i]}</k><span>${esc(o.t)}</span></button>`).join("")}</div>`;
+    return `<div class="card"><p class="kick">${kick}</p><h2>${esc(q.q)}</h2>${opts}</div>`;
+  }
+  function finish(){
+    const prev=S.done[id];
+    S.done[id]={score:prev?Math.max(prev.score,score):score,total:nQ,at:Date.now()};save();
+    keyHandler=null;
+    const list=mods(),nextId=list.find(x=>!S.done[x]);
+    const msg=score===nQ?"Every one right first time.":score>=nQ-1?"One to look at again.":"You've now seen the right answer to each one you missed.";
+    el.innerHTML=`<div class="wrap" style="flex:1;display:flex;flex-direction:column"><div class="doneview">${ringHTML("big",score/nQ,`<span><span id="cnt">0</span>/${nQ}<small>first time</small></span>`,72)}<h2>${esc(m.title)}: done</h2><p>${msg}</p></div><div class="doneact">${nextId?`<button class="btn" id="nx">Next: ${esc(MODULES[nextId].title)} ${I.arrow}</button><button class="btn ghost" id="hm">Back to my path</button>`:`<button class="btn" id="hm">${allDone()?"Finish up":"Back to my path"} ${I.arrow}</button>`}</div></div>`;
+    runRings();
+    const cnt=$("#cnt",el);let c=0;const iv=setInterval(()=>{if(c>=score){clearInterval(iv);cnt.textContent=score;return;}c++;cnt.textContent=c;},reduce?0:220);
+    setTimeout(()=>burst(innerWidth/2,innerHeight*.32,score===nQ?130:70),reduce?0:500);buzz(18);
+    const nx=$("#nx",el);if(nx)nx.onclick=()=>play(nextId);
+    $("#hm",el).onclick=home;
+    keyHandler=e=>{if(e.key==="Enter"){(nx||$("#hm",el)).click();}};
+  }
+  /* swipe between learn cards */
+  let sx=0,sy=0;
+  stage.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+  stage.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<70||Math.abs(dy)>50||steps[pos].t!=="card")return;
+    if(dx<0){const g=$("#go",dock);if(g&&!g.disabled)g.click();}else{const b=$(".backb",dock);if(b)b.click();}},{passive:true});
+  paintBar();show();
+}
+function cardHTML(c){
+  let b="";
+  if(c.k==="info")b=`<div class="stag">${c.p.map(p=>`<p>${p}</p>`).join("")}</div>`;
+  else if(c.k==="list"||c.k==="steps"){const tag=c.k==="steps"?"ol":"ul";
+    b=`${c.intro?`<p>${c.intro}</p>`:""}<${tag} class="items stag">${c.items.map(x=>`<li>${x}</li>`).join("")}</${tag}>`;}
+  else if(c.k==="people")b=`<div class="people stag">${c.groups.map(g=>`<div><h3>${esc(g[0])}</h3><ul>${g[1].map(n=>`<li>${esc(n)}</li>`).join("")}</ul></div>`).join("")}</div>`;
+  else if(c.k==="route")b=`<div class="route stag">${c.rows.map(r=>`<div><h3>${esc(r[0])}</h3><p>${esc(r[1])}</p></div>`).join("")}</div>`;
+  else if(c.k==="quote")return `<div class="card"><h2>${esc(c.h)}</h2><ul class="quote stag">${c.lines.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`;
+  else if(c.k==="reveal")return `<div class="card"><p class="kick">An inspector asks</p><h2>${esc(c.h)}</h2><button class="flip" aria-expanded="false"><span class="hint">${I.tap}Tap to see a strong answer</span><span class="think">Have a go at answering before you look.</span><span class="ans"><div><h3>A strong answer</h3><p>${esc(c.a)}</p></div></span></button>${c.note?`<p class="revnote">${esc(c.note)}</p>`:""}</div>`;
+  return `<div class="card"><h2>${esc(c.h)}</h2>${b}${c.foot?`<p class="footn">${c.foot}</p>`:""}</div>`;
+}
+
+document.addEventListener("keydown",e=>{if(e.target&&e.target.tagName==="INPUT")return;if(keyHandler)keyHandler(e);});
+function gate(){
+  view="gate";keyHandler=null;
+  app.innerHTML=`<div class="view"><header class="hero"><div class="wrap"><div class="brand"><img src="${LOGO}" alt="Hartburn Primary School"><span>Learning for Life</span></div><h1>Ofsted ready</h1><p>For Hartburn staff and governors.</p></div></header><main class="wrap gate"><h2 class="sec"><label for="code">Staff passcode</label></h2><p class="lead">Enter the four-digit passcode you were given.</p><div class="codebox" id="codebox"><i></i><i></i><i></i><i></i><input id="code" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" aria-describedby="codemsg"></div><p class="codemsg" id="codemsg" role="status"></p></main></div>`;
+  const inp=$("#code"),box=$("#codebox"),cells=[...box.querySelectorAll("i")],msg=$("#codemsg");
+  const paint=()=>cells.forEach((c,i)=>{c.textContent=inp.value[i]||"";c.classList.toggle("on",i<inp.value.length);c.classList.toggle("cur",i===inp.value.length);});
+  inp.oninput=()=>{inp.value=inp.value.replace(/\D/g,"").slice(0,4);msg.textContent="";paint();
+    if(inp.value.length<4)return;
+    let h=5381;for(const ch of "hartburn:"+inp.value)h=((h<<5)+h+ch.charCodeAt(0))>>>0;
+    if(h===1306008053){S.open=true;save();box.classList.add("ok");buzz(15);const r=box.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,40);setTimeout(home,reduce?0:550);}
+    else{box.classList.remove("bad");void box.offsetWidth;box.classList.add("bad");buzz([20,40,20]);msg.textContent="That passcode isn't right. Try again.";setTimeout(()=>{inp.value="";paint();},380);}};
+  paint();setTimeout(()=>inp.focus({preventScroll:true}),300);
+}
+S.open?home():gate();
+})();
+</script>
+</body>
+</html>
