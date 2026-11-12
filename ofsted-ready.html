@@ -124,6 +124,10 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .cert h2{font:700 26px/1.2 var(--display);color:var(--orient);margin:8px 0 4px;overflow-wrap:anywhere}
 .cert p{color:var(--ink)}
 .cert .row{display:flex;justify-content:center;gap:22px;margin-top:14px;font-size:14px;color:var(--soft)}
+.cert .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.cert .acts .btn{min-height:50px;font-size:15px;padding:0 12px}
+.cert .acts .btn svg{width:20px;height:20px}
+.cert .acts .btn[disabled]{opacity:.6}
 .cert .row b{display:block;font-size:18px;color:var(--orient);font-variant-numeric:tabular-nums}
 .cert .note{font-size:13px;color:var(--soft);margin-top:14px}
 @keyframes pop{from{opacity:0;transform:scale(.9)}}
@@ -554,6 +558,7 @@ const $=(s,r=document)=>r.querySelector(s);
 const app=$("#app");
 const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
 const I={
+  dl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   cross:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>',
   arrow:'<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
@@ -657,12 +662,15 @@ function finishHTML(){
   const t=totals();
   if(S.finishedAt&&S.name){
     const d=new Date(S.finishedAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
-    return `<div class="cert" style="margin-top:22px"><div class="seal">${I.check}</div><small>Ofsted ready</small><h2 id="certname"></h2><p>${esc(roleLabel())}</p><div class="row"><span><b>${mods().length}</b>blocks finished</span><span><b>${d}</b>completed</span></div><p class="note">Keep a screenshot of this as your record.</p></div>`;
+    return `<div class="cert" style="margin-top:22px"><div class="seal">${I.check}</div><small>Ofsted ready</small><h2 id="certname"></h2><p>${esc(roleLabel())}</p><div class="row"><span><b>${mods().length}</b>blocks finished</span><span><b>${d}</b>completed</span></div><p class="note">Save a copy as your record.</p><div class="acts"><button class="btn" id="savepdf" type="button">${I.dl}PDF</button><button class="btn ghost" id="savepng" type="button">${I.dl}Image</button></div></div>`;
   }
   return `<div class="fin" style="margin-top:22px"><h2>You've finished</h2><p>That's every block on your path. Add your name for your record.</p><form id="finform"><label for="fname">Your name</label><input id="fname" autocomplete="name" maxlength="60" placeholder="First name and surname"><button class="btn" type="submit" id="finbtn" disabled>Finish ${I.arrow}</button></form></div>`;
 }
 function wireFinish(){
   const cn=$("#certname");if(cn)cn.textContent=S.name;
+  const sp=$("#savepdf"),si=$("#savepng");
+  if(sp)sp.onclick=()=>saveRecord("pdf",sp);
+  if(si)si.onclick=()=>saveRecord("png",si);
   const f=$("#finform");if(!f)return;
   const inp=$("#fname"),btn=$("#finbtn");
   inp.oninput=()=>{btn.disabled=inp.value.trim().length<2;};
@@ -670,6 +678,89 @@ function wireFinish(){
     S.name=v;S.finishedAt=new Date().toISOString();save();btn.disabled=true;
     home();
     burst(innerWidth/2,innerHeight*.35,120);buzz(20);};
+}
+
+/* ---------- save record (PNG / PDF) ---------- */
+function drawRecord(){
+  const W=1240,H=1754,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  const O="#015481",C="#0B93E3",INK="#12324A",SOFT="#4A6478";
+  const serif="Lora,Georgia,serif",sans="'Open Sans',Arial,sans-serif";
+  x.fillStyle="#fff";x.fillRect(0,0,W,H);
+  // header
+  x.save();x.beginPath();x.moveTo(0,0);x.lineTo(W,0);x.lineTo(W,470);x.quadraticCurveTo(W/2,560,0,470);x.closePath();x.clip();
+  const g=x.createLinearGradient(0,0,W,470);g.addColorStop(0,O);g.addColorStop(.35,O);g.addColorStop(1,C);x.fillStyle=g;x.fillRect(0,0,W,560);
+  x.fillStyle="rgba(255,255,255,.08)";x.beginPath();x.arc(1080,90,230,0,7);x.fill();
+  x.fillStyle="rgba(255,255,255,.06)";x.beginPath();x.arc(1180,400,150,0,7);x.fill();
+  x.restore();
+  const finish=()=>{
+    x.textAlign="center";
+    x.fillStyle="#fff";x.font=`600 22px ${sans}`;if("letterSpacing" in x)x.letterSpacing="6px";
+    x.fillText("LEARNING FOR LIFE",W/2,400);if("letterSpacing" in x)x.letterSpacing="0px";
+    const oy=90;
+    // seal
+    x.fillStyle="#fff";x.beginPath();x.arc(W/2,(640+oy),62,0,7);x.fill();
+    x.fillStyle=O;x.beginPath();x.arc(W/2,(640+oy),52,0,7);x.fill();
+    x.strokeStyle="#fff";x.lineWidth=9;x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(W/2-22,(640+oy));x.lineTo(W/2-6,(657+oy));x.lineTo(W/2+24,(623+oy));x.stroke();
+    x.fillStyle=C;x.font=`600 24px ${sans}`;if("letterSpacing" in x)x.letterSpacing="6px";x.fillText("OFSTED READY",W/2,(770+oy));if("letterSpacing" in x)x.letterSpacing="0px";
+    x.fillStyle=SOFT;x.font=`400 28px ${sans}`;x.fillText("This is to record that",W/2,(830+oy));
+    // name, shrink to fit
+    let fs=84;x.fillStyle=O;do{x.font=`700 ${fs}px ${serif}`;fs-=4;}while(x.measureText(S.name).width>W-200&&fs>30);
+    x.fillText(S.name,W/2,(945+oy));
+    x.strokeStyle="#DDDDDD";x.lineWidth=3;x.beginPath();x.moveTo(W/2-260,(990+oy));x.lineTo(W/2+260,(990+oy));x.stroke();
+    x.fillStyle=INK;x.font=`400 30px ${sans}`;
+    const lines=wrap(x,"has finished the Ofsted ready staff training: "+mods().length+" blocks, each with a quiz.",W-300);
+    lines.forEach((l,i)=>x.fillText(l,W/2,1065+oy+i*44));
+    let y=1065+oy+lines.length*44+40;
+    const rl=roleLabel();
+    if(rl){x.fillStyle=SOFT;x.font=`600 24px ${sans}`;x.fillText("Path",W/2,y);y+=40;x.fillStyle=INK;x.font=`400 26px ${sans}`;
+      wrap(x,rl,W-320).forEach(l=>{x.fillText(l,W/2,y);y+=38;});}
+    const d=new Date(S.finishedAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+    x.fillStyle=SOFT;x.font=`600 24px ${sans}`;x.fillText("Date completed",W/2,y+70);
+    x.fillStyle=O;x.font=`700 40px ${serif}`;x.fillText(d,W/2,y+125);
+    x.fillStyle=SOFT;x.font=`400 22px ${sans}`;x.fillText("Hartburn Primary School, Stockton-on-Tees",W/2,1680);
+    x.fillStyle=C;x.fillRect(0,H-18,W,18);
+  };
+  return new Promise(res=>{
+    const im=new Image();
+    im.onload=()=>{const lw=360,lh=lw*im.height/im.width;x.drawImage(im,(W-lw)/2,140,lw,lh);finish();res(c);};
+    im.onerror=()=>{finish();res(c);};
+    im.src=LOGO;
+  });
+}
+function wrap(x,s,max){const w=s.split(" "),out=[];let l="";for(const a of w){const t=l?l+" "+a:a;if(x.measureText(t).width>max&&l){out.push(l);l=a;}else l=t;}if(l)out.push(l);return out;}
+function pdfFromJpeg(jpg,w,h){
+  const enc=s=>new TextEncoder().encode(s),parts=[],offs=[];let len=0;
+  const add=b=>{if(typeof b==="string")b=enc(b);parts.push(b);len+=b.length;};
+  const obj=(n,b)=>{offs[n]=len;add(n+" 0 obj\n");add(b);add("\nendobj\n");};
+  add("%PDF-1.4\n");
+  obj(1,"<< /Type /Catalog /Pages 2 0 R >>");
+  obj(2,"<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+  obj(3,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>");
+  offs[4]=len;add("4 0 obj\n<< /Type /XObject /Subtype /Image /Width "+w+" /Height "+h+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpg.length+" >>\nstream\n");add(jpg);add("\nendstream\nendobj\n");
+  const cs="q 595 0 0 842 0 0 cm /Im0 Do Q";
+  obj(5,"<< /Length "+cs.length+" >>\nstream\n"+cs+"\nendstream");
+  const xr=len;let t="xref\n0 6\n0000000000 65535 f \n";
+  for(let i=1;i<=5;i++)t+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+  add(t+"trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n"+xr+"\n%%EOF");
+  return new Blob(parts,{type:"application/pdf"});
+}
+async function saveRecord(kind,btn){
+  const old=btn.innerHTML;btn.disabled=true;btn.textContent="Making it...";
+  try{
+    try{await Promise.all([document.fonts.load("700 40px Lora"),document.fonts.load("400 28px 'Open Sans'"),document.fonts.load("600 24px 'Open Sans'")]);}catch(e){}
+    const c=await drawRecord();
+    const base="Ofsted-ready-"+S.name.trim().replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    const blob=kind==="pdf"
+      ? pdfFromJpeg(Uint8Array.from(atob(c.toDataURL("image/jpeg",.92).split(",")[1]),ch=>ch.charCodeAt(0)),c.width,c.height)
+      : await new Promise(r=>c.toBlob(r,"image/png"));
+    const file=new File([blob],base+"."+kind,{type:blob.type});
+    if(navigator.canShare&&navigator.canShare({files:[file]})&&matchMedia("(pointer:coarse)").matches){
+      try{await navigator.share({files:[file],title:"Ofsted ready"});buzz(15);btn.innerHTML=old;btn.disabled=false;return;}catch(e){if(e&&e.name==="AbortError"){btn.innerHTML=old;btn.disabled=false;return;}}
+    }
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=file.name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    buzz(15);btn.textContent="Saved";setTimeout(()=>{btn.innerHTML=old;btn.disabled=false;},1600);
+  }catch(e){btn.textContent="Couldn't save";setTimeout(()=>{btn.innerHTML=old;btn.disabled=false;},2000);}
 }
 
 /* ---------- player ---------- */
