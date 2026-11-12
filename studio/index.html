@@ -271,11 +271,18 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
 <section id="viewBelong" class="layout hidden">
   <div class="panel">
     <h2>Here, I Belong photos</h2>
-    <p class="sub">Add head and bust photos. Each one gets a soft spotlight and the Here, I Belong frame, ready for A4.</p>
+    <p class="sub">Add head and bust photos. Each one is levelled so everyone's eyes sit in the same place, gets a soft spotlight and goes into the Here, I Belong frame, ready for A4. Photos that need a look are marked with an orange dot.</p>
 
     <div class="drop" id="blDrop"><div class="big">Add photos</div><div class="small">Tap to choose, or drop them here</div></div>
     <input type="file" id="blFile" accept="image/*" multiple class="hidden">
     <div class="shots" id="blShots"></div>
+
+    <div id="blAlign" class="hidden">
+      <div class="field" style="margin-top:14px"><div class="sizehead"><label for="blEye">Eye line, all photos</label></div><input type="range" id="blEye" min="25" max="50" value="37"><div class="sizeends"><span>Higher</span><span>Lower</span></div></div>
+      <div class="field"><div class="sizehead"><label for="blIpd">Face size, all photos</label></div><input type="range" id="blIpd" min="14" max="30" value="21"><div class="sizeends"><span>Smaller</span><span>Larger</span></div></div>
+      <div class="hint" id="blStat" role="status"></div>
+      <button type="button" class="btn ghost hidden" id="blCheck" style="margin-top:8px"></button>
+    </div>
 
     <div id="blCtl" class="hidden">
       <div class="field" style="margin-top:18px">
@@ -285,14 +292,16 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
       <div class="field"><div class="sizehead"><label for="blSize">Light size</label></div><input type="range" id="blSize" min="25" max="130" value="70"><div class="sizeends"><span>Small</span><span>Large</span></div></div>
       <div class="field"><div class="sizehead"><label for="blSoft">Edge of the light</label></div><input type="range" id="blSoft" min="10" max="100" value="65"><div class="sizeends"><span>Sharper</span><span>Softer</span></div></div>
       <div class="field"><div class="sizehead"><label for="blDark">Darkness around</label></div><input type="range" id="blDark" min="30" max="100" value="88"><div class="sizeends"><span>Lighter</span><span>Darker</span></div></div>
-      <div class="field"><div class="sizehead"><label for="blZoom">Zoom</label></div><input type="range" id="blZoom" min="100" max="250" value="100"><div class="sizeends"><span>Wider</span><span>Closer</span></div></div>
-      <button type="button" class="btn ghost" id="blAuto">Find the face</button>
+      <div class="field"><div class="sizehead"><label for="blZoom">Zoom</label></div><input type="range" id="blZoom" min="30" max="600" value="100"><div class="sizeends"><span>Wider</span><span>Closer</span></div></div>
+      <div class="hint hidden" id="blFlags" style="color:#9a5b00;font-weight:600"></div>
+      <button type="button" class="btn ghost hidden" id="blFine" style="margin-top:8px">This one is fine</button>
+      <button type="button" class="btn ghost" id="blAuto" style="margin-top:8px">Line up this photo again</button>
       <button type="button" class="btn ghost" id="blAll" style="margin-top:8px">Use these settings for every photo</button>
     </div>
 
     <div style="margin-top:18px">
       <button type="button" class="btn" id="blOne" disabled>Download this photo</button>
-      <button type="button" class="btn ghost" id="blZip" style="margin-top:8px" disabled>Download all as a zip</button>
+      <button type="button" class="btn ghost" id="blZip" style="margin-top:8px" disabled>Download all (zips of 40)</button>
       <div class="hint" id="blMsg" role="status"></div>
     </div>
     <div class="privacy">
@@ -1577,26 +1586,30 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   const FW=2481,FH=3509,WX=153,WY=153,WW=2175,WH=2897,BG="#070707";
   const cv=$("blCanvas"),cx=cv.getContext("2d");
   const frame=new Image();let frameOK=false;frame.onload=()=>{frameOK=true;draw()};frame.src=FRAME_SRC;
-  let photos=[],sel=-1,mode="light";
-  const hasFD="FaceDetector" in window;
-  if(!hasFD)$("blAuto").classList.add("hidden");
-  const DEF=()=>({lx:.5,ly:.42,size:.70,soft:.65,dark:.88,zoom:1,ox:0,oy:0});
+  let photos=[],sel=-1,mode="light",cur=null,openTok=0;
+  const AL={eye:.37,ipd:.21};          // where the eyes go, and how far apart (fractions of the picture window)
+  const MP=(/\/$|\.[a-z]+$/i.test(location.pathname)?"./":"/studio/")+"mp/";
+  const DEF=()=>({lx:.5,ly:.42,size:.70,soft:.65,dark:.88,zoom:1,ox:0,oy:0,rot:0,aligned:false,manual:false,flags:[],lm:null});
 
+  /* ---------- geometry ---------- */
   function clamp(p){
-    const im=p.bmp,sc=Math.max(WW/im.width,WH/im.height)*p.zoom;
-    const mx=Math.max(0,(im.width*sc-WW)/2/WW),my=Math.max(0,(im.height*sc-WH)/2/WH);
-    p.ox=Math.min(mx,Math.max(-mx,p.ox));p.oy=Math.min(my,Math.max(-my,p.oy));
+    if(!p.aligned){
+      const a=p.aw/p.ah,sc=Math.max(WW/p.aw,WH/p.ah)*p.zoom;
+      const mx=Math.max(0,(p.aw*sc-WW)/2/WW),my=Math.max(0,(p.ah*sc-WH)/2/WH);
+      p.ox=Math.min(mx,Math.max(-mx,p.ox));p.oy=Math.min(my,Math.max(-my,p.oy));
+    }
     p.lx=Math.min(1,Math.max(0,p.lx));p.ly=Math.min(1,Math.max(0,p.ly));
   }
-  function paint(c,W,H,p){
+  function paint(c,W,H,p,img){
     const s=W/FW;
     c.fillStyle=BG;c.fillRect(0,0,W,H);
     const wx=WX*s,wy=WY*s,ww=WW*s,wh=WH*s;
-    if(p){
+    if(p&&img){
       c.save();c.beginPath();c.rect(wx,wy,ww,wh);c.clip();
-      const im=p.bmp,sc=Math.max(WW/im.width,WH/im.height)*p.zoom*s;
-      const dw=im.width*sc,dh=im.height*sc;
-      c.drawImage(im,wx+ww/2-dw/2+p.ox*ww,wy+wh/2-dh/2+p.oy*wh,dw,dh);
+      const sc=Math.max(WW/p.aw,WH/p.ah)*p.zoom*s;
+      const dw=p.aw*sc,dh=p.ah*sc;
+      c.save();c.translate(wx+ww/2+p.ox*ww,wy+wh/2+p.oy*wh);c.rotate(p.rot||0);
+      c.drawImage(img,-dw/2,-dh/2,dw,dh);c.restore();
       c.save();
       const gx=wx+p.lx*ww,gy=wy+p.ly*wh,r=p.size*ww,inner=.45*(1-p.soft);
       c.translate(gx,gy);c.scale(1,1.3);
@@ -1617,26 +1630,113 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     }
     if(frameOK)c.drawImage(frame,0,0,W,H);
   }
-  function draw(){paint(cx,cv.width,cv.height,sel>=0?photos[sel]:null)}
+  function curImg(){return(sel>=0&&cur&&cur.p===photos[sel])?cur.img:null}
+  function draw(){paint(cx,cv.width,cv.height,sel>=0?photos[sel]:null,curImg())}
 
+  /* ---------- eye finding (MediaPipe Face Landmarker, hosted on this site) ---------- */
+  let LM=null,lmState="idle";
+  async function lmLoad(){
+    if(LM)return LM;if(lmState==="failed")return null;
+    $("blMsg").textContent="Loading the eye finder (first time only)...";
+    try{
+      const V=await import(MP+"vision_bundle.mjs");
+      const fs=await V.FilesetResolver.forVisionTasks(MP+"wasm");
+      LM=await V.FaceLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MP+"face_landmarker.task",delegate:"CPU"},runningMode:"IMAGE",numFaces:2,outputFaceBlendshapes:true});
+      lmState="ready";return LM;
+    }catch(e){lmState="failed";console.warn("eye finder failed",e);$("blMsg").textContent="The eye finder could not load, so photos are centred instead.";return null}
+  }
+  async function analyse(img){
+    const lm=await lmLoad();if(!lm)return{lm:null,flags:["Eye finder unavailable"]};
+    const k=Math.min(1,1024/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    let r;try{r=lm.detect(c)}catch(e){return{lm:null,flags:["No face found"]}}
+    if(!r.faceLandmarks||!r.faceLandmarks.length)return{lm:null,flags:["No face found"]};
+    const info=r.faceLandmarks.map((f,i)=>{
+      const a=f[468],b=f[473],L=a.x<=b.x?a:b,R=a.x<=b.x?b:a;
+      const d=Math.hypot((R.x-L.x)*c.width,(R.y-L.y)*c.height);
+      return{f,i,L,R,d,nose:f[1]};
+    }).sort((x,y)=>y.d-x.d);
+    const m=info[0],flags=[];
+    if(info[1]&&info[1].d>.5*m.d)flags.push("More than one face");
+    const bs=r.faceBlendshapes&&r.faceBlendshapes[m.i]?r.faceBlendshapes[m.i].categories:[];
+    const g=n=>{const x=bs.find(b=>b.categoryName===n);return x?x.score:0};
+    const bl=g("eyeBlinkLeft"),br=g("eyeBlinkRight");
+    if((bl>.5&&br>.5)||bl>.75||br>.75)flags.push("Eyes may be closed");
+    const mid=(m.L.x+m.R.x)/2;
+    if(Math.abs((m.nose.x-mid)*c.width)/m.d>.4)flags.push("Head turned");
+    return{lm:{L:{x:m.L.x,y:m.L.y},R:{x:m.R.x,y:m.R.y}},flags};
+  }
+  function align(p){
+    if(!p.lm)return false;
+    const w=p.aw,h=p.ah,a=p.lm;
+    const Lx=a.L.x*w,Ly=a.L.y*h,Rx=a.R.x*w,Ry=a.R.y*h;
+    const d=Math.hypot(Rx-Lx,Ry-Ly),th=Math.atan2(Ry-Ly,Rx-Lx),mx=(Lx+Rx)/2,my=(Ly+Ry)/2;
+    const base=Math.max(WW/w,WH/h),sc=AL.ipd*WW/d;
+    p.zoom=sc/base;p.rot=-th;p.aligned=true;
+    const vx=(mx-w/2)*sc,vy=(my-h/2)*sc,cs=Math.cos(p.rot),sn=Math.sin(p.rot);
+    p.ox=-(vx*cs-vy*sn)/WW;p.oy=((AL.eye-.5)*WH-(vx*sn+vy*cs))/WH;
+    p.lx=.5;p.ly=AL.eye+.45*AL.ipd*WW/WH;
+    p.size=p.size;clamp(p);
+    // geometry flags
+    p.geo=[];
+    if(d<.35*AL.ipd*WW)p.geo.push("Small face, may look soft");
+    const T={x:p.ox*WW,y:p.oy*WH},c2=Math.cos(-p.rot),s2=Math.sin(-p.rot);
+    for(const q of[[-WW/2,-WH/2],[WW/2,-WH/2],[-WW/2,WH/2],[WW/2,WH/2]]){
+      const vx2=q[0]-T.x,vy2=q[1]-T.y,ux=(vx2*c2-vy2*s2)/sc+w/2,uy=(vx2*s2+vy2*c2)/sc+h/2;
+      if(ux<-2||uy<-2||ux>w+2||uy>h+2){p.geo.push("Photo too tight, edge may show");break}
+    }
+    return true;
+  }
+  const allFlags=p=>(p.flags||[]).concat(p.geo||[]);
+
+  /* ---------- thumbnails and the strip ---------- */
   function thumb(i){
     const t=document.createElement("canvas");t.width=140;t.height=196;
-    paint(t.getContext("2d"),140,196,photos[i]);
+    paint(t.getContext("2d"),140,196,photos[i],photos[i].sb);
     return t.toDataURL("image/jpeg",.8);
   }
-  function refreshShot(i){const el=$("blShots").children[i];if(el)el.firstChild.src=thumb(i)}
+  function badge(i){
+    const el=$("blShots").children[i];if(!el)return;
+    let b=el.querySelector(".flag");const f=allFlags(photos[i]);
+    if(f.length){if(!b){b=document.createElement("div");b.className="flag";b.style.cssText="position:absolute;left:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:#F5A524;color:#1a1a1a;font:700 13px/20px sans-serif;text-align:center;pointer-events:none";b.textContent="!";el.style.position="relative";el.appendChild(b)}b.title=f.join(", ")}
+    else if(b)b.remove();
+  }
+  function refreshShot(i){const el=$("blShots").children[i];if(el)el.firstChild.src=thumb(i);badge(i)}
+  function flagged(){return photos.map((p,i)=>allFlags(p).length?i:-1).filter(i=>i>=0)}
+  function stat(){
+    const n=photos.length,f=flagged().length;
+    $("blAlign").classList.toggle("hidden",!n);
+    $("blStat").textContent=n?(n+" photo"+(n===1?"":"s")+(f?", "+f+" need"+(f===1?"s":"")+" a look":", all lined up")):"";
+    $("blCheck").classList.toggle("hidden",!f);
+    $("blCheck").textContent="Check the next flagged photo ("+f+")";
+  }
   function sync(){
     const p=photos[sel],on=!!p;
     $("blCtl").classList.toggle("hidden",!on);
-    $("blOne").disabled=!on;$("blZip").disabled=!on;
-    if(on){$("blSize").value=p.size*100;$("blSoft").value=p.soft*100;$("blDark").value=p.dark*100;$("blZoom").value=p.zoom*100}
+    $("blOne").disabled=!on;$("blZip").disabled=!photos.length;
+    if(on){$("blSize").value=p.size*100;$("blSoft").value=p.soft*100;$("blDark").value=p.dark*100;$("blZoom").value=Math.round(p.zoom*100);
+      const f=allFlags(p);$("blFlags").textContent=f.join(". ");$("blFlags").classList.toggle("hidden",!f.length);$("blFine").classList.toggle("hidden",!f.length)}
     [...$("blShots").children].forEach((d,i)=>{d.firstChild.style.outline=i===sel?"3px solid #0B93E3":"none"});
-    draw();
+    stat();draw();
   }
-  [["blSize","size"],["blSoft","soft"],["blDark","dark"],["blZoom","zoom"]].forEach(([id,k])=>{
+  async function openSel(i){
+    if(cur&&cur.full){try{cur.full.close()}catch(e){}}
+    sel=i;const p=photos[i];cur=p?{p,img:p.sb}:null;sync();
+    if(!p)return;
+    const tok=++openTok;
+    try{
+      const full=await createImageBitmap(p.file,{imageOrientation:"from-image"});
+      if(tok!==openTok||sel!==i||photos[sel]!==p){full.close();return}
+      cur={p,img:full,full};draw();
+    }catch(e){}
+  }
+
+  /* ---------- sliders ---------- */
+  [["blSize","size",0],["blSoft","soft",0],["blDark","dark",0],["blZoom","zoom",1]].forEach(([id,k,man])=>{
     $(id).addEventListener("input",()=>{
       const p=photos[sel];if(!p)return;
-      p[k]=$(id).value/100;clamp(p);draw();
+      p[k]=$(id).value/100;if(man)p.manual=true;clamp(p);draw();
     });
     $(id).addEventListener("change",()=>{if(sel>=0)refreshShot(sel)});
   });
@@ -1644,50 +1744,80 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const b=e.target.closest("button");if(!b)return;mode=b.dataset.m;
     [...$("blMode").children].forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
   });
+  let reT=0;
+  function realignAll(){
+    clearTimeout(reT);reT=setTimeout(async()=>{
+      photos.forEach(p=>{if(p.lm&&!p.manual)align(p)});
+      draw();
+      for(let i=0;i<photos.length;i+=20){for(let j=i;j<Math.min(photos.length,i+20);j++)refreshShot(j);await new Promise(r=>setTimeout(r,0))}
+      stat();
+    },150);
+  }
+  $("blEye").addEventListener("input",()=>{AL.eye=$("blEye").value/100;realignAll()});
+  $("blIpd").addEventListener("input",()=>{AL.ipd=$("blIpd").value/100;realignAll()});
 
+  /* ---------- adding photos ---------- */
+  async function small(bmp,max){
+    const k=Math.min(1,max/Math.max(bmp.width,bmp.height)),c=document.createElement("canvas");
+    c.width=Math.max(1,Math.round(bmp.width*k));c.height=Math.max(1,Math.round(bmp.height*k));
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    return createImageBitmap(c);
+  }
   function addShot(i){
     const d=document.createElement("div");d.className="shot";
     const im=document.createElement("img");im.alt="";im.src=thumb(i);im.style.height="98px";im.style.cursor="pointer";
     const x=document.createElement("button");x.type="button";x.textContent="×";x.setAttribute("aria-label","Remove this photo");
     d.append(im,x);
-    im.onclick=()=>{sel=[...$("blShots").children].indexOf(d);sync()};
+    im.onclick=()=>openSel([...$("blShots").children].indexOf(d));
     x.onclick=()=>{
       const k=[...$("blShots").children].indexOf(d);
+      try{photos[k].sb.close()}catch(e){}
       photos.splice(k,1);d.remove();
-      sel=photos.length?Math.min(sel>k?sel-1:sel,photos.length-1):-1;
-      if(sel<0&&photos.length)sel=0;
-      sync();
+      const ns=photos.length?Math.min(sel>k?sel-1:sel,photos.length-1):-1;
+      openSel(Math.max(ns,photos.length?0:-1));
     };
-    $("blShots").appendChild(d);
+    $("blShots").appendChild(d);badge(i);
   }
+  let adding=false;
   async function addFiles(list){
-    for(const f of list){
-      if(!f.type.startsWith("image/"))continue;
+    list=list.filter(f=>f.type.startsWith("image/"));if(!list.length)return;
+    if(adding){$("blMsg").textContent="Still working on the last batch. Add more when it finishes.";return}
+    adding=true;const first=photos.length;
+    for(let n=0;n<list.length;n++){
+      const f=list[n];
+      $("blMsg").textContent="Lining up "+(n+1)+" of "+list.length+"...";
       try{
         let bmp;
         try{bmp=await createImageBitmap(f,{imageOrientation:"from-image"})}catch(e){bmp=await createImageBitmap(f)}
-        const p=Object.assign(DEF(),{bmp,name:(f.name||"photo").replace(/\.[^.]+$/,"").replace(/[^\w\-]+/g,"_")});
-        if(sel>=0)Object.assign(p,{size:photos[sel].size,soft:photos[sel].soft,dark:photos[sel].dark});
-        photos.push(p);sel=photos.length-1;
-        if(hasFD)await findFace(p,true);
-        addShot(photos.length-1);sync();
-      }catch(e){$("blMsg").textContent="Could not open "+f.name}
+        const p=Object.assign(DEF(),{file:f,name:(f.name||"photo").replace(/\.[^.]+$/,"").replace(/[^\w\-]+/g,"_"),aw:bmp.width,ah:bmp.height});
+        if(photos.length){const q=photos[photos.length-1];Object.assign(p,{size:q.size,soft:q.soft,dark:q.dark})}
+        p.sb=await small(bmp,420);
+        const r=await analyse(bmp);bmp.close();
+        p.flags=r.flags;p.lm=r.lm;
+        if(p.lm)align(p);
+        photos.push(p);addShot(photos.length-1);
+        if(photos.length===1+first&&first===0){sel=0;cur={p,img:p.sb};sync()}
+        else if(n%10===0)stat();
+      }catch(e){console.warn(e);$("blMsg").textContent="Could not open "+f.name}
+      if(n%5===4)await new Promise(r=>setTimeout(r,0));
     }
+    adding=false;stat();
+    const fl=flagged();
+    $("blMsg").textContent=fl.length?"Done. "+fl.length+" need a look, marked with an orange dot.":"Done. Every photo is lined up.";
+    if(fl.length&&first===0)openSel(fl[0]);else if(sel<0&&photos.length)openSel(0);
   }
-  async function findFace(p,quiet){
-    if(!hasFD)return;
-    try{
-      const faces=await new FaceDetector({fastMode:true,maxDetectedFaces:4}).detect(p.bmp);
-      if(!faces.length){if(!quiet)$("blMsg").textContent="No face found. Drag the light onto the face.";return}
-      const f=faces.sort((a,b)=>b.boundingBox.width-a.boundingBox.width)[0].boundingBox;
-      const im=p.bmp,sc=Math.max(WW/im.width,WH/im.height)*p.zoom,dw=im.width*sc,dh=im.height*sc;
-      p.lx=(WW/2-dw/2+p.ox*WW+(f.x+f.width/2)*sc)/WW;
-      p.ly=(WH/2-dh/2+p.oy*WH+(f.y+f.height*.85)*sc)/WH;
-      clamp(p);if(!quiet){$("blMsg").textContent="";sync();refreshShot(sel)}
-    }catch(e){}
-  }
-  $("blAuto").onclick=()=>{if(photos[sel])findFace(photos[sel],false)};
-  $("blAll").onclick=()=>{const q=photos[sel];photos.forEach((p,i)=>{Object.assign(p,{size:q.size,soft:q.soft,dark:q.dark});clamp(p);refreshShot(i)});$("blMsg").textContent="Copied to every photo."};
+  $("blAuto").onclick=async()=>{
+    const p=photos[sel];if(!p)return;
+    p.manual=false;
+    if(!p.lm){
+      try{const full=await createImageBitmap(p.file,{imageOrientation:"from-image"});const r=await analyse(full);full.close();p.flags=r.flags;p.lm=r.lm}catch(e){}
+    }
+    if(p.lm)align(p);else{Object.assign(p,{zoom:1,ox:0,oy:0,rot:0,aligned:false,lx:.5,ly:.42});clamp(p)}
+    refreshShot(sel);sync();
+  };
+  $("blFine").onclick=()=>{const p=photos[sel];if(!p)return;p.flags=[];p.geo=[];p.manual=true;refreshShot(sel);sync()};
+  $("blCheck").onclick=()=>{const f=flagged();if(!f.length)return;const n=f.find(i=>i>sel);openSel(n===undefined?f[0]:n)};
+  $("blAll").onclick=()=>{const q=photos[sel];photos.forEach((p,i)=>{Object.assign(p,{size:q.size,soft:q.soft,dark:q.dark});refreshShot(i)});$("blMsg").textContent="Copied to every photo."};
   $("blDrop").onclick=()=>$("blFile").click();
   $("blFile").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
   const drop=$("blDrop");
@@ -1701,28 +1831,28 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   cv.addEventListener("pointermove",e=>{
     if(!drag)return;const p=photos[sel],r=cv.getBoundingClientRect();
     const dx=(e.clientX-drag.x)/r.width*FW/WW,dy=(e.clientY-drag.y)/r.height*FH/WH;
-    drag.x=e.clientX;drag.y=e.clientY;
+    drag.x=e.clientX;drag.y=e.clientY;p.manual=true;
     if(mode==="light"){p.lx+=dx;p.ly+=dy}else{p.ox+=dx;p.oy+=dy}
     clamp(p);draw();
   });
   const end=()=>{if(drag&&sel>=0)refreshShot(sel);drag=null};
   cv.addEventListener("pointerup",end);cv.addEventListener("pointercancel",end);
 
-  function jpegBytes(p){
-    return new Promise(res=>{
-      const c=document.createElement("canvas");c.width=FW;c.height=FH;
-      paint(c.getContext("2d"),FW,FH,p);
-      c.toBlob(async b=>{
-        const u=new Uint8Array(await b.arrayBuffer());
-        if(u[2]===0xFF&&u[3]===0xE0&&u[6]===0x4A){u[13]=1;u[14]=1;u[15]=0x2C;u[16]=1;u[17]=0x2C}
-        res(u);
-      },"image/jpeg",.93);
-    });
+  /* ---------- saving ---------- */
+  async function jpegBytes(p){
+    const img=await createImageBitmap(p.file,{imageOrientation:"from-image"});
+    const c=document.createElement("canvas");c.width=FW;c.height=FH;
+    paint(c.getContext("2d"),FW,FH,p,img);img.close();
+    const b=await new Promise(res=>c.toBlob(res,"image/jpeg",.93));
+    c.width=c.height=1;
+    const u=new Uint8Array(await b.arrayBuffer());
+    if(u[2]===0xFF&&u[3]===0xE0&&u[6]===0x4A){u[13]=1;u[14]=1;u[15]=0x2C;u[16]=1;u[17]=0x2C}
+    return u;
   }
   function save(blob,name){
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
   }
   $("blOne").onclick=async()=>{
     const p=photos[sel];if(!p)return;$("blMsg").textContent="Making the file...";
@@ -1746,15 +1876,23 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const z=new DataView(new ArrayBuffer(22));z.setUint32(0,0x06054b50,true);z.setUint16(8,files.length,true);z.setUint16(10,files.length,true);z.setUint32(12,cs,true);z.setUint32(16,off,true);
     return new Blob([...parts,...cen,z.buffer],{type:"application/zip"});
   }
+  const PER=40;
   $("blZip").onclick=async()=>{
-    const files=[],used={};
-    for(let i=0;i<photos.length;i++){
-      $("blMsg").textContent="Making "+(i+1)+" of "+photos.length+"...";
-      await new Promise(r=>setTimeout(r,20));
-      let n="Here_I_Belong_"+photos[i].name;used[n]=(used[n]||0)+1;if(used[n]>1)n+="_"+used[n];
-      files.push({name:n+".jpg",data:await jpegBytes(photos[i])});
+    const used={},total=photos.length,nz=Math.ceil(total/PER);
+    $("blZip").disabled=true;
+    for(let z=0;z<nz;z++){
+      const files=[];
+      for(let i=z*PER;i<Math.min(total,(z+1)*PER);i++){
+        $("blMsg").textContent="Making "+(i+1)+" of "+total+"...";
+        await new Promise(r=>setTimeout(r,10));
+        let n="Here_I_Belong_"+photos[i].name;used[n]=(used[n]||0)+1;if(used[n]>1)n+="_"+used[n];
+        files.push({name:n+".jpg",data:await jpegBytes(photos[i])});
+      }
+      save(zipStore(files),"Here_I_Belong_photos"+(nz>1?"_"+String(z+1).padStart(2,"0")+"_of_"+String(nz).padStart(2,"0"):"")+".zip");
+      await new Promise(r=>setTimeout(r,500));
     }
-    save(zipStore(files),"Here_I_Belong_photos.zip");$("blMsg").textContent="Saved "+files.length+" photos.";
+    $("blMsg").textContent="Saved "+total+" photos"+(nz>1?" in "+nz+" zips. If your browser asks, allow multiple downloads.":".");
+    $("blZip").disabled=!photos.length;
   };
   sync();
 })();

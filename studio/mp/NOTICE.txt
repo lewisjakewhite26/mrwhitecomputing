@@ -1,0 +1,2 @@
+MediaPipe Tasks Vision 1.2.3 (Apache-2.0), Google.
+face_landmarker.task: Google MediaPipe Face Landmarker (Apache-2.0).
