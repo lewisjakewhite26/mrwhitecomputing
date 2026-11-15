@@ -305,7 +305,7 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
     <p class="sub">Add head and bust photos. Each one is levelled so everyone's eyes sit in the same place, gets a soft spotlight and goes into the Here, I Belong frame, ready for A4. Photos that need a look are marked with an orange dot.</p>
 
     <div class="drop" id="blDrop"><div class="big">Add photos</div><div class="small">Tap to choose, or drop them here</div></div>
-    <input type="file" id="blFile" accept="image/*" multiple class="hidden">
+    <input type="file" id="blFile" accept="image/*,.heic,.heif" multiple class="hidden">
     <div class="shots" id="blShots"></div>
 
     <div id="blAlign" class="hidden">
@@ -1824,14 +1824,35 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     $("blShots").appendChild(d);badge(i);
   }
   let adding=false;
+  const isHeic=f=>/\.(heic|heif)$/i.test(f.name||"")||/image\/hei[cf]/i.test(f.type||"");
+  let heicLib=null;
+  function loadHeic(){
+    if(window.heic2any)return Promise.resolve();
+    if(!heicLib)heicLib=new Promise((ok,no)=>{
+      const sc=document.createElement("script");
+      sc.src=(/\/$|\.[a-z]+$/i.test(location.pathname)?"./":"/studio/")+"lib/heic2any.min.js";
+      sc.onload=ok;sc.onerror=()=>{heicLib=null;no(new Error("HEIC converter did not load"))};
+      document.head.appendChild(sc);
+    });
+    return heicLib;
+  }
+  async function readable(f){
+    if(!isHeic(f))return f;
+    try{const t=await createImageBitmap(f);t.close();return f}catch(e){}
+    await loadHeic();
+    const out=await window.heic2any({blob:f,toType:"image/jpeg",quality:0.92});
+    const b=Array.isArray(out)?out[0]:out;
+    return new File([b],(f.name||"photo").replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg",lastModified:f.lastModified});
+  }
   async function addFiles(list){
-    list=list.filter(f=>f.type.startsWith("image/"));if(!list.length)return;
+    list=list.filter(f=>f.type.startsWith("image/")||isHeic(f));if(!list.length)return;
     if(adding){$("blMsg").textContent="Still working on the last batch. Add more when it finishes.";return}
     adding=true;const first=photos.length;
     for(let n=0;n<list.length;n++){
-      const f=list[n];
+      let f=list[n];
       $("blMsg").textContent="Lining up "+(n+1)+" of "+list.length+"...";
       try{
+        if(isHeic(f)){$("blMsg").textContent="Converting "+(n+1)+" of "+list.length+" from HEIC...";f=await readable(f)}
         let bmp;
         try{bmp=await createImageBitmap(f,{imageOrientation:"from-image"})}catch(e){bmp=await createImageBitmap(f)}
         const p=Object.assign(DEF(),{file:f,name:(f.name||"photo").replace(/\.[^.]+$/,"").replace(/[^\w\-]+/g,"_"),aw:bmp.width,ah:bmp.height});
@@ -1956,10 +1977,13 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   const BODY_LIMIT=965, COVER_LIMIT=900, PRIO_LIMIT=965;
   const FOCUS_DEFAULTS=["Consistency","Engagement","Environment","Personalised Learning"];
   const MAX_STR=6, MAX_ACT=5, N_PRIO=5;
+  const DESIGNS=["Classic wave","Double wave","Rolling hills","Diagonal sweep","Arch","Ripple"];
+  const designSel=(id,label)=>'<div class="field"><label for="'+id+'">'+label+'</label><select id="'+id+'">'+DESIGNS.map((n,k)=>'<option value="'+k+'">'+n+'</option>').join("")+'</select></div>';
 
   const blank=()=>({
     date:"", focus:"", p1:"", p2:"", photo:"", photoPos:50,
-    pages:FOCUS_DEFAULTS.map(t=>({title:t,cls:"",teacher:"",visitor:"",strengths:"",actions:""})),
+    pages:FOCUS_DEFAULTS.map((t,i)=>({title:t,design:[0,1,2,5][i],cls:"",teacher:"",visitor:"",strengths:"",actions:""})),
+    prioDesign:4,
     prio:Array.from({length:N_PRIO},()=>({t:"",d:""})),
     closing:""
   });
@@ -1985,10 +2009,11 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
         '<div class="shots" id="lwShot"></div>'+
         '<div class="focalwrap hidden" id="lwPosWrap"><label for="lwPos">Move photo up or down</label><input type="range" id="lwPos" min="0" max="100" value="50"></div>'+
         '<div class="hint">The photo stays in this browser. Check photo permissions before you use it.</div></div>'+
+      '<div class="field"><label for="lwAllD">Header and footer design for pages 2 to 6</label><select id="lwAllD"><option value="">Choose to use one design on every page</option>'+DESIGNS.map((n,k)=>'<option value="'+k+'">'+n+'</option>').join("")+'</select><div class="hint">Or pick a design for each page inside its own section.</div></div>'+
       '</div></details>';
     S.pages.forEach((p,i)=>{
       h+='<details class="lwd"><summary id="lwSum'+i+'">Page '+(i+2)+': '+esc(p.title)+'</summary><div class="lwin">'+
-        fieldHTML("lwT"+i,"Page title","text")+
+        fieldHTML("lwT"+i,"Page title","text")+designSel("lwD"+i,"Header and footer design")+
         '<div class="lw-three">'+
           '<div class="field"><label for="lwC'+i+'">Class</label><input type="text" id="lwC'+i+'"></div>'+
           '<div class="field"><label for="lwH'+i+'">Teacher</label><input type="text" id="lwH'+i+'"></div>'+
@@ -1999,6 +2024,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
         '</div></details>';
     });
     h+='<details class="lwd"><summary>Page 6: Priorities for follow-up</summary><div class="lwin">';
+    h+=designSel("lwDP","Header and footer design");
     for(let i=0;i<N_PRIO;i++){
       h+=fieldHTML("lwPt"+i,"Priority "+(i+1)+" title","text")+
          fieldHTML("lwPd"+i,"Priority "+(i+1)+" detail","area","","",2);
@@ -2018,6 +2044,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     S.pages.forEach((p,i)=>{ put("lwT"+i,p.title); put("lwC"+i,p.cls); put("lwH"+i,p.teacher); put("lwV"+i,p.visitor); put("lwS"+i,p.strengths); put("lwA"+i,p.actions); });
     S.prio.forEach((p,i)=>{ put("lwPt"+i,p.t); put("lwPd"+i,p.d); });
     put("lwClose",S.closing);
+    S.pages.forEach((p,i)=>put("lwD"+i,p.design)); put("lwDP",S.prioDesign); put("lwAllD","");
   }
   function wireAll(){
     wire("lwDate",0,v=>S.date=v); wire("lwFocus",0,v=>S.focus=v);
@@ -2030,6 +2057,14 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     });
     S.prio.forEach((p,i)=>{ wire("lwPt"+i,0,v=>p.t=v); wire("lwPd"+i,0,v=>p.d=v); });
     wire("lwClose",0,v=>S.closing=v);
+    S.pages.forEach((p,i)=>wire("lwD"+i,0,v=>p.design=+v));
+    wire("lwDP",0,v=>S.prioDesign=+v);
+    const all=$("lwAllD");
+    if(all)all.addEventListener("change",()=>{
+      if(all.value==="")return;
+      const d=+all.value;S.pages.forEach((p,i)=>{p.design=d;$("lwD"+i).value=d});S.prioDesign=d;$("lwDP").value=d;
+      dirty=true;schedule();
+    });
   }
   const lines=v=>String(v||"").split("\n").map(s=>s.trim()).filter(Boolean);
   function countHint(id,v,max){
@@ -2044,8 +2079,36 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   const logo=()=>'<img class="lw-logo" alt="Hartburn Primary School" style="position:absolute;left:48px;top:39px;width:190px;height:52px">';
   const pill=(t,bg)=>'<div style="height:30px;box-sizing:border-box;padding:0 14px;border-radius:999px;background:'+bg+';display:flex;align-items:center;font:700 12px/16px '+OS+';color:#015481;white-space:nowrap">'+esc(t)+'</div>';
   const pills=(date,n)=>'<div style="position:absolute;right:48px;top:44px;display:flex;gap:8px">'+(date?pill(date,"#FFFFFF"):"")+pill(n+" of 6","#CFE6F7")+'</div>';
-  const footWave=(h)=>'<svg width="794" height="'+h+'" viewBox="0 0 794 140" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;left:0;bottom:0;width:794px;height:'+h+'px"><path d="M0 50 C150 20 300 30 450 62 S700 86 794 44 V140 H0 Z" fill="#8FCBF5"/><path d="M0 74 C260 56 480 90 794 60 V140 H0 Z" fill="#015481"/></svg>';
-  const headSvg=(id,h)=>'<svg width="794" height="250" viewBox="0 0 794 250" aria-hidden="true" style="position:absolute;left:0;top:0"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#015481"/><stop offset="0.58" stop-color="#0A6FB0"/><stop offset="1" stop-color="#0B93E3"/></linearGradient></defs><path d="M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z" fill="url(#'+id+')"/></svg>';
+  const GRADDEF=id=>'<linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#015481"/><stop offset="0.58" stop-color="#0A6FB0"/><stop offset="1" stop-color="#0B93E3"/></linearGradient>';
+  const HEAD=[
+    {pale:null,main:"M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z"},
+    {pale:"M0 0 H794 V196 C660 256 540 176 410 222 C270 270 130 232 0 252 Z",main:"M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z"},
+    {pale:"M0 0 H794 V226 C700 188 620 188 530 228 C440 268 340 272 250 232 C170 196 80 206 0 250 Z",main:"M0 0 H794 V212 C700 174 620 174 530 214 C440 254 340 258 250 218 C170 182 80 192 0 236 Z"},
+    {pale:"M0 236 L794 170 V198 L0 264 Z",main:"M0 0 H794 V170 L0 236 Z"},
+    {pale:"M0 0 H794 V208 C794 208 600 264 397 264 C194 264 0 208 0 208 Z",main:"M0 0 H794 V190 C794 190 600 246 397 246 C194 246 0 190 0 190 Z"},
+    {pale:"M0 0 H794 V196 C660 256 540 176 410 222 C270 270 130 232 0 252 Z",main:"M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z",rings:true}
+  ];
+  const headSvg=(id,d)=>{
+    const h=HEAD[d]||HEAD[0];
+    return '<svg width="794" height="270" viewBox="0 0 794 270" aria-hidden="true" style="position:absolute;left:0;top:0"><defs>'+GRADDEF(id)+(h.rings?'<clipPath id="'+id+'c"><path d="'+h.main+'"/></clipPath>':'')+'</defs>'+
+      (h.pale?'<path d="'+h.pale+'" fill="#8FCBF5"/>':'')+
+      '<path d="'+h.main+'" fill="url(#'+id+')"/>'+
+      (h.rings?'<g clip-path="url(#'+id+'c)" fill="none" stroke="#FFFFFF" stroke-opacity=".2" stroke-width="2"><circle cx="720" cy="30" r="70"/><circle cx="720" cy="30" r="125"/><circle cx="720" cy="30" r="180"/><circle cx="720" cy="30" r="235"/></g>':'')+
+    '</svg>';
+  };
+  const FOOT=[
+    ["M0 50 C150 20 300 30 450 62 S700 86 794 44 V140 H0 Z","M0 74 C260 56 480 90 794 60 V140 H0 Z"],
+    ["M0 40 C120 10 260 20 380 50 S640 70 794 30 V140 H0 Z","M0 70 C200 46 360 84 560 64 S720 56 794 66 V140 H0 Z"],
+    ["M0 20 C200 0 400 40 794 10 V140 H0 Z","M0 46 C220 26 420 70 794 36 V140 H0 Z","M0 70 C260 52 520 84 794 60 V140 H0 Z"],
+    ["M0 62 L794 6 V140 H0 Z","M0 72 L794 26 V140 H0 Z"],
+    ["M0 62 C250 -8 544 -8 794 62 V140 H0 Z","M0 82 C250 22 544 22 794 82 V140 H0 Z"],
+    ["M0 36 C100 6 200 66 300 36 S500 6 600 36 S740 56 794 36 V140 H0 Z","M0 56 C120 30 240 80 360 54 S600 30 794 58 V140 H0 Z","M0 76 C150 58 300 92 470 72 S700 60 794 72 V140 H0 Z"]
+  ];
+  const FOOTCOL=["#CFE6F7","#8FCBF5","#015481"];
+  const footWave=(h,d)=>{
+    const L=FOOT[d]||FOOT[0], cols=L.length===3?FOOTCOL:["#8FCBF5","#015481"];
+    return '<svg width="794" height="'+h+'" viewBox="0 0 794 140" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;left:0;bottom:0;width:794px;height:'+h+'px">'+L.map((pp,k)=>'<path d="'+pp+'" fill="'+cols[k]+'"/>').join("")+'</svg>';
+  };
   const lfl=(left)=>'<div style="position:absolute;left:48px;bottom:34px;font:italic 400 19px/24px '+PF+';color:#FFFFFF">Learning for Life</div>';
   const section=(title,color,iconBg,icon,items)=>{
     if(!items.length) return '';
@@ -2079,7 +2142,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   function focusPage(p,i){
     const n=i+2, st=lines(p.strengths).slice(0,MAX_STR), ac=lines(p.actions).slice(0,MAX_ACT);
     return '<div class="lw-page" data-limit="'+BODY_LIMIT+'">'+
-      headSvg("lwg"+n)+logo()+
+      headSvg("lwg"+n,p.design)+logo()+
       '<h1 style="position:absolute;left:48px;top:112px;width:700px;font:600 52px/58px '+PF+';color:#FFFFFF">'+esc(p.title||FOCUS_DEFAULTS[i])+'</h1>'+
       pills(S.date,n)+
       '<div class="lw-body" style="position:absolute;left:48px;top:270px;width:698px">'+
@@ -2087,21 +2150,21 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
         section("Strengths observed","#015481","#015481",TICK,st)+
         section("Areas for development and agreed actions","#0A6FB0","#0A6FB0",ARROW,ac)+
       '</div>'+
-      footWave(140)+lfl()+
+      footWave(140,p.design)+lfl()+
     '</div>';
   }
   function priorities(){
     const items=S.prio.filter(p=>p.t.trim()||p.d.trim());
     let k=0;
     return '<div class="lw-page" data-limit="'+PRIO_LIMIT+'">'+
-      headSvg("lwg7")+logo()+
+      headSvg("lwg7",S.prioDesign)+logo()+
       '<h1 style="position:absolute;left:48px;top:112px;width:700px;font:600 52px/58px '+PF+';color:#FFFFFF">Priorities for follow-up</h1>'+
       pills(S.date,6)+
       '<div class="lw-body" style="position:absolute;left:48px;top:290px;width:698px">'+
         items.map(p=>{ k++; return '<div style="display:flex;gap:20px;margin-bottom:22px"><div style="width:4px;flex:none;background:#0A6FB0"></div><div style="flex:none;width:40px;height:40px;border-radius:50%;background:#015481;display:flex;align-items:center;justify-content:center;font:700 18px/1 '+OS+';color:#FFFFFF">'+k+'</div><div style="flex:1;min-width:0"><div class="lw-pre" style="font:600 24px/30px '+PF+';color:#015481">'+esc(p.t)+'</div>'+(p.d.trim()?'<div class="lw-pre" style="margin-top:4px;font:400 15px/22px '+OS+'">'+esc(p.d)+'</div>':'')+'</div></div>'; }).join("")+
         (S.closing.trim()?'<div style="display:flex;gap:20px;margin-top:8px"><div style="width:4px;flex:none;background:#015481"></div><div class="lw-pre" style="flex:1;font:italic 400 19px/28px '+PF+';color:#015481">'+esc(S.closing)+'</div></div>':'')+
       '</div>'+
-      footWave(140)+lfl()+
+      footWave(140,S.prioDesign)+lfl()+
     '</div>';
   }
 
