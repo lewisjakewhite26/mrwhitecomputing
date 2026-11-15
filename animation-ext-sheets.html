@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flipbook Practice Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap">
+<style>
+  @page{size:A4 portrait;margin:10mm}
+  :root{--ink:#1B2540;--mut:#4C5568;--line:#9aa1ae;--paper:#F6F1E7;--blue:#2F5FD0}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Lexend,'Segoe UI',Arial,sans-serif}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.12em}
+  .bar{max-width:210mm;margin:16px auto 0;display:flex;gap:10px;padding:0 4px;flex-wrap:wrap}
+  .bar a,.bar button{font:inherit;font-weight:600;font-size:16px;color:var(--ink);background:#fff;border:2px solid #E2D8C6;border-radius:10px;padding:9px 16px;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .bar .go{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bar .sp{margin-left:auto}
+  .page{width:210mm;height:297mm;margin:12px auto 30px;background:#fff;padding:10mm;display:flex;flex-direction:column;gap:4mm;break-after:page;box-shadow:0 10px 30px -18px rgba(27,37,64,.45)}
+  .page:last-child{break-after:auto}
+  @media print{
+    html,body{background:#fff} .bar{display:none}
+    .page{margin:0;width:auto;height:276mm;padding:0;box-shadow:none}
+    body.only-wave .page:not(.wave), body.only-ball .page:not(.ball), body.only-rail .page:not(.rail), body.only-fall .page:not(.fall), body.only-blank .page:not(.blank){display:none}
+  }
+  .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:5mm;border-bottom:.6mm solid var(--ink);padding-bottom:2.5mm}
+  .hd h1{margin:0;font-size:18pt;font-weight:800;line-height:1.1}
+  .hd p{margin:1mm 0 0;font-size:9.5pt;color:var(--mut);line-height:1.35}
+  .hd .tag{font-weight:700;font-size:9.5pt;background:var(--ink);color:#fff;border-radius:2mm;padding:1.5mm 3mm;white-space:nowrap}
+  .grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,1fr);border-top:.35mm dashed var(--line);border-left:.35mm dashed var(--line)}
+  .pg{position:relative;border-right:.35mm dashed var(--line);border-bottom:.35mm dashed var(--line);display:flex}
+  .bind{width:14mm;flex:none;border-right:.3mm solid #d9dde4;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:2.5mm 0}
+  .bind .n{font-size:13pt;font-weight:800}
+  .bind .st{width:2.2mm;height:2.2mm;border-radius:50%;border:.3mm solid var(--line)}
+  .draw{flex:1;position:relative}
+  .draw svg{position:absolute;inset:0;width:100%;height:100%}
+  .cut{position:absolute;left:-3mm;top:-3mm;font-size:10pt;color:var(--line);background:#fff;line-height:1}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="animation-ext.html#part4"><span data-ph="arrow-left"></span>Back to the lesson</a>
+  <button type="button" class="sp" data-print="wave"><span data-ph="printer"></span>1 Wave</button>
+  <button type="button" data-print="ball"><span data-ph="printer"></span>2 Bounce</button>
+  <button type="button" data-print="rail"><span data-ph="printer"></span>3 Across</button>
+  <button type="button" data-print="fall"><span data-ph="printer"></span>4 Speeding up</button>
+  <button type="button" data-print="blank"><span data-ph="printer"></span>5 Blank</button>
+  <button type="button" class="go" data-print="all"><span data-ph="printer"></span>Print all five</button>
+</div>
+<div id="pages"></div>
+<script>
+(function(){
+  var PH = {"arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "printer": "<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>", "scissors": "<path d=\"M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  /* ---------- flipbook drawings: 12 pages each, drawn on a 300 x 160 page ---------- */
+  var FLIP = (function(){
+    var UP = [10,40,70,100,130,140,140,140,130,100,70,40], FORE = [0,0,0,0,0,-20,20,-20,20,0,0,0];
+    var BH = [112,104,88,64,30,0,34,62,80,86,80,62], SQ = {3:[.92,1.12],4:[.88,1.2],5:[1.45,.62],6:[.9,1.12]};
+    var GROUND = 140;
+    function g(inner, col, w){ return '<g fill="none" stroke="' + col + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round">' + inner + '</g>'; }
+    function wave(i, col, w){
+      var a = UP[i] * Math.PI / 180, ex = 150 + 34 * Math.sin(a), ey = 82 + 34 * Math.cos(a);
+      var b = (UP[i] + FORE[i]) * Math.PI / 180, hx = ex + 26 * Math.sin(b), hy = ey + 26 * Math.cos(b);
+      return g('<circle cx="150" cy="46" r="16"/><path d="M150 62 V112 M150 112 L134 148 M150 112 L166 148 M150 82 L128 108 M150 82 L' + ex + ' ' + ey + ' L' + hx + ' ' + hy + '"/>', col, w);
+    }
+    function ballXY(i){
+      var r = 18, s = SQ[i] || [1, 1], ry = r * s[1], rx = r * s[0];
+      var y = BH[i] === 0 ? GROUND - ry : GROUND - r - BH[i];
+      return { x: 52 + i * 17, y: y, rx: rx, ry: ry };
+    }
+    function floor(col){ return '<path d="M16 ' + GROUND + ' H284" fill="none" stroke="' + col + '" stroke-width="3" stroke-linecap="round"/>'; }
+    function ball(i, col, w){
+      var b = ballXY(i);
+      return floor(col) + g('<ellipse cx="' + b.x + '" cy="' + b.y + '" rx="' + b.rx + '" ry="' + b.ry + '"/>', col, w);
+    }
+    function railXY(i){ return { x: 36 + i * (228 / 11), y: GROUND - 20 }; }
+    function fallXY(i){ var t = i / 11; return { x: 150, y: 20 + 100 * t * t }; }
+    function dot(p, col){ return '<circle cx="' + p.x + '" cy="' + p.y + '" r="19" fill="none" stroke="' + col + '" stroke-width="3" stroke-dasharray="6 6"/>'; }
+    function solid(p, col){ return '<circle cx="' + p.x + '" cy="' + p.y + '" r="14" fill="' + col + '"/>'; }
+    function rail(i, col, w, fill){ var p = railXY(i); return floor(col) + dot(p, col) + (fill ? solid(p, fill) : ''); }
+    function fall(i, col, w, fill){ var p = fallXY(i); return floor(col) + dot(p, col) + (fill ? solid(p, fill) : ''); }
+    function blank(i, col){ return floor(col) + '<path d="M14 154 h10 M19 149 v10 M276 154 h10 M281 149 v10" stroke="' + col + '" stroke-width="2" fill="none"/>'; }
+    return {
+      N: 12,
+      svg: function(kind, i, col, w, fill){
+        var inner = kind === 'wave' ? wave(i, col, w) : kind === 'ball' ? ball(i, col, w) : kind === 'rail' ? rail(i, col, w, fill) : kind === 'fall' ? fall(i, col, w, fill) : blank(i, col);
+        return '<svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+      }
+    };
+  })();
+
+  var COMMON = ' Cut on the dashed lines. Put the pages in order with 1 on top, line them up and clip the left side.';
+  var KINDS = [
+    ['wave', 'Step 1: trace the wave', 'Go over every grey picture with your pencil. Each page is a tiny bit different, so when you flick, the arm waves.'],
+    ['ball', 'Step 2: trace the bounce', 'Trace the ball on every page. Look at the gaps: the ball moves further between pages when it is going fast.'],
+    ['rail', 'Step 3: draw inside the dotted shape', 'Draw anything you like inside the dotted shape on every page: a car, a fish, a snail. Keep it the same size. It moves the same distance each time.'],
+    ['fall', 'Step 4: speeding up', 'Draw an object in each dotted shape. See how the gaps get bigger? Things speed up as they fall.'],
+    ['blank', 'Step 5: your own idea', 'Pencil in the ground line first. Decide what moves and what stays the same. Move things a tiny bit each page.']
+  ];
+  function sheet(k){
+    var kind = k[0], h = '<div class="page ' + kind + '"><div class="hd"><div><h1>' + k[1] + '</h1><p>' + k[2] + COMMON + '</p></div><span class="tag">PAGES 1 TO 12</span></div><div class="grid">';
+    for(var i = 0; i < 12; i++){
+      var svg = FLIP.svg(kind, i, kind === 'blank' || kind === 'rail' || kind === 'fall' ? '#9aa1ae' : '#b4bac6', kind === 'wave' || kind === 'ball' ? 5 : 3);
+      h += '<div class="pg">' + (i === 0 ? '<span class="cut">' + ph('scissors') + '</span>' : '') +
+        '<div class="bind"><span class="st"></span><span class="n">' + (i + 1) + '</span><span class="st"></span></div><div class="draw">' + svg + '</div></div>';
+    }
+    return h + '</div></div>';
+  }
+  document.getElementById('pages').innerHTML = KINDS.map(sheet).join('');
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+  [].forEach.call(document.querySelectorAll('[data-print]'), function(b){
+    b.addEventListener('click', function(){
+      var k = b.getAttribute('data-print');
+      document.body.className = k === 'all' ? '' : 'only-' + k;
+      window.print();
+    });
+  });
+})();
+</script>
+</body>
+</html>

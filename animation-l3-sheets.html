@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planning Sheets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap">
+<style>
+  @page{size:A4 portrait;margin:10mm}
+  :root{--ink:#1B2540;--mut:#4C5568;--line:#9aa1ae;--paper:#F6F1E7;--blue:#2F5FD0}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);font-family:Lexend,'Segoe UI',Arial,sans-serif}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.12em}
+  .bar{max-width:210mm;margin:16px auto 0;display:flex;gap:10px;padding:0 4px;flex-wrap:wrap}
+  .bar a,.bar button{font:inherit;font-weight:600;font-size:16px;color:var(--ink);background:#fff;border:2px solid #E2D8C6;border-radius:10px;padding:9px 16px;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .bar .go{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bar .sp{margin-left:auto}
+  .page{width:210mm;height:297mm;margin:12px auto 30px;background:#fff;padding:10mm;display:flex;flex-direction:column;gap:4mm;break-after:page;box-shadow:0 10px 30px -18px rgba(27,37,64,.45)}
+  .page:last-child{break-after:auto}
+  @media print{
+    html,body{background:#fff} .bar{display:none}
+    .page{margin:0;width:auto;height:276mm;padding:0;box-shadow:none}
+    body.only-board .page:not(.board), body.only-chars .page:not(.chars), body.only-bgs .page:not(.bgs){display:none}
+  }
+  .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:5mm;border-bottom:.6mm solid var(--ink);padding-bottom:2.5mm}
+  .hd h1{margin:0;font-size:18pt;font-weight:800;line-height:1.1}
+  .hd p{margin:1mm 0 0;font-size:9.5pt;color:var(--mut);line-height:1.35}
+  .hd .tag{font-weight:700;font-size:9.5pt;background:var(--ink);color:#fff;border-radius:2mm;padding:1.5mm 3mm;white-space:nowrap}
+  .who{display:flex;gap:6mm;font-size:10pt;font-weight:600}
+  .who span{flex:1;display:flex;gap:2mm;align-items:flex-end}
+  .who i{flex:1;border-bottom:.3mm solid var(--line);height:5mm}
+  .boards{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:4mm 5mm}
+  .bp{display:flex;flex-direction:column;gap:1.6mm;min-height:0}
+  .bp .fr{flex:1;border:.5mm solid var(--ink);border-radius:2mm;position:relative;min-height:0}
+  .bp .fr .n{position:absolute;left:1.5mm;top:1.5mm;font-weight:800;font-size:10pt;background:var(--ink);color:#fff;border-radius:1mm;padding:0 2mm}
+  .ln{display:flex;gap:2mm;font-size:8.8pt;font-weight:600;align-items:flex-end;white-space:nowrap}
+  .ln i{flex:1;border-bottom:.3mm solid var(--line);height:4.4mm}
+  .ln.ph{gap:3mm}
+  .ln.ph span{display:flex;gap:1.6mm;align-items:flex-end;flex:1}
+  .sum{border:.45mm solid var(--ink);border-radius:3mm;padding:3mm 4.5mm;font-size:10.5pt;font-weight:700;display:flex;gap:4mm;align-items:flex-end;flex-wrap:wrap}
+  .sum i{display:inline-block;width:20mm;border-bottom:.3mm solid var(--ink);height:5mm;margin:0 1.5mm}
+  .sum .tip{width:100%;font-weight:500;font-size:9pt;color:var(--mut)}
+  .cuts{flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:4mm}
+  .ct{border:.35mm dashed var(--line);display:grid;place-items:center;position:relative;min-height:0;padding:2mm}
+  .ct svg{width:100%;height:100%}
+  .ct.w2{grid-column:span 2}
+  .scene{flex:1;border:.5mm solid var(--ink);border-radius:2mm;overflow:hidden;position:relative;min-height:0}
+  .scene svg{position:absolute;inset:0;width:100%;height:100%}
+  .scene .lab{position:absolute;left:2mm;top:2mm;z-index:2;font-weight:800;font-size:10pt;background:var(--ink);color:#fff;border-radius:1mm;padding:0 2mm}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="animation-l3.html#part7"><span data-ph="arrow-left"></span>Back to the lesson</a>
+  <button type="button" class="sp" data-print="board"><span data-ph="printer"></span>Print storyboard</button>
+  <button type="button" data-print="chars"><span data-ph="printer"></span>Print characters (on card)</button>
+  <button type="button" data-print="bgs"><span data-ph="printer"></span>Print backgrounds</button>
+  <button type="button" class="go" data-print="all"><span data-ph="printer"></span>Print everything</button>
+</div>
+<div id="pages"></div>
+<script>
+(function(){
+  var PH = {"arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "printer": "<path d=\"M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z\"/>"};
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (PH[n] || '') + '</svg>'; }
+  /* ---------- shared drawings ---------- */
+  var INK2 = '#1B2540';
+  function romanScene(o){
+    // o: ship x (or null), soldier x,y (or null), beach
+    var s = '<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice">' +
+      '<rect width="400" height="240" fill="#dbe9f6"/><circle cx="52" cy="40" r="20" fill="#F2B53A"/>' +
+      '<rect y="128" width="400" height="112" fill="#8fb8de"/>' +
+      '<path d="M20 160 q12 -8 24 0 t24 0 M150 190 q12 -8 24 0 t24 0 M60 214 q12 -8 24 0 t24 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>' +
+      '<path d="M400 108 L318 112 Q282 150 262 240 L400 240 Z" fill="#e8d3a3"/><path d="M400 108 L318 112 Q282 150 262 240" fill="none" stroke="#c9b27a" stroke-width="3"/>';
+    if(o.ship != null) s += romanShip(o.ship, 150);
+    if(o.sol) s += romanSoldier(o.sol[0], o.sol[1], o.sol[2] || 1);
+    return s + '</svg>';
+  }
+  function romanShip(x, y){
+    return '<g transform="translate(' + x + ' ' + y + ')">' +
+      '<path d="M-62 0 L62 0 L46 30 L-46 30 Z" fill="#8a5a2b" stroke="' + INK2 + '" stroke-width="3" stroke-linejoin="round"/>' +
+      '<line x1="0" y1="0" x2="0" y2="-88" stroke="' + INK2 + '" stroke-width="4"/>' +
+      '<rect x="-36" y="-84" width="72" height="54" fill="#fff" stroke="' + INK2 + '" stroke-width="3"/>' +
+      '<rect x="-36" y="-66" width="72" height="14" fill="#B23A26"/></g>';
+  }
+  function romanSoldier(x, y, k){
+    return '<g transform="translate(' + x + ' ' + y + ') scale(' + k + ')" stroke="' + INK2 + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M-9 -52 L-12 -2 M9 -52 L12 -2" fill="none"/>' +
+      '<rect x="-12" y="-96" width="24" height="46" rx="4" fill="#B23A26"/>' +
+      '<circle cx="0" cy="-112" r="12" fill="#f1c9a0"/><path d="M-13 -114 A13 13 0 0 1 13 -114 Z" fill="#9aa1ae"/><rect x="-3" y="-134" width="6" height="12" fill="#B23A26"/>' +
+      '<path d="M-12 -88 L-28 -64" fill="none"/><rect x="-38" y="-86" width="20" height="34" rx="4" fill="#F2B53A"/>' +
+      '<path d="M12 -88 L30 -70 M36 -120 L36 -10" fill="none"/></g>';
+  }
+  window.ROMAN = { scene: romanScene, ship: romanShip, soldier: romanSoldier };
+
+  function board(){
+    var h = '<div class="page board"><div class="hd"><div><h1>Our Roman animation</h1><p>Draw a quick picture in each panel. Then write what moves, what stays the same and how many photos you need. Ten photos play for one second.</p></div><span class="tag">STORYBOARD</span></div>' +
+      '<div class="who"><span>Idea <i></i></span><span>Pair <i></i></span></div><div class="boards">';
+    for(var i = 1; i <= 6; i++){
+      h += '<div class="bp"><div class="fr"><span class="n">' + i + '</span></div>' +
+        '<div class="ln">Moves <i></i></div><div class="ln">Stays the same <i></i></div><div class="ln">Photos <i style="max-width:24mm"></i></div></div>';
+    }
+    return h + '</div><div class="sum">Total photos<i></i> &divide; 10 = <i></i>seconds<span class="tip">Aim for about 50 photos. Cross out panels you can&rsquo;t finish in Lesson 4.</span></div></div>';
+  }
+  function tent(){ return '<svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid meet"><path d="M10 110 L80 14 L150 110 Z" fill="#e8d3a3" stroke="#1B2540" stroke-width="3" stroke-linejoin="round"/><path d="M80 14 L80 110" stroke="#1B2540" stroke-width="3"/><path d="M62 110 L80 68 L98 110 Z" fill="#6b4a2a" stroke="#1B2540" stroke-width="3" stroke-linejoin="round"/></svg>'; }
+  function wall(){ var b = ''; for(var r = 0; r < 3; r++){ for(var c = 0; c < 4; c++){ var off = r % 2 ? 20 : 0; b += '<rect x="' + (c * 40 - off + 4) + '" y="' + (r * 26 + 6) + '" width="38" height="24" fill="#b8b2a6" stroke="#1B2540" stroke-width="2.5"/>'; } } return '<svg viewBox="0 0 168 90" preserveAspectRatio="xMidYMid meet">' + b + '</svg>'; }
+  function sol(flip, k){ return '<svg viewBox="-60 -150 120 160" preserveAspectRatio="xMidYMid meet"><g transform="scale(' + (flip ? -1 : 1) + ' 1)">' + ROMAN.soldier(0, 0, k || 1) + '</g></svg>'; }
+  function ship(){ return '<svg viewBox="-80 -100 160 140" preserveAspectRatio="xMidYMid meet">' + ROMAN.ship(0, 0) + '</svg>'; }
+  function chars(){
+    return '<div class="page chars"><div class="hd"><div><h1>Roman characters</h1><p>Print on card. Cut along the dashed lines before Lesson 4. Colour them in if you like, then keep them in an envelope with your pair&rsquo;s name on it.</p></div><span class="tag">CUT-OUTS</span></div><div class="cuts">' +
+      '<div class="ct">' + sol(false) + '</div><div class="ct">' + sol(true) + '</div><div class="ct">' + sol(false, .8) + '</div>' +
+      '<div class="ct">' + sol(true, .8) + '</div><div class="ct w2">' + ship() + '</div>' +
+      '<div class="ct">' + tent() + '</div><div class="ct">' + wall() + '</div><div class="ct">' + wall() + '</div></div></div>';
+  }
+  function bgs(){
+    var fort = '<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice"><rect width="400" height="240" fill="#dbe9f6"/><circle cx="340" cy="44" r="20" fill="#F2B53A"/><path d="M0 130 Q100 96 200 124 T400 112 V240 H0 Z" fill="#9bc58c"/><rect y="170" width="400" height="70" fill="#c9b27a"/><path d="M60 170 V120 M60 120 h30 M90 120 v50 M150 170 V120 M150 120 h30 M180 120 v50" stroke="#1B2540" stroke-width="3" stroke-dasharray="8 6" fill="none"/></svg>';
+    return '<div class="page bgs"><div class="hd"><div><h1>Backgrounds</h1><p>Colour these in or draw your own. Once the background is stuck down, do not move it between photos. The film will jump if it moves.</p></div><span class="tag">BACKGROUNDS</span></div>' +
+      '<div class="scene"><span class="lab">THE BEACH</span>' + ROMAN.scene({}) + '</div><div class="scene"><span class="lab">THE FORT</span>' + fort + '</div></div>';
+  }
+  document.getElementById('pages').innerHTML = board() + chars() + bgs();
+  [].forEach.call(document.querySelectorAll('[data-ph]'), function(e){ e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); });
+  [].forEach.call(document.querySelectorAll('[data-print]'), function(b){
+    b.addEventListener('click', function(){
+      var k = b.getAttribute('data-print');
+      document.body.className = k === 'all' ? '' : 'only-' + k;
+      window.print();
+    });
+  });
+})();
+</script>
+</body>
+</html>

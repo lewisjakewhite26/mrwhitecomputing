@@ -60,10 +60,11 @@
   var L = [
     { t:'How do pictures move?', d:'Why still pictures shown quickly look like movement, and a thaumatrope for every child to make and spin.', href:'animation-l1.html', sheets:'animation-l1-sheets.html', sheetsLabel:'Thaumatrope sheets to print', ic:'film-strip' },
     { t:'Make a flipbook', d:'Four bouncing balls, one smooth and three that go wrong, then children draw and flick their own flipbook.', href:'animation-l2.html', sheets:'animation-l2-sheets.html', sheetsLabel:'Flipbook pages to print', ic:'book-open' },
-    { t:'Planning an animation', ic:'pencil-simple' },
+    { t:'Planning an animation', d:'How many photos a film needs, a Roman storyboard, and which plans are really achievable. Then each pair plans its own animation.', href:'animation-l3.html', sheets:'animation-l3-sheets.html', sheetsLabel:'Storyboard, characters and backgrounds to print', ic:'pencil-simple' },
     { t:'Filming an animation', ic:'camera' },
     { t:'Editing an animation', ic:'scissors' },
-    { t:'Reviewing an animation', ic:'eye' }
+    { t:'Reviewing an animation', ic:'eye' },
+    { t:'Extra: Flipbook practice', d:'Five practice flipbooks with less help each time, from tracing a wave to your own idea. For anyone who found the flipbook hard.', href:'animation-ext.html', sheets:'animation-ext-sheets.html', sheetsLabel:'Practice flipbooks to print', ic:'book-open' }
   ];
   document.getElementById('bin').innerHTML = L.map(function(l, i){
     var live = !!l.href, tag = live ? 'a' : 'div';
