@@ -155,6 +155,36 @@ body.locked .gate{display:flex;}
 .gate-card button{width:100%;margin-top:12px;background:var(--navy);color:#fff;border:0;border-radius:8px;
   font-family:var(--sans);font-size:16px;font-weight:700;padding:14px;cursor:pointer;min-height:50px;}
 .gate-err{color:var(--red);font-size:14px;font-weight:700;margin-top:12px;min-height:20px;}
+
+/* ---------- learning walk ---------- */
+.lw-shell{display:grid;grid-template-columns:400px 1fr;gap:20px;align-items:start;}
+.lw-shell>.panel{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain;}
+.lw-shell>.lw-area{position:sticky;top:12px;height:calc(100vh - 24px);max-height:none;overscroll-behavior:contain;}
+@media (max-width:1000px){.lw-shell{grid-template-columns:1fr;}.lw-shell>.panel,.lw-shell>.lw-area{position:static;max-height:none;}.lw-shell>.lw-area{height:auto;max-height:84vh;}}
+.lwd{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;background:#fff;}
+.lwd>summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--navy);padding:12px 14px;min-height:44px;display:flex;align-items:center;}
+.lwd[open]>summary{border-bottom:1px solid var(--line);}
+.lwd .lwin{padding:14px;}
+.lwd .field:last-child{margin-bottom:0;}
+.lw-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.lw-three label{font-size:13px !important;}
+.lw-warn{color:var(--amber);font-weight:700;font-size:13px;margin:4px 0;}
+.lw-area{background:#6f7d89;padding:24px;border-radius:10px;overflow:auto;max-height:84vh;}
+.lw-slot{margin:0 auto 24px;position:relative;box-shadow:0 3px 18px rgba(0,0,0,.25);background:#fff;overflow:hidden;}
+.lw-slot:last-child{margin-bottom:0;}
+.lw-page{position:relative;width:794px;height:1122px;overflow:hidden;background:#fff;color:#0C2D45;font-family:'OpenSans',system-ui,sans-serif;transform-origin:0 0;}
+.lw-page h1{margin:0;}
+.lw-pre{white-space:pre-line;overflow-wrap:anywhere;}
+@media print{
+  .lw-area{background:none;padding:0;max-height:none;overflow:visible;}
+  .lw-shell{display:block;}
+  .lw-shell>.lw-area,.lw-shell>.panel{position:static;height:auto;max-height:none;overflow:visible;}
+  .lw-slot{width:794px !important;height:1122px !important;margin:0;box-shadow:none;break-after:page;page-break-after:always;}
+  .lw-slot:last-child{break-after:auto;page-break-after:auto;}
+  .lw-page{transform:none !important;}
+  .lw-page,.lw-page *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .lw-ph{display:none !important;}
+}
 </style>
 </head>
 <body class="locked">
@@ -184,6 +214,7 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
     <button class="tab" id="tabPosts" role="tab" aria-selected="true">Posts</button>
     <button class="tab" id="tabDocs" role="tab" aria-selected="false">Letters &amp; policies</button>
     <button class="tab" id="tabBelong" role="tab" aria-selected="false">Belonging photos</button>
+    <button class="tab" id="tabLw" role="tab" aria-selected="false">Learning walk</button>
   </div>
 </div>
 
@@ -370,6 +401,19 @@ Stockton-on-Tees TS18 [  ]
     </div>
   </div>
 </section>
+<section id="viewLw" class="lw-shell hidden">
+  <div class="panel doc-controls">
+    <h2>Learning walk feedback</h2>
+    <p class="sub">Fill in each part, check the pages on the right, then save as a PDF. Open a part to fill it in.</p>
+    <div id="lwForm"></div>
+    <div class="hint" id="lwStatus" role="status"></div>
+    <button class="btn" id="lwPrint" type="button">Save as PDF</button>
+    <button class="btn ghost" id="lwClear" type="button" style="margin-top:9px;">Start again</button>
+    <div class="privacy">In the print window choose <strong>Save as PDF</strong> and set margins to <strong>None</strong>. Nothing you type or add here is saved or sent anywhere, so save the PDF before you close this page.</div>
+  </div>
+  <div class="lw-area" id="lwArea"><div id="lwPages"></div></div>
+</section>
+
 
 </div>
 
@@ -1507,7 +1551,7 @@ const doDownload=()=>{
 $("download").onclick=doDownload; $("download2").onclick=doDownload;
 
 function showTab(which){
-  [["posts","viewPosts","tabPosts"],["docs","viewDocs","tabDocs"],["belong","viewBelong","tabBelong"]].forEach(([k,v,t])=>{
+  [["posts","viewPosts","tabPosts"],["docs","viewDocs","tabDocs"],["belong","viewBelong","tabBelong"],["lw","viewLw","tabLw"]].forEach(([k,v,t])=>{
     $(v).classList.toggle("hidden",which!==k);
     $(t).setAttribute("aria-selected",String(which===k));
   });
@@ -1515,6 +1559,7 @@ function showTab(which){
 $("tabPosts").onclick=()=>showTab("posts");
 $("tabDocs").onclick=()=>showTab("docs");
 $("tabBelong").onclick=()=>showTab("belong");
+$("tabLw").onclick=()=>showTab("lw");
 
 /* =====================================================================
    DOCUMENTS
@@ -1895,6 +1940,248 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     $("blZip").disabled=!photos.length;
   };
   sync();
+})();
+</script>
+<script>
+/* =====================================================================
+   LEARNING WALK FEEDBACK
+   Six A4 pages: cover, four focus pages, priorities. Typed in a form,
+   saved as a PDF from the print window. Nothing is stored.
+===================================================================== */
+(function(){
+  "use strict";
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const PF="'Playfair',Georgia,serif", OS="'OpenSans',system-ui,sans-serif";
+  const BODY_LIMIT=965, COVER_LIMIT=900, PRIO_LIMIT=965;
+  const FOCUS_DEFAULTS=["Consistency","Engagement","Environment","Personalised Learning"];
+  const MAX_STR=6, MAX_ACT=5, N_PRIO=5;
+
+  const blank=()=>({
+    date:"", focus:"", p1:"", p2:"", photo:"", photoPos:50,
+    pages:FOCUS_DEFAULTS.map(t=>({title:t,cls:"",teacher:"",visitor:"",strengths:"",actions:""})),
+    prio:Array.from({length:N_PRIO},()=>({t:"",d:""})),
+    closing:""
+  });
+  let S=blank(), dirty=false, timer=0;
+
+  /* ---------- the form ---------- */
+  const fieldHTML=(id,label,kind,hint,ph,rows)=>
+    '<div class="field"><label for="'+id+'">'+label+'</label>'+
+    (kind==="area"?'<textarea id="'+id+'" rows="'+(rows||3)+'" placeholder="'+esc(ph||"")+'"></textarea>'
+                  :'<input type="text" id="'+id+'" placeholder="'+esc(ph||"")+'">')+
+    (hint?'<div class="hint" id="'+id+'Hint">'+hint+'</div>':'')+'</div>';
+
+  function buildForm(){
+    let h='';
+    h+='<details class="lwd" open><summary>Cover</summary><div class="lwin">'+
+      fieldHTML("lwDate","Date","text","","e.g. 18 November 2026")+
+      fieldHTML("lwFocus","Focus areas","text","Shown under the title.","e.g. Consistency, engagement, environment and personalised learning")+
+      fieldHTML("lwP1","Overview, first paragraph","area","Thank the staff and pupils for the welcome.","",4)+
+      fieldHTML("lwP2","Overview, second paragraph","area","A short summary of what the learning walk found.","",4)+
+      '<div class="field"><label>Cover photo (optional)</label>'+
+        '<div class="drop" id="lwDrop"><div class="big">Add a photo</div><div class="small">Tap to choose, or drop one here</div></div>'+
+        '<input type="file" id="lwFile" accept="image/*" class="hidden">'+
+        '<div class="shots" id="lwShot"></div>'+
+        '<div class="focalwrap hidden" id="lwPosWrap"><label for="lwPos">Move photo up or down</label><input type="range" id="lwPos" min="0" max="100" value="50"></div>'+
+        '<div class="hint">The photo stays in this browser. Check photo permissions before you use it.</div></div>'+
+      '</div></details>';
+    S.pages.forEach((p,i)=>{
+      h+='<details class="lwd"><summary id="lwSum'+i+'">Page '+(i+2)+': '+esc(p.title)+'</summary><div class="lwin">'+
+        fieldHTML("lwT"+i,"Page title","text")+
+        '<div class="lw-three">'+
+          '<div class="field"><label for="lwC'+i+'">Class</label><input type="text" id="lwC'+i+'"></div>'+
+          '<div class="field"><label for="lwH'+i+'">Teacher</label><input type="text" id="lwH'+i+'"></div>'+
+          '<div class="field"><label for="lwV'+i+'">Visitor</label><input type="text" id="lwV'+i+'"></div>'+
+        '</div>'+
+        fieldHTML("lwS"+i,"Strengths observed","area","One per line. Up to "+MAX_STR+".","",6)+
+        fieldHTML("lwA"+i,"Areas for development and agreed actions","area","One per line. Up to "+MAX_ACT+".","",5)+
+        '</div></details>';
+    });
+    h+='<details class="lwd"><summary>Page 6: Priorities for follow-up</summary><div class="lwin">';
+    for(let i=0;i<N_PRIO;i++){
+      h+=fieldHTML("lwPt"+i,"Priority "+(i+1)+" title","text")+
+         fieldHTML("lwPd"+i,"Priority "+(i+1)+" detail","area","","",2);
+    }
+    h+=fieldHTML("lwClose","Closing statement","area","The school's strengths and the main focus for follow-up.","",3)+
+       '</div></details>';
+    $("lwForm").innerHTML=h;
+  }
+
+  function wire(id,get,set){
+    const el=$(id); if(!el) return;
+    el.addEventListener("input",()=>{ set(el.value); dirty=true; schedule(); });
+  }
+  function syncFromState(){
+    const put=(id,v)=>{ const e=$(id); if(e) e.value=v; };
+    put("lwDate",S.date); put("lwFocus",S.focus); put("lwP1",S.p1); put("lwP2",S.p2);
+    S.pages.forEach((p,i)=>{ put("lwT"+i,p.title); put("lwC"+i,p.cls); put("lwH"+i,p.teacher); put("lwV"+i,p.visitor); put("lwS"+i,p.strengths); put("lwA"+i,p.actions); });
+    S.prio.forEach((p,i)=>{ put("lwPt"+i,p.t); put("lwPd"+i,p.d); });
+    put("lwClose",S.closing);
+  }
+  function wireAll(){
+    wire("lwDate",0,v=>S.date=v); wire("lwFocus",0,v=>S.focus=v);
+    wire("lwP1",0,v=>S.p1=v); wire("lwP2",0,v=>S.p2=v);
+    S.pages.forEach((p,i)=>{
+      wire("lwT"+i,0,v=>{ p.title=v; $("lwSum"+i).textContent="Page "+(i+2)+": "+(v||FOCUS_DEFAULTS[i]); });
+      wire("lwC"+i,0,v=>p.cls=v); wire("lwH"+i,0,v=>p.teacher=v); wire("lwV"+i,0,v=>p.visitor=v);
+      wire("lwS"+i,0,v=>{ p.strengths=v; countHint("lwS"+i,v,MAX_STR); });
+      wire("lwA"+i,0,v=>{ p.actions=v; countHint("lwA"+i,v,MAX_ACT); });
+    });
+    S.prio.forEach((p,i)=>{ wire("lwPt"+i,0,v=>p.t=v); wire("lwPd"+i,0,v=>p.d=v); });
+    wire("lwClose",0,v=>S.closing=v);
+  }
+  const lines=v=>String(v||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  function countHint(id,v,max){
+    const n=lines(v).length, h=$(id+"Hint"); if(!h) return;
+    h.textContent=n>max?("Only the first "+max+" lines show. You have "+n+"."):("One per line. Up to "+max+". You have "+n+".");
+    h.style.color=n>max?"#B06A00":""; h.style.fontWeight=n>max?"700":"";
+  }
+
+  /* ---------- the pages ---------- */
+  const TICK='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ARROW='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7 H11 M7.5 3.5 L11 7 L7.5 10.5" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const logo=()=>'<img class="lw-logo" alt="Hartburn Primary School" style="position:absolute;left:48px;top:39px;width:190px;height:52px">';
+  const pill=(t,bg)=>'<div style="height:30px;box-sizing:border-box;padding:0 14px;border-radius:999px;background:'+bg+';display:flex;align-items:center;font:700 12px/16px '+OS+';color:#015481;white-space:nowrap">'+esc(t)+'</div>';
+  const pills=(date,n)=>'<div style="position:absolute;right:48px;top:44px;display:flex;gap:8px">'+(date?pill(date,"#FFFFFF"):"")+pill(n+" of 6","#CFE6F7")+'</div>';
+  const footWave=(h)=>'<svg width="794" height="'+h+'" viewBox="0 0 794 140" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;left:0;bottom:0;width:794px;height:'+h+'px"><path d="M0 50 C150 20 300 30 450 62 S700 86 794 44 V140 H0 Z" fill="#8FCBF5"/><path d="M0 74 C260 56 480 90 794 60 V140 H0 Z" fill="#015481"/></svg>';
+  const headSvg=(id,h)=>'<svg width="794" height="250" viewBox="0 0 794 250" aria-hidden="true" style="position:absolute;left:0;top:0"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#015481"/><stop offset="0.58" stop-color="#0A6FB0"/><stop offset="1" stop-color="#0B93E3"/></linearGradient></defs><path d="M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z" fill="url(#'+id+')"/></svg>';
+  const lfl=(left)=>'<div style="position:absolute;left:48px;bottom:34px;font:italic 400 19px/24px '+PF+';color:#FFFFFF">Learning for Life</div>';
+  const section=(title,color,iconBg,icon,items)=>{
+    if(!items.length) return '';
+    return '<div style="display:flex;gap:16px;margin-top:26px"><div style="width:4px;flex:none;background:'+color+'"></div><div style="flex:1;min-width:0">'+
+      '<div style="font:600 24px/30px '+PF+';color:#015481;margin-bottom:6px">'+esc(title)+'</div>'+
+      items.map(t=>'<div style="display:flex;align-items:center;gap:14px;min-height:42px;padding:6px 0;box-sizing:border-box;border-bottom:1px solid #8FCBF5"><div style="flex:none;width:24px;height:24px;border-radius:50%;background:'+iconBg+';display:flex;align-items:center;justify-content:center">'+icon+'</div><div class="lw-pre" style="font:400 15px/21px '+OS+';min-width:0">'+esc(t)+'</div></div>').join("")+
+      '</div></div>';
+  };
+  function metaCell(label,val){
+    return '<div style="border-bottom:2px solid #015481;min-height:44px;box-sizing:border-box;padding-bottom:3px"><div style="font:700 11px/14px '+OS+';letter-spacing:.14em;text-transform:uppercase;color:#0A6FB0">'+label+'</div><div style="font:600 15px/21px '+OS+';min-height:21px;margin-top:2px">'+esc(val)+'</div></div>';
+  }
+  function cover(){
+    const ph=S.photo
+      ? '<img alt="" src="'+S.photo+'" style="width:100%;height:100%;object-fit:cover;object-position:50% '+S.photoPos+'%;display:block">'
+      : '<div class="lw-ph" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;background:repeating-linear-gradient(135deg,#d3e1ec 0 9px,#c8d9e7 9px 18px);color:#0E4268;font:700 14px/20px '+OS+'">Cover photo goes here</div>';
+    return '<div class="lw-page" data-limit="'+COVER_LIMIT+'">'+
+      '<svg width="794" height="520" viewBox="0 0 794 520" aria-hidden="true" style="position:absolute;left:0;top:0"><defs><linearGradient id="lwg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#015481"/><stop offset="0.58" stop-color="#0A6FB0"/><stop offset="1" stop-color="#0B93E3"/></linearGradient></defs><path d="M0 0 H794 V448 C680 490 560 406 420 446 C280 486 140 442 0 480 Z" fill="#8FCBF5"/><path d="M0 0 H794 V410 C680 452 560 368 420 408 C280 448 140 404 0 442 Z" fill="url(#lwg0)"/></svg>'+
+      logo()+
+      (S.date?'<div style="position:absolute;right:48px;top:44px">'+pill(S.date,"#FFFFFF")+'</div>':'')+
+      '<h1 style="position:absolute;left:48px;top:150px;width:640px;font:600 72px/78px '+PF+';color:#FFFFFF">Learning Walk<br>Feedback</h1>'+
+      (S.focus?'<div class="lw-pre" style="position:absolute;left:48px;top:318px;width:600px;font:italic 400 19px/26px '+PF+';color:#CFE6F7">'+esc(S.focus)+'</div>':'')+
+      '<div class="lw-body" style="position:absolute;left:48px;top:566px;width:360px;display:flex;gap:16px"><div style="width:4px;flex:none;background:#015481"></div><div style="min-width:0;flex:1"><div style="font:600 28px/34px '+PF+';color:#015481">Overview</div>'+
+        (S.p1?'<div class="lw-pre" style="margin-top:14px;font:400 16px/25px '+OS+'">'+esc(S.p1)+'</div>':'')+
+        (S.p2?'<div class="lw-pre" style="margin-top:16px;font:400 16px/25px '+OS+'">'+esc(S.p2)+'</div>':'')+
+      '</div></div>'+
+      '<div'+(S.photo?'':' class="lw-ph"')+' style="position:absolute;left:430px;top:550px;width:316px;height:330px;box-sizing:border-box;border-radius:28px;overflow:hidden;background:#d3e1ec">'+ph+'</div>'+
+      '<div style="position:absolute;left:48px;top:930px;font:italic 400 28px/36px '+PF+';color:#015481">Learning for Life</div>'+
+      '<svg width="794" height="100" viewBox="0 0 794 100" aria-hidden="true" style="position:absolute;left:0;bottom:0"><path d="M0 36 C180 12 380 56 560 34 S730 22 794 40 V100 H0 Z" fill="#8FCBF5"/><path d="M0 58 C260 40 500 74 794 48 V100 H0 Z" fill="#015481"/></svg>'+
+    '</div>';
+  }
+  function focusPage(p,i){
+    const n=i+2, st=lines(p.strengths).slice(0,MAX_STR), ac=lines(p.actions).slice(0,MAX_ACT);
+    return '<div class="lw-page" data-limit="'+BODY_LIMIT+'">'+
+      headSvg("lwg"+n)+logo()+
+      '<h1 style="position:absolute;left:48px;top:112px;width:700px;font:600 52px/58px '+PF+';color:#FFFFFF">'+esc(p.title||FOCUS_DEFAULTS[i])+'</h1>'+
+      pills(S.date,n)+
+      '<div class="lw-body" style="position:absolute;left:48px;top:270px;width:698px">'+
+        '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:24px">'+metaCell("Class",p.cls)+metaCell("Teacher",p.teacher)+metaCell("Visitor",p.visitor)+'</div>'+
+        section("Strengths observed","#015481","#015481",TICK,st)+
+        section("Areas for development and agreed actions","#0A6FB0","#0A6FB0",ARROW,ac)+
+      '</div>'+
+      footWave(140)+lfl()+
+    '</div>';
+  }
+  function priorities(){
+    const items=S.prio.filter(p=>p.t.trim()||p.d.trim());
+    let k=0;
+    return '<div class="lw-page" data-limit="'+PRIO_LIMIT+'">'+
+      headSvg("lwg7")+logo()+
+      '<h1 style="position:absolute;left:48px;top:112px;width:700px;font:600 52px/58px '+PF+';color:#FFFFFF">Priorities for follow-up</h1>'+
+      pills(S.date,6)+
+      '<div class="lw-body" style="position:absolute;left:48px;top:290px;width:698px">'+
+        items.map(p=>{ k++; return '<div style="display:flex;gap:20px;margin-bottom:22px"><div style="width:4px;flex:none;background:#0A6FB0"></div><div style="flex:none;width:40px;height:40px;border-radius:50%;background:#015481;display:flex;align-items:center;justify-content:center;font:700 18px/1 '+OS+';color:#FFFFFF">'+k+'</div><div style="flex:1;min-width:0"><div class="lw-pre" style="font:600 24px/30px '+PF+';color:#015481">'+esc(p.t)+'</div>'+(p.d.trim()?'<div class="lw-pre" style="margin-top:4px;font:400 15px/22px '+OS+'">'+esc(p.d)+'</div>':'')+'</div></div>'; }).join("")+
+        (S.closing.trim()?'<div style="display:flex;gap:20px;margin-top:8px"><div style="width:4px;flex:none;background:#015481"></div><div class="lw-pre" style="flex:1;font:italic 400 19px/28px '+PF+';color:#015481">'+esc(S.closing)+'</div></div>':'')+
+      '</div>'+
+      footWave(140)+lfl()+
+    '</div>';
+  }
+
+  /* ---------- draw, scale, check fit ---------- */
+  function render(){
+    const html=[cover()].concat(S.pages.map(focusPage),[priorities()]).map(p=>'<div class="lw-slot">'+p+'</div>').join("");
+    $("lwPages").innerHTML=html;
+    document.querySelectorAll(".lw-logo").forEach(i=>{ i.src=LOGO_WHITE_SRC; });
+    fit(); check();
+  }
+  function schedule(){ clearTimeout(timer); timer=setTimeout(render,120); }
+  function fit(){
+    const w=$("lwArea").clientWidth-48; if(w<=0) return;
+    const s=Math.min(1,w/794);
+    document.querySelectorAll(".lw-slot").forEach(sl=>{
+      sl.style.width=(794*s)+"px"; sl.style.height=(1122*s)+"px";
+      const pg=sl.firstChild; pg.style.transform="scale("+s+")";
+    });
+  }
+  function check(){
+    const bad=[];
+    document.querySelectorAll(".lw-slot").forEach((sl,i)=>{
+      const pg=sl.firstChild, b=pg.querySelector(".lw-body"); if(!b) return;
+      if(b.offsetTop+b.offsetHeight>Number(pg.dataset.limit)) bad.push(i===0?"The cover":"Page "+(i+1));
+    });
+    const st=$("lwStatus");
+    st.textContent=bad.length?(bad.join(", ")+(bad.length>1?" are":" is")+" too full and runs into the bottom edge. Shorten a line or two."):"";
+    st.className="hint"+(bad.length?" lw-warn":"");
+    $("lwPrint").disabled=false;
+  }
+
+  /* ---------- photo ---------- */
+  function setPhoto(file){
+    if(!file||!/^image\//.test(file.type)) return;
+    if(S.photo) URL.revokeObjectURL(S.photo);
+    S.photo=URL.createObjectURL(file); dirty=true;
+    $("lwShot").innerHTML='<div class="shot"><img alt="Cover photo" src="'+S.photo+'"><button type="button" aria-label="Remove photo" id="lwRm">&times;</button></div>';
+    $("lwPosWrap").classList.remove("hidden");
+    $("lwRm").onclick=clearPhoto;
+    render();
+  }
+  function clearPhoto(){
+    if(S.photo) URL.revokeObjectURL(S.photo);
+    S.photo=""; $("lwShot").innerHTML=""; $("lwPosWrap").classList.add("hidden"); $("lwFile").value=""; render();
+  }
+
+  /* ---------- start ---------- */
+  buildForm(); wireAll(); syncFromState();
+  $("lwDrop").onclick=()=>$("lwFile").click();
+  $("lwFile").onchange=e=>setPhoto(e.target.files[0]);
+  const drop=$("lwDrop");
+  ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("hot");}));
+  ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("hot");}));
+  drop.addEventListener("drop",e=>setPhoto(e.dataTransfer.files[0]));
+  $("lwPos").addEventListener("input",e=>{ S.photoPos=Number(e.target.value); schedule(); });
+  $("lwPrint").onclick=()=>{
+    const st=document.createElement("style"); st.textContent="@page{size:A4;margin:0}"; document.head.appendChild(st);
+    window.addEventListener("afterprint",()=>st.remove(),{once:true});
+    window.print();
+  };
+  $("lwClear").onclick=()=>{
+    if(!confirm("Clear everything and start again?")) return;
+    if(S.photo) URL.revokeObjectURL(S.photo);
+    S=blank(); dirty=false; $("lwShot").innerHTML=""; $("lwPosWrap").classList.add("hidden");
+    buildForm(); wireAll(); syncFromState(); rebindPhoto(); render();
+  };
+  function rebindPhoto(){
+    $("lwDrop").onclick=()=>$("lwFile").click();
+    $("lwFile").onchange=e=>setPhoto(e.target.files[0]);
+    $("lwPos").addEventListener("input",e=>{ S.photoPos=Number(e.target.value); schedule(); });
+    const d=$("lwDrop");
+    ["dragenter","dragover"].forEach(ev=>d.addEventListener(ev,e=>{e.preventDefault();d.classList.add("hot");}));
+    ["dragleave","drop"].forEach(ev=>d.addEventListener(ev,e=>{e.preventDefault();d.classList.remove("hot");}));
+    d.addEventListener("drop",e=>setPhoto(e.dataTransfer.files[0]));
+  }
+  window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
+  window.addEventListener("resize",fit);
+  if(window.ResizeObserver) new ResizeObserver(fit).observe($("lwArea"));
+  $("tabLw").addEventListener("click",()=>{ render(); });
+  render();
 })();
 </script>
 </body>
