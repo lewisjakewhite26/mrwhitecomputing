@@ -315,10 +315,16 @@
 
     <!-- 2 watch the wave -->
     <section class="part" data-name="Watch it" id="p-watch">
-      <h2 style="margin-bottom:16px">Twelve pages, each a tiny bit different</h2>
+      <h2 style="margin-bottom:16px">Twelve pages, one at a time</h2>
       <div class="player-row">
         <div class="frame viewer" id="wvView"></div>
         <div class="ctrl">
+          <span class="lab">FLIPBOOK</span>
+          <div class="row" id="wvKind">
+            <button class="bt on" type="button" data-k="wave">Wave</button>
+            <button class="bt" type="button" data-k="ball">Bounce</button>
+            <button class="bt" type="button" data-k="ufo">UFO</button>
+          </div>
           <span class="lab">SPEED</span>
           <div class="row" id="wvSpd">
             <button class="bt" type="button" data-f="3">Slow</button>
@@ -468,10 +474,19 @@
 
   var BLUE2 = '#2F5FD0', SUN2 = '#F2B53A';
   var loops = [].slice.call(document.querySelectorAll('.loop[data-fig]'));
-  var wvView = document.getElementById('wvView'), wvStrip = document.getElementById('wvStrip'), wvF = 8, wvI = -1;
-  var stripHtml = '';
-  for(var z = 0; z < 12; z++) stripHtml += '<div class="frame"><span class="num">' + (z + 1) + '</span>' + FLIP.svg('wave', z, INK, 5) + '</div>';
-  wvStrip.innerHTML = stripHtml;
+  var wvView = document.getElementById('wvView'), wvStrip = document.getElementById('wvStrip'), wvF = 8, wvI = -1, wvK = 'wave', wvW = {wave:5, ball:5, ufo:4};
+  function buildStrip(){
+    var h = '';
+    for(var z = 0; z < 12; z++) h += '<div class="frame"><span class="num">' + (z + 1) + '</span>' + FLIP.svg(wvK, z, INK, wvW[wvK]) + '</div>';
+    wvStrip.innerHTML = h; wvI = -1;
+  }
+  buildStrip();
+  [].forEach.call(document.querySelectorAll('#wvKind .bt'), function(b){
+    b.addEventListener('click', function(){
+      wvK = b.getAttribute('data-k'); buildStrip();
+      [].forEach.call(document.querySelectorAll('#wvKind .bt'), function(x){ x.classList.toggle('on', x === b); });
+    });
+  });
   [].forEach.call(document.querySelectorAll('#wvSpd .bt'), function(b){
     b.addEventListener('click', function(){
       wvF = +b.getAttribute('data-f');
@@ -489,7 +504,7 @@
     var j = Math.floor(now / 1000 * wvF) % 12;
     if(j !== wvI){
       wvI = j;
-      wvView.innerHTML = FLIP.svg('wave', j, INK, 5);
+      wvView.innerHTML = FLIP.svg(wvK, j, INK, wvW[wvK]);
       [].forEach.call(wvStrip.children, function(c, n){ c.classList.toggle('cur', n === j); });
     }
   }
