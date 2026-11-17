@@ -274,11 +274,11 @@
   #p-watch .ctrl p{font-size:30px}
   #p-watch .strip12 .frame{height:70px}
   .bt.on{background:var(--blue);border-color:var(--blue);color:#fff}
-  .ladder{gap:6px}
-  .rung{padding:6px 14px;grid-template-columns:130px 1fr}
-  .rung .frame{height:62px}
-  .rung b{font-size:26px;line-height:1.15}
-  .rung span{font-size:21px;line-height:1.2}
+  .ladder{gap:10px}
+  .rung{padding:8px 16px;grid-template-columns:200px 1fr}
+  .rung .frame{height:104px}
+  .rung b{font-size:30px;line-height:1.15}
+  .rung span{font-size:24px;line-height:1.25}
   .rung .lvl{font-size:16px}
 </style>
 </head>
@@ -333,14 +333,13 @@
     </section>
 
     <!-- 3 ladder -->
-    <section class="part" data-name="Five steps">
-      <h2>Five steps, less help each time</h2>
+    <section class="part" data-name="Four steps">
+      <h2>Four steps, less help each time</h2>
       <div class="ladder">
-        <div class="rung pp" data-s="1"><div class="frame"><div class="loop" data-fig="wave"></div></div><div><span class="lvl">STEP 1</span><b>Trace the wave</b><span>Every page is already drawn in grey. Go over the lines</span></div></div>
-        <div class="rung pp" data-s="2"><div class="frame"><div class="loop" data-fig="ball"></div></div><div><span class="lvl">STEP 2</span><b>Trace the bounce</b><span>Look at the gaps. It moves further when it is going fast</span></div></div>
-        <div class="rung pp" data-s="3"><div class="frame"><div class="loop" data-fig="rail"></div></div><div><span class="lvl">STEP 3</span><b>Draw inside the dotted shape</b><span>Anything you like. It travels across at an even speed</span></div></div>
-        <div class="rung pp" data-s="4"><div class="frame"><div class="loop" data-fig="fall"></div></div><div><span class="lvl">STEP 4</span><b>Speeding up</b><span>The dotted shapes spread out as it falls. Draw your own object in each</span></div></div>
-        <div class="rung pp" data-s="5"><div class="frame own"><span data-ph="lightbulb"></span></div><div><span class="lvl">STEP 5</span><b>Your own idea</b><span>Blank pages with a ground line. You decide what moves</span></div></div>
+        <div class="rung pp" data-s="1"><div class="frame"><div class="loop" data-fig="wave"></div></div><div><span class="lvl">STEP 1</span><b>Trace the wave</b><span>The body stays the same. Only the arm moves a little each page</span></div></div>
+        <div class="rung pp" data-s="2"><div class="frame"><div class="loop" data-fig="ball"></div></div><div><span class="lvl">STEP 2</span><b>Trace the bounce</b><span>It speeds up as it falls, slows as it rises and squashes when it lands</span></div></div>
+        <div class="rung pp" data-s="3"><div class="frame"><div class="loop" data-fig="ufo"></div></div><div><span class="lvl">STEP 3</span><b>Trace the UFO</b><span>A UFO beams up a stick person. He stretches when he is pulled up fast</span></div></div>
+        <div class="rung pp" data-s="4"><div class="frame own"><span data-ph="lightbulb"></span></div><div><span class="lvl">STEP 4</span><b>Your own idea</b><span>Blank pages with a ground line. You decide what moves</span></div></div>
       </div>
     </section>
 
@@ -351,7 +350,7 @@
         <div class="steps">
           <div class="stp pp" data-s="1"><span class="n">1</span><span>Cut along the dashed lines</span></div>
           <div class="stp pp" data-s="2"><span class="n">2</span><span>Put the pages in order, with 1 on top</span></div>
-          <div class="stp pp" data-s="3"><span class="n">3</span><span>Go through the pages in order, one at a time, with a pencil</span></div>
+          <div class="stp pp" data-s="3"><span class="n">3</span><span>Trace each page in order. Hold it up to a window to see the page before</span></div>
           <div class="stp pp" data-s="4"><span class="n">4</span><span>Line the pages up, clip the left side and flick</span></div>
         </div>
         <div>
@@ -408,7 +407,7 @@
   var FLIP = (function(){
     var UP = [10,40,70,100,130,140,140,140,130,100,70,40], FORE = [0,0,0,0,0,-20,20,-20,20,0,0,0];
     var BH = [112,104,88,64,30,0,34,62,80,86,80,62], SQ = {3:[.92,1.12],4:[.88,1.2],5:[1.45,.62],6:[.9,1.12]};
-    var GROUND = 140;
+    var GROUND = 140, COL = '#000', W = 5;
     function g(inner, col, w){ return '<g fill="none" stroke="' + col + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round">' + inner + '</g>'; }
     function wave(i, col, w){
       var a = UP[i] * Math.PI / 180, ex = 150 + 34 * Math.sin(a), ey = 82 + 34 * Math.cos(a);
@@ -425,17 +424,43 @@
       var b = ballXY(i);
       return floor(col) + g('<ellipse cx="' + b.x + '" cy="' + b.y + '" rx="' + b.rx + '" ry="' + b.ry + '"/>', col, w);
     }
-    function railXY(i){ return { x: 36 + i * (228 / 11), y: GROUND - 20 }; }
-    function fallXY(i){ var t = i / 11; return { x: 150, y: 20 + 100 * t * t }; }
-    function dot(p, col){ return '<circle cx="' + p.x + '" cy="' + p.y + '" r="19" fill="none" stroke="' + col + '" stroke-width="3" stroke-dasharray="6 6"/>'; }
-    function solid(p, col){ return '<circle cx="' + p.x + '" cy="' + p.y + '" r="14" fill="' + col + '"/>'; }
-    function rail(i, col, w, fill){ var p = railXY(i); return floor(col) + dot(p, col) + (fill ? solid(p, fill) : ''); }
-    function fall(i, col, w, fill){ var p = fallXY(i); return floor(col) + dot(p, col) + (fill ? solid(p, fill) : ''); }
+    function person(fy, s, mode){
+      var y = function(h){ return fy - h * s; };
+      if(mode === 'legs') return g('<path d="M150 48 V' + y(22) + ' M150 ' + y(22) + ' L142 ' + fy + ' M150 ' + y(22) + ' L158 ' + fy + '"/>', COL, W);
+      if(mode === 'feet') return g('<path d="M146 48 L142 ' + fy + ' M154 48 L158 ' + fy + '"/>', COL, W);
+      return g('<circle cx="150" cy="' + y(54) + '" r="9"/><path d="M150 ' + y(45) + ' V' + y(22) + ' M150 ' + y(22) + ' L142 ' + fy + ' M150 ' + y(22) + ' L158 ' + fy + ' M150 ' + y(38) + ' L139 ' + y(26) + ' M150 ' + y(38) + ' L161 ' + y(26) + '"/>', COL, W);
+    }
+    function ship(cy){
+      return g('<ellipse cx="150" cy="' + cy + '" rx="44" ry="11"/><path d="M128 ' + (cy - 7) + ' Q150 ' + (cy - 34) + ' 172 ' + (cy - 7) + '"/><circle cx="130" cy="' + (cy + 1) + '" r="2"/><circle cx="150" cy="' + (cy + 3) + '" r="2"/><circle cx="170" cy="' + (cy + 1) + '" r="2"/>', COL, W);
+    }
+    function beam(cy, by){
+      var top = cy + 11, k = (by - top) / (GROUND - top), hw = 12 + 26 * k;
+      return g('<path d="M138 ' + top + ' L' + (150 - hw) + ' ' + by + ' M162 ' + top + ' L' + (150 + hw) + ' ' + by + (by >= GROUND ? ' M' + (150 - hw) + ' ' + by + ' H' + (150 + hw) : '') + '"/>', COL, 3);
+    }
+    var UFO = [
+      ['p'], ['p'],
+      ['s', -6, 'p'], ['s', 14, 'p'], ['s', 33, 'p'],
+      ['s', 33, 'p', 0, 85], ['s', 33, 'p', 0, 140],
+      ['s', 33, 'p', 1, 140, 14, 1.2], ['s', 33, 'l', 1, 140, 40, 1.2],
+      ['s', 33, 'f', 1, 90, 70, 1.2], ['s', 20], ['b']
+    ];
+    function ufo(i, col, w){
+      COL = col; W = w;
+      var d = UFO[i], out = floor(col);
+      if(d[0] === 'b') return out + g('<path d="M96 14 H206 M120 24 H232 M84 34 H178 M140 44 H222"/>', col, w - 1);
+      if(d[0] === 'p') return out + person(GROUND, 1, 'full');
+      var cy = d[1], what = d[2];
+      if(d[4]) out += beam(cy, d[4]);
+      if(what === 'p') out += person(GROUND - (d[5] || 0), d[6] || 1, 'full');
+      else if(what === 'l') out += person(GROUND - d[5], d[6], 'legs');
+      else if(what === 'f') out += person(GROUND - d[5], d[6], 'feet');
+      return out + ship(cy);
+    }
     function blank(i, col){ return floor(col) + '<path d="M14 154 h10 M19 149 v10 M276 154 h10 M281 149 v10" stroke="' + col + '" stroke-width="2" fill="none"/>'; }
     return {
       N: 12,
       svg: function(kind, i, col, w, fill){
-        var inner = kind === 'wave' ? wave(i, col, w) : kind === 'ball' ? ball(i, col, w) : kind === 'rail' ? rail(i, col, w, fill) : kind === 'fall' ? fall(i, col, w, fill) : blank(i, col);
+        var inner = kind === 'wave' ? wave(i, col, w) : kind === 'ball' ? ball(i, col, w) : kind === 'ufo' ? ufo(i, col, w) : blank(i, col);
         return '<svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
       }
     };
@@ -459,7 +484,7 @@
       if(e._i === i) return;
       e._i = i;
       var k = e.getAttribute('data-fig');
-      e.innerHTML = FLIP.svg(k, i, INK, (k === 'wave' || k === 'ball') ? 5 : 3, k === 'rail' ? BLUE2 : k === 'fall' ? SUN2 : null);
+      e.innerHTML = FLIP.svg(k, i, INK, k === 'ufo' ? 4 : 5);
     });
     var j = Math.floor(now / 1000 * wvF) % 12;
     if(j !== wvI){

@@ -22,7 +22,7 @@
   @media print{
     html,body{background:#fff} .bar{display:none}
     .page{margin:0;width:auto;height:276mm;padding:0;box-shadow:none}
-    body.only-wave .page:not(.wave), body.only-ball .page:not(.ball), body.only-rail .page:not(.rail), body.only-fall .page:not(.fall), body.only-blank .page:not(.blank){display:none}
+    body.only-wave .page:not(.wave), body.only-ball .page:not(.ball), body.only-ufo .page:not(.ufo), body.only-blank .page:not(.blank){display:none}
   }
   .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:5mm;border-bottom:.6mm solid var(--ink);padding-bottom:2.5mm}
   .hd h1{margin:0;font-size:18pt;font-weight:800;line-height:1.1}
@@ -43,10 +43,9 @@
   <a href="animation-ext.html#part4"><span data-ph="arrow-left"></span>Back to the lesson</a>
   <button type="button" class="sp" data-print="wave"><span data-ph="printer"></span>1 Wave</button>
   <button type="button" data-print="ball"><span data-ph="printer"></span>2 Bounce</button>
-  <button type="button" data-print="rail"><span data-ph="printer"></span>3 Across</button>
-  <button type="button" data-print="fall"><span data-ph="printer"></span>4 Speeding up</button>
-  <button type="button" data-print="blank"><span data-ph="printer"></span>5 Blank</button>
-  <button type="button" class="go" data-print="all"><span data-ph="printer"></span>Print all five</button>
+  <button type="button" data-print="ufo"><span data-ph="printer"></span>3 UFO</button>
+  <button type="button" data-print="blank"><span data-ph="printer"></span>4 Blank</button>
+  <button type="button" class="go" data-print="all"><span data-ph="printer"></span>Print all four</button>
 </div>
 <div id="pages"></div>
 <script>
@@ -57,7 +56,7 @@
   var FLIP = (function(){
     var UP = [10,40,70,100,130,140,140,140,130,100,70,40], FORE = [0,0,0,0,0,-20,20,-20,20,0,0,0];
     var BH = [112,104,88,64,30,0,34,62,80,86,80,62], SQ = {3:[.92,1.12],4:[.88,1.2],5:[1.45,.62],6:[.9,1.12]};
-    var GROUND = 140;
+    var GROUND = 140, COL = '#000', W = 5;
     function g(inner, col, w){ return '<g fill="none" stroke="' + col + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round">' + inner + '</g>'; }
     function wave(i, col, w){
       var a = UP[i] * Math.PI / 180, ex = 150 + 34 * Math.sin(a), ey = 82 + 34 * Math.cos(a);
@@ -74,17 +73,43 @@
       var b = ballXY(i);
       return floor(col) + g('<ellipse cx="' + b.x + '" cy="' + b.y + '" rx="' + b.rx + '" ry="' + b.ry + '"/>', col, w);
     }
-    function railXY(i){ return { x: 36 + i * (228 / 11), y: GROUND - 20 }; }
-    function fallXY(i){ var t = i / 11; return { x: 150, y: 20 + 100 * t * t }; }
-    function dot(p, col){ return '<circle cx="' + p.x + '" cy="' + p.y + '" r="19" fill="none" stroke="' + col + '" stroke-width="3" stroke-dasharray="6 6"/>'; }
-    function solid(p, col){ return '<circle cx="' + p.x + '" cy="' + p.y + '" r="14" fill="' + col + '"/>'; }
-    function rail(i, col, w, fill){ var p = railXY(i); return floor(col) + dot(p, col) + (fill ? solid(p, fill) : ''); }
-    function fall(i, col, w, fill){ var p = fallXY(i); return floor(col) + dot(p, col) + (fill ? solid(p, fill) : ''); }
+    function person(fy, s, mode){
+      var y = function(h){ return fy - h * s; };
+      if(mode === 'legs') return g('<path d="M150 48 V' + y(22) + ' M150 ' + y(22) + ' L142 ' + fy + ' M150 ' + y(22) + ' L158 ' + fy + '"/>', COL, W);
+      if(mode === 'feet') return g('<path d="M146 48 L142 ' + fy + ' M154 48 L158 ' + fy + '"/>', COL, W);
+      return g('<circle cx="150" cy="' + y(54) + '" r="9"/><path d="M150 ' + y(45) + ' V' + y(22) + ' M150 ' + y(22) + ' L142 ' + fy + ' M150 ' + y(22) + ' L158 ' + fy + ' M150 ' + y(38) + ' L139 ' + y(26) + ' M150 ' + y(38) + ' L161 ' + y(26) + '"/>', COL, W);
+    }
+    function ship(cy){
+      return g('<ellipse cx="150" cy="' + cy + '" rx="44" ry="11"/><path d="M128 ' + (cy - 7) + ' Q150 ' + (cy - 34) + ' 172 ' + (cy - 7) + '"/><circle cx="130" cy="' + (cy + 1) + '" r="2"/><circle cx="150" cy="' + (cy + 3) + '" r="2"/><circle cx="170" cy="' + (cy + 1) + '" r="2"/>', COL, W);
+    }
+    function beam(cy, by){
+      var top = cy + 11, k = (by - top) / (GROUND - top), hw = 12 + 26 * k;
+      return g('<path d="M138 ' + top + ' L' + (150 - hw) + ' ' + by + ' M162 ' + top + ' L' + (150 + hw) + ' ' + by + (by >= GROUND ? ' M' + (150 - hw) + ' ' + by + ' H' + (150 + hw) : '') + '"/>', COL, 3);
+    }
+    var UFO = [
+      ['p'], ['p'],
+      ['s', -6, 'p'], ['s', 14, 'p'], ['s', 33, 'p'],
+      ['s', 33, 'p', 0, 85], ['s', 33, 'p', 0, 140],
+      ['s', 33, 'p', 1, 140, 14, 1.2], ['s', 33, 'l', 1, 140, 40, 1.2],
+      ['s', 33, 'f', 1, 90, 70, 1.2], ['s', 20], ['b']
+    ];
+    function ufo(i, col, w){
+      COL = col; W = w;
+      var d = UFO[i], out = floor(col);
+      if(d[0] === 'b') return out + g('<path d="M96 14 H206 M120 24 H232 M84 34 H178 M140 44 H222"/>', col, w - 1);
+      if(d[0] === 'p') return out + person(GROUND, 1, 'full');
+      var cy = d[1], what = d[2];
+      if(d[4]) out += beam(cy, d[4]);
+      if(what === 'p') out += person(GROUND - (d[5] || 0), d[6] || 1, 'full');
+      else if(what === 'l') out += person(GROUND - d[5], d[6], 'legs');
+      else if(what === 'f') out += person(GROUND - d[5], d[6], 'feet');
+      return out + ship(cy);
+    }
     function blank(i, col){ return floor(col) + '<path d="M14 154 h10 M19 149 v10 M276 154 h10 M281 149 v10" stroke="' + col + '" stroke-width="2" fill="none"/>'; }
     return {
       N: 12,
       svg: function(kind, i, col, w, fill){
-        var inner = kind === 'wave' ? wave(i, col, w) : kind === 'ball' ? ball(i, col, w) : kind === 'rail' ? rail(i, col, w, fill) : kind === 'fall' ? fall(i, col, w, fill) : blank(i, col);
+        var inner = kind === 'wave' ? wave(i, col, w) : kind === 'ball' ? ball(i, col, w) : kind === 'ufo' ? ufo(i, col, w) : blank(i, col);
         return '<svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
       }
     };
@@ -94,14 +119,13 @@
   var KINDS = [
     ['wave', 'Step 1: trace the wave', 'Go over every grey picture with your pencil. Each page is a tiny bit different, so when you flick, the arm waves.'],
     ['ball', 'Step 2: trace the bounce', 'Trace the ball on every page. Look at the gaps: the ball moves further between pages when it is going fast.'],
-    ['rail', 'Step 3: draw inside the dotted shape', 'Draw anything you like inside the dotted shape on every page: a car, a fish, a snail. Keep it the same size. It moves the same distance each time.'],
-    ['fall', 'Step 4: speeding up', 'Draw an object in each dotted shape. See how the gaps get bigger? Things speed up as they fall.'],
-    ['blank', 'Step 5: your own idea', 'Pencil in the ground line first. Decide what moves and what stays the same. Move things a tiny bit each page.']
+    ['ufo', 'Step 3: trace the UFO', 'Trace the UFO, the beam and the stick person on every page. When he is pulled up fast, he gets stretched. At the end the UFO whooshes away and leaves a blur.'],
+    ['blank', 'Step 4: your own idea', 'Pencil in the ground line first. Decide what moves and what stays the same. Move things a tiny bit each page.']
   ];
   function sheet(k){
     var kind = k[0], h = '<div class="page ' + kind + '"><div class="hd"><div><h1>' + k[1] + '</h1><p>' + k[2] + COMMON + '</p></div><span class="tag">PAGES 1 TO 12</span></div><div class="grid">';
     for(var i = 0; i < 12; i++){
-      var svg = FLIP.svg(kind, i, kind === 'blank' || kind === 'rail' || kind === 'fall' ? '#9aa1ae' : '#b4bac6', kind === 'wave' || kind === 'ball' ? 5 : 3);
+      var svg = FLIP.svg(kind, i, kind === 'blank' ? '#9aa1ae' : '#b4bac6', kind === 'ufo' ? 4 : kind === 'blank' ? 3 : 5);
       h += '<div class="pg">' + (i === 0 ? '<span class="cut">' + ph('scissors') + '</span>' : '') +
         '<div class="bind"><span class="st"></span><span class="n">' + (i + 1) + '</span><span class="st"></span></div><div class="draw">' + svg + '</div></div>';
     }
