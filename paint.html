@@ -338,8 +338,20 @@
   function isShape(t){ return t === 'line' || t === 'rect'; }
 
   var sprayTimer = null;
+  var ptrs = {}, gest = null;   // two fingers on a stamp: pinch to resize, twist to turn
+  function gDist(){ var k = gest.ids, a = ptrs[k[0]], b = ptrs[k[1]]; return Math.max(1, Math.hypot(b[0] - a[0], b[1] - a[1])); }
+  function gAng(){ var k = gest.ids, a = ptrs[k[0]], b = ptrs[k[1]]; return Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI; }
+  function gMid(){ var k = gest.ids, a = ptrs[k[0]], b = ptrs[k[1]]; return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; }
   cv.addEventListener('pointerdown', function(e){
-    if(painter || touring) return;         // one finger at a time, so a resting palm can't scribble; and hands off during the tour
+    if(touring) return;
+    ptrs[e.pointerId] = pos(e);
+    if(tool === 'stamp' && live && painter && painter.stamp && !gest && e.pointerId !== painter.id && ptrs[painter.id]){
+      e.preventDefault(); gest = { ids:[painter.id, e.pointerId] };
+      gest.d0 = gDist(); gest.a0 = gAng(); gest.m0 = gMid(); gest.s0 = live.s; gest.r0 = live.r; gest.x0 = live.x; gest.y0 = live.y;
+      try{ cv.setPointerCapture(e.pointerId); }catch(err){}
+      return;
+    }
+    if(painter) return;         // one finger at a time, so a resting palm can't scribble; and hands off during the tour
     e.preventDefault();
     var p = pos(e);
     if(tool === 'stamp'){
@@ -369,6 +381,15 @@
     }
   });
   cv.addEventListener('pointermove', function(e){
+    if(ptrs[e.pointerId]) ptrs[e.pointerId] = pos(e);
+    if(gest){
+      if(gest.ids.indexOf(e.pointerId) < 0) return;
+      var m = gMid();
+      nextSize = Math.max(70, Math.min(560, Math.round(gest.s0 * gDist() / gest.d0)));
+      nextRot = ((Math.round(gest.r0 + gAng() - gest.a0) % 360) + 360) % 360;
+      live.s = nextSize; live.r = nextRot; live.x = Math.round(gest.x0 + m[0] - gest.m0[0]); live.y = Math.round(gest.y0 + m[1] - gest.m0[1]);
+      redrawLive(); return;
+    }
     if(!painter || e.pointerId !== painter.id) return;
     if(painter.stamp){ var q2 = pos(e); live.x = Math.round(q2[0] + painter.dx); live.y = Math.round(q2[1] + painter.dy); redrawLive(); return; }
     if(isShape(tool)){
@@ -385,6 +406,8 @@
     });
   });
   function end(e){
+    delete ptrs[e.pointerId];
+    if(gest){ if(gest.ids.indexOf(e.pointerId) >= 0){ gest = null; painter = null; } return; }
     if(!painter || e.pointerId !== painter.id) return;
     clearInterval(sprayTimer); sprayTimer = null;
     if(painter.stamp){ painter = null; return; }
