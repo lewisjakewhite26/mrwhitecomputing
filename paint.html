@@ -104,6 +104,17 @@
   .stamps .tool{min-height:66px;font-size:14px;gap:2px;padding:4px}
   .stamps .tool .i{font-size:30px}
   .tool img{width:38px;height:38px;display:block}
+  /* lesson 3: one stack under the picture, Background first */
+  .stamps .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto auto}
+  .stamps .bar,.stamps .tour{grid-column:1}
+  .stamps .board{grid-column:1;grid-row:3}
+  .stamps .tools{grid-column:1;grid-row:4;flex-direction:row;justify-content:center;gap:8px;overflow:visible;padding-top:8px}
+  .stamps .pal{grid-column:1;grid-row:5}
+  .stamps .tool{width:auto;flex:1 1 0;min-width:0;max-width:130px;min-height:72px}
+  .stamps .tool.undo{margin:0 0 0 14px;max-width:100px}
+  .stamps .tool.bg{background:var(--wall)}
+  @media (max-width:520px){ .stamps .tools{gap:4px} .stamps .tool{font-size:10px;padding:4px 1px} .stamps .tool.undo{margin-left:6px} .stamps .stp{width:56px;min-height:70px} .srow{flex-wrap:wrap;gap:4px} .srow .sep{display:none} .stamps .stp img{width:36px;height:36px} .hint{font-size:20px;min-height:70px} }
+  .hint{min-height:84px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--muted);padding:0 12px;text-align:center}
   @media (max-width:900px){ .tool{width:80px;min-height:72px;font-size:13px} .tool .i{font-size:30px} .sw{width:50px;height:50px} .brand span.t{display:none} }
 </style>
 </head>
@@ -215,6 +226,7 @@
   function setColour(c){ colour = COLOURS[c]; [].forEach.call(palEl.querySelectorAll('.sw'), function(b){ b.classList.toggle('on', b.getAttribute('data-c') === c); }); if(MODE_KEY === 'l3'){ preloadColour(colour); renderStampRow(); } }
   function renderStampRow(){
     var row = document.getElementById('srow'); if(!row) return;
+    if(tool === 'fill'){ row.innerHTML = '<div class="hint">Pick a colour, then tap the picture</div>'; return; }
     row.innerHTML = STAMPS[CAT].map(function(s){ return '<button class="stp' + (s[0] === STAMP ? ' on' : '') + '" type="button" data-s="' + s[0] + '"><img alt="" src="' + svgURL(s[2], colour) + '">' + s[1] + '</button>'; }).join('') +
       '<span class="sep"></span>' +
       '<button class="stp ctl" type="button" data-k="smaller">' + ph('minus') + 'Smaller</button><button class="stp ctl" type="button" data-k="bigger">' + ph('plus') + 'Bigger</button><button class="stp ctl" type="button" data-k="turn">' + ph('arrows-clockwise') + 'Turn</button>';
@@ -224,11 +236,10 @@
     row.querySelector('[data-k=turn]').addEventListener('click', turnStamp);
   }
   function buildStampBar(){
-    toolsEl.innerHTML = Object.keys(STAMPS).map(function(c){ return '<button class="tool" type="button" data-cat="' + c + '"><img alt="" src="' + svgURL(stampDef(TABICON[c])[2], '#1B2540') + '">' + c + '</button>'; }).join('') +
-      '<button class="tool" type="button" data-t="fill">' + ph('paint-bucket') + 'Background</button>' +
+    toolsEl.innerHTML = '<button class="tool bg" type="button" data-t="fill">' + ph('paint-bucket') + 'Background</button>' + Object.keys(STAMPS).map(function(c){ return '<button class="tool" type="button" data-cat="' + c + '"><img alt="" src="' + svgURL(stampDef(TABICON[c])[2], '#1B2540') + '">' + c + '</button>'; }).join('') +
       '<button class="tool undo" type="button" id="undo">' + ph('arrow-counter-clockwise') + 'Undo</button>';
     [].forEach.call(toolsEl.querySelectorAll('[data-cat]'), function(b){ b.addEventListener('click', function(){ CAT = b.getAttribute('data-cat'); STAMP = STAMPS[CAT][0][0]; setTool('stamp'); renderStampRow(); }); });
-    toolsEl.querySelector('[data-t=fill]').addEventListener('click', function(){ live = null; setTool('fill'); });
+    toolsEl.querySelector('[data-t=fill]').addEventListener('click', function(){ live = null; setTool('fill'); renderStampRow(); });
     palEl.classList.add('col');
     palEl.innerHTML = '<div class="srow" id="srow"></div><div class="swrow">' + MODE.colours.map(function(c){ return '<button class="sw' + (c === 'white' ? ' white' : '') + '" type="button" aria-label="' + c + '" data-c="' + c + '" style="background:' + COLOURS[c] + '"></button>'; }).join('') + '</div>';
     [].forEach.call(palEl.querySelectorAll('.sw'), function(b){ b.addEventListener('click', function(){ setColour(b.getAttribute('data-c')); }); });
