@@ -301,10 +301,11 @@
   /* lesson 4 */
   .title-art{overflow:hidden}
   .tgrid.g3{grid-template-columns:repeat(3,1fr)}
-  .tgrid.g3 .tc .mk{height:270px}
-  .tgrid.g3 .tc .say{min-height:130px;font-size:30px}
-  .tgrid.g3 .tc .hd{font-size:40px}
-  .tgrid.g3 .tc .hd .i{font-size:52px}
+  .tgrid.g2{grid-template-columns:repeat(2,1fr)}
+  .tgrid.g3 .tc .mk,.tgrid.g2 .tc .mk{height:270px}
+  .tgrid.g3 .tc .say,.tgrid.g2 .tc .say{min-height:130px;font-size:30px}
+  .tgrid.g3 .tc .hd,.tgrid.g2 .tc .hd{font-size:40px}
+  .tgrid.g3 .tc .hd .i,.tgrid.g2 .tc .hd .i{font-size:52px}
   .words.w4 .word{font-size:52px}
   .quiz .pic{background:#FBF6E9}
   .pic-s .snd,.big .snd2{position:absolute;border:0;background:rgba(27,37,64,.78);color:#fff;display:grid;place-items:center;cursor:pointer}
@@ -327,7 +328,7 @@
       <div class="title-wrap">
         <p class="kick">Digital painting &middot; Lesson 4</p>
         <h1>Paint like Kandinsky</h1>
-        <p class="sub">Today you paint with circles, lines and sound.</p>
+        <p class="sub">Today you paint with circles, lines and mirrors.</p>
       </div>
       <div class="title-art"><canvas width="600" height="500" data-art="build"></canvas></div>
     </section>
@@ -365,12 +366,11 @@
       <div class="words w4" id="words"></div>
     </section>
 
-    <section class="part" data-name="Three new tools" id="p-meet">
-      <h2>Three new tools</h2>
-      <div class="tgrid g3">
+    <section class="part" data-name="Two new tools" id="p-meet">
+      <h2>Two new tools</h2>
+      <div class="tgrid g2">
         <div class="tc pp-card" data-s="1"><div class="hd"><span data-ph="hand-pointing"></span>Smudge</div><div class="mk"><canvas width="420" height="270" data-demo="smudge"></canvas><div class="q">?</div></div><div class="say">Drag through two colours. They mix.</div></div>
-        <div class="tc pp-card" data-s="2"><div class="hd"><span data-ph="arrows-left-right"></span>Mirror</div><div class="mk"><canvas width="420" height="270" data-demo="mirror"></canvas><div class="q">?</div></div><div class="say">Draw on one side. The other side copies you.</div></div>
-        <div class="tc pp-card" data-s="3"><div class="hd"><span data-ph="music-notes"></span>Sound</div><div class="mk"><canvas width="420" height="270" data-demo="sound"></canvas><div class="q">?</div></div><div class="say">Music plays. Every note picks a colour.</div></div>
+        <div class="tc pp-card" data-s="2"><div class="hd"><span data-ph="arrows-left-right"></span>Mirror</div><div class="mk"><canvas width="420" height="270" data-demo="mirror"></canvas><div class="q">?</div></div><div class="say">Switch it on. Whatever you draw, the other side copies.</div></div>
       </div>
     </section>
 
@@ -399,14 +399,13 @@
       <div class="task">
         <div class="tk compact">
           <div class="yr pp" data-s="1"><b>1</b>Paint two colours with the brush. Then tap Smudge and drag through both.</div>
-          <div class="yr pp" data-s="2"><b>2</b>Tap Mirror. Draw down one side of the line.</div>
-          <div class="yr pp" data-s="3"><b>3</b>Tap Sound. Drag slowly and listen.</div>
-          <div class="banner pp" data-s="4" style="font-size:30px;padding:18px 24px"><span data-ph="music-notes"></span>Tap New picture before you start your own.</div>
+          <div class="yr pp" data-s="2"><b>2</b>Switch Mirror on. Draw down one side of the line.</div>
+          <div class="yr pp" data-s="3"><b>3</b>Keep Mirror on and try the brush. Then switch it off.</div>
+          <div class="banner pp" data-s="4" style="font-size:30px;padding:18px 24px"><span data-ph="plus"></span>Tap New picture before you start your own.</div>
         </div>
         <div class="side">
           <div class="timer" id="timer0"><span class="t" id="tt0">5:00</span><div class="row"><button class="bt go" type="button" id="tgo0"><span data-ph="play"></span>Start</button><button class="bt" type="button" id="treset0"><span data-ph="arrow-counter-clockwise"></span>Reset</button></div></div>
           <a class="bt go big-go" href="paint.html?mode=l4" target="_blank" rel="noopener"><span data-ph="play"></span>Open the app</a>
-          <p class="note">Sound plays through the iPad speaker.</p>
         </div>
       </div>
     </section>
@@ -546,7 +545,7 @@
     for(var i = 1; i <= n; i++){ var f0 = (i - 1) / 120, f1 = i / 120; cx.strokeStyle = NOTE_COL[Math.floor(f1 * 14) % 6 === 0 ? 3 : (Math.floor(f1 * 14) * 5) % 6]; cx.beginPath(); cx.moveTo(30 + f0 * 360, 140 + Math.sin(f0 * 8) * 70); cx.lineTo(30 + f1 * 360, 140 + Math.sin(f1 * 8) * 70); cx.stroke(); }
   }
   (function(){
-    var D = { smudge:demoSmudge, mirror:demoMirror, sound:demoSound }, cvs = [].slice.call(document.querySelectorAll('[data-demo]')), t0 = performance.now();
+    var D = { smudge:demoSmudge, mirror:demoMirror }, cvs = [].slice.call(document.querySelectorAll('[data-demo]')), t0 = performance.now();
     function tick(now){
       cvs.forEach(function(cv){ if(!cv.closest('.part.on') || !cv.closest('.tc.in')) return; D[cv.getAttribute('data-demo')](cv.getContext('2d'), cv.width, cv.height, RM ? 3500 : Math.max(0, now - t0)); });
       requestAnimationFrame(tick);
@@ -555,11 +554,11 @@
   })();
 
   /* ---------- words ---------- */
-  var WORDS = [['smudge', 'smudge', 'hand-pointing'], ['mirror', 'mirror', 'arrows-left-right'], ['sound brush', 'sound brush', 'music-notes'], ['tool', 'tool', 'paint-bucket']];
+  var WORDS = [['smudge', 'smudge', 'hand-pointing'], ['mirror', 'mirror', 'arrows-left-right'], ['tool', 'tool', 'paint-bucket']];
   $('words').innerHTML = WORDS.map(function(w){ return '<div class="word"><span class="ic">' + ph(w[2]) + '</span>' + w[1] + '</div>'; }).join('');
 
   /* ---------- quiz: children show the number on their fingers, then the board shows the answer ---------- */
-  var OPTS = [['Smudge', 'hand-pointing'], ['Mirror', 'arrows-left-right'], ['Sound', 'music-notes'], ['Fill', 'paint-bucket']];
+  var OPTS = [['Smudge', 'hand-pointing'], ['Mirror', 'arrows-left-right'], ['Fill', 'paint-bucket']];
   var QUIZ = [
     ['Which tool made the colours mix?', 'Smudge', 'Smudge. It drags colour along and mixes it.', function(cx){
       cx.fillStyle = '#fff'; cx.fillRect(100, 110, 180, 250); cx.fillStyle = COL.red; cx.fillRect(100, 110, 180, 250); cx.fillStyle = COL.blue; cx.fillRect(440, 110, 180, 250);
@@ -569,10 +568,6 @@
       cx.setLineDash([10, 10]); cx.strokeStyle = 'rgba(47,107,224,.6)'; cx.lineWidth = 3; cx.beginPath(); cx.moveTo(360, 20); cx.lineTo(360, 450); cx.stroke(); cx.setLineDash([]);
       cx.lineWidth = 14; cx.lineCap = 'round';
       [[COL.red, 0], [COL.blue, 1]].forEach(function(o, k){ cx.strokeStyle = o[0]; [0, 1].forEach(function(side){ cx.beginPath(); for(var i = 0; i <= 60; i++){ var f = i / 60, x = 340 - f * (210 - k * 70) + Math.sin(f * 8 + k) * 30, y = 50 + f * 360 - k * 40; x = side ? 720 - x : x; i ? cx.lineTo(x, y) : cx.moveTo(x, y); } cx.stroke(); }); });
-    }],
-    ['Which tool changed the colour by itself?', 'Sound', 'Sound. Each note picks the next colour.', function(cx){
-      cx.lineWidth = 30; cx.lineCap = 'round';
-      for(var i = 1; i <= 100; i++){ var f0 = (i - 1) / 100, f1 = i / 100; cx.strokeStyle = NOTE_COL[Math.floor(f1 * 12) * 5 % 6]; cx.beginPath(); cx.moveTo(60 + f0 * 600, 235 + Math.sin(f0 * 9) * 120); cx.lineTo(60 + f1 * 600, 235 + Math.sin(f1 * 9) * 120); cx.stroke(); }
     }],
     ['Which tool covered the whole shape in one tap?', 'Fill', 'Fill. One tap and the space is full.', function(cx){
       cx.lineWidth = 8; cx.strokeStyle = COL.ink; cx.strokeRect(120, 90, 200, 290); cx.fillStyle = COL.yellow; cx.fillRect(124, 94, 192, 282); cx.strokeRect(400, 90, 200, 290);

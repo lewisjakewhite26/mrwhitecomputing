@@ -40,6 +40,8 @@
   .bar{grid-row:1} .tour{grid-row:2}
   .board{grid-column:2;grid-row:3} .pal{grid-column:2;grid-row:4}
   .tools{grid-column:1;grid-row:3 / 5;display:flex;flex-direction:column;gap:8px;overflow:auto}
+  .sw-on{font-size:12px;font-weight:700;color:var(--muted)}
+  .tool.on .sw-on{color:var(--ink)}
   .tool{width:96px;min-height:84px;border-radius:18px;background:var(--card);border:3px solid var(--edge);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 4px;font-size:15px;font-weight:700}
   .tool .i{font-size:36px}
   .tool.on{background:var(--sun-soft);border-color:var(--sun);box-shadow:inset 0 0 0 2px var(--sun)}
@@ -167,8 +169,8 @@
     l2: { name:'Lesson 2', tools:['pencil','line','rect','fill','rubber'], colours:['black','red','yellow','blue','white'] },
     // Matisse: cut-out stampers in a bright palette, plus fill for a background
     l3: { name:'Lesson 3', tools:['stamp'], colours:['blue','red','yellow','green','orange','pink','purple','white'] },
-    // Kandinsky: every tool open, plus smudge, the mirror brush and the sound brush
-    l4: { name:'Lesson 4', tools:['pencil','brush','spray','line','rect','fill','rubber','smudge','mirror','sound'], colours:['black','red','orange','yellow','green','blue','purple','brown','pink','white'] }
+    // Kandinsky: every tool open, plus smudge and a Mirror switch that works with the other tools
+    l4: { name:'Lesson 4', tools:['pencil','brush','spray','line','rect','fill','rubber','smudge','mirror'], colours:['black','red','orange','yellow','green','blue','purple','brown','pink','white'] }
   };
   var TOOLS = {
     pencil: { label:'Pencil', icon:'pencil-simple' },
@@ -179,8 +181,7 @@
     line:   { label:'Line', icon:'line-segment' },
     rect:   { label:'Rectangle', icon:'rectangle' },
     smudge: { label:'Smudge', icon:'hand-pointing' },
-    mirror: { label:'Mirror', icon:'arrows-left-right' },
-    sound:  { label:'Sound', icon:'music-notes' }
+    mirror: { label:'Mirror', icon:'arrows-left-right' }
   };
   var q = new URLSearchParams(location.search);
   var MODE_KEY = MODES[q.get('mode')] ? q.get('mode') : 'l1';   // the board can change this live: see setMode
@@ -234,7 +235,9 @@
   /* ---------- toolbar and palette ---------- */
   var toolsEl = document.getElementById('tools');
   var palEl = document.getElementById('pal'), undoBtn;
-  function axisUpdate(){ var a = document.getElementById('axis'); if(!a) return; a.hidden = tool !== 'mirror'; if(tool !== 'mirror') return; a.style.left = (cv.offsetLeft + Math.round(cv.offsetWidth / 2) - 1) + 'px'; a.style.top = cv.offsetTop + 'px'; a.style.height = cv.offsetHeight + 'px'; }
+  var mirrorOn = false;
+  function mirrorable(){ return mirrorOn && MODE.tools.indexOf('mirror') > -1 && tool !== 'fill' && tool !== 'smudge' && tool !== 'stamp'; }
+  function axisUpdate(){ var a = document.getElementById('axis'); if(!a) return; a.hidden = !(mirrorOn && MODE.tools.indexOf('mirror') > -1); if(a.hidden) return; a.style.left = (cv.offsetLeft + Math.round(cv.offsetWidth / 2) - 1) + 'px'; a.style.top = cv.offsetTop + 'px'; a.style.height = cv.offsetHeight + 'px'; }
   function setTool(t){ tool = t; axisUpdate(); [].forEach.call(toolsEl.querySelectorAll('[data-t],[data-cat]'), function(b){ var d = b.getAttribute('data-t'); b.classList.toggle('on', d ? d === t : (t === 'stamp' && b.getAttribute('data-cat') === CAT)); }); }
   function setColour(c){ colour = COLOURS[c]; [].forEach.call(palEl.querySelectorAll('.sw'), function(b){ b.classList.toggle('on', b.getAttribute('data-c') === c); }); if(MODE_KEY === 'l3'){ preloadColour(colour); renderStampRow(); } }
   function renderStampRow(){
@@ -267,9 +270,13 @@
     document.body.classList.toggle('stamps', MODE_KEY === 'l3');
     if(MODE_KEY === 'l3') return buildStampBar();
     palEl.classList.remove('col');
-    toolsEl.innerHTML = MODE.tools.map(function(t){ return '<button class="tool" type="button" data-t="' + t + '">' + ph(TOOLS[t].icon) + TOOLS[t].label + '</button>'; }).join('') +
+    mirrorOn = false;
+    toolsEl.innerHTML = MODE.tools.filter(function(t){ return t !== 'mirror'; }).map(function(t){ return '<button class="tool" type="button" data-t="' + t + '">' + ph(TOOLS[t].icon) + TOOLS[t].label + '</button>'; }).join('') +
+      (MODE.tools.indexOf('mirror') > -1 ? '<button class="tool" type="button" id="mirrorBtn">' + ph('arrows-left-right') + 'Mirror <b class="sw-on">off</b></button>' : '') +
       '<button class="tool undo" type="button" id="undo">' + ph('arrow-counter-clockwise') + 'Undo</button>';
     [].forEach.call(toolsEl.querySelectorAll('[data-t]'), function(b){ b.addEventListener('click', function(){ setTool(b.getAttribute('data-t')); }); });
+    var mb = document.getElementById('mirrorBtn');
+    if(mb) mb.addEventListener('click', function(){ mirrorOn = !mirrorOn; mb.classList.toggle('on', mirrorOn); mb.querySelector('b').textContent = mirrorOn ? 'on' : 'off'; axisUpdate(); });
     palEl.innerHTML = MODE.colours.map(function(c){ return '<button class="sw' + (c === 'white' ? ' white' : '') + '" type="button" aria-label="' + c + '" data-c="' + c + '" style="background:' + COLOURS[c] + '"></button>'; }).join('');
     [].forEach.call(palEl.querySelectorAll('.sw'), function(b){ b.addEventListener('click', function(){ setColour(b.getAttribute('data-c')); }); });
     undoBtn = document.getElementById('undo');
@@ -440,8 +447,8 @@
     snap();
     if(isShape(tool)){ painter.base = history[history.length - 1]; painter.start = p; return; }
     if(tool === 'spray'){
-      sprayAt(p, colour, painter.dots);
-      sprayTimer = setInterval(function(){ if(painter) sprayAt(painter.last, colour, painter.dots); }, 30);
+      sprayAt(p, colour, painter.dots); if(mirrorable()) sprayAt(mir(p), colour, painter.dots);
+      sprayTimer = setInterval(function(){ if(painter){ sprayAt(painter.last, colour, painter.dots); if(mirrorable()) sprayAt(mir(painter.last), colour, painter.dots); } }, 30);
     } else if(tool === 'smudge'){
       smudgeStart(p);
     } else if(tool === 'sound'){
@@ -449,7 +456,7 @@
     } else {
       var w = SIZE[tool], c = tool === 'rubber' ? '#ffffff' : colour;
       line(p, [p[0] + .01, p[1]], w, c);
-      if(tool === 'mirror') line(mir(p), [W - p[0] - .01, p[1]], w, c);
+      if(mirrorable()) line(mir(p), [W - p[0] - .01, p[1]], w, c);
     }
   });
   cv.addEventListener('pointermove', function(e){
@@ -466,7 +473,7 @@
     if(painter.stamp){ var q2 = pos(e); live.x = Math.round(q2[0] + painter.dx); live.y = Math.round(q2[1] + painter.dy); redrawLive(); return; }
     if(isShape(tool)){
       var b = shapeEnd(painter.start, pos(e));
-      cx.putImageData(painter.base, 0, 0); drawShape(tool, painter.start, b, colour);
+      cx.putImageData(painter.base, 0, 0); drawShape(tool, painter.start, b, colour); if(mirrorable()) drawShape(tool, mir(painter.start), mir(b), colour);
       painter.last = b; return;
     }
     var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
@@ -477,7 +484,7 @@
       else if(tool === 'sound') soundMove(painter.last, p);
       else if(tool !== 'spray'){
         line(painter.last, p, SIZE[tool], tool === 'rubber' ? '#ffffff' : colour);
-        if(tool === 'mirror') line(mir(painter.last), mir(p), SIZE[tool], colour);
+        if(mirrorable()) line(mir(painter.last), mir(p), SIZE[tool], tool === 'rubber' ? '#ffffff' : colour);
       }
       painter.last = p; painter.pts.push(p);
     });
