@@ -170,7 +170,7 @@
     // Matisse: cut-out stampers in a bright palette, plus fill for a background
     l3: { name:'Lesson 3', tools:['stamp'], colours:['blue','red','yellow','green','orange','pink','purple','white'] },
     // Kandinsky: every tool open, plus smudge and a Mirror switch that works with the other tools
-    l4: { name:'Lesson 4', tools:['pencil','brush','spray','line','rect','fill','rubber','smudge','mirror'], colours:['black','red','orange','yellow','green','blue','purple','brown','pink','white'] }
+    l4: { name:'Lesson 4', tools:['pencil','brush','spray','line','rect','circle','fill','rubber','smudge','mirror'], colours:['black','red','orange','yellow','green','blue','purple','brown','pink','white'] }
   };
   var TOOLS = {
     pencil: { label:'Pencil', icon:'pencil-simple' },
@@ -180,6 +180,7 @@
     rubber: { label:'Rubber', icon:'eraser' },
     line:   { label:'Line', icon:'line-segment' },
     rect:   { label:'Rectangle', icon:'rectangle' },
+    circle: { label:'Circle', icon:'circle' },
     smudge: { label:'Smudge', icon:'hand-pointing' },
     mirror: { label:'Mirror', icon:'arrows-left-right' }
   };
@@ -302,7 +303,7 @@
   function record(a){ log.push(a); counts[a.t] = (counts[a.t] || 0) + 1; }
 
   /* ---------- drawing ---------- */
-  var SIZE = { pencil:4, brush:22, rubber:40, line:14, rect:10, smudge:30, mirror:12, sound:24 };
+  var SIZE = { pencil:4, brush:22, rubber:40, line:14, rect:10, circle:10, smudge:30, mirror:12, sound:24 };
   function pos(e){ var r = cv.getBoundingClientRect(); return [ (e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height ]; }
   function line(a, b, w, c){
     cx.strokeStyle = c; cx.lineWidth = w; cx.lineCap = 'round'; cx.lineJoin = 'round';
@@ -353,11 +354,12 @@
   }
   function drawShape(t, a, b, c){
     if(t === 'line'){ cx.lineCap = 'square'; line(a, b, SIZE.line, c); cx.lineCap = 'round'; return; }
+    if(t === 'circle'){ cx.strokeStyle = c; cx.lineWidth = SIZE.circle; cx.beginPath(); cx.arc(a[0], a[1], Math.hypot(b[0] - a[0], b[1] - a[1]), 0, Math.PI * 2); cx.stroke(); return; }
     cx.strokeStyle = c; cx.lineWidth = SIZE.rect; cx.lineJoin = 'miter';
     cx.strokeRect(Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]));
     cx.lineJoin = 'round';
   }
-  function isShape(t){ return t === 'line' || t === 'rect'; }
+  function isShape(t){ return t === 'line' || t === 'rect' || t === 'circle'; }
 
   var sprayTimer = null;
   var ptrs = {}, gest = null;   // two fingers on a stamp: pinch to resize, twist to turn
@@ -439,7 +441,8 @@
     }
     if(tool === 'fill'){ live = null;
       var before = cx.getImageData(0, 0, W, H);
-      if(floodFill(p[0], p[1], colour)){ history.push(before); if(history.length > LIMIT) history.shift(); undoBtn.disabled = false; record({ t:'fill', x:Math.round(p[0]), y:Math.round(p[1]), c:colour }); }
+      var filled = floodFill(p[0], p[1], colour); if(mirrorOn && MODE.tools.indexOf('mirror') > -1 && floodFill(W - p[0], p[1], colour)) filled = true;
+      if(filled){ history.push(before); if(history.length > LIMIT) history.shift(); undoBtn.disabled = false; record({ t:'fill', x:Math.round(p[0]), y:Math.round(p[1]), c:colour }); }
       return;
     }
     painter = { id:e.pointerId, last:p, pts:[p], dots:[] };
