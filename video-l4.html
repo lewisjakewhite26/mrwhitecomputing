@@ -136,7 +136,7 @@
   .tile:nth-child(2n){border-bottom-color:var(--grn)} .tile:nth-child(3n){border-bottom-color:var(--blu)}
 
   /* the panel on the right of the set */
-  .ctl{flex:1;height:660px;border-radius:22px;background:linear-gradient(#2d2926,#211e1c);padding:22px 20px;color:#e9e2d2;display:flex;flex-direction:column;gap:18px;
+  .ctl{flex:1;height:660px;border-radius:22px;background:linear-gradient(#2d2926,#211e1c);padding:22px 20px;color:#e9e2d2;display:flex;flex-direction:column;gap:14px;
     box-shadow:inset 0 3px 8px rgba(0,0,0,.6),0 2px 0 rgba(255,255,255,.2)}
   .brand{display:flex;align-items:center;justify-content:space-between}
   .plate{font-weight:800;font-size:22px;letter-spacing:.16em;padding:8px 10px 8px 14px;border-radius:5px;background:linear-gradient(#d9b86a,#a98339);color:#2b2113;text-shadow:0 1px 0 rgba(255,255,255,.4)}
@@ -144,15 +144,15 @@
   .pwr:active{transform:translateY(4px);box-shadow:0 1px 0 #6b150c}
   .off-air .pwr::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid rgba(255,122,104,.8);animation:ring 1.4s ease-out infinite}
   @keyframes ring{from{transform:scale(.85);opacity:1}to{transform:scale(1.25);opacity:0}}
-  .grille{height:64px;border-radius:10px;background:repeating-linear-gradient(#0f0d0c 0 5px,#3a3430 5px 9px);box-shadow:inset 0 2px 6px rgba(0,0,0,.8)}
+  .grille{height:40px;border-radius:10px;background:repeating-linear-gradient(#0f0d0c 0 5px,#3a3430 5px 9px);box-shadow:inset 0 2px 6px rgba(0,0,0,.8)}
   .lcd{height:112px;border-radius:10px;background:#120c04;padding:12px 16px;font-family:var(--mono);color:#ffb23a;box-shadow:inset 0 0 14px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.18)}
   .lcd .ch{font-size:44px;font-weight:700;line-height:1;text-shadow:0 0 10px rgba(255,160,40,.6)}
   .lcd .nm{font-size:19px;letter-spacing:.05em;margin-top:8px;opacity:.9}
   .lcd .dots{display:flex;gap:5px;margin-top:8px}
   .lcd .dots i{width:10px;height:10px;background:#4a3010}
   .lcd .dots i.on{background:#ffb23a}
-  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .key{height:66px;border-radius:10px;background:linear-gradient(#f3ead6,#d8ccb2);color:#2b2113;font-family:var(--mono);font-size:30px;font-weight:700;
+  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .key{height:54px;border-radius:10px;background:linear-gradient(#f3ead6,#d8ccb2);color:#2b2113;font-family:var(--mono);font-size:30px;font-weight:700;
     box-shadow:0 5px 0 #8a7b5a,0 7px 8px rgba(0,0,0,.45);display:grid;place-items:center}
   .key:active,.key.cur{transform:translateY(4px);box-shadow:0 1px 0 #8a7b5a}
   .key.cur{background:linear-gradient(#ffd878,#f0b53a)}
@@ -161,6 +161,15 @@
   .nav .key:disabled{opacity:.45;cursor:default}
   .nav .nx{background:linear-gradient(#ffe27a,#f2bc2c)}
   .legs{display:none}
+  .part.watch{padding:0;background:#000}
+  .part.watch iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+  .tips.three .tip{min-height:150px}
+  .shots{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0 8px;margin-top:14px}
+  .shots th{font-family:var(--mono);font-size:16px;letter-spacing:.06em;color:var(--mut);text-align:left;padding:0 14px 2px}
+  .shots td{background:#fff;padding:13px 14px;font-size:24px;line-height:1.25;font-weight:600;border-top:1px solid var(--edge);border-bottom:1px solid var(--edge);vertical-align:middle}
+  .shots td:first-child{border-left:1px solid var(--edge);border-radius:10px 0 0 10px;font-size:26px;font-weight:800}
+  .shots td span{display:block}
+  .shots td:last-child{border-right:1px solid var(--edge);border-radius:0 10px 10px 0;color:var(--acc)}
 </style>
 </head>
 <body>
@@ -182,6 +191,38 @@
               <p class="sub">Your group plans a trailer, then goes out and films every shot of it. The cutting has to wait until <span class="hl">next lesson</span>.</p>
             </div>
             <div class="bars"><i style="background:#e8e8e8"></i><i style="background:#e6d93a"></i><i style="background:#3ac7d6"></i><i style="background:#3fbf5a"></i><i style="background:#c847c4"></i><i style="background:#e0402f"></i><i style="background:#2d4fd0"></i></div>
+          </section>
+
+          <section class="part watch" data-name="Watch" data-short="WATCH">
+            <iframe data-src="trailer-stapler.html" title="The Evil Stapler, a horror trailer" allow="autoplay; fullscreen"></iframe>
+          </section>
+
+          <section class="part" data-name="What genre is it?" data-short="CLUES">
+            <h2>What genre is it?</h2>
+            <div>
+              <div class="q pp" data-s="1"><span class="n">01</span>What genre is this trailer?</div>
+              <div class="q pp" data-s="2"><span class="n">02</span>How do you know? Find the clues.</div>
+            </div>
+            <div class="tips three">
+              <div class="tip pp" data-s="3"><b>Sound</b><span>The music, the voices and the silences</span></div>
+              <div class="tip pp" data-s="4"><b>Light</b><span>What was bright and what was dark</span></div>
+              <div class="tip pp" data-s="5"><b>Story</b><span>Who was in trouble, and why</span></div>
+            </div>
+            <p class="note pp" data-s="6">Start with: It's a ____ trailer because ____.</p>
+          </section>
+
+          <section class="part" data-name="What shots did you see?" data-short="SHOTS">
+            <h2>What shots did you see?</h2>
+            <table class="shots">
+              <colgroup><col style="width:190px"><col style="width:450px"><col></colgroup>
+              <tr><th>TECHNIQUE</th><th>WHAT YOU SAW</th><th><span class="pp" data-s="7">WHY IT WAS CHOSEN</span></th></tr>
+              <tr class="pp" data-s="1"><td>High angle</td><td>Mr White tiny in a dark classroom</td><td><span class="pp" data-s="7">He looks alone and small</span></td></tr>
+              <tr class="pp" data-s="2"><td>Close-up</td><td>The homework, all answers wrong</td><td><span class="pp" data-s="7">We spot every mistake</span></td></tr>
+              <tr class="pp" data-s="3"><td>Low angle</td><td>The stapler towering over the desk</td><td><span class="pp" data-s="7">It looks huge and powerful</span></td></tr>
+              <tr class="pp" data-s="4"><td>Quick cuts</td><td>The stapler, then his face, again</td><td><span class="pp" data-s="7">The pace builds the fear</span></td></tr>
+              <tr class="pp" data-s="5"><td>Black card</td><td>Nothing on screen, then the title</td><td><span class="pp" data-s="7">Silence makes the title land</span></td></tr>
+              <tr class="pp" data-s="6"><td>Wide shot</td><td>Mr White running down the corridor</td><td><span class="pp" data-s="7">The chase stays in view</span></td></tr>
+            </table>
           </section>
 
           <section class="part" data-name="What is a trailer?" data-short="TRAILER">
@@ -351,10 +392,18 @@
   }
 
   var cur = 0, step = 0, live = false, busy = false, osdT = 0;
+  function syncFilms(off){
+    PARTS.forEach(function(p, i){
+      var f = p.querySelector('iframe[data-src]'); if(!f) return;
+      var want = (i === cur && !off) ? f.getAttribute('data-src') : 'about:blank';
+      if(f.getAttribute('src') !== want) f.setAttribute('src', want);
+    });
+  }
   function render(){
     PARTS.forEach(function(p, i){ p.classList.toggle('on', i === cur); });
     [].forEach.call(PARTS[cur].querySelectorAll('.pp'), function(e){ e.classList.toggle('in', +e.getAttribute('data-s') <= step); });
     keys.forEach(function(k, i){ k.classList.toggle('cur', i === cur); });
+    syncFilms();
     var P = PARTS[cur];
     document.getElementById('lch').textContent = 'CH ' + pad(cur + 1);
     document.getElementById('lnm').textContent = P.getAttribute('data-short');
@@ -396,6 +445,7 @@
     boot.style.animation = 'none'; void boot.offsetWidth; boot.style.animation = RM ? 'none' : 'bootOff .6s ease-in forwards';
     setTimeout(function(){ screen.classList.remove('live'); stage.classList.remove('on-air'); stage.classList.add('off-air'); osd.classList.remove('show'); }, RM ? 0 : 200);
     setTimeout(function(){ busy = false; }, RM ? 0 : 650);
+    syncFilms(true);
     document.getElementById('lch').textContent = 'CH --'; document.getElementById('lnm').textContent = 'STANDBY'; document.getElementById('ldots').innerHTML = '';
     keys.forEach(function(k){ k.classList.remove('cur'); });
   }
