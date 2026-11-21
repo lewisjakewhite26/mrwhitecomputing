@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Draw an animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --paper:#F6F1E7; --card:#FFFDF8; --edge:#E2D8C6; --ink:#1B2540; --muted:#4C5568;
+    --blue:#2F5FD0; --blue-soft:#D9E5FF; --sun:#F2B53A; --sun-soft:#FCEBC4;
+    --good:#0E7D55; --good-soft:#D3F1E3; --bad:#B23A26; --bad-soft:#F8DCD5;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:Lexend,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  svg.i{width:1em;height:1em;fill:currentColor;flex:none}
+  button{font-family:inherit;color:inherit}
+  .bt{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:18px;font-weight:600;background:var(--card);border:2px solid var(--edge);border-radius:12px;padding:12px 18px;cursor:pointer;line-height:1;min-height:52px}
+  .bt .i{font-size:24px}
+  .bt.go{background:var(--blue);border-color:var(--blue);color:#fff}
+  .bt.sun{background:var(--sun);border-color:var(--sun)}
+  .bt.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bt:disabled{opacity:.4;cursor:default}
+
+  /* ---------- menu ---------- */
+  #menu{position:absolute;inset:0;overflow:auto;padding:26px 34px 40px;-webkit-overflow-scrolling:touch}
+  .wrap{max-width:1040px;margin:0 auto}
+  .kick{font-size:14px;font-weight:700;letter-spacing:.14em;color:var(--blue);margin:0 0 6px}
+  h1{margin:0 0 6px;font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+  .sub{margin:0 0 20px;font-size:19px;color:var(--muted);line-height:1.4}
+  h3.step{display:flex;align-items:center;gap:12px;margin:22px 0 10px;font-size:22px;font-weight:700}
+  h3.step b{width:36px;height:36px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:19px}
+  .pairs{display:flex;flex-wrap:wrap;gap:10px}
+  .pr{min-width:64px;min-height:56px;padding:0 14px;font-size:24px;font-weight:700;border-radius:14px;border:2px solid var(--edge);background:var(--card);cursor:pointer}
+  .pr.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .pr.t{font-size:18px}
+  .lv{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .lvc{display:flex;gap:16px;align-items:center;text-align:left;padding:16px 18px;border-radius:18px;border:3px solid var(--edge);background:var(--card);cursor:pointer}
+  .lvc.on{border-color:var(--blue);background:var(--blue-soft)}
+  .lvc .ic{width:64px;height:64px;border-radius:16px;background:var(--sun-soft);display:grid;place-items:center;font-size:36px;flex:none}
+  .lvc b{display:block;font-size:24px}
+  .lvc span{display:block;font-size:16px;color:var(--muted);line-height:1.3;margin-top:3px}
+  .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .act{position:relative;text-align:left;padding:0;border-radius:18px;border:3px solid var(--edge);background:var(--card);cursor:pointer;overflow:hidden;display:flex;flex-direction:column}
+  .act .pv{height:150px;background:#fff;border-bottom:3px solid var(--edge)}
+  .act .pv canvas{width:100%;height:100%;display:block}
+  .act .tx{padding:12px 16px 16px}
+  .act b{display:block;font-size:24px}
+  .act span{display:block;font-size:16px;color:var(--muted);line-height:1.3;margin-top:4px}
+  .act .tick{position:absolute;right:10px;top:10px;font-size:15px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--good);color:#fff;display:none}
+  .act.done .tick{display:block}
+  .act:active{transform:scale(.99)}
+  .saved{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .sv{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:16px;background:var(--card);border:2px solid var(--edge)}
+  .sv canvas{width:112px;height:70px;border-radius:8px;background:#fff;border:2px solid var(--edge);flex:none}
+  .sv b{display:block;font-size:17px}
+  .sv span{display:block;font-size:14px;color:var(--muted)}
+  .sv .r{display:flex;gap:6px;margin-top:6px}
+  .sv .r .bt{min-height:40px;padding:8px 12px;font-size:15px}
+  .none{font-size:17px;color:var(--muted);padding:6px 0}
+  .tiny{font-size:14px;color:var(--muted);line-height:1.4;margin-top:22px}
+
+  /* ---------- editor ---------- */
+  #ed{position:absolute;inset:0;display:grid;grid-template-columns:96px minmax(0,1fr) 300px;grid-template-rows:62px minmax(0,1fr) 128px;gap:0}
+  .bar{grid-column:1 / -1;min-width:0;display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:2px solid var(--edge);background:var(--card)}
+  .bar .ttl{font-size:19px;font-weight:700}
+  .bar .ttl span{color:var(--muted);font-weight:500}
+  .bar .sp{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .bar .st{font-size:15px;color:var(--muted)}
+  .bar .st.err{color:var(--bad)}
+  .tools{grid-column:1;grid-row:2;display:flex;flex-direction:column;gap:8px;padding:10px 8px;overflow:auto;border-right:2px solid var(--edge);background:var(--card)}
+  .tool{width:80px;min-height:62px;border-radius:14px;border:3px solid var(--edge);background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:600;cursor:pointer;padding:4px 2px}
+  .tool .i{font-size:28px}
+  .tool.on{background:var(--sun-soft);border-color:var(--sun)}
+  .tool:disabled{opacity:.35}
+  .sw{width:80px;height:36px;border-radius:10px;border:3px solid var(--edge);cursor:pointer;padding:0}
+  .sw.on{border-color:var(--ink);box-shadow:0 0 0 3px #fff inset}
+  .sizes{display:flex;gap:6px;justify-content:center}
+  .sz{width:24px;height:44px;border-radius:8px;border:3px solid var(--edge);background:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0}
+  .sz i{display:block;border-radius:50%;background:var(--ink)}
+  .sz.on{border-color:var(--ink)}
+  .sepl{height:2px;background:var(--edge);margin:2px 6px}
+  .centre{grid-column:2;grid-row:2;position:relative;min-width:0;min-height:0;display:grid;place-items:center;padding:10px;background:#E9E1D0}
+  #cwrap{position:relative;box-shadow:0 0 0 3px var(--edge),0 24px 50px -30px rgba(27,37,64,.55);background:#fff;touch-action:none}
+  #cwrap canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+  #guide{pointer-events:none}
+  #ink{touch-action:none;cursor:crosshair}
+  .side{grid-column:3;grid-row:2;padding:14px;display:flex;flex-direction:column;gap:12px;border-left:2px solid var(--edge);background:var(--card);overflow:auto}
+  .coach{border-radius:18px;background:var(--blue-soft);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+  .coach .k{font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--blue)}
+  .coach .n{font-size:34px;font-weight:800;line-height:1}
+  .coach .n small{font-size:18px;font-weight:600;color:var(--muted)}
+  .coach p{margin:0;font-size:19px;line-height:1.35;font-weight:500}
+  .coach p.tip{font-size:16px;color:var(--muted)}
+  .prog{display:flex;gap:4px}
+  .prog i{flex:1;height:8px;border-radius:4px;background:#fff}
+  .prog i.on{background:var(--blue)}
+  .prog i.cur{background:var(--sun)}
+  .calc{border-radius:16px;border:2px solid var(--edge);padding:10px 14px;font-size:16px;line-height:1.4}
+  .calc b{font-size:22px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .big{width:100%;font-size:20px;min-height:60px}
+  .strip{grid-column:1 / -1;grid-row:3;display:flex;min-width:0;align-items:stretch;gap:10px;padding:8px 12px;border-top:2px solid var(--edge);background:var(--card)}
+  #thumbs{flex:1;display:flex;gap:8px;overflow-x:auto;align-items:center;padding:4px 2px;-webkit-overflow-scrolling:touch}
+  .th{flex:none;position:relative;width:128px;height:80px;border-radius:10px;border:3px solid var(--edge);background:#fff;cursor:pointer;padding:0;overflow:hidden}
+  .th canvas{width:100%;height:100%;display:block}
+  .th.on{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+  .th b{position:absolute;left:4px;top:3px;font-size:13px;background:rgba(27,37,64,.8);color:#fff;border-radius:6px;padding:1px 6px}
+  .sctl{display:flex;flex-direction:column;gap:6px;justify-content:center;flex:none}
+  .sctl .row{flex-wrap:nowrap}
+  .sctl .bt{min-height:44px;padding:8px 12px;font-size:16px}
+
+  /* playback + dialogs */
+  #play{position:absolute;inset:0;z-index:30;background:rgba(27,37,64,.94);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:14px}
+  #play.on{display:flex}
+  #pcv{max-width:100%;max-height:calc(100% - 150px);border-radius:12px;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+  .pctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;color:#fff}
+  .pctl .lab{font-size:15px;color:#cfd6e6;margin-right:4px}
+  .pctl .bt{min-height:48px}
+  .pinfo{font-size:17px;color:#fff}
+  .speed{display:flex;gap:6px}
+  .speed .bt{min-height:46px;padding:8px 14px;font-size:16px}
+  #dlg{position:absolute;inset:0;z-index:40;background:rgba(27,37,64,.7);display:none;align-items:center;justify-content:center;padding:18px}
+  #dlg.on{display:flex}
+  .card{background:var(--card);border-radius:22px;padding:24px 26px;max-width:560px;width:100%;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:14px}
+  .card h2{margin:0;font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .card p{margin:0;font-size:18px;line-height:1.4;color:var(--muted)}
+  .card img{max-width:100%;border-radius:10px;border:2px solid var(--edge);-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
+  .toast{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:14px;font-size:17px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+  .toast.on{opacity:1}
+
+  @media (max-width:900px){
+    .acts,.saved{grid-template-columns:1fr}
+    .lv{grid-template-columns:1fr}
+  }
+  /* an iPad held upright: tools along the top, the coach under the picture */
+  @media (orientation:portrait){
+    #ed{grid-template-columns:minmax(0,1fr);grid-template-rows:58px auto minmax(0,1fr) auto 112px}
+    .bar{grid-column:1}
+    .tools{grid-column:1;grid-row:2;flex-direction:row;align-items:center;border-right:0;border-bottom:2px solid var(--edge);overflow-x:auto;overflow-y:hidden;padding:8px 10px}
+    .tool{width:68px;min-height:62px;flex:none}
+    .sw{width:44px;height:44px;flex:none;border-radius:50%}
+    .sizes{flex:none}
+    .sepl{width:2px;height:44px;margin:0 4px;flex:none}
+    .centre{grid-column:1;grid-row:3}
+    .side{grid-column:1;grid-row:4;border-left:0;border-top:2px solid var(--edge);flex-direction:row;flex-wrap:wrap;align-items:stretch;align-content:flex-start;padding:8px 12px;max-height:220px;overflow:auto}
+    .side .coach{flex:1 1 340px;min-width:0;padding:10px 14px}
+    .coach .n{font-size:26px}
+    .coach p{font-size:17px}
+    .coach p.tip{font-size:14px}
+    .side .big{width:auto;flex:0 0 190px;min-height:54px;font-size:18px}
+    .side .calc{flex:0 0 auto}
+    .strip{grid-column:1;grid-row:5}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ MENU ============ -->
+<div id="menu">
+  <div class="wrap">
+    <p class="kick">YEAR 3 AND 4 &middot; ANIMATION</p>
+    <h1>Draw an animation</h1>
+    <p class="sub">Draw one frame, add the next, and play them fast. The app shows your last frame in grey so you can see how far to move things.</p>
+
+    <h3 class="step"><b>1</b>Which pair are you?</h3>
+    <div class="pairs" id="pairs"></div>
+
+    <h3 class="step"><b>2</b>Easy or hard?</h3>
+    <div class="lv">
+      <button class="lvc on" type="button" data-l="easy"><span class="ic" data-ph="eye"></span><div><b>Easy</b><span>A faint marker shows where to draw each frame, as well as your grey last frame.</span></div></button>
+      <button class="lvc" type="button" data-l="hard"><span class="ic" data-ph="lightbulb"></span><div><b>Hard</b><span>No markers. Only your grey last frame, so you judge the gaps yourself.</span></div></button>
+    </div>
+
+    <h3 class="step"><b>3</b>What will you draw?</h3>
+    <div class="acts">
+      <button class="act" type="button" data-k="ball"><div class="pv"><canvas width="320" height="200"></canvas></div><div class="tx"><b>Bouncing ball</b><span>A guided animation. 12 frames, then you can play it.</span></div><i class="tick">Saved</i></button>
+      <button class="act" type="button" data-k="ufo"><div class="pv"><canvas width="320" height="200"></canvas></div><div class="tx"><b>UFO visit</b><span>A guided animation. 12 frames, with a tractor beam.</span></div><i class="tick">Saved</i></button>
+      <button class="act" type="button" data-k="free"><div class="pv"><canvas width="320" height="200"></canvas></div><div class="tx"><b>Your own idea</b><span>No guide. You choose the story and how many frames.</span></div><i class="tick">Saved</i></button>
+    </div>
+
+    <h3 class="step">Saved on this iPad</h3>
+    <div class="saved" id="saved"></div>
+    <p class="tiny">Your frames stay on this iPad, under your pair number, so you can carry on in the next lesson. Use the same iPad and the same pair number.</p>
+  </div>
+</div>
+
+<!-- ============ EDITOR ============ -->
+<div id="ed" hidden>
+  <div class="bar">
+    <button class="bt" id="home" type="button"><span data-ph="arrow-left"></span>Menu</button>
+    <div class="ttl" id="ttl"></div>
+    <div class="sp"><span class="st" id="st"></span><button class="bt" id="ghost" type="button"><span data-ph="eye"></span><span id="ghostlab">Grey frame on</span></button></div>
+  </div>
+  <div class="tools" id="tools"></div>
+  <div class="centre" id="centre">
+    <div id="cwrap">
+      <canvas id="bg" width="960" height="600"></canvas>
+      <canvas id="onion" width="960" height="600"></canvas>
+      <canvas id="ink" width="960" height="600"></canvas>
+      <canvas id="guide" width="960" height="600"></canvas>
+    </div>
+  </div>
+  <div class="side" id="side"></div>
+  <div class="strip">
+    <div id="thumbs"></div>
+    <div class="sctl">
+      <div class="row"><button class="bt" id="addf" type="button"><span data-ph="plus"></span>New frame</button><button class="bt" id="dupf" type="button"><span id="dupic"></span>Copy</button></div>
+      <div class="row"><button class="bt" id="delf" type="button"><span id="delic"></span>Delete</button><button class="bt go" id="playb" type="button"><span data-ph="play"></span>Play</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PLAYBACK ============ -->
+<div id="play">
+  <canvas id="pcv" width="960" height="600"></canvas>
+  <div class="pinfo" id="pinfo"></div>
+  <div class="pctl">
+    <span class="lab">Speed</span>
+    <div class="speed" id="speed"></div>
+    <button class="bt" id="ploop" type="button"><span data-ph="repeat"></span>Loop on</button>
+    <button class="bt sun" id="pclose" type="button"><span data-ph="x"></span>Close</button>
+  </div>
+</div>
+
+<div id="dlg"><div class="card" id="card"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var PH = {"pencil-simple": "<path d=\"M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z\"/>", "eraser": "<path d=\"M225,80.4,183.6,39a24,24,0,0,0-33.94,0L31,157.66a24,24,0,0,0,0,33.94l30.06,30.06A8,8,0,0,0,66.74,224H216a8,8,0,0,0,0-16h-84.7L225,114.34A24,24,0,0,0,225,80.4ZM108.68,208H70.05L42.33,180.28a8,8,0,0,1,0-11.31L96,115.31,148.69,168Zm105-105L160,156.69,107.31,104,161,50.34a8,8,0,0,1,11.32,0l41.38,41.38a8,8,0,0,1,0,11.31Z\"/>", "arrow-counter-clockwise": "<path d=\"M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z\"/>", "plus": "<path d=\"M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z\"/>", "play": "<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>", "repeat": "M24,128A72.08,72.08,0,0,1,96,56H204.69L194.34,45.66a8,8,0,0,1,11.32-11.32l24,24a8,8,0,0,1,0,11.32l-24,24a8,8,0,0,1-11.32-11.32L204.69,72H96a56.06,56.06,0,0,0-56,56,8,8,0,0,1-16,0Zm200-8a8,8,0,0,0-8,8,56.06,56.06,0,0,1-56,56H51.31l10.35-10.34a8,8,0,0,0-11.32-11.32l-24,24a8,8,0,0,0,0,11.32l24,24a8,8,0,0,0,11.32-11.32L51.31,200H160a72.08,72.08,0,0,0,72-72A8,8,0,0,0,224,120Z", "x": "<path d=\"M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z\"/>", "check": "<path d=\"M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z\"/>", "eye": "<path d=\"M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z\"/>", "lightbulb": "<path d=\"M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.65,71.65,0,0,0,27.64,56.3A32,32,0,0,1,96,186v6h64v-6a32.15,32.15,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Zm-16.11-9.34a57.6,57.6,0,0,0-46.56-46.55,8,8,0,0,0-2.66,15.78c16.57,2.79,30.63,16.85,33.44,33.45A8,8,0,0,0,176,104a9,9,0,0,0,1.35-.11A8,8,0,0,0,183.89,94.66Z\"/>", "arrow-left": "<path d=\"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z\"/>", "arrow-right": "<path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/>", "film-strip": "<path d=\"M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z\"/>", "floppy-disk": "<path d=\"M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z\"/>"};
+  var EXTRA = {
+    trash:'<g fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><path d="M40 64h176M104 36h48M64 64l12 156h104l12-156M108 104v76M148 104v76"/></g>',
+    copy:'<g fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><rect x="88" y="88" width="128" height="128" rx="14"/><path d="M168 88V56a14 14 0 0 0-14-14H56a14 14 0 0 0-14 14v98a14 14 0 0 0 14 14h32"/></g>',
+    download:'<g fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><path d="M128 40v120M84 118l44 44 44-44M40 168v32a8 8 0 0 0 8 8h160a8 8 0 0 0 8-8v-32"/></g>',
+    stop:'<rect x="56" y="56" width="144" height="144" rx="16"/>',
+    marker:'<g fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="128" cy="128" rx="84" ry="84" stroke-dasharray="22 22"/></g>'
+  };
+  function ph(n){ return '<svg class="i" viewBox="0 0 256 256" aria-hidden="true">' + (EXTRA[n] || PH[n] || '') + '</svg>'; }
+  function $(id){ return document.getElementById(id); }
+  function inject(root){ [].forEach.call((root || document).querySelectorAll('[data-ph]'), function(e){ if(!e.firstChild) e.insertAdjacentHTML('afterbegin', ph(e.getAttribute('data-ph'))); }); }
+  inject();
+  $('dupic').innerHTML = ph('copy'); $('delic').innerHTML = ph('trash');
+
+  var W = 960, H = 600, MAXF = 40;
+  var COLOURS = ['#1B2540','#E23B2E','#F28A1E','#F7D024','#2E9E4F','#2F6BE0','#7B4BC9','#C9D2E0','#EE6FA6','#FFFFFF'];
+  var SIZES = [6, 14, 28];
+
+  /* ---------- backgrounds ---------- */
+  function bgDraw(cx, name){
+    cx.clearRect(0, 0, W, H);
+    if(name === 'ball'){
+      cx.fillStyle = '#CFE6F7'; cx.fillRect(0, 0, W, 500);
+      cx.fillStyle = '#FFE27A'; cx.beginPath(); cx.arc(860, 80, 46, 0, 7); cx.fill();
+      cx.fillStyle = '#8CCB7A'; cx.fillRect(0, 500, W, 100);
+      cx.fillStyle = '#6FB35E'; cx.fillRect(0, 500, W, 8);
+    } else if(name === 'ufo'){
+      cx.fillStyle = '#16204A'; cx.fillRect(0, 0, W, H);
+      cx.fillStyle = '#fff';
+      [[70,60],[180,160],[300,50],[420,120],[540,40],[700,90],[800,170],[900,50],[120,260],[250,300],[880,300],[60,380]].forEach(function(s){ cx.beginPath(); cx.arc(s[0], s[1], 2.5, 0, 7); cx.fill(); });
+      cx.fillStyle = '#26763F'; cx.beginPath(); cx.moveTo(0, 600); cx.lineTo(0, 520); cx.quadraticCurveTo(200, 440, 420, 520); cx.quadraticCurveTo(620, 470, 960, 530); cx.lineTo(960, 600); cx.fill();
+      cx.fillStyle = '#1D5E31'; cx.fillRect(0, 556, W, 44);
+    } else if(name === 'sea'){
+      cx.fillStyle = '#CFE6F7'; cx.fillRect(0, 0, W, 330);
+      cx.fillStyle = '#4A9AD8'; cx.fillRect(0, 330, W, 270);
+      cx.strokeStyle = '#fff'; cx.lineWidth = 4; cx.lineCap = 'round';
+      for(var i = 0; i < 9; i++){ var x = 60 + i * 110, y = 400 + (i % 3) * 60; cx.beginPath(); cx.moveTo(x, y); cx.quadraticCurveTo(x + 20, y - 14, x + 40, y); cx.quadraticCurveTo(x + 60, y + 14, x + 80, y); cx.stroke(); }
+    } else if(name === 'night'){
+      cx.fillStyle = '#16204A'; cx.fillRect(0, 0, W, H);
+      cx.fillStyle = '#fff';
+      [[70,60],[180,160],[300,50],[420,120],[540,40],[700,90],[800,170],[900,50],[120,260],[250,300],[880,300]].forEach(function(s){ cx.beginPath(); cx.arc(s[0], s[1], 2.5, 0, 7); cx.fill(); });
+    } else if(name === 'sky'){
+      cx.fillStyle = '#CFE6F7'; cx.fillRect(0, 0, W, 500);
+      cx.fillStyle = '#8CCB7A'; cx.fillRect(0, 500, W, 100);
+    } else { cx.fillStyle = '#fff'; cx.fillRect(0, 0, W, H); }
+  }
+
+  /* ---------- the two guided animations ---------- */
+  // a ball, marked by its centre and its two radii
+  function ballStep(x, y, rx, ry, say, tip){ return { m:{ t:'ball', x:x, y:y, rx:rx, ry:ry }, say:say, tip:tip || '' }; }
+  var TUT = {
+    ball: { title:'Bouncing ball', bg:'ball', fps:10, steps:[
+      ballStep(150, 90, 46, 46, 'Draw a ball at the top. Colour it in.', 'Make it about this big. Keep it the same size all the way down.'),
+      ballStep(215, 108, 46, 46, 'Draw it again, a little lower and to the right.', 'Look at the grey ball. Move only a tiny bit. At the top it falls slowly.'),
+      ballStep(280, 158, 46, 46, 'Draw it again. Move it a bit further this time.'),
+      ballStep(345, 245, 46, 46, 'The ball is getting faster, so the gap gets bigger.'),
+      ballStep(410, 355, 46, 46, 'Bigger gap again. It is falling fast now.'),
+      ballStep(475, 445, 46, 46, 'Nearly at the floor. Keep the gap big.'),
+      ballStep(525, 466, 62, 34, 'It hits the floor and squashes flat. Draw it wide and short.', 'The bottom of the ball touches the green line.'),
+      ballStep(575, 438, 40, 54, 'It springs back up, stretched tall and thin.'),
+      ballStep(625, 350, 46, 46, 'Back to its normal shape, going up fast.'),
+      ballStep(680, 262, 46, 46, 'It is slowing down as it goes up, so the gaps get smaller.'),
+      ballStep(735, 195, 46, 46, 'Smaller gap. Nearly at the top of the bounce.'),
+      ballStep(790, 160, 46, 46, 'The top of the bounce. It is lower than where you started.', 'Each bounce is a bit lower than the last one.')
+    ]},
+    ufo: { title:'UFO visit', bg:'ufo', fps:8, steps:[
+      { m:{ t:'ufo', x:90, y:120 }, say:'Draw a UFO at the left of the sky. Saucer on the bottom, dome on top.', tip:'Keep the same size and shape in every frame.' },
+      { m:{ t:'ufo', x:200, y:136 }, say:'Draw it again, further right. It bobs down a little as it flies.' },
+      { m:{ t:'ufo', x:330, y:120 }, say:'Right again, and bob back up.' },
+      { m:{ t:'ufo', x:455, y:136 }, say:'Right and down again. The gaps are all about the same: steady flying.' },
+      { m:{ t:'ufo', x:555, y:150 }, say:'It starts to slow down, so the gap is smaller.' },
+      { m:{ t:'ufo', x:605, y:152 }, say:'Almost stopped. A tiny gap.' },
+      { m:{ t:'ufo', x:612, y:148 }, say:'It hovers. Add a short beam of light under it.', tip:'The beam is a triangle that gets wider as it goes down.', b:70 },
+      { m:{ t:'ufo', x:612, y:148 }, say:'Make the beam longer.', b:190 },
+      { m:{ t:'ufo', x:612, y:148 }, say:'The beam reaches the ground.', b:380 },
+      { m:{ t:'ufo', x:628, y:138 }, say:'The beam goes off. The UFO starts to move away.', tip:'Keep the ground and the hills. They are in the picture already.' },
+      { m:{ t:'ufo', x:720, y:100 }, say:'It speeds up and goes up and to the right.' },
+      { m:{ t:'ufo', x:860, y:40 }, say:'Zoom. A big gap, because it is going very fast.' }
+    ]},
+    free: { title:'Your own animation', bg:'white', steps:null }
+  };
+
+  /* ---------- state ---------- */
+  var S = { pair:null, level:'easy', kind:null, bg:'white', frames:[], cur:0, fps:8, tool:'pen', col:0, size:1, ghost:true, loop:true, dirty:false };
+  var CTX = { ink:$('ink').getContext('2d', { willReadFrequently:true }), onion:$('onion').getContext('2d'), guide:$('guide').getContext('2d'), bg:$('bg').getContext('2d') };
+  function newFrame(){ var c = document.createElement('canvas'); c.width = W; c.height = H; return { c:c, undo:[] }; }
+  function blank(f){ var d = f.c.getContext('2d').getImageData(0, 0, W, H).data, n = 0; for(var i = 3; i < d.length; i += 4 * 61) if(d[i] > 30 && ++n > 3) return false; return true; }
+  function toast(t){ var el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(function(){ el.classList.remove('on'); }, 2400); }
+
+  /* ---------- saving: IndexedDB, so a lot of frames fit ---------- */
+  var DB = null, memory = {};
+  function openDB(){
+    return new Promise(function(res){
+      try{
+        var r = indexedDB.open('hbanim', 1);
+        r.onupgradeneeded = function(){ r.result.createObjectStore('a', { keyPath:'id' }); };
+        r.onsuccess = function(){ DB = r.result; res(); };
+        r.onerror = function(){ res(); };
+        r.onblocked = function(){ res(); };
+      }catch(e){ res(); }
+    });
+  }
+  function dbPut(rec){
+    memory[rec.id] = rec;
+    return new Promise(function(res){
+      if(!DB){ res(false); return; }
+      try{ var tx = DB.transaction('a', 'readwrite'); tx.objectStore('a').put(rec); tx.oncomplete = function(){ res(true); }; tx.onerror = tx.onabort = function(){ res(false); }; }catch(e){ res(false); }
+    });
+  }
+  function dbAll(){
+    return new Promise(function(res){
+      if(!DB){ res(Object.keys(memory).map(function(k){ return memory[k]; })); return; }
+      try{ var q = DB.transaction('a').objectStore('a').getAll(); q.onsuccess = function(){ res(q.result || []); }; q.onerror = function(){ res([]); }; }catch(e){ res([]); }
+    });
+  }
+  function dbDel(id){ delete memory[id]; if(!DB) return; try{ DB.transaction('a', 'readwrite').objectStore('a').delete(id); }catch(e){} }
+  function recId(){ return S.pair + '|' + S.kind; }
+  var saveT = null;
+  function markDirty(){ S.dirty = true; $('st').textContent = 'Saving...'; $('st').classList.remove('err'); clearTimeout(saveT); saveT = setTimeout(save, 700); }
+  function commit(){ var f = S.frames[S.cur]; if(!f) return; var cx = f.c.getContext('2d'); cx.clearRect(0, 0, W, H); cx.drawImage($('ink'), 0, 0); }
+  function save(){
+    if(!S.frames.length) return Promise.resolve();
+    commit();
+    var rec = { id:recId(), pair:S.pair, kind:S.kind, level:S.level, bg:S.bg, fps:S.fps, ts:Date.now(), frames:S.frames.map(function(f){ return f.c.toDataURL('image/png'); }) };
+    return dbPut(rec).then(function(ok){
+      S.dirty = false;
+      $('st').textContent = ok ? 'Saved on this iPad' : 'Could not save here';
+      $('st').classList.toggle('err', !ok);
+    });
+  }
+
+  /* ---------- menu ---------- */
+  var PAIRS = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','Demo'];
+  S.pair = (function(){ try{ return localStorage.getItem('hbanim:pair') || null; }catch(e){ return null; } })();
+  function buildPairs(){
+    $('pairs').innerHTML = PAIRS.map(function(p){ return '<button class="pr' + (p === 'Demo' ? ' t' : '') + (S.pair === p ? ' on' : '') + '" type="button" data-p="' + p + '">' + p + '</button>'; }).join('');
+    [].forEach.call($('pairs').children, function(b){ b.addEventListener('click', function(){ S.pair = b.getAttribute('data-p'); try{ localStorage.setItem('hbanim:pair', S.pair); }catch(e){} buildPairs(); refreshSaved(); }); });
+  }
+  [].forEach.call(document.querySelectorAll('.lvc'), function(b){ b.addEventListener('click', function(){ S.level = b.getAttribute('data-l'); [].forEach.call(document.querySelectorAll('.lvc'), function(o){ o.classList.toggle('on', o === b); }); }); });
+
+  // small previews on the activity cards
+  function previewDraw(){
+    [].forEach.call(document.querySelectorAll('.act'), function(a){
+      var k = a.getAttribute('data-k'), cv = a.querySelector('canvas'), cx = cv.getContext('2d'), t = TUT[k];
+      var big = document.createElement('canvas'); big.width = W; big.height = H;
+      var bc = big.getContext('2d'); bgDraw(bc, t.bg);
+      if(k === 'ball'){ bc.fillStyle = '#E23B2E'; [[150,90],[345,245],[525,466],[790,160]].forEach(function(p, i){ bc.globalAlpha = .35 + i * .2; bc.beginPath(); bc.ellipse(p[0], p[1], i === 2 ? 62 : 46, i === 2 ? 34 : 46, 0, 0, 7); bc.fill(); }); bc.globalAlpha = 1; }
+      if(k === 'ufo'){ [[120,120],[330,125],[612,148],[860,40]].forEach(function(p, i){ bc.globalAlpha = .4 + i * .2; drawUfo(bc, p[0], p[1], '#C9D2E0', '#7FD6E8'); }); bc.globalAlpha = 1; }
+      if(k === 'free'){ bc.strokeStyle = '#2F6BE0'; bc.lineWidth = 14; bc.lineCap = 'round'; bc.beginPath(); bc.moveTo(120, 420); bc.bezierCurveTo(300, 100, 560, 520, 840, 180); bc.stroke(); bc.fillStyle = '#F7D024'; bc.beginPath(); bc.arc(780, 140, 60, 0, 7); bc.fill(); }
+      cx.drawImage(big, 0, 0, cv.width, cv.height);
+    });
+  }
+  function drawUfo(cx, x, y, body, dome){
+    cx.save(); cx.translate(x, y);
+    cx.fillStyle = dome; cx.beginPath(); cx.ellipse(0, -18, 44, 36, 0, Math.PI, 0); cx.fill();
+    cx.fillStyle = body; cx.beginPath(); cx.ellipse(0, 6, 92, 28, 0, 0, 7); cx.fill();
+    cx.restore();
+  }
+  function refreshSaved(){
+    dbAll().then(function(rows){
+      rows = rows.filter(function(r){ return r.pair === S.pair; });
+      [].forEach.call(document.querySelectorAll('.act'), function(a){ a.classList.toggle('done', rows.some(function(r){ return r.kind === a.getAttribute('data-k') && r.frames.length > 1; })); });
+      var box = $('saved');
+      if(!S.pair){ box.innerHTML = '<div class="none">Pick your pair number first.</div>'; return; }
+      if(!rows.length){ box.innerHTML = '<div class="none">Nothing saved yet for pair ' + S.pair + '.</div>'; return; }
+      var names = { ball:'Bouncing ball', ufo:'UFO visit', free:'Your own idea' };
+      box.innerHTML = rows.map(function(r, i){ return '<div class="sv"><canvas width="224" height="140"></canvas><div><b>' + names[r.kind] + '</b><span>' + r.frames.length + ' frames</span><div class="r"><button class="bt" data-o="' + i + '" type="button">Open</button><button class="bt" data-g="' + i + '" type="button"><span data-ph="download"></span>GIF</button></div></div></div>'; }).join('');
+      inject(box);
+      [].forEach.call(box.querySelectorAll('.sv'), function(el, i){
+        var r = rows[i], im = new Image();
+        im.onload = function(){ var cx = el.querySelector('canvas').getContext('2d'), t = document.createElement('canvas'); t.width = W; t.height = H; var tc = t.getContext('2d'); bgDraw(tc, r.bg); tc.drawImage(im, 0, 0); cx.drawImage(t, 0, 0, 224, 140); };
+        im.src = r.frames[0];
+        el.querySelector('[data-o]').addEventListener('click', function(){ openAnim(r.kind, r); });
+        el.querySelector('[data-g]').addEventListener('click', function(){ loadFrames(r).then(function(fr){ exportFromRecord(r, fr); }); });
+      });
+    });
+  }
+  [].forEach.call(document.querySelectorAll('.act'), function(a){
+    a.addEventListener('click', function(){
+      if(!S.pair){ toast('Pick your pair number first'); $('menu').scrollTo(0, 0); return; }
+      var k = a.getAttribute('data-k');
+      dbAll().then(function(rows){ var r = rows.filter(function(x){ return x.id === S.pair + '|' + k; })[0]; openAnim(k, r || null); });
+    });
+  });
+
+  function loadFrames(rec){
+    return Promise.all(rec.frames.map(function(u){ return new Promise(function(res){ var im = new Image(); im.onload = function(){ var f = newFrame(); f.c.getContext('2d').drawImage(im, 0, 0); res(f); }; im.onerror = function(){ res(newFrame()); }; im.src = u; }); }));
+  }
+
+  /* ---------- the editor ---------- */
+  function openAnim(kind, rec){
+    S.kind = kind; var t = TUT[kind];
+    S.bg = rec ? rec.bg : t.bg; S.fps = rec ? rec.fps : (t.fps || 8);
+    if(rec) S.level = rec.level || S.level;
+    var go = function(frames){
+      S.frames = frames && frames.length ? frames : [newFrame()];
+      S.cur = 0; S.tool = 'pen'; S.dirty = false; S.col = (S.bg === 'ufo' || S.bg === 'night') ? 7 : (S.bg === 'ball' ? 1 : 0);
+      if(t.steps) S.cur = Math.min(S.frames.length - 1, Math.max(0, S.frames.length - (blank(S.frames[S.frames.length - 1]) ? 1 : 0)));
+      $('menu').hidden = true; $('ed').hidden = false;
+      buildTools(); buildSide(); layout(); bgDraw(CTX.bg, S.bg); showFrame(S.cur, true); buildThumbs();
+      $('st').textContent = rec ? 'Saved on this iPad' : '';
+      $('ttl').innerHTML = t.title + ' <span>&middot; pair ' + S.pair + (t.steps ? ' &middot; ' + S.level : '') + '</span>';
+    };
+    if(rec) loadFrames(rec).then(go); else go(null);
+  }
+  $('home').addEventListener('click', function(){
+    var done = function(){ $('ed').hidden = true; $('menu').hidden = false; refreshSaved(); };
+    if(S.frames.length && !(S.frames.length === 1 && blank(S.frames[0]))) save().then(done); else done();
+  });
+
+  function layout(){
+    var c = $('centre'), r = c.getBoundingClientRect(), pw = r.width - 20, ph2 = r.height - 20, s = Math.min(pw / W, ph2 / H);
+    var w = Math.floor(W * s), h = Math.floor(H * s), cw = $('cwrap'); cw.style.width = w + 'px'; cw.style.height = h + 'px';
+  }
+  addEventListener('resize', function(){ if(!$('ed').hidden) layout(); });
+
+  function buildTools(){
+    var h = '<button class="tool on" data-t="pen" type="button">' + ph('pencil-simple') + 'Pen</button><button class="tool" data-t="rub" type="button">' + ph('eraser') + 'Rubber</button><button class="tool" id="undo" type="button">' + ph('arrow-counter-clockwise') + 'Undo</button><div class="sepl"></div><div class="sizes">' +
+      SIZES.map(function(s, i){ return '<button class="sz' + (i === S.size ? ' on' : '') + '" data-z="' + i + '" type="button"><i style="width:' + (6 + i * 5) + 'px;height:' + (6 + i * 5) + 'px"></i></button>'; }).join('') + '</div><div class="sepl"></div>' +
+      COLOURS.map(function(c, i){ return '<button class="sw' + (i === S.col ? ' on' : '') + '" data-c="' + i + '" type="button" aria-label="colour ' + (i + 1) + '" style="background:' + c + '"></button>'; }).join('');
+    $('tools').innerHTML = h;
+    [].forEach.call($('tools').querySelectorAll('[data-t]'), function(b){ b.addEventListener('click', function(){ S.tool = b.getAttribute('data-t'); [].forEach.call($('tools').querySelectorAll('[data-t]'), function(o){ o.classList.toggle('on', o === b); }); }); });
+    [].forEach.call($('tools').querySelectorAll('[data-z]'), function(b){ b.addEventListener('click', function(){ S.size = +b.getAttribute('data-z'); [].forEach.call($('tools').querySelectorAll('[data-z]'), function(o){ o.classList.toggle('on', o === b); }); }); });
+    [].forEach.call($('tools').querySelectorAll('[data-c]'), function(b){ b.addEventListener('click', function(){ S.col = +b.getAttribute('data-c'); S.tool = 'pen'; [].forEach.call($('tools').querySelectorAll('[data-c]'), function(o){ o.classList.toggle('on', o === b); }); [].forEach.call($('tools').querySelectorAll('[data-t]'), function(o){ o.classList.toggle('on', o.getAttribute('data-t') === 'pen'); }); }); });
+    $('undo').addEventListener('click', undo);
+  }
+
+  /* drawing: one finger at a time, so a resting palm cannot scribble */
+  var ink = $('ink'), pid = null, last = null;
+  function pos(e){ var r = ink.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; }
+  function seg(a, b){
+    var cx = CTX.ink; cx.save();
+    cx.lineCap = 'round'; cx.lineJoin = 'round'; cx.lineWidth = S.tool === 'rub' ? 46 : SIZES[S.size];
+    if(S.tool === 'rub') cx.globalCompositeOperation = 'destination-out'; else cx.strokeStyle = cx.fillStyle = COLOURS[S.col];
+    cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0] + .01, b[1]); cx.stroke(); cx.restore();
+  }
+  ink.addEventListener('pointerdown', function(e){
+    if(pid !== null) return; e.preventDefault(); pid = e.pointerId; try{ ink.setPointerCapture(pid); }catch(x){}
+    var f = S.frames[S.cur]; f.undo.push(CTX.ink.getImageData(0, 0, W, H)); if(f.undo.length > 12) f.undo.shift();
+    last = pos(e); seg(last, last);
+  });
+  ink.addEventListener('pointermove', function(e){
+    if(e.pointerId !== pid) return;
+    var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if(!evs.length) evs = [e];
+    evs.forEach(function(ev){ var p = pos(ev); seg(last, p); last = p; });
+  });
+  function up(e){ if(e.pointerId !== pid) return; pid = null; last = null; commit(); updateThumb(S.cur); markDirty(); refreshSide(); }
+  ink.addEventListener('pointerup', up); ink.addEventListener('pointercancel', up);
+  function undo(){
+    var f = S.frames[S.cur]; if(!f || !f.undo.length) return;
+    CTX.ink.putImageData(f.undo.pop(), 0, 0); commit(); updateThumb(S.cur); markDirty(); refreshSide();
+  }
+
+  /* showing a frame: its ink, the grey ghost of the one before, and (easy mode) the marker */
+  function showFrame(i, first){
+    if(!first) commit();
+    S.cur = Math.max(0, Math.min(S.frames.length - 1, i));
+    CTX.ink.clearRect(0, 0, W, H); CTX.ink.drawImage(S.frames[S.cur].c, 0, 0);
+    drawOnion(); drawGuide(); refreshThumbs(); refreshSide();
+  }
+  function drawOnion(){
+    var cx = CTX.onion; cx.clearRect(0, 0, W, H);
+    if(!S.ghost || S.cur === 0) return;
+    var t = document.createElement('canvas'); t.width = W; t.height = H; var tc = t.getContext('2d');
+    tc.drawImage(S.frames[S.cur - 1].c, 0, 0);
+    tc.globalCompositeOperation = 'source-in'; tc.fillStyle = '#6B7280'; tc.fillRect(0, 0, W, H);   // flat grey copy of the last frame
+    cx.globalAlpha = .45; cx.drawImage(t, 0, 0); cx.globalAlpha = 1;
+  }
+  function drawGuide(){
+    var cx = CTX.guide; cx.clearRect(0, 0, W, H);
+    var t = TUT[S.kind]; if(!t.steps || S.level !== 'easy') return;
+    var st = t.steps[S.cur]; if(!st) return;
+    cx.save(); cx.setLineDash([12, 10]); cx.lineWidth = 4; cx.lineCap = 'round'; cx.strokeStyle = 'rgba(47,95,208,.75)'; cx.fillStyle = 'rgba(47,95,208,.08)';
+    var m = st.m;
+    if(m.t === 'ball'){ cx.beginPath(); cx.ellipse(m.x, m.y, m.rx, m.ry, 0, 0, 7); cx.fill(); cx.stroke(); }
+    else {
+      cx.beginPath(); cx.ellipse(m.x, m.y - 18, 44, 36, 0, Math.PI, 0); cx.fill(); cx.stroke();
+      cx.beginPath(); cx.ellipse(m.x, m.y + 6, 92, 28, 0, 0, 7); cx.fill(); cx.stroke();
+      if(st.b){ cx.beginPath(); cx.moveTo(m.x - 40, m.y + 30); cx.lineTo(m.x + 40, m.y + 30); cx.lineTo(m.x + 40 + st.b * .32, m.y + 30 + st.b); cx.lineTo(m.x - 40 - st.b * .32, m.y + 30 + st.b); cx.closePath(); cx.fill(); cx.stroke(); }
+    }
+    cx.restore();
+  }
+  $('ghost').addEventListener('click', function(){ S.ghost = !S.ghost; $('ghostlab').textContent = S.ghost ? 'Grey frame on' : 'Grey frame off'; drawOnion(); });
+
+  /* ---------- filmstrip ---------- */
+  function composite(f, w, h){ var c = document.createElement('canvas'); c.width = w; c.height = h; var cx = c.getContext('2d'); var b = document.createElement('canvas'); b.width = W; b.height = H; bgDraw(b.getContext('2d'), S.bg); cx.drawImage(b, 0, 0, w, h); cx.drawImage(f.c, 0, 0, w, h); return c; }
+  function buildThumbs(){
+    var box = $('thumbs'); box.innerHTML = '';
+    S.frames.forEach(function(f, i){
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'th'; b.innerHTML = '<canvas width="256" height="160"></canvas><b>' + (i + 1) + '</b>';
+      b.addEventListener('click', function(){ showFrame(i); }); box.appendChild(b);
+    });
+    S.frames.forEach(function(f, i){ updateThumb(i); });
+    refreshThumbs();
+  }
+  function updateThumb(i){
+    var b = $('thumbs').children[i]; if(!b) return;
+    if(i === S.cur) commit();
+    var cx = b.querySelector('canvas').getContext('2d'); cx.clearRect(0, 0, 256, 160); cx.drawImage(composite(S.frames[i], 256, 160), 0, 0);
+  }
+  function refreshThumbs(){
+    [].forEach.call($('thumbs').children, function(b, i){ b.classList.toggle('on', i === S.cur); });
+    var on = $('thumbs').children[S.cur]; if(on && on.scrollIntoView) { var t = $('thumbs'); t.scrollLeft = Math.max(0, on.offsetLeft - t.clientWidth / 2 + 64); }
+    $('dupf').disabled = !!TUT[S.kind].steps; $('delf').disabled = S.frames.length < 2 || !!TUT[S.kind].steps; $('dupf').style.display = $('delf').style.display = TUT[S.kind].steps ? 'none' : '';
+    $('addf').style.display = TUT[S.kind].steps ? 'none' : '';
+  }
+  $('addf').addEventListener('click', function(){ if(S.frames.length >= MAXF){ toast('That is the most frames this app holds: ' + MAXF); return; } commit(); S.frames.splice(S.cur + 1, 0, newFrame()); buildThumbs(); showFrame(S.cur + 1, true); markDirty(); });
+  $('dupf').addEventListener('click', function(){ if(S.frames.length >= MAXF){ toast('That is the most frames this app holds: ' + MAXF); return; } commit(); var n = newFrame(); n.c.getContext('2d').drawImage(S.frames[S.cur].c, 0, 0); S.frames.splice(S.cur + 1, 0, n); buildThumbs(); showFrame(S.cur + 1, true); markDirty(); });
+  $('delf').addEventListener('click', function(){
+    if(S.frames.length < 2) return;
+    ask('Delete frame ' + (S.cur + 1) + '?', 'It cannot be brought back.', [['Delete it', 'sun', function(){ S.frames.splice(S.cur, 1); var c = Math.min(S.cur, S.frames.length - 1); buildThumbs(); showFrame(c, true); markDirty(); }], ['Keep it', '', null]]);
+  });
+
+  /* ---------- the side panel: coach for the guided ones, tips for free draw ---------- */
+  function buildSide(){ refreshSide(); }
+  function refreshSide(){
+    var t = TUT[S.kind], side = $('side');
+    if(!t.steps){
+      var n = S.frames.length, fps = S.fps, sec = n / fps;
+      side.innerHTML = '<div class="coach"><div class="k">YOUR OWN ANIMATION</div><div class="n">' + n + ' <small>frame' + (n === 1 ? '' : 's') + '</small></div><p>Draw something, press <b>New frame</b>, then move it a little. Do that again and again.</p><p class="tip">Look at the grey frame to judge how far to move.</p></div>' +
+        '<div class="calc"><b>' + (Math.round(sec * 10) / 10) + ' seconds</b><br>' + n + ' frames at ' + fps + ' a second.</div>' +
+        '<div class="row" id="bgrow"></div>' +
+        '<button class="bt go big" id="sPlay" type="button"><span data-ph="play"></span>Play it</button><button class="bt big" id="sDown" type="button"><span data-ph="download"></span>Save and download</button>';
+      var bgs = [['white','White'],['sky','Sky'],['sea','Sea'],['night','Night']];
+      $('bgrow').innerHTML = '<div style="width:100%;font-size:14px;color:var(--muted);font-weight:600">Background</div>' + bgs.map(function(b){ return '<button class="bt' + (S.bg === b[0] ? ' on' : '') + '" data-bg="' + b[0] + '" type="button" style="min-height:44px;padding:8px 14px;font-size:16px">' + b[1] + '</button>'; }).join('');
+      [].forEach.call($('bgrow').querySelectorAll('[data-bg]'), function(b){ b.addEventListener('click', function(){ S.bg = b.getAttribute('data-bg'); bgDraw(CTX.bg, S.bg); buildThumbs(); markDirty(); refreshSide(); }); });
+    } else {
+      var N = t.steps.length, i = S.cur, st = t.steps[i], filled = S.frames.length, haveInk = !blank(S.frames[i]);
+      var prog = ''; for(var k = 0; k < N; k++) prog += '<i class="' + (k === i ? 'cur' : (k < filled && !blank(S.frames[k]) ? 'on' : '')) + '"></i>';
+      var last = i === N - 1;
+      side.innerHTML = '<div class="coach"><div class="k">' + t.title.toUpperCase() + '</div><div class="n">Frame ' + (i + 1) + ' <small>of ' + N + '</small></div><div class="prog">' + prog + '</div><p>' + st.say + '</p>' + (st.tip ? '<p class="tip">' + st.tip + '</p>' : '') + (S.level === 'hard' ? '<p class="tip">Hard mode: no marker. Use the grey frame.</p>' : '') + '</div>' +
+        '<button class="bt go big" id="sNext" type="button"' + (haveInk ? '' : ' disabled') + '><span data-ph="' + (last ? 'check' : 'arrow-right') + '"></span>' + (last ? 'Finish' : 'Next frame') + '</button>' +
+        '<button class="bt big" id="sPlay" type="button"' + (filled < 2 ? ' disabled' : '') + '><span data-ph="play"></span>Play so far</button>';
+      $('sNext').addEventListener('click', nextStep);
+    }
+    inject(side);
+    var p = $('sPlay'); if(p) p.addEventListener('click', openPlay);
+    var d = $('sDown'); if(d) d.addEventListener('click', downloadDialog);
+  }
+  function nextStep(){
+    var t = TUT[S.kind], N = t.steps.length;
+    if(blank(S.frames[S.cur])){ toast('Draw something first'); return; }
+    commit(); markDirty();
+    if(S.cur === N - 1){ finishTutorial(); return; }
+    if(S.cur === S.frames.length - 1){ S.frames.push(newFrame()); buildThumbs(); }
+    showFrame(S.cur + 1, true);
+  }
+  function finishTutorial(){
+    save().then(function(){
+      ask('You made an animation', 'It is saved on this iPad. Play it, download it, or go and draw your own.', [
+        ['Play it', 'go', openPlay], ['Save and download', '', downloadDialog], ['Back to menu', '', function(){ $('home').click(); }]]);
+    });
+  }
+
+  /* ---------- dialogs ---------- */
+  function ask(title, text, buttons){
+    var c = $('card'); c.innerHTML = '<h2>' + title + '</h2><p>' + text + '</p><div class="row" id="dbtn"></div>';
+    buttons.forEach(function(b){ var el = document.createElement('button'); el.type = 'button'; el.className = 'bt ' + (b[1] || ''); el.textContent = b[0]; el.addEventListener('click', function(){ $('dlg').classList.remove('on'); if(b[2]) b[2](); }); $('dbtn').appendChild(el); });
+    $('dlg').classList.add('on');
+  }
+
+  /* ---------- playback ---------- */
+  var playT = null, SPEEDS = [['Slow', 4], ['Steady', 8], ['Quick', 12], ['Fast', 18]];
+  function openPlay(){
+    commit();
+    var fr = S.frames.filter(function(f, i){ return i === 0 || !blank(f) || S.frames.length < 3; });
+    if(fr.length < 2){ toast('Draw at least two frames first'); return; }
+    $('play').classList.add('on'); var pcv = $('pcv'), cx = pcv.getContext('2d'), i = 0;
+    var bgc = document.createElement('canvas'); bgc.width = W; bgc.height = H; bgDraw(bgc.getContext('2d'), S.bg);
+    function speedBtns(){ $('speed').innerHTML = SPEEDS.map(function(s){ return '<button class="bt' + (S.fps === s[1] ? ' on' : '') + '" data-f="' + s[1] + '" type="button">' + s[0] + ' (' + s[1] + ')</button>'; }).join(''); [].forEach.call($('speed').children, function(b){ b.addEventListener('click', function(){ S.fps = +b.getAttribute('data-f'); speedBtns(); info(); run(); markDirty(); }); }); }
+    function info(){ $('pinfo').textContent = fr.length + ' frames at ' + S.fps + ' a second = ' + (Math.round(fr.length / S.fps * 10) / 10) + ' seconds'; }
+    function draw(){ cx.drawImage(bgc, 0, 0); cx.drawImage(fr[i].c, 0, 0); }
+    function run(){ clearInterval(playT); i = 0; draw(); playT = setInterval(function(){ i++; if(i >= fr.length){ if(S.loop) i = 0; else { i = fr.length - 1; clearInterval(playT); draw(); return; } } draw(); }, 1000 / S.fps); }
+    $('ploop').lastChild.textContent = S.loop ? 'Loop on' : 'Loop off';
+    speedBtns(); info(); run();
+  }
+  $('ploop').addEventListener('click', function(){ S.loop = !S.loop; this.lastChild.textContent = S.loop ? 'Loop on' : 'Loop off'; var b = $('speed').querySelector('.on'); if(b) b.click(); });
+  $('pclose').addEventListener('click', function(){ clearInterval(playT); $('play').classList.remove('on'); });
+  $('playb').addEventListener('click', openPlay);
+
+  /* ---------- GIF: written by hand, so it needs nothing from the internet ---------- */
+  function lzw(px, minCode){
+    var clear = 1 << minCode, eoi = clear + 1, next = eoi + 1, size = minCode + 1, table = new Map();
+    var out = [], cur = 0, shift = 0;
+    function emit(c){ cur |= c << shift; shift += size; while(shift >= 8){ out.push(cur & 255); cur >>= 8; shift -= 8; } }
+    emit(clear);
+    var ib = px[0];
+    for(var i = 1; i < px.length; i++){
+      var k = px[i], key = ib << 8 | k, v = table.get(key);
+      if(v === undefined){
+        emit(ib);
+        if(next === 4096){ emit(clear); next = eoi + 1; size = minCode + 1; table = new Map(); }
+        else { if(next >= (1 << size)) size++; table.set(key, next++); }
+        ib = k;
+      } else ib = v;
+    }
+    emit(ib); emit(eoi);
+    if(shift > 0) out.push(cur & 255);
+    return out;
+  }
+  // the palette is built from the colours the frames really use (backgrounds and pen colours come out exact)
+  function makePalette(frames){
+    var cnt = new Uint32Array(32768), sr = new Uint32Array(32768), sg = new Uint32Array(32768), sb = new Uint32Array(32768);
+    frames.forEach(function(img){ var d = img.data; for(var i = 0; i < d.length; i += 4 * 3){ var k = (d[i] >> 3) << 10 | (d[i + 1] >> 3) << 5 | (d[i + 2] >> 3); cnt[k]++; sr[k] += d[i]; sg[k] += d[i + 1]; sb[k] += d[i + 2]; } });
+    var keys = []; for(var k = 0; k < 32768; k++) if(cnt[k]) keys.push(k);
+    keys.sort(function(a, b){ return cnt[b] - cnt[a]; });
+    var pal = keys.slice(0, 256).map(function(k){ return [Math.round(sr[k] / cnt[k]), Math.round(sg[k] / cnt[k]), Math.round(sb[k] / cnt[k])]; });
+    while(pal.length < 2) pal.push([0, 0, 0]);
+    var map = new Int16Array(32768).fill(-1);
+    function index(r, g, b){
+      var k = (r >> 3) << 10 | (g >> 3) << 5 | (b >> 3), v = map[k]; if(v >= 0) return v;
+      var best = 0, bd = 1e9; for(var i = 0; i < pal.length; i++){ var p = pal[i], dr = p[0] - r, dg = p[1] - g, db = p[2] - b, dd = dr * dr * 2 + dg * dg * 4 + db * db * 3; if(dd < bd){ bd = dd; best = i; } }
+      return map[k] = best;
+    }
+    return { pal:pal, index:index };
+  }
+  function gifBytes(frames, w, h, fps){
+    var o = [], delay = Math.max(2, Math.round(100 / fps)), P = makePalette(frames);
+    function s(t){ for(var i = 0; i < t.length; i++) o.push(t.charCodeAt(i)); }
+    function u16(n){ o.push(n & 255, n >> 8 & 255); }
+    s('GIF89a'); u16(w); u16(h); o.push(0xF7, 0, 0);
+    for(var z = 0; z < 256; z++){ var c = P.pal[z] || [0, 0, 0]; o.push(c[0], c[1], c[2]); }
+    o.push(0x21, 0xFF, 11); s('NETSCAPE2.0'); o.push(3, 1, 0, 0, 0);
+    frames.forEach(function(img){
+      var d = img.data, px = new Uint8Array(w * h);
+      for(var i = 0, j = 0; j < px.length; i += 4, j++) px[j] = P.index(d[i], d[i + 1], d[i + 2]);
+      o.push(0x21, 0xF9, 4, 0, delay & 255, delay >> 8 & 255, 0, 0);
+      o.push(0x2C); u16(0); u16(0); u16(w); u16(h); o.push(0);
+      o.push(8);
+      var data = lzw(px, 8);
+      for(var p = 0; p < data.length; p += 255){ var n = Math.min(255, data.length - p); o.push(n); for(var q = 0; q < n; q++) o.push(data[p + q]); }
+      o.push(0);
+    });
+    o.push(0x3B);
+    return new Uint8Array(o);
+  }
+  function framesFor(frames, bg, w, h){
+    var bgc = document.createElement('canvas'); bgc.width = W; bgc.height = H; bgDraw(bgc.getContext('2d'), bg);
+    return frames.map(function(f){ var c = document.createElement('canvas'); c.width = w; c.height = h; var cx = c.getContext('2d'); cx.drawImage(bgc, 0, 0, w, h); cx.drawImage(f.c, 0, 0, w, h); return cx.getImageData(0, 0, w, h); });
+  }
+  function fname(kind, pair, ext){ return 'pair-' + String(pair).toLowerCase() + '-' + kind + '.' + ext; }
+  function giveFile(blob, name){
+    var url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+    return url;
+  }
+  function exportGif(frames, bg, fps, kind, pair){
+    ask('Making your GIF', 'One moment...', []);
+    setTimeout(function(){
+      try{
+        var imgs = framesFor(frames, bg, 640, 400), bytes = gifBytes(imgs, 640, 400, fps), blob = new Blob([bytes], { type:'image/gif' });
+        var url = giveFile(blob, fname(kind, pair, 'gif'));
+        var c = $('card'); c.innerHTML = '<h2>Your GIF is ready</h2><p>It should download now. If nothing happens, press and hold the picture, then choose Save to Photos or Add to Photos.</p><img alt="Your animation" src="' + url + '"><div class="row"><button class="bt go" id="dok" type="button">Done</button></div>';
+        $('dok').addEventListener('click', function(){ $('dlg').classList.remove('on'); });
+      }catch(e){ ask('That did not work', 'The GIF could not be made on this iPad. Try again, or tell your teacher.', [['Close', '', null]]); }
+    }, 60);
+  }
+  function exportFromRecord(r, fr){ exportGif(fr, r.bg, r.fps, r.kind, r.pair); }
+
+  /* ---------- video: only offered where the browser says it can, and checked after ---------- */
+  function videoType(){
+    if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) return null;
+    var list = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+    for(var i = 0; i < list.length; i++){ try{ if(MediaRecorder.isTypeSupported(list[i])) return list[i]; }catch(e){} }
+    return null;
+  }
+  function exportVideo(){
+    var type = videoType(); if(!type) return;
+    commit();
+    var fr = S.frames.filter(function(f, i){ return !blank(f) || S.frames.length < 3; });
+    var c = document.createElement('canvas'); c.width = W; c.height = H; var cx = c.getContext('2d');
+    var bgc = document.createElement('canvas'); bgc.width = W; bgc.height = H; bgDraw(bgc.getContext('2d'), S.bg);
+    function draw(i){ cx.drawImage(bgc, 0, 0); cx.drawImage(fr[i].c, 0, 0); }
+    ask('Recording your video', 'Keep this page open. It takes about ' + Math.max(2, Math.ceil(fr.length / S.fps)) + ' seconds.', []);
+    var chunks = [], rec, kind = S.kind, pair = S.pair;
+    try{ rec = new MediaRecorder(c.captureStream(S.fps), { mimeType:type }); }catch(e){ ask('No video here', 'This iPad could not record video. Use the GIF instead.', [['Close', '', null]]); return; }
+    rec.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = function(){
+      var blob = new Blob(chunks, { type:type.split(';')[0] });
+      if(blob.size < 2000){ ask('The video came out empty', 'This iPad could not record it. Use the GIF instead.', [['Close', '', null]]); return; }
+      giveFile(blob, fname(kind, pair, type.indexOf('mp4') > -1 ? 'mp4' : 'webm'));
+      ask('Your video is ready', 'It should download now.', [['Done', 'go', null]]);
+    };
+    draw(0); rec.start();
+    var i = 0, pass = 0, tm = setInterval(function(){ i++; if(i >= fr.length){ pass++; i = 0; if(pass >= 2){ clearInterval(tm); setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 300); return; } } draw(i); }, 1000 / S.fps);
+  }
+  function downloadDialog(){
+    save().then(function(){
+      var fr = S.frames.filter(function(f){ return !blank(f); });
+      if(fr.length < 2){ toast('Draw at least two frames first'); return; }
+      var c = $('card'); c.innerHTML = '<h2>Save and download</h2><p>Your frames are already saved on this iPad. These make a file you can keep.</p><div class="row"><button class="bt go" id="dg" type="button"><span data-ph="download"></span>GIF picture</button>' + (videoType() ? '<button class="bt" id="dv" type="button"><span data-ph="film-strip"></span>Video file</button>' : '') + '<button class="bt" id="dx" type="button">Close</button></div>' + (videoType() ? '<p>The video file does not work on every iPad. If it comes out empty, use the GIF.</p>' : '');
+      inject(c);
+      $('dg').addEventListener('click', function(){ exportGif(S.frames.filter(function(f){ return !blank(f); }), S.bg, S.fps, S.kind, S.pair); });
+      var dv = $('dv'); if(dv) dv.addEventListener('click', exportVideo);
+      $('dx').addEventListener('click', function(){ $('dlg').classList.remove('on'); });
+      $('dlg').classList.add('on');
+    });
+  }
+
+  /* ---------- go ---------- */
+  addEventListener('pagehide', function(){ if(S.dirty && S.frames.length) save(); });
+  document.addEventListener('visibilitychange', function(){ if(document.hidden && S.dirty && S.frames.length) save(); });
+  // stop Safari zooming the page on a double tap or stray pinch
+  ['gesturestart','gesturechange','gestureend'].forEach(function(n){ document.addEventListener(n, function(e){ e.preventDefault(); }); });
+  var lastTap = 0; document.addEventListener('touchend', function(e){ var t = Date.now(); if(t - lastTap < 350 && !e.target.closest('#menu')) e.preventDefault(); lastTap = t; }, { passive:false });
+
+  window.HBANIM = { state:S, openAnim:openAnim, gifBytes:gifBytes, framesFor:framesFor, newFrame:newFrame };
+  buildPairs(); previewDraw();
+  openDB().then(function(){ refreshSaved(); });
+  var qs = new URLSearchParams(location.search);
+  if(qs.get('level') === 'hard'){ S.level = 'hard'; [].forEach.call(document.querySelectorAll('.lvc'), function(o){ o.classList.toggle('on', o.getAttribute('data-l') === 'hard'); }); }
+  if(qs.get('pair') && PAIRS.indexOf(qs.get('pair')) > -1){ S.pair = qs.get('pair'); buildPairs(); }
+  if(qs.get('start') && TUT[qs.get('start')] && S.pair) openDB().then(function(){ dbAll().then(function(rows){ openAnim(qs.get('start'), rows.filter(function(x){ return x.id === S.pair + '|' + qs.get('start'); })[0] || null); }); });
+})();
+</script>
+</body>
+</html>
