@@ -2490,10 +2490,10 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const corners=[["nw",-1,-1],["ne",1,-1],["se",1,1],["sw",-1,1]];
     corners.forEach(([k,sx,sy])=>a.push({k,x:sx*w/2,y:sy*h/2,sx,sy}));
     if(o.type==="text"){ a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0}); }
-    else if(o.type==="shape"||o.type==="photo"||o.type==="wave"){
+    else if(o.type==="shape"||o.type==="photo"){
       a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0},{k:"n",x:0,y:-h/2,sx:0,sy:-1},{k:"s",x:0,y:h/2,sx:0,sy:1});
     }
-    a.push({k:"rot",x:0,y:-h/2-38*u,sx:0,sy:0});
+    if(o.type!=="wave") a.push({k:"rot",x:0,y:-h/2-38*u,sx:0,sy:0});
     return a;
   }
 
@@ -2537,7 +2537,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
         xs.push([M+hw,-hw],[P.w-M-hw,hw]); ys.push([M+hh,-hh],[P.h-M-hh,hh]); }
       for(const [t] of xs) if(Math.abs(nx-t)<T){ nx=t; D.guides.push({x:t===P.w/2?t:t+((t<P.w/2)?-0:0)}); break; }
       for(const [t] of ys) if(Math.abs(ny-t)<T){ ny=t; D.guides.push({y:t}); break; }
-      o.x=clamp(nx,0,P.w); o.y=clamp(ny,0,P.h);
+      o.x=o.type==="wave"?clamp(nx,P.w-o.w/2,o.w/2):clamp(nx,0,P.w); o.y=clamp(ny,0,P.h);
     }else if(drag.mode==="rot"){
       let a=Math.atan2(p.y-o.y,p.x-o.x)*180/Math.PI+90;
       a=((a%360)+540)%360-180; const sn=Math.round(a/15)*15; if(Math.abs(a-sn)<4)a=sn;
@@ -2548,8 +2548,8 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
       if(hd.sx&&hd.sy){ /* corner */
         const fx=-hd.sx*d0.w/2, fy=-hd.sy*d0.h/2;
         let nw=Math.abs(l.x-fx), nh=Math.abs(l.y-fy);
-        const uni=o.type==="text"||o.type==="logo"||(o.type==="shape"&&o.kind==="circle")||(o.type==="photo"&&o.frame==="circle");
-        if(uni){ const k=clamp(Math.max(nw/d0.w,nh/d0.h),.15,8); nw=d0.w*k; nh=d0.h*k;
+        const uni=o.type==="text"||o.type==="logo"||o.type==="wave"||(o.type==="shape"&&o.kind==="circle")||(o.type==="photo"&&o.frame==="circle");
+        if(uni){ const k=o.type==="wave"?clamp(Math.max(nw/d0.w,nh/d0.h),P.w/d0.w,P.w*2.5/d0.w):clamp(Math.max(nw/d0.w,nh/d0.h),.15,8); nw=d0.w*k; nh=d0.h*k;
           if(o.type==="text"){ o.size=clamp(Math.round(o0.size*k),14,400); nh=d0.h*k; } }
         set(nw,nh,fx+hd.sx*nw/2,fy+hd.sy*nh/2);
       }else if(hd.sx){ /* left or right edge */
@@ -2558,6 +2558,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
         const fy=-hd.sy*d0.h/2, nh=Math.abs(l.y-fy); set(d0.w,nh,0,fy+hd.sy*nh/2);
       }
       if(o.type==="logo") o.h=o.w*o0.h/o0.w;
+      if(o.type==="wave"){ o.h=o.w*(o.part==="head"?270:140)/794; o.x=clamp(o.x,P.w-o.w/2,o.w/2); }
     }
     draw();
   });
@@ -2592,9 +2593,9 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   }
   function addWave(part,style,over){
     const P=P_(), old=D.objs.find(x=>x.type==="wave"&&x.part===part), head=part==="head";
-    const h=Math.round(Math.min(P.h*(head?.3:.2),P.w*(head?.34:.176)*1.2));
+    const h=Math.round(P.w*(head?270:140)/794);
     const o={type:"wave",part,style,scheme:old?old.scheme:"blues",flip:false,x:P.w/2,y:head?h/2:P.h-h/2,w:P.w,h};
-    if(old){ o.flip=old.flip; o.h=old.h; o.y=old.y; o.id=old.id; o.rot=0; Object.assign(old,o,{style}); D.sel=old.id; commit(); panel(); draw(); return old; }
+    if(old){ o.flip=old.flip; o.w=old.w; o.h=Math.round(old.w*(head?270:140)/794); o.x=old.x; o.y=old.y; o.id=old.id; o.rot=0; Object.assign(old,o,{style}); D.sel=old.id; commit(); panel(); draw(); return old; }
     add(Object.assign(o,over||{}));
     // keep designs behind words and photos
     const w=D.objs.pop(); D.objs.unshift(w); draw(); return w;
@@ -2697,7 +2698,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     }else if(o.type==="logo"){
       h+='<div class="field"><label>Logo colours</label>'+seg("variant",o.variant,[["auto","Match page"],["light","Dark logo"],["white","White logo"]])+'</div>';
     }
-    h+=slider("dgRot","Turn",-180,180,o.rot,1,"°");
+    if(o.type!=="wave") h+=slider("dgRot","Turn",-180,180,o.rot,1,"°");
     h+='<div class="dg-acts"><button class="btn ghost" data-act="fwd" type="button">Bring forward</button><button class="btn ghost" data-act="back" type="button">Send back</button><button class="btn ghost" data-act="dup" type="button">Copy</button><button class="btn ghost del" data-act="del" type="button">Delete</button></div>';
     box.innerHTML=h;
     if(o.type==="text") $("dgText").value=o.text;
@@ -2738,7 +2739,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   function sizeCanvas(){ cv.width=D.page.w; cv.height=D.page.h; $("dgCap").textContent=D.page.n+" ("+D.page.w+" × "+D.page.h+"). Tap an item to select it. Drag to move. Use the round handles to resize and turn."; $("dgPdf").classList.toggle("hidden",!D.page.pdf); document.querySelectorAll("#dgSizes .frame-btn").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===D.page.k))); document.querySelectorAll("#dgBg .sw").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===D.bg))); }
   $("dgSizes").innerHTML=PAGES.map(p=>'<button type="button" class="frame-btn" data-k="'+p.k+'" aria-pressed="false">'+p.n+'</button>').join("");
   $("dgSizes").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; const np=PAGES.find(p=>p.k===b.dataset.k); if(np===D.page)return;
-    const fx=np.w/D.page.w, fy=np.h/D.page.h; D.objs.forEach(o=>{o.x*=fx;o.y*=fy;}); D.page=np; sizeCanvas(); commit(); draw(); };
+    const fx=np.w/D.page.w, fy=np.h/D.page.h; D.objs.forEach(o=>{ if(o.type==="wave"){ const hd=o.part==="head"; o.w=np.w; o.h=Math.round(np.w*(hd?270:140)/794); o.x=np.w/2; o.y=hd?o.h/2:np.h-o.h/2; } else {o.x*=fx;o.y*=fy;} }); D.page=np; sizeCanvas(); commit(); draw(); };
   $("dgBg").innerHTML=COLS.map(([c,n])=>'<button type="button" class="sw" style="--c:'+c+'" aria-label="'+n+'" title="'+n+'" data-v="'+c+'" aria-pressed="false"></button>').join("");
   $("dgBg").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; D.bg=b.dataset.v; sizeCanvas(); commit(); draw(); panel(); };
 
