@@ -205,6 +205,12 @@ body.locked .gate{display:flex;}
 #dgCanvas{touch-action:none;cursor:default;background:#fff;}
 .dg-msg{font-size:12.5px;color:var(--amber);font-weight:700;margin-top:6px;}
 .dg-empty{font-size:13.5px;color:#30404d;background:var(--tint);border:1px solid var(--line);border-radius:8px;padding:12px;}
+.dg-waves{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dg-wv{padding:0;border:2px solid #8FCBF5;border-radius:8px;background:#fff;cursor:pointer;overflow:hidden;height:54px;display:block}
+.dg-wv svg{display:block;width:100%;height:100%}
+.dg-wv:hover{border-color:#0B93E3}
+.dg-wv[aria-pressed="true"]{border-color:#015481;box-shadow:0 0 0 2px #015481}
+.dg-wv:focus-visible{outline:3px solid #0B93E3;outline-offset:2px}
 </style>
 </head>
 <body class="locked">
@@ -447,6 +453,14 @@ Stockton-on-Tees TS18 [  ]
     <div class="field">
       <label>Background</label>
       <div class="swatches" id="dgBg"></div>
+    </div>
+    <div class="field">
+      <label>Header design</label>
+      <div class="dg-waves" id="dgHeads"></div>
+    </div>
+    <div class="field">
+      <label>Footer design</label>
+      <div class="dg-waves" id="dgFoots"></div>
     </div>
     <div class="field">
       <label>Start from</label>
@@ -2388,10 +2402,49 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
       if(r>0) rr(cx,-w/2,-h/2,w,h,r); else cx.rect(-w/2,-h/2,w,h);
     }
   }
+  const WHEAD=[
+    {pale:null,main:"M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z"},
+    {pale:"M0 0 H794 V196 C660 256 540 176 410 222 C270 270 130 232 0 252 Z",main:"M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z"},
+    {pale:"M0 0 H794 V226 C700 188 620 188 530 228 C440 268 340 272 250 232 C170 196 80 206 0 250 Z",main:"M0 0 H794 V212 C700 174 620 174 530 214 C440 254 340 258 250 218 C170 182 80 192 0 236 Z"},
+    {pale:"M0 236 L794 170 V198 L0 264 Z",main:"M0 0 H794 V170 L0 236 Z"},
+    {pale:"M0 0 H794 V208 C794 208 600 264 397 264 C194 264 0 208 0 208 Z",main:"M0 0 H794 V190 C794 190 600 246 397 246 C194 246 0 190 0 190 Z"},
+    {pale:"M0 0 H794 V196 C660 256 540 176 410 222 C270 270 130 232 0 252 Z",main:"M0 0 H794 V170 C660 230 540 150 410 196 C270 244 130 206 0 226 Z",rings:true}
+  ];
+  const WFOOT=[
+    ["M0 50 C150 20 300 30 450 62 S700 86 794 44 V140 H0 Z","M0 74 C260 56 480 90 794 60 V140 H0 Z"],
+    ["M0 40 C120 10 260 20 380 50 S640 70 794 30 V140 H0 Z","M0 70 C200 46 360 84 560 64 S720 56 794 66 V140 H0 Z"],
+    ["M0 20 C200 0 400 40 794 10 V140 H0 Z","M0 46 C220 26 420 70 794 36 V140 H0 Z","M0 70 C260 52 520 84 794 60 V140 H0 Z"],
+    ["M0 62 L794 6 V140 H0 Z","M0 72 L794 26 V140 H0 Z"],
+    ["M0 62 C250 -8 544 -8 794 62 V140 H0 Z","M0 82 C250 22 544 22 794 82 V140 H0 Z"],
+    ["M0 36 C100 6 200 66 300 36 S500 6 600 36 S740 56 794 36 V140 H0 Z","M0 56 C120 30 240 80 360 54 S600 30 794 58 V140 H0 Z","M0 76 C150 58 300 92 470 72 S700 60 794 72 V140 H0 Z"]
+  ];
+  const WNAMES=["Classic wave","Double wave","Rolling hills","Diagonal sweep","Arch","Ripple"];
+  const WSCHEMES={
+    blues:{n:"Hartburn blues",f3:["#CFE6F7","#8FCBF5","#015481"],f2:["#8FCBF5","#015481"],pale:"#8FCBF5",main:null},
+    bright:{n:"Bright blues",f3:["#8FCBF5","#0B93E3","#015481"],f2:["#0B93E3","#015481"],pale:"#8FCBF5",main:"#0B93E3"},
+    light:{n:"Soft blues",f3:["#E4F1FB","#CFE6F7","#8FCBF5"],f2:["#CFE6F7","#8FCBF5"],pale:"#E4F1FB",main:"#8FCBF5"},
+    navy:{n:"Navy",f3:["#0B93E3","#0A6FB0","#015481"],f2:["#0A6FB0","#015481"],pale:"#0B93E3",main:"#015481"}
+  };
+  function drawWave(o,w,h){
+    const sc=WSCHEMES[o.scheme]||WSCHEMES.blues, head=o.part==="head", vh=head?270:140;
+    cx.save(); cx.scale(w/794,(o.flip?-1:1)*h/vh); cx.translate(-397,-vh/2);
+    if(head){
+      const d=WHEAD[o.style]||WHEAD[0];
+      if(d.pale){ cx.fillStyle=sc.pale; cx.fill(new Path2D(d.pale)); }
+      let f=sc.main; if(!f){ const g=cx.createLinearGradient(0,0,794,vh); g.addColorStop(0,"#015481"); g.addColorStop(.58,"#0A6FB0"); g.addColorStop(1,"#0B93E3"); f=g; }
+      const m=new Path2D(d.main); cx.fillStyle=f; cx.fill(m);
+      if(d.rings){ cx.save(); cx.clip(m); cx.strokeStyle="rgba(255,255,255,.2)"; cx.lineWidth=2; [70,125,180,235].forEach(r=>{cx.beginPath();cx.arc(720,30,r,0,Math.PI*2);cx.stroke();}); cx.restore(); }
+    }else{
+      const L=WFOOT[o.style]||WFOOT[0], cols=L.length===3?sc.f3:sc.f2;
+      L.forEach((d,k)=>{ cx.fillStyle=cols[k]; cx.fill(new Path2D(d)); });
+    }
+    cx.restore();
+  }
   function drawObj(o){
     const {w,h}=dims(o);
     cx.save(); cx.translate(o.x,o.y); cx.rotate(rad(o.rot));
-    if(o.type==="shape"){
+    if(o.type==="wave"){ drawWave(o,w,h); }
+    else if(o.type==="shape"){
       cx.globalAlpha=(o.alpha??100)/100; cx.fillStyle=o.fill; path(o,w,h); cx.fill();
     }else if(o.type==="text"){
       cx.fillStyle=o.color; cx.font=FONTS[o.font].f(o.size,o.bold); cx.textBaseline="middle"; cx.textAlign=o.align;
@@ -2437,7 +2490,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const corners=[["nw",-1,-1],["ne",1,-1],["se",1,1],["sw",-1,1]];
     corners.forEach(([k,sx,sy])=>a.push({k,x:sx*w/2,y:sy*h/2,sx,sy}));
     if(o.type==="text"){ a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0}); }
-    else if(o.type==="shape"||o.type==="photo"){
+    else if(o.type==="shape"||o.type==="photo"||o.type==="wave"){
       a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0},{k:"n",x:0,y:-h/2,sx:0,sy:-1},{k:"s",x:0,y:h/2,sx:0,sy:1});
     }
     a.push({k:"rot",x:0,y:-h/2-38*u,sx:0,sy:0});
@@ -2537,10 +2590,31 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const P=P_(), s=Math.round(P.w*.3);
     return add(Object.assign({type:"shape",kind,fill:BLUE,radius:kind==="rect"?0:0,alpha:100,x:P.w/2,y:P.h/2,w:kind==="circle"?s:Math.round(P.w*.6),h:kind==="circle"?s:Math.round(P.w*.2)},over||{}));
   }
+  function addWave(part,style,over){
+    const P=P_(), old=D.objs.find(x=>x.type==="wave"&&x.part===part), head=part==="head";
+    const h=Math.round(Math.min(P.h*(head?.3:.2),P.w*(head?.34:.176)*1.2));
+    const o={type:"wave",part,style,scheme:old?old.scheme:"blues",flip:false,x:P.w/2,y:head?h/2:P.h-h/2,w:P.w,h};
+    if(old){ o.flip=old.flip; o.h=old.h; o.y=old.y; o.id=old.id; o.rot=0; Object.assign(old,o,{style}); D.sel=old.id; commit(); panel(); draw(); return old; }
+    add(Object.assign(o,over||{}));
+    // keep designs behind words and photos
+    const w=D.objs.pop(); D.objs.unshift(w); draw(); return w;
+  }
   function addLogo(over){
     const P=P_(), w=Math.round(P.w*.3), r=(logoLight.naturalHeight||1)/(logoLight.naturalWidth||1);
     return add(Object.assign({type:"logo",variant:"auto",x:P.w/2,y:P.h*.9,w,h:w*r},over||{}));
   }
+  function waveBtn(part,i,scheme,on){
+    const sc=WSCHEMES[scheme]||WSCHEMES.blues, head=part==="head", vh=head?270:140; let inner;
+    if(head){ const d=WHEAD[i]; inner=(d.pale?'<path d="'+d.pale+'" fill="'+sc.pale+'"/>':'')+'<path d="'+d.main+'" fill="'+(sc.main||"#0A6FB0")+'"/>'; }
+    else{ const L=WFOOT[i], cols=L.length===3?sc.f3:sc.f2; inner=L.map((d,k)=>'<path d="'+d+'" fill="'+cols[k]+'"/>').join(""); }
+    return '<button type="button" class="dg-wv" data-i="'+i+'" aria-pressed="'+!!on+'" aria-label="'+WNAMES[i]+'" title="'+WNAMES[i]+'"><svg viewBox="0 0 794 '+vh+'" preserveAspectRatio="none" aria-hidden="true">'+inner+'</svg></button>';
+  }
+  ["head","foot"].forEach(part=>{
+    const box=$(part==="head"?"dgHeads":"dgFoots");
+    box.dataset.wave=part;
+    box.innerHTML=WNAMES.map((n,i)=>waveBtn(part,i,"blues",false)).join("");
+    box.onclick=e=>{ const b=e.target.closest("button"); if(b) addWave(part,+b.dataset.i); };
+  });
   $("dgAddText").onclick=()=>addText(false);
   $("dgAddHead").onclick=()=>addText(true);
   $("dgAddRect").onclick=()=>addShape("rect");
@@ -2598,7 +2672,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   function panel(){
     const o=cur(), box=$("dgSel");
     if(!o){ box.innerHTML='<div class="dg-empty">Nothing selected. Tap something on the page to change it, or add something new above.</div>'; return; }
-    let h='<h3>'+({text:"Words",shape:o.kind==="circle"?"Circle":"Box",photo:"Photo",logo:"Logo"}[o.type])+'</h3>';
+    let h='<h3>'+({text:"Words",shape:o.kind==="circle"?"Circle":"Box",photo:"Photo",logo:"Logo",wave:o.part==="head"?"Header design":"Footer design"}[o.type])+'</h3>';
     if(o.type==="text"){
       h+='<div class="field"><label for="dgText">Edit the words</label><textarea id="dgText" rows="4"></textarea></div>';
       h+='<div class="field"><label>Font</label>'+seg("font",o.font,[["head","Heading"],["serif","Serif"],["sans","Plain"]])+'</div>';
@@ -2616,6 +2690,10 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
       h+=slider("dgOx","Move photo left or right",-100,100,Math.round(o.ox*100),1);
       h+=slider("dgOy","Move photo up or down",-100,100,Math.round(o.oy*100),1);
       if(o.frame==="round") h+=slider("dgRad","Rounded corners",0,100,o.radius||30,1);
+    }else if(o.type==="wave"){
+      h+='<div class="field"><label>Design</label><div class="dg-waves" data-wave="'+o.part+'">'+WNAMES.map((n,i)=>waveBtn(o.part,i,o.scheme,o.style===i)).join("")+'</div></div>';
+      h+='<div class="field"><label>Colours</label>'+seg("scheme",o.scheme,Object.keys(WSCHEMES).map(k=>[k,WSCHEMES[k].n]))+'</div>';
+      h+='<div class="field"><label>Direction</label>'+seg("flip",o.flip,[[false,"Normal"],[true,"Upside down"]])+'</div>';
     }else if(o.type==="logo"){
       h+='<div class="field"><label>Logo colours</label>'+seg("variant",o.variant,[["auto","Match page"],["light","Dark logo"],["white","White logo"]])+'</div>';
     }
@@ -2627,7 +2705,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   }
   function warn(){
     const o=cur(); if(!o||o.type!=="text")return;
-    if(D.objs.some(x=>x.type==="shape"||x.type==="photo"))return;
+    if(D.objs.some(x=>x.type==="shape"||x.type==="photo"||x.type==="wave"))return;
     const a=lum(o.color), b=lum(D.bg), r=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
     if(r<3){ const d=document.createElement("div"); d.className="dg-msg"; d.textContent="These words are hard to read on this background. Try a different colour."; $("dgSel").insertBefore(d,$("dgSel").children[1]); }
   }
@@ -2645,9 +2723,11 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const o=cur(); if(!o)return; const b=e.target.closest("button"); if(!b)return;
     if(b.dataset.act){ ({fwd:()=>order(1),back:()=>order(-1),dup,del}[b.dataset.act])(); return; }
     const sw=b.closest(".swatches"), sg=b.closest("[data-seg]");
+    const wv=b.closest("[data-wave]");
+    if(wv){ addWave(wv.dataset.wave,+b.dataset.i); return; }
     if(sw){ const k=sw.dataset.key; o[k]=b.dataset.v; commit(); panel(); draw(); }
     else if(sg){
-      const k=sg.dataset.seg; let v=b.dataset.v; if(k==="bold")v=(v==="true");
+      const k=sg.dataset.seg; let v=b.dataset.v; if(k==="bold"||k==="flip")v=(v==="true");
       o[k]=v; if(k==="frame"&&v==="circle"){ const s=Math.min(o.w,o.h); o.w=o.h=s; } if(k==="frame"&&v==="round"&&!o.radius)o.radius=30;
       if(k==="font"&&v==="head")o.bold=false;
       commit(); panel(); draw();
