@@ -185,6 +185,26 @@ body.locked .gate{display:flex;}
   .lw-page,.lw-page *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .lw-ph{display:none !important;}
 }
+
+/* ---------- design tab ---------- */
+.dg-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.dg-tools .frame-btn{text-align:center;font-weight:600;}
+.dg-sizes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;}
+.sw{width:40px;height:40px;border-radius:50%;border:2px solid #9fb0bd;cursor:pointer;padding:0;background:var(--c);}
+.sw[aria-pressed="true"]{outline:3px solid var(--blue);outline-offset:2px;border-color:#fff;}
+.dg-sel{border-top:2px solid var(--line);margin-top:6px;padding-top:16px;}
+.dg-sel h3{font-family:var(--serif);font-weight:600;font-size:15px;margin:0 0 12px;color:var(--navy);}
+.dg-row{display:flex;gap:8px;margin-bottom:10px;}
+.dg-row .frame-btn{flex:1;text-align:center;padding:8px 6px;}
+.dg-row.three .frame-btn{font-size:13px;}
+.dg-acts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px;}
+.dg-acts .btn{position:static;font-size:14.5px;padding:11px;min-height:46px;}
+.dg-acts .del{border-color:var(--red);color:var(--red);}
+#dgDownload,#dgPdf{position:static;}
+#dgCanvas{touch-action:none;cursor:default;background:#fff;}
+.dg-msg{font-size:12.5px;color:var(--amber);font-weight:700;margin-top:6px;}
+.dg-empty{font-size:13.5px;color:#30404d;background:var(--tint);border:1px solid var(--line);border-radius:8px;padding:12px;}
 </style>
 </head>
 <body class="locked">
@@ -215,6 +235,7 @@ try{ if(localStorage.getItem("hartburn-studio-open")==="yes") document.body.clas
     <button class="tab" id="tabDocs" role="tab" aria-selected="false">Letters &amp; policies</button>
     <button class="tab" id="tabBelong" role="tab" aria-selected="false">Belonging photos</button>
     <button class="tab" id="tabLw" role="tab" aria-selected="false">Learning walk</button>
+    <button class="tab" id="tabDesign" role="tab" aria-selected="false">Design your own</button>
   </div>
 </div>
 
@@ -413,6 +434,59 @@ Stockton-on-Tees TS18 [  ]
   </div>
   <div class="lw-area" id="lwArea"><div id="lwPages"></div></div>
 </section>
+
+<section id="viewDesign" class="layout hidden">
+  <div class="panel">
+    <h2>Design your own</h2>
+    <p class="sub">Add words, photos and shapes, then move and resize them yourself. Colours and fonts are Hartburn's, so it always looks right.</p>
+
+    <div class="field">
+      <label>Page</label>
+      <div class="dg-sizes" id="dgSizes"></div>
+    </div>
+    <div class="field">
+      <label>Background</label>
+      <div class="swatches" id="dgBg"></div>
+    </div>
+    <div class="field">
+      <label>Start from</label>
+      <div class="dg-tools" id="dgStarts"></div>
+    </div>
+
+    <div class="field">
+      <label>Add</label>
+      <div class="dg-tools">
+        <button class="frame-btn" id="dgAddText" type="button">Text</button>
+        <button class="frame-btn" id="dgAddHead" type="button">Heading</button>
+        <button class="frame-btn" id="dgAddPhoto" type="button">Photo</button>
+        <button class="frame-btn" id="dgAddRect" type="button">Box</button>
+        <button class="frame-btn" id="dgAddCircle" type="button">Circle</button>
+        <button class="frame-btn" id="dgAddLogo" type="button">Logo</button>
+      </div>
+      <input type="file" id="dgFile" accept="image/*,.heic,.heif" multiple class="hidden">
+      <div class="dg-msg" id="dgMsg" role="status"></div>
+    </div>
+
+    <div class="dg-sel" id="dgSel"></div>
+
+    <div class="dg-acts">
+      <button class="btn ghost" id="dgUndo" type="button">Undo</button>
+      <button class="btn ghost" id="dgRedo" type="button">Redo</button>
+    </div>
+    <button class="btn" id="dgDownload" type="button" style="margin-top:14px">Download image</button>
+    <button class="btn ghost hidden" id="dgPdf" type="button" style="margin-top:9px">Save as PDF</button>
+    <div class="privacy">
+      Photos are handled inside this browser only. They are never uploaded, saved or sent anywhere. Nothing here is saved, so download your design before you close this page. Normal photo permission rules still apply to anything you post.
+    </div>
+  </div>
+
+  <div class="stage">
+    <canvas id="dgCanvas" width="1080" height="1080" tabindex="0" aria-label="Design area"></canvas>
+    <div class="cap" id="dgCap">Tap an item to select it. Drag to move. Use the round handles to resize and turn.</div>
+    <button class="btn dl2" id="dgDownload2" type="button">Download image</button>
+  </div>
+</section>
+
 
 
 </div>
@@ -1551,7 +1625,7 @@ const doDownload=()=>{
 $("download").onclick=doDownload; $("download2").onclick=doDownload;
 
 function showTab(which){
-  [["posts","viewPosts","tabPosts"],["docs","viewDocs","tabDocs"],["belong","viewBelong","tabBelong"],["lw","viewLw","tabLw"]].forEach(([k,v,t])=>{
+  [["posts","viewPosts","tabPosts"],["docs","viewDocs","tabDocs"],["belong","viewBelong","tabBelong"],["lw","viewLw","tabLw"],["design","viewDesign","tabDesign"]].forEach(([k,v,t])=>{
     $(v).classList.toggle("hidden",which!==k);
     $(t).setAttribute("aria-selected",String(which===k));
   });
@@ -1560,6 +1634,7 @@ $("tabPosts").onclick=()=>showTab("posts");
 $("tabDocs").onclick=()=>showTab("docs");
 $("tabBelong").onclick=()=>showTab("belong");
 $("tabLw").onclick=()=>showTab("lw");
+$("tabDesign").onclick=()=>showTab("design");
 
 /* =====================================================================
    DOCUMENTS
@@ -2245,6 +2320,388 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   if(window.ResizeObserver) new ResizeObserver(fit).observe($("lwArea"));
   $("tabLw").addEventListener("click",()=>{ render(); });
   render();
+})();
+</script>
+<script>
+/* =====================================================================
+   DESIGN YOUR OWN
+   A small editor. Staff add text, photos, shapes and the logo, then
+   drag, resize and turn them. Colours and fonts are limited to the
+   Hartburn brand, so it cannot go off brand. Nothing is saved or sent.
+===================================================================== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const cv=$("dgCanvas"), cx=cv.getContext("2d");
+  const PAGES=[
+    {k:"sq",  n:"Square post",      w:1080,h:1080},
+    {k:"port",n:"Portrait post",    w:1080,h:1350},
+    {k:"a4p", n:"A4 portrait",      w:1240,h:1754,pdf:"portrait"},
+    {k:"a4l", n:"A4 landscape",     w:1754,h:1240,pdf:"landscape"}
+  ];
+  const COLS=[[NAVY,"Navy"],[BLUE,"Blue"],[WHITE,"White"],[INK,"Black"],[TINT,"Pale blue"],[ALTO,"Grey"]];
+  const FONTS={head:{n:"Heading",f:(s,b)=>"600 "+s+"px "+PLAYFAIR()},serif:{n:"Serif",f:(s,b)=>(b?"600 ":"400 ")+s+"px "+LORA()},sans:{n:"Plain",f:(s,b)=>(b?"700 ":"400 ")+s+"px "+SANS()}};
+  const D={page:PAGES[0],bg:WHITE,objs:[],sel:null,uid:1,imgs:new Map(),undo:[],redo:[],guides:[]};
+  let drag=null;
+
+  /* ---------- helpers ---------- */
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const rad=d=>d*Math.PI/180;
+  const byId=id=>D.objs.find(o=>o.id===id);
+  const cur=()=>byId(D.sel);
+  function msg(t){ $("dgMsg").textContent=t||""; }
+
+  function layoutText(o){
+    cx.font=FONTS[o.font].f(o.size,o.bold);
+    const out=[];
+    String(o.text||"").split("\n").forEach(par=>{
+      const words=par.split(/\s+/).filter(Boolean);
+      if(!words.length){ out.push(""); return; }
+      let line="";
+      words.forEach(wd=>{
+        const t=line?line+" "+wd:wd;
+        if(cx.measureText(t).width<=o.w||!line) line=t; else{ out.push(line); line=wd; }
+      });
+      out.push(line);
+    });
+    return out;
+  }
+  function textH(o){ return Math.max(1,layoutText(o).length)*o.size*o.lh; }
+  function dims(o){ return o.type==="text"?{w:o.w,h:textH(o)}:{w:o.w,h:o.h}; }
+
+  /* ---------- history ---------- */
+  function snap(){ return JSON.stringify({page:D.page.k,bg:D.bg,objs:D.objs,sel:D.sel,uid:D.uid}); }
+  function commit(){ D.undo.push(snap()); if(D.undo.length>60)D.undo.shift(); D.redo=[]; syncBtns(); }
+  function restore(s){
+    const j=JSON.parse(s); D.page=PAGES.find(p=>p.k===j.page); D.bg=j.bg; D.objs=j.objs; D.sel=j.sel; D.uid=j.uid;
+    sizeCanvas(); panel(); draw();
+  }
+  function undo(){ if(D.undo.length<2)return; D.redo.push(D.undo.pop()); restore(D.undo[D.undo.length-1]); syncBtns(); }
+  function redo(){ if(!D.redo.length)return; const s=D.redo.pop(); D.undo.push(s); restore(s); syncBtns(); }
+  function syncBtns(){ $("dgUndo").disabled=D.undo.length<2; $("dgRedo").disabled=!D.redo.length; }
+
+  /* ---------- drawing ---------- */
+  function path(o,w,h){
+    cx.beginPath();
+    if(o.type==="shape"&&o.kind==="circle"||o.type==="photo"&&o.frame==="circle"){ cx.ellipse(0,0,w/2,h/2,0,0,Math.PI*2); }
+    else{
+      const r=(o.type==="shape"||o.type==="photo"&&o.frame==="round")?Math.min(w,h)/2*((o.radius||0)/100):0;
+      if(r>0) rr(cx,-w/2,-h/2,w,h,r); else cx.rect(-w/2,-h/2,w,h);
+    }
+  }
+  function drawObj(o){
+    const {w,h}=dims(o);
+    cx.save(); cx.translate(o.x,o.y); cx.rotate(rad(o.rot));
+    if(o.type==="shape"){
+      cx.globalAlpha=(o.alpha??100)/100; cx.fillStyle=o.fill; path(o,w,h); cx.fill();
+    }else if(o.type==="text"){
+      cx.fillStyle=o.color; cx.font=FONTS[o.font].f(o.size,o.bold); cx.textBaseline="middle"; cx.textAlign=o.align;
+      const lh=o.size*o.lh, ax=o.align==="left"?-w/2:o.align==="right"?w/2:0;
+      layoutText(o).forEach((l,i)=>cx.fillText(l,ax,-h/2+(i+.5)*lh));
+    }else if(o.type==="photo"){
+      const im=D.imgs.get(o.img);
+      path(o,w,h); cx.save(); cx.clip();
+      if(im){
+        const s=Math.max(w/im.width,h/im.height)*o.zoom, dw=im.width*s, dh=im.height*s;
+        const ox=(dw-w)/2*o.ox, oy=(dh-h)/2*o.oy;
+        cx.drawImage(im,-dw/2-ox,-dh/2-oy,dw,dh);
+      }
+      cx.restore();
+    }else if(o.type==="logo"){
+      const dark=lum(D.bg)<.35, on=o.variant==="auto"?(dark?logoWhite:logoLight):(o.variant==="white"?logoWhite:logoLight);
+      if(on.complete&&on.naturalWidth) cx.drawImage(on,-w/2,-h/2,w,h);
+    }
+    cx.restore();
+  }
+  function lum(hex){ const n=parseInt(hex.slice(1),16),f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(n>>16)+.7152*f(n>>8&255)+.0722*f(n&255); }
+  function draw(exporting){
+    const P=D.page; cx.setTransform(1,0,0,1,0,0); cx.clearRect(0,0,P.w,P.h);
+    cx.fillStyle=D.bg; cx.fillRect(0,0,P.w,P.h);
+    D.objs.forEach(drawObj);
+    if(exporting)return;
+    const o=cur(); const u=P.w/cv.getBoundingClientRect().width||1;
+    D.guides.forEach(g=>{ cx.save(); cx.strokeStyle="#E6007E"; cx.lineWidth=1.5*u; cx.beginPath(); if(g.x!=null){cx.moveTo(g.x,0);cx.lineTo(g.x,P.h);}else{cx.moveTo(0,g.y);cx.lineTo(P.w,g.y);} cx.stroke(); cx.restore(); });
+    if(!o)return;
+    const {w,h}=dims(o);
+    cx.save(); cx.translate(o.x,o.y); cx.rotate(rad(o.rot));
+    cx.strokeStyle=BLUE; cx.lineWidth=2.5*u; cx.setLineDash([8*u,6*u]); cx.strokeRect(-w/2,-h/2,w,h); cx.setLineDash([]);
+    handles(o).forEach(hd=>{
+      cx.beginPath();
+      if(hd.k==="rot"){ cx.moveTo(0,-h/2); cx.lineTo(0,-h/2-38*u); cx.strokeStyle=BLUE; cx.lineWidth=2.5*u; cx.stroke(); cx.beginPath(); }
+      cx.arc(hd.x,hd.y,(hd.k==="rot"?11:9)*u,0,Math.PI*2);
+      cx.fillStyle=hd.k==="rot"?BLUE:"#fff"; cx.fill(); cx.lineWidth=3*u; cx.strokeStyle=BLUE; cx.stroke();
+    });
+    cx.restore();
+  }
+  function handles(o){
+    const {w,h}=dims(o), u=D.page.w/cv.getBoundingClientRect().width||1, a=[];
+    const corners=[["nw",-1,-1],["ne",1,-1],["se",1,1],["sw",-1,1]];
+    corners.forEach(([k,sx,sy])=>a.push({k,x:sx*w/2,y:sy*h/2,sx,sy}));
+    if(o.type==="text"){ a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0}); }
+    else if(o.type==="shape"||o.type==="photo"){
+      a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0},{k:"n",x:0,y:-h/2,sx:0,sy:-1},{k:"s",x:0,y:h/2,sx:0,sy:1});
+    }
+    a.push({k:"rot",x:0,y:-h/2-38*u,sx:0,sy:0});
+    return a;
+  }
+
+  /* ---------- pointer ---------- */
+  function pt(e){ const r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height}; }
+  function toLocal(o,p){ const dx=p.x-o.x,dy=p.y-o.y,c=Math.cos(rad(-o.rot)),s=Math.sin(rad(-o.rot)); return {x:dx*c-dy*s,y:dx*s+dy*c}; }
+  function toWorld(o,l){ const c=Math.cos(rad(o.rot)),s=Math.sin(rad(o.rot)); return {x:o.x+l.x*c-l.y*s,y:o.y+l.x*s+l.y*c}; }
+  function hitHandle(o,p){
+    const l=toLocal(o,p), u=D.page.w/cv.getBoundingClientRect().width||1;
+    return handles(o).find(h=>Math.hypot(h.x-l.x,h.y-l.y)<=18*u)||null;
+  }
+  function hitObj(p){
+    for(let i=D.objs.length-1;i>=0;i--){
+      const o=D.objs[i], l=toLocal(o,p), {w,h}=dims(o);
+      if(Math.abs(l.x)<=w/2&&Math.abs(l.y)<=h/2) return o;
+    }
+    return null;
+  }
+  cv.addEventListener("pointerdown",e=>{
+    const p=pt(e); cv.focus({preventScroll:true});
+    let o=cur(), hd=o?hitHandle(o,p):null;
+    if(!hd){ o=hitObj(p); D.sel=o?o.id:null; panel(); if(!o){draw();return;} }
+    cv.setPointerCapture(e.pointerId);
+    drag={mode:hd?hd.k:"move",hd,start:p,o0:JSON.parse(JSON.stringify(o)),id:o.id,moved:false};
+    draw();
+  });
+  cv.addEventListener("pointermove",e=>{
+    const p=pt(e);
+    if(!drag){
+      const o=cur(), hd=o?hitHandle(o,p):null;
+      cv.style.cursor=hd?(hd.k==="rot"?"grab":"nwse-resize"):(hitObj(p)?"move":"default");
+      return;
+    }
+    const o=byId(drag.id); if(!o)return; drag.moved=true;
+    const o0=drag.o0, P=D.page;
+    if(drag.mode==="move"){
+      let nx=o0.x+(p.x-drag.start.x), ny=o0.y+(p.y-drag.start.y);
+      D.guides=[]; const u=P.w/cv.getBoundingClientRect().width, T=8*u, {w,h}=dims(o);
+      const xs=[[P.w/2,0]], ys=[[P.h/2,0]];
+      if(o.rot%90===0){ const hw=(o.rot%180===0?w:h)/2, hh=(o.rot%180===0?h:w)/2, M=48;
+        xs.push([M+hw,-hw],[P.w-M-hw,hw]); ys.push([M+hh,-hh],[P.h-M-hh,hh]); }
+      for(const [t] of xs) if(Math.abs(nx-t)<T){ nx=t; D.guides.push({x:t===P.w/2?t:t+((t<P.w/2)?-0:0)}); break; }
+      for(const [t] of ys) if(Math.abs(ny-t)<T){ ny=t; D.guides.push({y:t}); break; }
+      o.x=clamp(nx,0,P.w); o.y=clamp(ny,0,P.h);
+    }else if(drag.mode==="rot"){
+      let a=Math.atan2(p.y-o.y,p.x-o.x)*180/Math.PI+90;
+      a=((a%360)+540)%360-180; const sn=Math.round(a/15)*15; if(Math.abs(a-sn)<4)a=sn;
+      o.rot=Math.round(a);
+    }else{
+      const hd=drag.hd, l=toLocal(o0,p), d0=dims(o0), min=40;
+      const set=(w,h,cxl,cyl)=>{ const c=toWorld(o0,{x:cxl,y:cyl}); o.x=c.x;o.y=c.y; if(o.type==="text"){o.w=Math.max(60,w);} else{o.w=Math.max(min,w);o.h=Math.max(min,h);} };
+      if(hd.sx&&hd.sy){ /* corner */
+        const fx=-hd.sx*d0.w/2, fy=-hd.sy*d0.h/2;
+        let nw=Math.abs(l.x-fx), nh=Math.abs(l.y-fy);
+        const uni=o.type==="text"||o.type==="logo"||(o.type==="shape"&&o.kind==="circle")||(o.type==="photo"&&o.frame==="circle");
+        if(uni){ const k=clamp(Math.max(nw/d0.w,nh/d0.h),.15,8); nw=d0.w*k; nh=d0.h*k;
+          if(o.type==="text"){ o.size=clamp(Math.round(o0.size*k),14,400); nh=d0.h*k; } }
+        set(nw,nh,fx+hd.sx*nw/2,fy+hd.sy*nh/2);
+      }else if(hd.sx){ /* left or right edge */
+        const fx=-hd.sx*d0.w/2, nw=Math.abs(l.x-fx); set(nw,d0.h,fx+hd.sx*nw/2,0);
+      }else{ /* top or bottom edge */
+        const fy=-hd.sy*d0.h/2, nh=Math.abs(l.y-fy); set(d0.w,nh,0,fy+hd.sy*nh/2);
+      }
+      if(o.type==="logo") o.h=o.w*o0.h/o0.w;
+    }
+    draw();
+  });
+  const endDrag=()=>{ if(!drag)return; const m=drag.moved; drag=null; D.guides=[]; draw(); if(m){ commit(); panel(); } };
+  cv.addEventListener("pointerup",endDrag); cv.addEventListener("pointercancel",endDrag);
+  window.addEventListener("resize",()=>draw());
+
+  document.addEventListener("keydown",e=>{
+    if($("viewDesign").classList.contains("hidden"))return;
+    const t=e.target.tagName; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT")return;
+    const o=cur();
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){ e.preventDefault(); e.shiftKey?redo():undo(); return; }
+    if(!o)return;
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="d"){ e.preventDefault(); dup(); return; }
+    if(e.key==="Delete"||e.key==="Backspace"){ e.preventDefault(); del(); return; }
+    const st=e.shiftKey?10:1, mv={ArrowLeft:[-st,0],ArrowRight:[st,0],ArrowUp:[0,-st],ArrowDown:[0,st]}[e.key];
+    if(mv){ e.preventDefault(); o.x=clamp(o.x+mv[0],0,D.page.w); o.y=clamp(o.y+mv[1],0,D.page.h); draw(); clearTimeout(keyT); keyT=setTimeout(commit,400); }
+  });
+  let keyT=0;
+
+  /* ---------- adding things ---------- */
+  function add(o){ o.id=D.uid++; o.rot=0; D.objs.push(o); D.sel=o.id; commit(); panel(); draw(); return o; }
+  const P_=()=>D.page;
+  function addText(head,txt,over){
+    const P=P_(), onDark=lum(D.bg)<.35;
+    return add(Object.assign({type:"text",text:txt||(head?"Your title here":"Type your words here"),font:head?"head":"sans",bold:false,size:head?Math.round(P.w*.075):Math.round(P.w*.036),
+      color:head?(onDark?WHITE:NAVY):(onDark?WHITE:INK),align:"left",lh:head?1.15:1.4,x:P.w/2,y:P.h/2,w:Math.round(P.w*.78)},over||{}));
+  }
+  function addShape(kind,over){
+    const P=P_(), s=Math.round(P.w*.3);
+    return add(Object.assign({type:"shape",kind,fill:BLUE,radius:kind==="rect"?0:0,alpha:100,x:P.w/2,y:P.h/2,w:kind==="circle"?s:Math.round(P.w*.6),h:kind==="circle"?s:Math.round(P.w*.2)},over||{}));
+  }
+  function addLogo(over){
+    const P=P_(), w=Math.round(P.w*.3), r=(logoLight.naturalHeight||1)/(logoLight.naturalWidth||1);
+    return add(Object.assign({type:"logo",variant:"auto",x:P.w/2,y:P.h*.9,w,h:w*r},over||{}));
+  }
+  $("dgAddText").onclick=()=>addText(false);
+  $("dgAddHead").onclick=()=>addText(true);
+  $("dgAddRect").onclick=()=>addShape("rect");
+  $("dgAddCircle").onclick=()=>addShape("circle");
+  $("dgAddLogo").onclick=()=>addLogo();
+  $("dgAddPhoto").onclick=()=>$("dgFile").click();
+
+  let heicLib=null;
+  const isHeic=f=>/\.(heic|heif)$/i.test(f.name||"")||/image\/hei[cf]/i.test(f.type||"");
+  function loadHeic(){
+    if(window.heic2any)return Promise.resolve();
+    if(!heicLib)heicLib=new Promise((ok,no)=>{
+      const sc=document.createElement("script");
+      sc.src=(/\/$|\.[a-z]+$/i.test(location.pathname)?"./":"/studio/")+"lib/heic2any.min.js";
+      sc.onload=ok; sc.onerror=()=>{heicLib=null;no(new Error("x"));}; document.head.appendChild(sc);
+    });
+    return heicLib;
+  }
+  async function bitmap(f){
+    try{ return await createImageBitmap(f,{imageOrientation:"from-image"}); }catch(e){}
+    if(isHeic(f)){ await loadHeic(); let o=await window.heic2any({blob:f,toType:"image/jpeg",quality:.92}); o=Array.isArray(o)?o[0]:o; return await createImageBitmap(o); }
+    return await createImageBitmap(f);
+  }
+  async function addPhotos(files){
+    msg("");
+    for(const f of files){
+      try{
+        let b=await bitmap(f);
+        const m=2400; if(Math.max(b.width,b.height)>m){ const k=m/Math.max(b.width,b.height), c=document.createElement("canvas"); c.width=Math.round(b.width*k); c.height=Math.round(b.height*k); c.getContext("2d").drawImage(b,0,0,c.width,c.height); b.close&&b.close(); b=c; }
+        const id="i"+(D.uid++); D.imgs.set(id,b);
+        const P=P_(), w=Math.round(P.w*.6), h=Math.min(Math.round(w*b.height/b.width),Math.round(P.h*.7));
+        add({type:"photo",img:id,zoom:1,ox:0,oy:0,frame:"rect",radius:0,x:P.w/2,y:P.h/2,w,h});
+      }catch(e){ msg("That photo could not be opened. Try another."); }
+    }
+    $("dgFile").value="";
+  }
+  $("dgFile").onchange=e=>addPhotos([...e.target.files]);
+  ["dragover","drop"].forEach(ev=>cv.addEventListener(ev,e=>{ e.preventDefault(); if(ev==="drop"&&e.dataTransfer.files.length) addPhotos([...e.dataTransfer.files].filter(f=>/^image\//.test(f.type)||isHeic(f))); }));
+
+  /* ---------- actions on the selected item ---------- */
+  function del(){ const i=D.objs.findIndex(o=>o.id===D.sel); if(i<0)return; D.objs.splice(i,1); D.sel=null; commit(); panel(); draw(); }
+  function dup(){ const o=cur(); if(!o)return; const c=JSON.parse(JSON.stringify(o)); c.id=D.uid++; c.x=clamp(c.x+30,0,D.page.w); c.y=clamp(c.y+30,0,D.page.h); D.objs.push(c); D.sel=c.id; commit(); panel(); draw(); }
+  function order(dir){
+    const i=D.objs.findIndex(o=>o.id===D.sel); if(i<0)return; const j=i+dir; if(j<0||j>=D.objs.length)return;
+    [D.objs[i],D.objs[j]]=[D.objs[j],D.objs[i]]; commit(); draw();
+  }
+
+  /* ---------- side panel for the selected item ---------- */
+  function swatches(cur,key,withNone){
+    return '<div class="swatches" data-key="'+key+'">'+COLS.map(([c,n])=>'<button type="button" class="sw" style="--c:'+c+'" aria-label="'+n+'" title="'+n+'" data-v="'+c+'" aria-pressed="'+(cur===c)+'"></button>').join("")+'</div>';
+  }
+  function seg(key,cur,opts){ return '<div class="dg-row three" data-seg="'+key+'">'+opts.map(([v,n])=>'<button type="button" class="frame-btn" data-v="'+v+'" aria-pressed="'+(String(cur)===String(v))+'">'+n+'</button>').join("")+'</div>'; }
+  function slider(id,label,min,max,val,step,unit){ return '<div class="field"><div class="sizehead"><label for="'+id+'">'+label+'</label><output>'+val+(unit||"")+'</output></div><input type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+(step||1)+'" value="'+val+'" data-unit="'+(unit||"")+'"></div>'; }
+
+  function panel(){
+    const o=cur(), box=$("dgSel");
+    if(!o){ box.innerHTML='<div class="dg-empty">Nothing selected. Tap something on the page to change it, or add something new above.</div>'; return; }
+    let h='<h3>'+({text:"Words",shape:o.kind==="circle"?"Circle":"Box",photo:"Photo",logo:"Logo"}[o.type])+'</h3>';
+    if(o.type==="text"){
+      h+='<div class="field"><label for="dgText">Edit the words</label><textarea id="dgText" rows="4"></textarea></div>';
+      h+='<div class="field"><label>Font</label>'+seg("font",o.font,[["head","Heading"],["serif","Serif"],["sans","Plain"]])+'</div>';
+      h+=slider("dgSize","Size",14,400,o.size,1);
+      if(o.font!=="head") h+='<div class="field">'+seg("bold",o.bold,[[false,"Normal"],[true,"Bold"]])+'</div>';
+      h+='<div class="field"><label>Alignment</label>'+seg("align",o.align,[["left","Left"],["center","Centre"],["right","Right"]])+'</div>';
+      h+='<div class="field"><label>Colour</label>'+swatches(o.color,"color")+'</div>';
+    }else if(o.type==="shape"){
+      h+='<div class="field"><label>Colour</label>'+swatches(o.fill,"fill")+'</div>';
+      if(o.kind==="rect") h+=slider("dgRad","Rounded corners",0,100,o.radius||0,1);
+      h+=slider("dgAlpha","See through",20,100,o.alpha??100,5,"%");
+    }else if(o.type==="photo"){
+      h+='<div class="field"><label>Shape</label>'+seg("frame",o.frame,[["rect","Square"],["round","Rounded"],["circle","Circle"]])+'</div>';
+      h+=slider("dgZoom","Zoom",1,4,o.zoom,.05);
+      h+=slider("dgOx","Move photo left or right",-100,100,Math.round(o.ox*100),1);
+      h+=slider("dgOy","Move photo up or down",-100,100,Math.round(o.oy*100),1);
+      if(o.frame==="round") h+=slider("dgRad","Rounded corners",0,100,o.radius||30,1);
+    }else if(o.type==="logo"){
+      h+='<div class="field"><label>Logo colours</label>'+seg("variant",o.variant,[["auto","Match page"],["light","Dark logo"],["white","White logo"]])+'</div>';
+    }
+    h+=slider("dgRot","Turn",-180,180,o.rot,1,"°");
+    h+='<div class="dg-acts"><button class="btn ghost" data-act="fwd" type="button">Bring forward</button><button class="btn ghost" data-act="back" type="button">Send back</button><button class="btn ghost" data-act="dup" type="button">Copy</button><button class="btn ghost del" data-act="del" type="button">Delete</button></div>';
+    box.innerHTML=h;
+    if(o.type==="text") $("dgText").value=o.text;
+    warn();
+  }
+  function warn(){
+    const o=cur(); if(!o||o.type!=="text")return;
+    if(D.objs.some(x=>x.type==="shape"||x.type==="photo"))return;
+    const a=lum(o.color), b=lum(D.bg), r=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    if(r<3){ const d=document.createElement("div"); d.className="dg-msg"; d.textContent="These words are hard to read on this background. Try a different colour."; $("dgSel").insertBefore(d,$("dgSel").children[1]); }
+  }
+  let inT=0;
+  $("dgSel").addEventListener("input",e=>{
+    const o=cur(); if(!o)return; const t=e.target;
+    if(t.id==="dgText"){ o.text=t.value; }
+    else if(t.type==="range"){
+      const v=+t.value; t.parentNode.querySelector("output").textContent=v+(t.dataset.unit||"");
+      ({dgSize:()=>o.size=v,dgRad:()=>o.radius=v,dgAlpha:()=>o.alpha=v,dgZoom:()=>o.zoom=v,dgOx:()=>o.ox=v/100,dgOy:()=>o.oy=v/100,dgRot:()=>o.rot=v}[t.id]||(()=>0))();
+    }else return;
+    draw(); clearTimeout(inT); inT=setTimeout(commit,500);
+  });
+  $("dgSel").addEventListener("click",e=>{
+    const o=cur(); if(!o)return; const b=e.target.closest("button"); if(!b)return;
+    if(b.dataset.act){ ({fwd:()=>order(1),back:()=>order(-1),dup,del}[b.dataset.act])(); return; }
+    const sw=b.closest(".swatches"), sg=b.closest("[data-seg]");
+    if(sw){ const k=sw.dataset.key; o[k]=b.dataset.v; commit(); panel(); draw(); }
+    else if(sg){
+      const k=sg.dataset.seg; let v=b.dataset.v; if(k==="bold")v=(v==="true");
+      o[k]=v; if(k==="frame"&&v==="circle"){ const s=Math.min(o.w,o.h); o.w=o.h=s; } if(k==="frame"&&v==="round"&&!o.radius)o.radius=30;
+      if(k==="font"&&v==="head")o.bold=false;
+      commit(); panel(); draw();
+    }
+  });
+
+  /* ---------- page, background, starters ---------- */
+  function sizeCanvas(){ cv.width=D.page.w; cv.height=D.page.h; $("dgCap").textContent=D.page.n+" ("+D.page.w+" × "+D.page.h+"). Tap an item to select it. Drag to move. Use the round handles to resize and turn."; $("dgPdf").classList.toggle("hidden",!D.page.pdf); document.querySelectorAll("#dgSizes .frame-btn").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===D.page.k))); document.querySelectorAll("#dgBg .sw").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===D.bg))); }
+  $("dgSizes").innerHTML=PAGES.map(p=>'<button type="button" class="frame-btn" data-k="'+p.k+'" aria-pressed="false">'+p.n+'</button>').join("");
+  $("dgSizes").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; const np=PAGES.find(p=>p.k===b.dataset.k); if(np===D.page)return;
+    const fx=np.w/D.page.w, fy=np.h/D.page.h; D.objs.forEach(o=>{o.x*=fx;o.y*=fy;}); D.page=np; sizeCanvas(); commit(); draw(); };
+  $("dgBg").innerHTML=COLS.map(([c,n])=>'<button type="button" class="sw" style="--c:'+c+'" aria-label="'+n+'" title="'+n+'" data-v="'+c+'" aria-pressed="false"></button>').join("");
+  $("dgBg").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; D.bg=b.dataset.v; sizeCanvas(); commit(); draw(); panel(); };
+
+  const STARTS=[
+    ["Blank",()=>{}],
+    ["Notice",()=>{ const P=D.page; D.bg=NAVY;
+      addShape("rect",{fill:BLUE,x:P.w/2,y:P.h*.12,w:P.w,h:Math.round(P.h*.02)});
+      addText(true,"Your title here",{x:P.w/2,y:P.h*.3,w:Math.round(P.w*.82),color:WHITE});
+      addText(false,"Type your message here. Add as much as you need.",{x:P.w/2,y:P.h*.58,w:Math.round(P.w*.82),color:WHITE});
+      addLogo({y:P.h*.9,variant:"white"}); }],
+    ["Poster",()=>{ const P=D.page; D.bg=WHITE;
+      addShape("rect",{fill:NAVY,x:P.w/2,y:P.h*.14,w:P.w,h:Math.round(P.h*.28)});
+      addText(true,"Your title here",{x:P.w/2,y:P.h*.14,w:Math.round(P.w*.82),color:WHITE});
+      addText(false,"Type your message here. Add as much as you need.",{x:P.w/2,y:P.h*.5,w:Math.round(P.w*.82),color:INK});
+      addLogo({y:P.h*.9,variant:"light"}); }]
+  ];
+  $("dgStarts").innerHTML=STARTS.map((s,i)=>'<button type="button" class="frame-btn" data-i="'+i+'">'+s[0]+'</button>').join("");
+  $("dgStarts").onclick=e=>{ const b=e.target.closest("button"); if(!b)return;
+    if(D.objs.length&&!confirm("Start again? What is on the page now will be cleared."))return;
+    D.objs=[]; D.sel=null; D.bg=WHITE; STARTS[+b.dataset.i][1](); D.sel=null; sizeCanvas(); commit(); panel(); draw(); };
+
+  /* ---------- output ---------- */
+  function out(type){ draw(true); const url=cv.toDataURL(type||"image/png"); draw(); return url; }
+  const download=()=>{ draw(true); cv.toBlob(b=>{ draw(); const u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download="hartburn-design.png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1500); },"image/png"); };
+  $("dgDownload").onclick=download; $("dgDownload2").onclick=download;
+  $("dgPdf").onclick=()=>{
+    const url=out("image/png"), o=D.page.pdf, f=document.createElement("iframe");
+    f.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0";
+    document.body.appendChild(f); const d=f.contentDocument;
+    d.open(); d.write('<!doctype html><title>Hartburn design</title><style>@page{size:A4 '+o+';margin:0}html,body{margin:0}img{display:block;width:100%;height:100vh;object-fit:contain}</style><img src="'+url+'">'); d.close();
+    const go=()=>{ f.contentWindow.focus(); f.contentWindow.print(); setTimeout(()=>f.remove(),2000); };
+    const im=d.querySelector("img"); im.complete?go():(im.onload=go);
+  };
+  $("dgUndo").onclick=undo; $("dgRedo").onclick=redo;
+
+  /* ---------- tab ---------- */
+  function start(){
+    sizeCanvas(); panel(); commit(); draw();
+    Promise.all(["600 40px Playfair","400 40px Lora","600 40px Lora","400 40px OpenSans","700 40px OpenSans"].map(f=>document.fonts?document.fonts.load(f):0)).then(()=>draw());
+    logoLight.addEventListener("load",draw); logoWhite.addEventListener("load",draw);
+  }
+  start();
+  $("tabDesign").addEventListener("click",()=>{ sizeCanvas(); draw(); });
 })();
 </script>
 </body>
