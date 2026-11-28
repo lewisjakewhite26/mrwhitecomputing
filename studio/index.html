@@ -49,7 +49,7 @@ body{font-family:var(--sans);color:var(--ink);background:#eef2f5;-webkit-text-si
 @media (max-width:1000px){
   .layout{grid-template-columns:1fr;}
   .layout .stage{order:-1;position:sticky;top:0;z-index:5;padding:12px;}
-  .layout .stage canvas{max-height:30vh;}
+  .layout .stage canvas{max-height:38vh;}
   .frames{max-height:none !important;overflow:visible !important;grid-template-columns:repeat(3,1fr) !important;}
   #download{position:static;}
   .dl2{display:block !important;margin-top:10px;}
@@ -202,7 +202,7 @@ body.locked .gate{display:flex;}
 .dg-acts .btn{position:static;font-size:14.5px;padding:11px;min-height:46px;}
 .dg-acts .del{border-color:var(--red);color:var(--red);}
 #dgDownload,#dgPdf{position:static;}
-#dgCanvas{touch-action:none;cursor:default;background:#fff;}
+#dgCanvas{touch-action:none;user-select:none;-webkit-user-select:none;cursor:default;background:#fff;}
 .dg-msg{font-size:12.5px;color:var(--amber);font-weight:700;margin-top:6px;}
 .dg-empty{font-size:13.5px;color:#30404d;background:var(--tint);border:1px solid var(--line);border-radius:8px;padding:12px;}
 .dg-waves{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -467,6 +467,16 @@ Stockton-on-Tees TS18 [  ]
       <div class="dg-tools" id="dgStarts"></div>
     </div>
 
+    <div class="field" id="dgComposeBox">
+      <label for="dgCompose">Type your words here</label>
+      <textarea id="dgCompose" rows="3" placeholder="Type or paste your words, then send them to the page"></textarea>
+      <div class="dg-tools" style="margin-top:8px">
+        <button class="frame-btn" id="dgSendHead" type="button">Send as heading</button>
+        <button class="frame-btn" id="dgSendText" type="button">Send as text</button>
+      </div>
+      <button class="btn ghost hidden" id="dgSendUpdate" type="button" style="margin-top:8px;width:100%">Replace the selected words</button>
+    </div>
+
     <div class="field">
       <label>Add</label>
       <div class="dg-tools">
@@ -496,7 +506,7 @@ Stockton-on-Tees TS18 [  ]
 
   <div class="stage">
     <canvas id="dgCanvas" width="1080" height="1080" tabindex="0" aria-label="Design area"></canvas>
-    <div class="cap" id="dgCap">Tap an item to select it. Drag to move. Use the round handles to resize and turn.</div>
+    <div class="cap" id="dgCap">Tap an item to select it. Drag to move. Double-tap words to edit them above. Use the round handles to resize and turn.</div>
     <button class="btn dl2" id="dgDownload2" type="button">Download image</button>
   </div>
 </section>
@@ -2489,7 +2499,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     const {w,h}=dims(o), u=D.page.w/cv.getBoundingClientRect().width||1, a=[];
     const corners=[["nw",-1,-1],["ne",1,-1],["se",1,1],["sw",-1,1]];
     corners.forEach(([k,sx,sy])=>a.push({k,x:sx*w/2,y:sy*h/2,sx,sy}));
-    if(o.type==="text"){ a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0}); }
+    if(o.type==="text"){ /* corners only: one clear way to resize */ }
     else if(o.type==="shape"||o.type==="photo"){
       a.push({k:"e",x:w/2,y:0,sx:1,sy:0},{k:"w",x:-w/2,y:0,sx:-1,sy:0},{k:"n",x:0,y:-h/2,sx:0,sy:-1},{k:"s",x:0,y:h/2,sx:0,sy:1});
     }
@@ -2508,7 +2518,8 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   function hitObj(p){
     for(let i=D.objs.length-1;i>=0;i--){
       const o=D.objs[i], l=toLocal(o,p), {w,h}=dims(o);
-      if(Math.abs(l.x)<=w/2&&Math.abs(l.y)<=h/2) return o;
+      const u=D.page.w/cv.getBoundingClientRect().width||1, pad=o.type==="text"?16*u:0;
+      if(Math.abs(l.x)<=w/2+pad&&Math.abs(l.y)<=h/2+pad) return o;
     }
     return null;
   }
@@ -2582,10 +2593,15 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   /* ---------- adding things ---------- */
   function add(o){ o.id=D.uid++; o.rot=0; D.objs.push(o); D.sel=o.id; commit(); panel(); draw(); return o; }
   const P_=()=>D.page;
+  /* New words go below the last words, so they never land on top of each other. */
+  function nextTextY(){
+    const P=P_(), ts=D.objs.filter(o=>o.type==="text"); if(!ts.length) return P.h/2;
+    const bottom=Math.max(...ts.map(o=>o.y+dims(o).h/2)); return Math.min(P.h*.88,bottom+P.w*.06);
+  }
   function addText(head,txt,over){
     const P=P_(), onDark=lum(D.bg)<.35;
     return add(Object.assign({type:"text",text:txt||(head?"Your title here":"Type your words here"),font:head?"head":"sans",bold:false,size:head?Math.round(P.w*.075):Math.round(P.w*.036),
-      color:head?(onDark?WHITE:NAVY):(onDark?WHITE:INK),align:"left",lh:head?1.15:1.4,x:P.w/2,y:P.h/2,w:Math.round(P.w*.78)},over||{}));
+      color:head?(onDark?WHITE:NAVY):(onDark?WHITE:INK),align:"left",lh:head?1.15:1.4,x:P.w/2,y:nextTextY(),w:Math.round(P.w*.78)},over||{}));
   }
   function addShape(kind,over){
     const P=P_(), s=Math.round(P.w*.3);
@@ -2616,6 +2632,14 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     box.innerHTML=WNAMES.map((n,i)=>waveBtn(part,i,"blues",false)).join("");
     box.onclick=e=>{ const b=e.target.closest("button"); if(b) addWave(part,+b.dataset.i); };
   });
+  /* typing space outside the page: send new words in, or replace the selected words */
+  const cmp=$("dgCompose");
+  function sendNew(head){ const t=cmp.value.trim(); if(!t){ cmp.focus(); return; } addText(head,t); cmp.value=""; }
+  function syncCompose(){ const o=cur(); $("dgSendUpdate").classList.toggle("hidden",!(o&&o.type==="text")); }
+  $("dgSendHead").onclick=()=>sendNew(true);
+  $("dgSendText").onclick=()=>sendNew(false);
+  $("dgSendUpdate").onclick=()=>{ const o=cur(), t=cmp.value; if(!o||o.type!=="text"||!t.trim()){ cmp.focus(); return; } o.text=t; commit(); panel(); draw(); };
+  cv.addEventListener("dblclick",()=>{ const o=cur(); if(o&&o.type==="text"){ cmp.value=o.text; cmp.focus(); cmp.scrollIntoView({block:"center",behavior:"smooth"}); } });
   $("dgAddText").onclick=()=>addText(false);
   $("dgAddHead").onclick=()=>addText(true);
   $("dgAddRect").onclick=()=>addShape("rect");
@@ -2672,12 +2696,13 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
 
   function panel(){
     const o=cur(), box=$("dgSel");
-    if(!o){ box.innerHTML='<div class="dg-empty">Nothing selected. Tap something on the page to change it, or add something new above.</div>'; return; }
+    if(!o){ box.innerHTML='<div class="dg-empty">Nothing selected. Tap something on the page to change it, or add something new above.</div>'; syncCompose(); return; }
     let h='<h3>'+({text:"Words",shape:o.kind==="circle"?"Circle":"Box",photo:"Photo",logo:"Logo",wave:o.part==="head"?"Header design":"Footer design"}[o.type])+'</h3>';
     if(o.type==="text"){
       h+='<div class="field"><label for="dgText">Edit the words</label><textarea id="dgText" rows="4"></textarea></div>';
       h+='<div class="field"><label>Font</label>'+seg("font",o.font,[["head","Heading"],["serif","Serif"],["sans","Plain"]])+'</div>';
       h+=slider("dgSize","Size",14,400,o.size,1);
+      h+=slider("dgWidth","Box width",20,100,Math.round(o.w/D.page.w*100),1,"%");
       if(o.font!=="head") h+='<div class="field">'+seg("bold",o.bold,[[false,"Normal"],[true,"Bold"]])+'</div>';
       h+='<div class="field"><label>Alignment</label>'+seg("align",o.align,[["left","Left"],["center","Centre"],["right","Right"]])+'</div>';
       h+='<div class="field"><label>Colour</label>'+swatches(o.color,"color")+'</div>';
@@ -2702,6 +2727,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     h+='<div class="dg-acts"><button class="btn ghost" data-act="fwd" type="button">Bring forward</button><button class="btn ghost" data-act="back" type="button">Send back</button><button class="btn ghost" data-act="dup" type="button">Copy</button><button class="btn ghost del" data-act="del" type="button">Delete</button></div>';
     box.innerHTML=h;
     if(o.type==="text") $("dgText").value=o.text;
+    syncCompose();
     warn();
   }
   function warn(){
@@ -2716,7 +2742,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
     if(t.id==="dgText"){ o.text=t.value; }
     else if(t.type==="range"){
       const v=+t.value; t.parentNode.querySelector("output").textContent=v+(t.dataset.unit||"");
-      ({dgSize:()=>o.size=v,dgRad:()=>o.radius=v,dgAlpha:()=>o.alpha=v,dgZoom:()=>o.zoom=v,dgOx:()=>o.ox=v/100,dgOy:()=>o.oy=v/100,dgRot:()=>o.rot=v}[t.id]||(()=>0))();
+      ({dgSize:()=>o.size=v,dgWidth:()=>o.w=Math.round(D.page.w*v/100),dgRad:()=>o.radius=v,dgAlpha:()=>o.alpha=v,dgZoom:()=>o.zoom=v,dgOx:()=>o.ox=v/100,dgOy:()=>o.oy=v/100,dgRot:()=>o.rot=v}[t.id]||(()=>0))();
     }else return;
     draw(); clearTimeout(inT); inT=setTimeout(commit,500);
   });
@@ -2736,7 +2762,7 @@ $("clearDoc").onclick=()=>{ $("docTitle").value=""; $("docMeta").value=""; $("do
   });
 
   /* ---------- page, background, starters ---------- */
-  function sizeCanvas(){ cv.width=D.page.w; cv.height=D.page.h; $("dgCap").textContent=D.page.n+" ("+D.page.w+" × "+D.page.h+"). Tap an item to select it. Drag to move. Use the round handles to resize and turn."; $("dgPdf").classList.toggle("hidden",!D.page.pdf); document.querySelectorAll("#dgSizes .frame-btn").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===D.page.k))); document.querySelectorAll("#dgBg .sw").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===D.bg))); }
+  function sizeCanvas(){ cv.width=D.page.w; cv.height=D.page.h; $("dgCap").textContent=D.page.n+" ("+D.page.w+" × "+D.page.h+"). Tap an item to select it. Drag to move. Double-tap words to edit them above. Use the round handles to resize and turn."; $("dgPdf").classList.toggle("hidden",!D.page.pdf); document.querySelectorAll("#dgSizes .frame-btn").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===D.page.k))); document.querySelectorAll("#dgBg .sw").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===D.bg))); }
   $("dgSizes").innerHTML=PAGES.map(p=>'<button type="button" class="frame-btn" data-k="'+p.k+'" aria-pressed="false">'+p.n+'</button>').join("");
   $("dgSizes").onclick=e=>{ const b=e.target.closest("button"); if(!b)return; const np=PAGES.find(p=>p.k===b.dataset.k); if(np===D.page)return;
     const fx=np.w/D.page.w, fy=np.h/D.page.h; D.objs.forEach(o=>{ if(o.type==="wave"){ const hd=o.part==="head"; o.w=np.w; o.h=Math.round(np.w*(hd?270:140)/794); o.x=np.w/2; o.y=hd?o.h/2:np.h-o.h/2; } else {o.x*=fx;o.y*=fy;} }); D.page=np; sizeCanvas(); commit(); draw(); };
